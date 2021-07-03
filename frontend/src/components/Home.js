@@ -13,6 +13,7 @@ import { bscConfig, bscNetwork, claimTokens, etherConfig, etheriumNetwork, suppo
 import { fromWei, formatCurrency, isMetaMaskInstalled, getCurrentNetworkId, getCurrentAccount } from "../utils/helper";
 import web3 from '../web';
 import { CHANGE_NETWORK } from "../actions/types";
+import SwapCard from "./Cards/SwapCard";
 // import web3 from 'web3'
 
 const useStyles = makeStyles((theme) => ({
@@ -176,6 +177,8 @@ const Home = ({
         <Avatar className={classes.logo} src="img/symbol.png" />
       
       <p>Polkabridge DEX</p>
+
+      <SwapCard />
       
         <Footer />
       </div>
