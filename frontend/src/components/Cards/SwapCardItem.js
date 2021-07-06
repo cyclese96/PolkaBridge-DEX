@@ -88,34 +88,35 @@ const SwapCardItem = ({
   account: { balance, loading },
   inputType,
   onInputChange,
+  onTokenChange,
+  currentToken,
 }) => {
   const classes = useStyles();
-  const [selectedToken, setToken] = useState({
-    icon: etherImg,
-    name: "Ethereum",
-    symbol: "ETH",
-  });
-
   const [inputValue, setInput] = useState("");
-
-  const onTokenSelect = (token) => {
-    console.log(token);
-    setToken(token);
-  };
 
   const handleInputChange = (event) => {
     setInput(event.target.value);
-    console.log(inputValue);
+    onInputChange(event.target.value);
   };
+
+  const handleMax = () => {
+    setInput(balance ? balance : "0.6843");
+    onInputChange(balance ? balance : "0.6843");
+  };
+
   return (
     <>
       <div className={classes.card}>
         <div className="card-item-theme">
           <div className={classes.cardContents}>
             <div className={classes.labelRow}>
-              <p className={classes.labelFont} hidden={inputType === null}>
-                {inputType === "from" ? "From:" : "To:"}
-              </p>
+              {inputType ? (
+                <p className={classes.labelFont} hidden={inputType === null}>
+                  {inputType === "from" ? "From:" : "To:"}
+                </p>
+              ) : (
+                ""
+              )}
               <p className={classes.labelFont}>
                 {inputType === "from" ? `Balance: ${"0.6843"}` : ""}
               </p>
@@ -129,11 +130,13 @@ const SwapCardItem = ({
                 placeholder="0.0"
               />
 
-              <a className={classes.maxButton}>Max</a>
+              <a className={classes.maxButton} onClick={handleMax}>
+                Max
+              </a>
 
               <SelectToken
-                selectedToken={selectedToken}
-                handleTokenSelected={onTokenSelect}
+                selectedToken={currentToken}
+                handleTokenSelected={onTokenChange}
               />
             </div>
           </div>

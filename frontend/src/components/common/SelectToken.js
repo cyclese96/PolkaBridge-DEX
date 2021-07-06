@@ -28,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
     height: "auto",
     marginRight: 2,
   },
+  selectToken: {
+    fontSize: 12,
+  },
 }));
 
 const SelectToken = ({
@@ -59,10 +62,18 @@ const SelectToken = ({
         className={[classes.token, className].join(" ")}
         onClick={handleTokensOpen}
       >
-        <img className={classes.tokenIcon} src={selectedToken.icon} alt={""} />
-        <span style={{ color: "white", marginLeft: 5 }}>
-          {selectedToken.symbol}
-        </span>
+        <img
+          className={classes.tokenIcon}
+          src={selectedToken ? selectedToken.icon : ""}
+          alt={""}
+        />
+        {!selectedToken.symbol ? (
+          <span className={classes.selectToken}>Select Token</span>
+        ) : (
+          <span style={{ color: "white", marginLeft: 5 }}>
+            {selectedToken.symbol}
+          </span>
+        )}
         <ArrowDropDownIcon />
       </a>
     </>

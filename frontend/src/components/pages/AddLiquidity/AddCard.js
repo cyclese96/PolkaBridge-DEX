@@ -11,6 +11,7 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { height } from "@material-ui/system";
 import CustomButton from "../../Buttons/CustomButton";
 import SwapCardItem from "../../Cards/SwapCardItem";
+import AddIcon from "@material-ui/icons/Add";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -99,9 +100,9 @@ const useStyles = makeStyles((theme) => ({
     padding: 6,
     marginLeft: 5,
     marginRight: 5,
-    border: "0.5px solid white",
+    border: "0.5px solid rgba(255, 255, 255, 0.1)",
     borderRadius: 10,
-    cursor: "pointer",
+    // cursor: "pointer",
     "&:hover": {
       background: "rgba(255, 255, 255, 0.1)",
     },
@@ -125,48 +126,6 @@ const useStyles = makeStyles((theme) => ({
   feeSelectHeadingSpan: {
     fontSize: 12,
   },
-  priceChangeContainer: {
-    width: 150,
-    // height: 20,
-    padding: 6,
-    marginLeft: 5,
-    marginRight: 5,
-    border: "0.5px solid #E0077D",
-    borderRadius: 10,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    // "&:hover": {
-    //   background: "rgba(255, 255, 255, 0.8)",
-    // },
-  },
-  buttons: {
-    display: "flex",
-    marginBottom: 10,
-    marginTop: 5,
-  },
-  priceChangeButton: {
-    width: 50,
-    height: 23,
-  },
-  currentPriceContainer: {
-    width: "94%",
-    // height: 20,
-    // padding: 6,
-    // marginLeft: 5,
-    // marginRight: 5,
-    border: "0.5px solid white",
-    borderRadius: 10,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    "&:hover": {
-      background: "rgba(255, 255, 255, 0.1)",
-    },
-    marginBottom: 10,
-  },
   depositCardsContainer: {
     display: "flex",
     flexDirection: "column",
@@ -179,19 +138,31 @@ const useStyles = makeStyles((theme) => ({
   addButton: {
     height: 45,
     width: "80%",
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  clearButton: {
+    color: "#E0077D",
+    cursor: "pointer",
   },
 }));
 
 const AddCard = ({ account: { balance, loading }, tokenType, handleBack }) => {
-  const classes = useStyles();
-  const [settingOpen, setOpen] = useState(false);
-  const [selectedToken1, setToken1] = useState({
+  const currentDefaultToken = {
     icon: etherImg,
     name: "Ethereum",
     symbol: "ETH",
-  });
-  const [fee, setFee] = useState(0.3);
+  };
+  const classes = useStyles();
+  const [settingOpen, setOpen] = useState(false);
+  const [selectedToken1, setToken1] = useState(currentDefaultToken);
   const [selectedToken2, setToken2] = useState({});
+  const [token1Input, setToken1Input] = useState("");
+  const [token2Input, setToken2Input] = useState("");
+
+  const [token1PerToken2, setPerToken1] = useState("1.4545");
+  const [token2PerToken1, setPerToken2] = useState("0.66891");
+  const [shareOfPool, setShare] = useState("0.04");
 
   const handleSettings = () => {
     setOpen(true);
@@ -201,13 +172,28 @@ const AddCard = ({ account: { balance, loading }, tokenType, handleBack }) => {
     setOpen(false);
   };
 
-  const onTokenSelect1 = (token) => {
+  const onToken1InputChange = (tokens) => {
+    setToken1Input(tokens);
+  };
+
+  const onToken2InputChange = (tokens) => {
+    setToken2Input(tokens);
+  };
+
+  const onToken1Select = (token) => {
     console.log(token);
     setToken1(token);
   };
-  const onTokenSelect2 = (token) => {
+  const onToken2Select = (token) => {
     console.log(token);
     setToken2(token);
+  };
+
+  const handleClearState = () => {
+    setToken1Input("");
+    setToken2Input("");
+    setToken1(currentDefaultToken);
+    setToken2({});
   };
 
   return (
@@ -232,167 +218,73 @@ const AddCard = ({ account: { balance, loading }, tokenType, handleBack }) => {
 
             <div className={classes.cardHeading}>
               <span>Select pair</span>
-              <a>Clear all</a>
-            </div>
-
-            <div className={classes.tokenPair}>
-              <div>
-                <SelectToken
-                  className={classes.selectToken}
-                  selectedToken={selectedToken1}
-                  handleTokenSelected={onTokenSelect1}
-                />
-              </div>
-              <div>
-                <SelectToken
-                  className={classes.selectToken}
-                  selectedToken={selectedToken2}
-                  handleTokenSelected={onTokenSelect2}
-                />
-              </div>
-            </div>
-
-            <div className={classes.cardHeading}>
-              <span>Select pool</span>
-            </div>
-
-            <div className={classes.cardSubHeading}>
-              <span style={{ fontSize: 12, color: "rgba(255, 255, 255, 0.7)" }}>
-                Select a pool type based on your preferred liquidity provider
-                fee.
-              </span>
-            </div>
-
-            <div className={classes.selectPoolContainer}>
-              <div
-                className={classes.feeSelectContainer}
-                onClick={() => setFee(0.05)}
-              >
-                <div className={classes.feeSelectHeading}>
-                  <p className={classes.feeSelectHeadingP}>0.05% fee</p>
-                  {fee === 0.05 ? (
-                    <CheckCircleIcon
-                      className={classes.checkIcon}
-                      fontSize="small"
-                    />
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <span className={classes.feeSelectHeadingSpan}>
-                  Best for stable pairs
-                </span>
-              </div>
-
-              <div
-                className={classes.feeSelectContainer}
-                onClick={() => setFee(0.3)}
-              >
-                <div className={classes.feeSelectHeading}>
-                  <p className={classes.feeSelectHeadingP}> 0.3% fee</p>
-                  {fee === 0.3 ? (
-                    <CheckCircleIcon
-                      className={classes.checkIcon}
-                      fontSize="small"
-                    />
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <span className={classes.feeSelectHeadingSpan}>
-                  Best for most pairs
-                </span>
-              </div>
-
-              <div
-                className={classes.feeSelectContainer}
-                onClick={() => setFee(1)}
-              >
-                <div className={classes.feeSelectHeading}>
-                  <p className={classes.feeSelectHeadingP}>1% fee</p>
-                  {fee === 1 ? (
-                    <CheckCircleIcon
-                      className={classes.checkIcon}
-                      fontSize="small"
-                    />
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <span className={classes.feeSelectHeadingSpan}>
-                  Best for exotic pairs
-                </span>
-              </div>
-            </div>
-
-            <div className={classes.cardHeading}>
-              <span>Set Price Range</span>
-            </div>
-
-            <div className={classes.priceRangeCardContainer}>
-              <div className={classes.priceChangeContainer}>
-                <span className={classes.feeSelectHeadingSpan}>Min Price</span>
-                <p style={{ margin: 0, padding: 0 }}>{0}</p>
-                <span className={classes.feeSelectHeadingSpan}>
-                  PBR per ETH
-                </span>
-
-                <div className={classes.buttons}>
-                  <CustomButton
-                    variant="light"
-                    className={classes.priceChangeButton}
-                  >
-                    - 0.1
-                  </CustomButton>
-                  <CustomButton
-                    variant="light"
-                    className={classes.priceChangeButton}
-                  >
-                    + 0.1
-                  </CustomButton>
-                </div>
-              </div>
-
-              <div className={classes.priceChangeContainer}>
-                <span className={classes.feeSelectHeadingSpan}>Max Price</span>
-                <p style={{ margin: 0, padding: 0 }}>{0}</p>
-                <span className={classes.feeSelectHeadingSpan}>
-                  PBR per ETH
-                </span>
-
-                <div className={classes.buttons}>
-                  <CustomButton
-                    variant="light"
-                    className={classes.priceChangeButton}
-                  >
-                    - 0.1
-                  </CustomButton>
-                  <CustomButton
-                    variant="light"
-                    className={classes.priceChangeButton}
-                  >
-                    + 0.1
-                  </CustomButton>
-                </div>
-              </div>
-            </div>
-
-            <div className={classes.currentPriceContainer}>
-              <span className={classes.feeSelectHeadingSpan}>
-                Current Price
-              </span>
-              <p style={{ margin: 0, padding: 0 }}>{0.0}</p>
-              <span className={classes.feeSelectHeadingSpan}>PBR per ETH</span>
-            </div>
-
-            <div className={classes.cardHeading}>
-              <span>Deposit Amounts</span>
+              <a className={classes.clearButton} onClick={handleClearState}>
+                Clear all
+              </a>
             </div>
 
             <div className={classes.depositCardsContainer}>
-              <SwapCardItem inputType={null} />
-              <SwapCardItem inputType={null} />
+              <SwapCardItem
+                onInputChange={onToken1InputChange}
+                onTokenChange={onToken1Select}
+                currentToken={selectedToken1}
+              />
+              <AddIcon fontSize="default" className={classes.settingIcon} />
+              <SwapCardItem
+                onInputChange={onToken2InputChange}
+                onTokenChange={onToken2Select}
+                currentToken={selectedToken2}
+              />
             </div>
+
+            {selectedToken1.symbol && selectedToken2.symbol ? (
+              <>
+                <div className={classes.cardSubHeading}>
+                  <span
+                    style={{ fontSize: 12, color: "rgba(255, 255, 255, 0.7)" }}
+                  >
+                    Prices and Pool share
+                  </span>
+                </div>
+
+                <div className={classes.selectPoolContainer}>
+                  <div className={classes.feeSelectContainer}>
+                    <div className={classes.feeSelectHeading}>
+                      <p className={classes.feeSelectHeadingP}>
+                        {token1PerToken2}
+                      </p>
+                    </div>
+                    <span className={classes.feeSelectHeadingSpan}>
+                      {`${selectedToken1.symbol} per ${selectedToken2.symbol}`}
+                    </span>
+                  </div>
+
+                  <div className={classes.feeSelectContainer}>
+                    <div className={classes.feeSelectHeading}>
+                      <p className={classes.feeSelectHeadingP}>
+                        {token2PerToken1}
+                      </p>
+                    </div>
+                    <span className={classes.feeSelectHeadingSpan}>
+                      {`${selectedToken2.symbol} per ${selectedToken1.symbol}`}
+                    </span>
+                  </div>
+
+                  <div className={classes.feeSelectContainer}>
+                    <div className={classes.feeSelectHeading}>
+                      <p
+                        className={classes.feeSelectHeadingP}
+                      >{`${shareOfPool}%`}</p>
+                    </div>
+                    <span className={classes.feeSelectHeadingSpan}>
+                      Share of pool
+                    </span>
+                  </div>
+                </div>
+              </>
+            ) : (
+              ""
+            )}
 
             <CustomButton variant="light" className={classes.addButton}>
               Add liquidity

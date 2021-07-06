@@ -9,18 +9,16 @@ import SwapCardItem from "./SwapCardItem";
 import SwapVertIcon from "@material-ui/icons/SwapVert";
 import { useState } from "react";
 import SwapSettings from "../common/SwapSettings";
+import etherImg from "../../assets/ether.png";
+import CustomButton from "../Buttons/CustomButton";
 
 const useStyles = makeStyles((theme) => ({
   card: {
     width: 450,
-    // height: 300,
-    // paddingLeft: 10,
-    // paddingRight: 10,
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 0,
       paddingRight: 0,
       width: 300,
-      //   height: 280,
     },
   },
   cardContents: {
@@ -28,10 +26,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     padding: 15,
-    // height: "100%",
-    // paddingTop: 3,
-    // paddingLeft:20,
-    // paddingRight:20
   },
   avatar: {
     zIndex: 2,
@@ -59,11 +53,42 @@ const useStyles = makeStyles((theme) => ({
     color: "#E0077D",
     fontSize: 26,
   },
+  addButton: {
+    height: 45,
+    width: "90%",
+    marginTop: 30,
+    marginBottom: 5,
+  },
 }));
 
 const SwapCard = ({ account: { balance, loading }, tokenType }) => {
   const classes = useStyles();
   const [settingOpen, setOpen] = useState(false);
+  const [selectedToken1, setToken1] = useState({
+    icon: etherImg,
+    name: "Ethereum",
+    symbol: "ETH",
+  });
+  const [selectedToken2, setToken2] = useState({});
+  const [token1Input, setToken1Input] = useState("");
+  const [token2Input, setToken2Input] = useState("");
+
+  const onToken1InputChange = (tokens) => {
+    setToken1Input(tokens);
+  };
+
+  const onToken2InputChange = (tokens) => {
+    setToken2Input(tokens);
+  };
+
+  const onToken1Select = (token) => {
+    console.log(token);
+    setToken1(token);
+  };
+  const onToken2Select = (token) => {
+    console.log(token);
+    setToken2(token);
+  };
 
   const handleSettings = () => {
     setOpen(true);
@@ -71,14 +96,6 @@ const SwapCard = ({ account: { balance, loading }, tokenType }) => {
 
   const close = () => {
     setOpen(false);
-  };
-
-  const handleFromInput = (fromToken) => {
-    console.log("from", fromToken);
-  };
-
-  const handleToInput = (toToken) => {
-    console.log("to", toToken);
   };
 
   return (
@@ -96,13 +113,23 @@ const SwapCard = ({ account: { balance, loading }, tokenType }) => {
               />
             </div>
 
-            <SwapCardItem inputType="from" onInputChange={handleFromInput} />
-            <SwapVertIcon
-              fontSize="default"
-              onInputChange={handleToInput}
-              className={classes.settingIcon}
+            <SwapCardItem
+              inputType="from"
+              onInputChange={onToken1InputChange}
+              onTokenChange={onToken1Select}
+              currentToken={selectedToken1}
             />
-            <SwapCardItem />
+            <SwapVertIcon fontSize="default" className={classes.settingIcon} />
+            <SwapCardItem
+              inputType="to"
+              onInputChange={onToken2InputChange}
+              onTokenChange={onToken2Select}
+              currentToken={selectedToken2}
+            />
+
+            <CustomButton variant="light" className={classes.addButton}>
+              Swap tokens
+            </CustomButton>
           </div>
         </div>
       </div>
