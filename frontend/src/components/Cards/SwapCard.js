@@ -73,6 +73,14 @@ const SwapCard = ({ account: { balance, loading }, tokenType }) => {
     setOpen(false);
   };
 
+  const handleFromInput = (fromToken) => {
+    console.log("from", fromToken);
+  };
+
+  const handleToInput = (toToken) => {
+    console.log("to", toToken);
+  };
+
   return (
     <>
       <SwapSettings open={settingOpen} handleClose={close} />
@@ -88,8 +96,12 @@ const SwapCard = ({ account: { balance, loading }, tokenType }) => {
               />
             </div>
 
-            <SwapCardItem inputType="from" />
-            <SwapVertIcon fontSize="default" className={classes.settingIcon} />
+            <SwapCardItem inputType="from" onInputChange={handleFromInput} />
+            <SwapVertIcon
+              fontSize="default"
+              onInputChange={handleToInput}
+              className={classes.settingIcon}
+            />
             <SwapCardItem />
           </div>
         </div>

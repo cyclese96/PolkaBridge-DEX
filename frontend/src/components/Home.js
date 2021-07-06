@@ -5,15 +5,33 @@ import { Avatar, CircularProgress } from "@material-ui/core";
 import Navbar from "./common/Navbar";
 import Footer from "./common/Footer";
 
-import { connectWallet, getAccountBalance, logout } from "../actions/accountActions";
+import {
+  connectWallet,
+  getAccountBalance,
+  logout,
+} from "../actions/accountActions";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import store from '../store'
-import { bscConfig, bscNetwork, claimTokens, etherConfig, etheriumNetwork, supportedNetworks, supportedStaking } from "../constants";
-import { fromWei, formatCurrency, isMetaMaskInstalled, getCurrentNetworkId, getCurrentAccount } from "../utils/helper";
-import web3 from '../web';
+import store from "../store";
+import {
+  bscConfig,
+  bscNetwork,
+  claimTokens,
+  etherConfig,
+  etheriumNetwork,
+  supportedNetworks,
+  supportedStaking,
+} from "../constants";
+import {
+  fromWei,
+  formatCurrency,
+  isMetaMaskInstalled,
+  getCurrentNetworkId,
+  getCurrentAccount,
+} from "../utils/helper";
+import web3 from "../web";
 import { CHANGE_NETWORK } from "../actions/types";
-import SwapCard from "./Cards/SwapCard";
+import TabPage from "./TabPage";
 // import web3 from 'web3'
 
 const useStyles = makeStyles((theme) => ({
@@ -61,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 40,
     backgroundColor: "#f9f9f9",
     padding: 12,
-  }
+  },
 }));
 
 const Home = ({
@@ -72,38 +90,40 @@ const Home = ({
   const classes = useStyles();
 
   const getCurrentNetwork = (networkId) => {
-    if (networkId === bscConfig.network_id.mainnet || networkId === bscConfig.network_id.testnet) {
+    if (
+      networkId === bscConfig.network_id.mainnet ||
+      networkId === bscConfig.network_id.testnet
+    ) {
       return bscNetwork;
-
-    } else if (networkId === etherConfig.network_id.mainet || networkId === etherConfig.network_id.koven) {
-      return etheriumNetwork
+    } else if (
+      networkId === etherConfig.network_id.mainet ||
+      networkId === etherConfig.network_id.koven
+    ) {
+      return etheriumNetwork;
     } else {
-      return etheriumNetwork
+      return etheriumNetwork;
     }
-  }
+  };
   useEffect(async () => {
     if (typeof window.web3 !== "undefined") {
       window.ethereum.on("accountsChanged", async (accounts) => {
         if (accounts.length === 0) {
           return;
         }
-       
+
         await connectWallet(false, currentNetwork);
         // await getAccountBalance(currentNetwork)
       });
 
       window.ethereum.on("networkChanged", async (networkId) => {
-
-
         // setCurrentNetwork(networkId)
-        const network = getCurrentNetwork(networkId)
+        const network = getCurrentNetwork(networkId);
 
         store.dispatch({
           type: CHANGE_NETWORK,
-          payload: network
-        })
+          payload: network,
+        });
 
-        
         await connectWallet(false, network);
         // await getAccountBalance(network)
       });
@@ -123,31 +143,27 @@ const Home = ({
     await connectWallet(true, currentNetwork);
   };
 
-
-
   useEffect(async () => {
-    let network = '';
-    const account = await getCurrentAccount()
-    
+    let network = "";
+    const account = await getCurrentAccount();
+
     // alert(account)
     if (isMetaMaskInstalled()) {
+      const networkId = await getCurrentNetworkId();
 
-      const networkId = await getCurrentNetworkId()
-
-      if (! supportedNetworks.includes(networkId.toString())) {
+      if (!supportedNetworks.includes(networkId.toString())) {
         // alert('This network is not supported yet! Please switch to Ethereum or Smart Chain network')
       }
-      network =   getCurrentNetwork(networkId.toString())
+      network = getCurrentNetwork(networkId.toString());
       // alert(`current network set to  ${network}` )
       store.dispatch({
         type: CHANGE_NETWORK,
-        payload: network
-      })
-    }else{
+        payload: network,
+      });
+    } else {
       // alert('meta mask not installed')
       network = etheriumNetwork;
     }
-    
 
     if (!isMetaMaskInstalled()) {
       return;
@@ -166,20 +182,15 @@ const Home = ({
           account={currentAccount}
           connected={connected}
           currentNetwork={currentNetwork}
-          // corgibBalance={formatCurrency(fromWei(corgibBalance))}
-          // pbrBalance={formatCurrency(fromWei(pbrBalance))}
-          // biteBalance={formatCurrency(fromWei(biteBalance))}
-          balance = {balance}
+          balance={balance}
         />
       </section>
 
       <div className={classes.background}>
-        <Avatar className={classes.logo} src="img/symbol.png" />
-      
-      <p>Polkabridge DEX</p>
+        <p>Polkabridge DEX</p>
 
-      <SwapCard />
-      
+        <TabPage />
+
         <Footer />
       </div>
     </div>

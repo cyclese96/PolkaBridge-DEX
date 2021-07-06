@@ -9,7 +9,9 @@ import binanceIcon from "../../assets/binance.png";
 import pbrIcon from "../../assets/balance.png";
 import { useState } from "react";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import SelectTokenDialog from "../common/SelectTokenDialog";
 import SelectToken from "../common/SelectToken";
+import etherImg from "../../assets/ether.png";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -82,26 +84,36 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SwapCardItem = ({ account: { balance, loading }, inputType }) => {
+const SwapCardItem = ({
+  account: { balance, loading },
+  inputType,
+  onInputChange,
+}) => {
   const classes = useStyles();
-  const [tokensOpen, setTokensOpen] = useState(false);
+  const [selectedToken, setToken] = useState({
+    icon: etherImg,
+    name: "Ethereum",
+    symbol: "ETH",
+  });
 
-  const handleTokensOpen = (type) => {
-    setTokensOpen(true);
+  const [inputValue, setInput] = useState("");
+
+  const onTokenSelect = (token) => {
+    console.log(token);
+    setToken(token);
   };
 
-  const tokensClose = () => {
-    setTokensOpen(false);
+  const handleInputChange = (event) => {
+    setInput(event.target.value);
+    console.log(inputValue);
   };
-
   return (
     <>
-      <SelectToken open={tokensOpen} handleClose={tokensClose} />
       <div className={classes.card}>
         <div className="card-item-theme">
           <div className={classes.cardContents}>
             <div className={classes.labelRow}>
-              <p className={classes.labelFont}>
+              <p className={classes.labelFont} hidden={inputType === null}>
                 {inputType === "from" ? "From:" : "To:"}
               </p>
               <p className={classes.labelFont}>
@@ -109,23 +121,20 @@ const SwapCardItem = ({ account: { balance, loading }, inputType }) => {
               </p>
             </div>
             <div className={classes.inputRow}>
-              <input type="text" className={classes.input} placeholder="0.0" />
+              <input
+                type="text"
+                className={classes.input}
+                onChange={handleInputChange}
+                value={inputValue}
+                placeholder="0.0"
+              />
 
               <a className={classes.maxButton}>Max</a>
-              <a
-                className={classes.token}
-                onClick={() => handleTokensOpen(inputType)}
-              >
-                <img
-                  className={classes.tokenIcon}
-                  src={inputType === "from" ? binanceIcon : pbrIcon}
-                  alt={"Select token"}
-                />
-                <span style={{ color: "white", marginLeft: 5 }}>
-                  {inputType === "from" ? "BNB" : "PBR"}
-                </span>
-                <ArrowDropDownIcon />
-              </a>
+
+              <SelectToken
+                selectedToken={selectedToken}
+                handleTokenSelected={onTokenSelect}
+              />
             </div>
           </div>
         </div>

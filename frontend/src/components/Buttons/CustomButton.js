@@ -36,16 +36,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CustomButton = ({ onClick, children, variant = "primary", disabled = false }) => {
-  const classes = useStyles();
+const CustomButton = ({
+  onClick,
+  children,
+  variant = "primary",
+  disabled = false,
+  className,
+}) => {
+  const ownClasses = useStyles();
   return (
     <Button
       onClick={onClick}
       color="primary"
       disabled={disabled}
-      className={
-        variant == "primary" ? classes.stakeButton : classes.unstakeButton
-      }
+      className={[
+        variant == "primary"
+          ? ownClasses.stakeButton
+          : ownClasses.unstakeButton,
+        className,
+      ].join(" ")}
     >
       {children}
     </Button>
