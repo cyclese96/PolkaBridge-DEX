@@ -7,6 +7,7 @@ import Box from "@material-ui/core/Box";
 import PropTypes from "prop-types";
 import SwapCard from "./Cards/SwapCard";
 import AddLiquidity from "./pages/AddLiquidity";
+import Analytics from "./pages/Analytics";
 
 const useStyles = makeStyles({
   root: {
@@ -94,7 +95,9 @@ export default function TabPage() {
       <TabPanel value={value} index={1}>
         <AddLiquidity />
       </TabPanel>
-      <TabPanel value={value} index={2} />
+      <TabPanel value={value} index={2} >
+          <Analytics />
+      </TabPanel>
     </>
   );
 }
