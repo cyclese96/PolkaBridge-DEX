@@ -70,24 +70,52 @@ const SwapCard = ({ account: { balance, loading }, tokenType }) => {
     symbol: "ETH",
   });
   const [selectedToken2, setToken2] = useState({});
-  const [token1Input, setToken1Input] = useState("");
-  const [token2Input, setToken2Input] = useState("");
+  const [token1Value, setToken1Value] = useState("");
+  const [token2Value, setToken2Value] = useState("");
+
+  const [swapStatus, setStatus] = useState({
+    message: "Please select tokens",
+    disabled: true,
+  });
 
   const onToken1InputChange = (tokens) => {
-    setToken1Input(tokens);
+    setToken1Value(tokens);
+
+    if (!tokens || (tokens > 0 && token2Value > 0)) {
+      setStatus({ message: "Swap Tokens", disabled: false });
+    }
   };
 
   const onToken2InputChange = (tokens) => {
-    setToken2Input(tokens);
+    console.log("inpuit", !tokens);
+    setToken2Value(tokens);
+
+    if (tokens && tokens > 0 && token1Value > 0) {
+      setStatus({ message: "Swap Tokens", disabled: false });
+    }
   };
 
   const onToken1Select = (token) => {
-    console.log(token);
     setToken1(token);
+    if (token.symbol === selectedToken2.symbol) {
+      setStatus({ message: "Invalid pair", disabled: true });
+    } else if (token1Value > 0 && token2Value > 0) {
+      setStatus({ message: "Swap Tokens", disabled: false });
+    } else {
+      setStatus({ message: "Enter amount", disabled: true });
+    }
   };
+
   const onToken2Select = (token) => {
-    console.log(token);
     setToken2(token);
+
+    if (selectedToken1.symbol === token.symbol) {
+      setStatus({ message: "Invalid pair", disabled: true });
+    } else if (token1Value > 0 && token2Value > 0) {
+      setStatus({ message: "Swap Tokens", disabled: false });
+    } else {
+      setStatus({ message: "Enter amount", disabled: true });
+    }
   };
 
   const handleSettings = () => {
@@ -96,6 +124,10 @@ const SwapCard = ({ account: { balance, loading }, tokenType }) => {
 
   const close = () => {
     setOpen(false);
+  };
+
+  const handleSwapToken = () => {
+    //todo perform swap action on given input
   };
 
   return (
@@ -118,6 +150,7 @@ const SwapCard = ({ account: { balance, loading }, tokenType }) => {
               onInputChange={onToken1InputChange}
               onTokenChange={onToken1Select}
               currentToken={selectedToken1}
+              inputValue={token1Value}
             />
             <SwapVertIcon fontSize="default" className={classes.settingIcon} />
             <SwapCardItem
@@ -125,10 +158,16 @@ const SwapCard = ({ account: { balance, loading }, tokenType }) => {
               onInputChange={onToken2InputChange}
               onTokenChange={onToken2Select}
               currentToken={selectedToken2}
+              inputValue={token2Value}
             />
 
-            <CustomButton variant="light" className={classes.addButton}>
-              Swap tokens
+            <CustomButton
+              variant="light"
+              className={classes.addButton}
+              onClick={handleSwapToken}
+              disabled={swapStatus.disabled}
+            >
+              {swapStatus.message}
             </CustomButton>
           </div>
         </div>

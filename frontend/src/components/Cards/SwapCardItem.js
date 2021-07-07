@@ -90,17 +90,18 @@ const SwapCardItem = ({
   onInputChange,
   onTokenChange,
   currentToken,
+  inputValue,
 }) => {
   const classes = useStyles();
-  const [inputValue, setInput] = useState("");
+  // const [inputValue, setInput] = useState("");
 
   const handleInputChange = (event) => {
-    setInput(event.target.value);
+    // setInput(event.target.value);
     onInputChange(event.target.value);
   };
 
   const handleMax = () => {
-    setInput(balance ? balance : "0.6843");
+    // setInput(balance ? balance : "0.6843");
     onInputChange(balance ? balance : "0.6843");
   };
 

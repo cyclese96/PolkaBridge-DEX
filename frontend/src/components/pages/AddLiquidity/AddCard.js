@@ -1,14 +1,10 @@
 import { makeStyles } from "@material-ui/core";
-
 import { connect } from "react-redux";
 import TuneIcon from "@material-ui/icons/Tune";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import { useState } from "react";
 import SwapSettings from "../../common/SwapSettings";
-import SelectToken from "../../common/SelectToken";
 import etherImg from "../../../assets/ether.png";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import { height } from "@material-ui/system";
 import CustomButton from "../../Buttons/CustomButton";
 import SwapCardItem from "../../Cards/SwapCardItem";
 import AddIcon from "@material-ui/icons/Add";
@@ -228,12 +224,14 @@ const AddCard = ({ account: { balance, loading }, tokenType, handleBack }) => {
                 onInputChange={onToken1InputChange}
                 onTokenChange={onToken1Select}
                 currentToken={selectedToken1}
+                inputValue={token1Input}
               />
               <AddIcon fontSize="default" className={classes.settingIcon} />
               <SwapCardItem
                 onInputChange={onToken2InputChange}
                 onTokenChange={onToken2Select}
                 currentToken={selectedToken2}
+                inputValue={token2Input}
               />
             </div>
 
