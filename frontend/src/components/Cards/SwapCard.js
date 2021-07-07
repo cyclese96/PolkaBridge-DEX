@@ -11,6 +11,7 @@ import { useState } from "react";
 import SwapSettings from "../common/SwapSettings";
 import etherImg from "../../assets/ether.png";
 import CustomButton from "../Buttons/CustomButton";
+import BigNumber from "bignumber.js";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -78,44 +79,44 @@ const SwapCard = ({ account: { balance, loading }, tokenType }) => {
     disabled: true,
   });
 
+
+
+  const verifySwapStatus = (token1 , token2) => {
+    if ( token1.selected.symbol === token2.selected.symbol){
+      setStatus({ message: "Invalid pair", disabled: true });
+    }else if((  !token1.value  && token1.selected.symbol) || (!token2.value && token2.selected.symbol)) {
+      setStatus({ message: "Enter amounts", disabled: true });
+    }else if(!token1.selected.symbol || !token2.selected.symbol){
+      setStatus({ message: "Select both tokens", disabled: true });
+    }else if(token1.value > 0 && token2.value > 0 && token1.selected.symbol && token2.selected.symbol ){
+      setStatus({ message: "Swap Tokens", disabled: false });
+    }
+  }
+
+
   const onToken1InputChange = (tokens) => {
     setToken1Value(tokens);
 
-    if (!tokens || (tokens > 0 && token2Value > 0)) {
-      setStatus({ message: "Swap Tokens", disabled: false });
-    }
+    verifySwapStatus({value:tokens, selected: selectedToken1}, {value:token2Value, selected: selectedToken2})
   };
 
   const onToken2InputChange = (tokens) => {
     console.log("inpuit", !tokens);
     setToken2Value(tokens);
 
-    if (tokens && tokens > 0 && token1Value > 0) {
-      setStatus({ message: "Swap Tokens", disabled: false });
-    }
+    verifySwapStatus({value:token1Value, selected: selectedToken1}, {value:tokens, selected: selectedToken2})
+
   };
 
   const onToken1Select = (token) => {
     setToken1(token);
-    if (token.symbol === selectedToken2.symbol) {
-      setStatus({ message: "Invalid pair", disabled: true });
-    } else if (token1Value > 0 && token2Value > 0) {
-      setStatus({ message: "Swap Tokens", disabled: false });
-    } else {
-      setStatus({ message: "Enter amount", disabled: true });
-    }
+    verifySwapStatus({value:token1Value, selected: token}, {value:token2Value, selected: selectedToken2})
   };
 
   const onToken2Select = (token) => {
     setToken2(token);
 
-    if (selectedToken1.symbol === token.symbol) {
-      setStatus({ message: "Invalid pair", disabled: true });
-    } else if (token1Value > 0 && token2Value > 0) {
-      setStatus({ message: "Swap Tokens", disabled: false });
-    } else {
-      setStatus({ message: "Enter amount", disabled: true });
-    }
+    verifySwapStatus({value:token1Value, selected: selectedToken1}, {value:token2Value, selected: token})
   };
 
   const handleSettings = () => {

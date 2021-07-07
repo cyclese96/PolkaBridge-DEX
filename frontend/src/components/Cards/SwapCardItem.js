@@ -97,7 +97,7 @@ const SwapCardItem = ({
 
   const handleInputChange = (event) => {
     // setInput(event.target.value);
-    onInputChange(event.target.value);
+    onInputChange( event.target.value ?  parseFloat(event.target.value) : '' );
   };
 
   const handleMax = () => {
