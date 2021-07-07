@@ -153,12 +153,17 @@ const AddCard = ({ account: { balance, loading }, tokenType, handleBack }) => {
   const [settingOpen, setOpen] = useState(false);
   const [selectedToken1, setToken1] = useState(currentDefaultToken);
   const [selectedToken2, setToken2] = useState({});
-  const [token1Input, setToken1Input] = useState("");
-  const [token2Input, setToken2Input] = useState("");
+  const [token1Value, setToken1Value] = useState("");
+  const [token2Value, setToken2Value] = useState("");
 
   const [token1PerToken2, setPerToken1] = useState("1.4545");
   const [token2PerToken1, setPerToken2] = useState("0.66891");
   const [shareOfPool, setShare] = useState("0.04");
+
+  const [addStatus, setStatus] = useState({
+    message: "Please select tokens",
+    disabled: true,
+  });
 
   const handleSettings = () => {
     setOpen(true);
@@ -168,26 +173,43 @@ const AddCard = ({ account: { balance, loading }, tokenType, handleBack }) => {
     setOpen(false);
   };
 
+  const verifySwapStatus = (token1 , token2) => {
+    if ( token1.selected.symbol === token2.selected.symbol){
+      setStatus({ message: "Invalid pair", disabled: true });
+    }else if((  !token1.value  && token1.selected.symbol) || (!token2.value && token2.selected.symbol)) {
+      setStatus({ message: "Enter amounts", disabled: true });
+    }else if(!token1.selected.symbol || !token2.selected.symbol){
+      setStatus({ message: "Select both tokens", disabled: true });
+    }else if(token1.value > 0 && token2.value > 0 && token1.selected.symbol && token2.selected.symbol ){
+      setStatus({ message: "Add liquidity", disabled: false });
+    }
+  }
+
   const onToken1InputChange = (tokens) => {
-    setToken1Input(tokens);
+    setToken1Value(tokens);
+
+    verifySwapStatus({value:tokens, selected: selectedToken1}, {value:token2Value, selected: selectedToken2})
   };
 
   const onToken2InputChange = (tokens) => {
-    setToken2Input(tokens);
+    setToken2Value(tokens);
+
+    verifySwapStatus({value:token1Value, selected: selectedToken1}, {value:tokens, selected: selectedToken2})
   };
 
   const onToken1Select = (token) => {
-    console.log(token);
     setToken1(token);
+
+    verifySwapStatus({value:token1Value, selected: token}, {value:token2Value, selected: selectedToken2})
   };
   const onToken2Select = (token) => {
-    console.log(token);
     setToken2(token);
+    verifySwapStatus({value:token1Value, selected: selectedToken1}, {value:token2Value, selected: token})
   };
 
   const handleClearState = () => {
-    setToken1Input("");
-    setToken2Input("");
+    setToken1Value("");
+    setToken2Value("");
     setToken1(currentDefaultToken);
     setToken2({});
   };
@@ -224,14 +246,14 @@ const AddCard = ({ account: { balance, loading }, tokenType, handleBack }) => {
                 onInputChange={onToken1InputChange}
                 onTokenChange={onToken1Select}
                 currentToken={selectedToken1}
-                inputValue={token1Input}
+                inputValue={token1Value}
               />
               <AddIcon fontSize="default" className={classes.settingIcon} />
               <SwapCardItem
                 onInputChange={onToken2InputChange}
                 onTokenChange={onToken2Select}
                 currentToken={selectedToken2}
-                inputValue={token2Input}
+                inputValue={token2Value}
               />
             </div>
 
@@ -284,8 +306,8 @@ const AddCard = ({ account: { balance, loading }, tokenType, handleBack }) => {
               ""
             )}
 
-            <CustomButton variant="light" className={classes.addButton}>
-              Add liquidity
+            <CustomButton variant="light" className={classes.addButton} disabled={addStatus.disabled}>
+              {addStatus.message}
             </CustomButton>
           </div>
         </div>

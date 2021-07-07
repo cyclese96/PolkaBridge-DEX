@@ -101,7 +101,6 @@ const SwapCard = ({ account: { balance, loading }, tokenType }) => {
   };
 
   const onToken2InputChange = (tokens) => {
-    console.log("inpuit", !tokens);
     setToken2Value(tokens);
 
     verifySwapStatus({value:token1Value, selected: selectedToken1}, {value:tokens, selected: selectedToken2})
