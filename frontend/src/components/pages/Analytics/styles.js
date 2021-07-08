@@ -28,17 +28,24 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "start",
     justifyContent: "space-evenly",
-    paddingTop: 10,
-    paddingLeft: 10,
+    paddingTop: 20,
+    paddingLeft: 15,
     paddingRight: 10,
     height: 300,
+  },
+  cardSpan: {
+    color: "rgba(255,255,255,0.4)",
+    fontSize: 14,
   },
   cardP: {
     margin: 0,
     padding: 0,
+    fontSize: 20,
   },
-  cardSpan: {},
-  cardSmall: {},
+  cardSmall: {
+    color: "rgba(255,255,255,0.6)",
+    fontSize: 12,
+  },
   priceStatBar: {
     marginTop: 20,
     width: "100%",

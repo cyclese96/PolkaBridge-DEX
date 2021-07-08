@@ -3,6 +3,8 @@ import useStyles from "./styles";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import TopTokens from "./TopTokens";
+import BarChart from "./BarChart";
+import AreaChart from "./AreaChart";
 
 const Analytics = () => {
   const classes = useStyles();
@@ -15,10 +17,12 @@ const Analytics = () => {
         <div className={classes.card}>
           <div className="card-theme">
             <div className={classes.cardContainer}>
-              <span>Total value locked</span>
+              <span className={classes.cardSpan}>Total value locked</span>
               <p className={classes.cardP}>$1.4B</p>
-              <small>Jul 7 2021</small>
-              <div className={classes.chart}>Chart goes here</div>
+              <small className={classes.cardSmall}>Jul 7 2021</small>
+              <div className={classes.chart}>
+                <AreaChart />
+              </div>
             </div>
           </div>
         </div>
@@ -26,10 +30,12 @@ const Analytics = () => {
         <div className={classes.card}>
           <div className="card-theme">
             <div className={classes.cardContainer}>
-              <span>Volume 24H</span>
+              <span className={classes.cardSpan}>Volume 24H</span>
               <p className={classes.cardP}>$ 992M</p>
-              <small>Jul 7 2021</small>
-              <div className={classes.chart}>Chart goes here</div>
+              <small className={classes.cardSmall}>Jul 7 2021</small>
+              <div className={classes.chart}>
+                <BarChart />
+              </div>
             </div>
           </div>
         </div>
