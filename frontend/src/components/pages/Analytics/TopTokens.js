@@ -21,8 +21,8 @@ import Switch from "@material-ui/core/Switch";
 import DeleteIcon from "@material-ui/icons/Delete";
 import FilterListIcon from "@material-ui/icons/FilterList";
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
+function createData(name, price, price_change, vol_24_h, tvl) {
+  return { name, price, price_change, vol_24_h, tvl };
 }
 
 const rows = [
@@ -80,11 +80,47 @@ const headCells = [
   },
   { id: "tvl", numeric: true, disablePadding: false, label: "TVL" },
 ];
+const headCellMobile = [
+  {
+    id: "name",
+    numeric: false,
+    disablePadding: true,
+    label: "# Name",
+  },
+  // { id: "price", numeric: true, disablePadding: false, label: "Price" },
+  // {
+  //   id: "price_change",
+  //   numeric: true,
+  //   disablePadding: false,
+  //   label: "Price Change",
+  // },
+  {
+    id: "vol_24_h",
+    numeric: true,
+    disablePadding: false,
+    label: "Volume 24 H",
+  },
+  // { id: "tvl", numeric: true, disablePadding: false, label: "TVL" },
+];
 
 const useHeadStyles = makeStyles((theme) => ({
-  tableSortIcon: {
-    root: {
-      color: "#E0077D",
+  headStyle: {
+    color: "rgba(255,255,255,0.5)",
+    margin: 0,
+    padding: 0,
+  },
+  sortIcons: {
+    opacity: 1,
+    color: "rgba(255,255,255,0.5)",
+  },
+  desktop: {
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
+  },
+  mobile: {
+    [theme.breakpoints.up("sm")]: {
+      display: "none",
     },
   },
 }));
@@ -104,6 +140,18 @@ function EnhancedTableHead(props) {
   };
 
   const ownClasses = useHeadStyles();
+  console.log(window.innerWidth);
+
+  const currHeaderCells =
+    window.innerWidth <= 768
+      ? headCells.filter((item) => {
+          if (item.id === "name" || item.id === "vol_24_h") {
+            return true;
+          } else {
+            return false;
+          }
+        })
+      : headCells;
   return (
     <TableHead>
       <TableRow>
@@ -116,21 +164,26 @@ function EnhancedTableHead(props) {
           /> */}
           {/* <span>#Name</span> */}
         </TableCell>
-        {headCells.map((headCell) => (
+        {currHeaderCells.map((headCell) => (
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            style={{ color: "#E0077D" }}
+            // style={{ color: "#E0077D" }}s
           >
             <TableSortLabel
-              active={orderBy === headCell.id}
+              // active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
-              className={ownClasses.tableSortIcon}
+              classes={{
+                icon:
+                  orderBy !== headCell.id
+                    ? ownClasses.sortIcons
+                    : ownClasses.sortIcons,
+              }}
             >
-              <p style={{ margin: 0, padding: 0 }}>{headCell.label}</p>
+              <p className={ownClasses.headStyle}>{headCell.label}</p>
               {orderBy === headCell.id ? (
                 <span className={classes.visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
@@ -228,6 +281,9 @@ EnhancedTableToolbar.propTypes = {
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
+    [theme.breakpoints.down("sm")]: {
+      width: 370,
+    },
   },
   paper: {
     width: "100%",
@@ -235,6 +291,9 @@ const useStyles = makeStyles((theme) => ({
   },
   table: {
     minWidth: 750,
+    [theme.breakpoints.down("sm")]: {
+      minWidth: 370,
+    },
   },
   visuallyHidden: {
     border: 0,
@@ -355,26 +414,47 @@ const TopTokens = () => {
                           inputProps={{ "aria-labelledby": labelId }}
                         /> */}
                       </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                      >
-                        <span className={classes.cellText}>{row.name}</span>
-                      </TableCell>
-                      <TableCell align="right">
-                        <span className={classes.cellText}>{row.name}</span>
-                      </TableCell>
-                      <TableCell align="right" className={classes.cellText}>
-                        {row.fat}
-                      </TableCell>
-                      <TableCell align="right" className={classes.cellText}>
-                        {row.carbs}
-                      </TableCell>
-                      <TableCell align="right" className={classes.cellText}>
-                        {row.protein}
-                      </TableCell>
+                      {window.innerWidth <= 768 ? (
+                        <>
+                          <TableCell
+                            component="th"
+                            id={labelId}
+                            scope="row"
+                            padding="none"
+                          >
+                            <span className={classes.cellText}>{row.name}</span>
+                          </TableCell>
+
+                          <TableCell align="right" className={classes.cellText}>
+                            {row.vol_24_h}
+                          </TableCell>
+                        </>
+                      ) : (
+                        <>
+                          <TableCell
+                            component="th"
+                            id={labelId}
+                            scope="row"
+                            padding="none"
+                          >
+                            <span className={classes.cellText}>{row.name}</span>
+                          </TableCell>
+                          <TableCell align="right">
+                            <span className={classes.cellText}>
+                              {row.price}
+                            </span>
+                          </TableCell>
+                          <TableCell align="right" className={classes.cellText}>
+                            {row.price_change}
+                          </TableCell>
+                          <TableCell align="right" className={classes.cellText}>
+                            {row.vol_24_h}
+                          </TableCell>
+                          <TableCell align="right" className={classes.cellText}>
+                            {row.tvl}
+                          </TableCell>
+                        </>
+                      )}
                     </TableRow>
                   );
                 })}

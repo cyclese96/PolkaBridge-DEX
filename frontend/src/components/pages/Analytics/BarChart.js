@@ -38,7 +38,12 @@ const state = {
 };
 
 const BarChart = () => (
-  <Chart options={state.options} series={state.series} type="bar" width="400" />
+  <Chart
+    options={state.options}
+    series={state.series}
+    type="bar"
+    width="120%"
+  />
 );
 
 export default BarChart;

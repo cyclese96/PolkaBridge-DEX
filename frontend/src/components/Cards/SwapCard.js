@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 0,
       paddingRight: 0,
-      width: 300,
+      width: "100%",
     },
   },
   cardContents: {
@@ -79,43 +79,59 @@ const SwapCard = ({ account: { balance, loading }, tokenType }) => {
     disabled: true,
   });
 
-
-
-  const verifySwapStatus = (token1 , token2) => {
-    if ( token1.selected.symbol === token2.selected.symbol){
+  const verifySwapStatus = (token1, token2) => {
+    if (token1.selected.symbol === token2.selected.symbol) {
       setStatus({ message: "Invalid pair", disabled: true });
-    }else if((  !token1.value  && token1.selected.symbol) || (!token2.value && token2.selected.symbol)) {
+    } else if (
+      (!token1.value && token1.selected.symbol) ||
+      (!token2.value && token2.selected.symbol)
+    ) {
       setStatus({ message: "Enter amounts", disabled: true });
-    }else if(!token1.selected.symbol || !token2.selected.symbol){
+    } else if (!token1.selected.symbol || !token2.selected.symbol) {
       setStatus({ message: "Select both tokens", disabled: true });
-    }else if(token1.value > 0 && token2.value > 0 && token1.selected.symbol && token2.selected.symbol ){
+    } else if (
+      token1.value > 0 &&
+      token2.value > 0 &&
+      token1.selected.symbol &&
+      token2.selected.symbol
+    ) {
       setStatus({ message: "Swap Tokens", disabled: false });
     }
-  }
-
+  };
 
   const onToken1InputChange = (tokens) => {
     setToken1Value(tokens);
 
-    verifySwapStatus({value:tokens, selected: selectedToken1}, {value:token2Value, selected: selectedToken2})
+    verifySwapStatus(
+      { value: tokens, selected: selectedToken1 },
+      { value: token2Value, selected: selectedToken2 }
+    );
   };
 
   const onToken2InputChange = (tokens) => {
     setToken2Value(tokens);
 
-    verifySwapStatus({value:token1Value, selected: selectedToken1}, {value:tokens, selected: selectedToken2})
-
+    verifySwapStatus(
+      { value: token1Value, selected: selectedToken1 },
+      { value: tokens, selected: selectedToken2 }
+    );
   };
 
   const onToken1Select = (token) => {
     setToken1(token);
-    verifySwapStatus({value:token1Value, selected: token}, {value:token2Value, selected: selectedToken2})
+    verifySwapStatus(
+      { value: token1Value, selected: token },
+      { value: token2Value, selected: selectedToken2 }
+    );
   };
 
   const onToken2Select = (token) => {
     setToken2(token);
 
-    verifySwapStatus({value:token1Value, selected: selectedToken1}, {value:token2Value, selected: token})
+    verifySwapStatus(
+      { value: token1Value, selected: selectedToken1 },
+      { value: token2Value, selected: token }
+    );
   };
 
   const handleSettings = () => {

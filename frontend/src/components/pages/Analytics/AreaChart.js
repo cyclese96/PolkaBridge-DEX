@@ -40,7 +40,7 @@ const state = {
           borderColor: "#999",
           label: {
             show: true,
-            text: "Support",
+            // text: "Support",
             style: {
               color: "#fff",
               background: "#00E396",
@@ -55,7 +55,7 @@ const state = {
           yAxisIndex: 0,
           label: {
             show: true,
-            text: "Rally",
+            // text: "Rally",
             style: {
               color: "#fff",
               background: "#775DD0",
@@ -138,7 +138,8 @@ const AreaChart = () => (
     options={state.options}
     series={state.series}
     type="area"
-    width="400"
+    // width="350"
+    width="120%"
   />
 );
 

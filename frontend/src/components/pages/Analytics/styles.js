@@ -6,13 +6,14 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    justifyContent: "center",
   },
   card: {
-    width: 420,
+    width: 450,
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 0,
       paddingRight: 0,
-      width: 300,
+      width: 370,
     },
     // margin: 15,
   },
@@ -20,18 +21,33 @@ const useStyles = makeStyles((theme) => ({
   cardsContainer: {
     width: "100%",
     display: "flex",
+    alignItems: "center",
     justifyContent: "space-between",
+    flexWrap: "wrap",
     padding: 20,
+    [theme.breakpoints.down("sm")]: {
+      padding: 0,
+    },
   },
   cardContainer: {
     display: "flex",
     flexDirection: "column",
+    // width: "100%",
     alignItems: "start",
     justifyContent: "space-evenly",
     paddingTop: 20,
     paddingLeft: 15,
     paddingRight: 10,
     height: 300,
+    [theme.breakpoints.down("sm")]: {
+      marginTop: 15,
+    },
+  },
+  chart: {
+    width: 340,
+    [theme.breakpoints.down("sm")]: {
+      width: 300,
+    },
   },
   cardSpan: {
     color: "rgba(255,255,255,0.4)",
@@ -50,6 +66,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 20,
     width: "100%",
     height: 45,
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
   },
   priceStatContainer: {
     display: "flex",

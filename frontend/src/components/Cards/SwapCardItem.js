@@ -81,6 +81,8 @@ const useStyles = makeStyles((theme) => ({
   maxButton: {
     color: "#E0077D",
     cursor: "pointer",
+    marginLeft: 2,
+    marginRight: 4,
   },
 }));
 
@@ -97,7 +99,7 @@ const SwapCardItem = ({
 
   const handleInputChange = (event) => {
     // setInput(event.target.value);
-    onInputChange( event.target.value ?  parseFloat(event.target.value) : '' );
+    onInputChange(event.target.value ? parseFloat(event.target.value) : "");
   };
 
   const handleMax = () => {

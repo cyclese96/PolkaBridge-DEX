@@ -12,26 +12,17 @@ import AddIcon from "@material-ui/icons/Add";
 const useStyles = makeStyles((theme) => ({
   card: {
     width: 450,
-    // height: 300,
-    // paddingLeft: 10,
-    // paddingRight: 10,
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 0,
       paddingRight: 0,
-      width: 300,
-      //   height: 280,
+      width: "100%",
     },
   },
   cardContents: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    // padding: 15,
-    width: "100%",
-    // height: "100%",
-    // paddingTop: 3,
-    // paddingLeft:20,
-    // paddingRight:20
+    padding: 15,
   },
   avatar: {
     zIndex: 2,
@@ -74,7 +65,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     marginTop: 2,
     marginBottom: 15,
-    // border: "1px solid white",
   },
   selectToken: {
     width: 150,
@@ -84,23 +74,27 @@ const useStyles = makeStyles((theme) => ({
   },
   selectPoolContainer: {
     display: "flex",
-    width: "95%",
+    width: "100%",
     alignItems: "center",
     justifyContent: "space-between",
-    marginTop: 2,
+    marginTop: 10,
     marginBottom: 10,
   },
   feeSelectContainer: {
     width: 140,
-    // height: 20,
     padding: 6,
     marginLeft: 5,
     marginRight: 5,
     border: "0.5px solid rgba(255, 255, 255, 0.1)",
     borderRadius: 10,
-    // cursor: "pointer",
     "&:hover": {
       background: "rgba(255, 255, 255, 0.1)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      width: 100,
+      padding: 2,
+      marginLeft: 2,
+      marginRight: 2,
     },
   },
   feeSelectHeading: {
@@ -122,20 +116,11 @@ const useStyles = makeStyles((theme) => ({
   feeSelectHeadingSpan: {
     fontSize: 12,
   },
-  depositCardsContainer: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    width: "85%",
-    justifyContent: "space-between",
-    marginTop: 2,
-    marginBottom: 15,
-  },
   addButton: {
     height: 45,
-    width: "80%",
-    marginTop: 10,
-    marginBottom: 10,
+    width: "90%",
+    marginTop: 30,
+    marginBottom: 5,
   },
   clearButton: {
     color: "#E0077D",
@@ -173,38 +158,58 @@ const AddCard = ({ account: { balance, loading }, tokenType, handleBack }) => {
     setOpen(false);
   };
 
-  const verifySwapStatus = (token1 , token2) => {
-    if ( token1.selected.symbol === token2.selected.symbol){
+  const verifySwapStatus = (token1, token2) => {
+    if (token1.selected.symbol === token2.selected.symbol) {
       setStatus({ message: "Invalid pair", disabled: true });
-    }else if((  !token1.value  && token1.selected.symbol) || (!token2.value && token2.selected.symbol)) {
+    } else if (
+      (!token1.value && token1.selected.symbol) ||
+      (!token2.value && token2.selected.symbol)
+    ) {
       setStatus({ message: "Enter amounts", disabled: true });
-    }else if(!token1.selected.symbol || !token2.selected.symbol){
+    } else if (!token1.selected.symbol || !token2.selected.symbol) {
       setStatus({ message: "Select both tokens", disabled: true });
-    }else if(token1.value > 0 && token2.value > 0 && token1.selected.symbol && token2.selected.symbol ){
+    } else if (
+      token1.value > 0 &&
+      token2.value > 0 &&
+      token1.selected.symbol &&
+      token2.selected.symbol
+    ) {
       setStatus({ message: "Add liquidity", disabled: false });
     }
-  }
+  };
 
   const onToken1InputChange = (tokens) => {
     setToken1Value(tokens);
 
-    verifySwapStatus({value:tokens, selected: selectedToken1}, {value:token2Value, selected: selectedToken2})
+    verifySwapStatus(
+      { value: tokens, selected: selectedToken1 },
+      { value: token2Value, selected: selectedToken2 }
+    );
   };
 
   const onToken2InputChange = (tokens) => {
     setToken2Value(tokens);
 
-    verifySwapStatus({value:token1Value, selected: selectedToken1}, {value:tokens, selected: selectedToken2})
+    verifySwapStatus(
+      { value: token1Value, selected: selectedToken1 },
+      { value: tokens, selected: selectedToken2 }
+    );
   };
 
   const onToken1Select = (token) => {
     setToken1(token);
 
-    verifySwapStatus({value:token1Value, selected: token}, {value:token2Value, selected: selectedToken2})
+    verifySwapStatus(
+      { value: token1Value, selected: token },
+      { value: token2Value, selected: selectedToken2 }
+    );
   };
   const onToken2Select = (token) => {
     setToken2(token);
-    verifySwapStatus({value:token1Value, selected: selectedToken1}, {value:token2Value, selected: token})
+    verifySwapStatus(
+      { value: token1Value, selected: selectedToken1 },
+      { value: token2Value, selected: token }
+    );
   };
 
   const handleClearState = () => {
@@ -235,33 +240,37 @@ const AddCard = ({ account: { balance, loading }, tokenType, handleBack }) => {
             </div>
 
             <div className={classes.cardHeading}>
-              <span>Select pair</span>
+              <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
+                Select pair
+              </span>
               <a className={classes.clearButton} onClick={handleClearState}>
                 Clear all
               </a>
             </div>
 
-            <div className={classes.depositCardsContainer}>
-              <SwapCardItem
-                onInputChange={onToken1InputChange}
-                onTokenChange={onToken1Select}
-                currentToken={selectedToken1}
-                inputValue={token1Value}
-              />
-              <AddIcon fontSize="default" className={classes.settingIcon} />
-              <SwapCardItem
-                onInputChange={onToken2InputChange}
-                onTokenChange={onToken2Select}
-                currentToken={selectedToken2}
-                inputValue={token2Value}
-              />
-            </div>
+            <SwapCardItem
+              onInputChange={onToken1InputChange}
+              onTokenChange={onToken1Select}
+              currentToken={selectedToken1}
+              inputValue={token1Value}
+            />
+            <AddIcon fontSize="default" className={classes.settingIcon} />
+            <SwapCardItem
+              onInputChange={onToken2InputChange}
+              onTokenChange={onToken2Select}
+              currentToken={selectedToken2}
+              inputValue={token2Value}
+            />
 
             {selectedToken1.symbol && selectedToken2.symbol ? (
               <>
                 <div className={classes.cardSubHeading}>
                   <span
-                    style={{ fontSize: 12, color: "rgba(255, 255, 255, 0.7)" }}
+                    style={{
+                      fontSize: 12,
+                      color: "rgba(255, 255, 255, 0.7)",
+                      marginTop: 20,
+                    }}
                   >
                     Prices and Pool share
                   </span>
@@ -306,7 +315,11 @@ const AddCard = ({ account: { balance, loading }, tokenType, handleBack }) => {
               ""
             )}
 
-            <CustomButton variant="light" className={classes.addButton} disabled={addStatus.disabled}>
+            <CustomButton
+              variant="light"
+              className={classes.addButton}
+              disabled={addStatus.disabled}
+            >
               {addStatus.message}
             </CustomButton>
           </div>

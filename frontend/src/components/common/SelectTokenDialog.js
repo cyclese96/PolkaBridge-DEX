@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     height: 600,
     [theme.breakpoints.down("sm")]: {
       width: 320,
-      height: 350,
+      height: 500,
     },
   },
   heading: {
@@ -87,6 +87,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 18,
     width: "80%",
     color: "white",
+    [theme.breakpoints.down("sm")]: {
+      height: 100,
+    },
   },
   buttons: {
     // marginTop: 80,
