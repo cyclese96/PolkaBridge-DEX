@@ -104,7 +104,7 @@ const SwapCardItem = ({
 
   const handleMax = () => {
     // setInput(balance ? balance : "0.6843");
-    onInputChange(balance ? balance : "0.6843");
+    onInputChange(balance ? balance[currentToken.symbol] : "0");
   };
 
   return (

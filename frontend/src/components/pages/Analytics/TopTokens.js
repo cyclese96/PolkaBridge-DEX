@@ -30,6 +30,11 @@ const rows = [
   createData("USD Coin", 1.0, 0.0, 529.2, 536.11),
   createData("Tetcher USD", 1.0, -0.03, 162.22, 177.01),
   createData("Dai Stablecoin", 1.0, 0.0, 92.56, 131.58),
+  createData("Dai Stablecoin", 1.0, 0.0, 92.56, 131.58),
+  createData("Dai Stablecoin", 1.0, 0.0, 92.56, 131.58),
+  createData("Dai Stablecoin", 1.0, 0.0, 92.56, 131.58),
+  createData("Dai Stablecoin", 1.0, 0.0, 92.56, 131.58),
+  createData("Dai Stablecoin", 1.0, 0.0, 92.56, 131.58),
 ];
 
 function descendingComparator(a, b, orderBy) {

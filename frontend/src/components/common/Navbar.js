@@ -22,8 +22,8 @@ import CustomSnackBar from "./CustomSnackbar";
 import { EqualizerOutlined } from "@material-ui/icons";
 import Wallet from "./Wallet";
 import AccountDialog from "./AccountDialog";
-import etherIcon from '../../assets/ether.png'
-import binanceIcon from '../../assets/binance.png'
+import etherIcon from "../../assets/ether.png";
+import binanceIcon from "../../assets/binance.png";
 import { etheriumNetwork } from "../../constants";
 
 const useStyles = makeStyles((theme) => ({
@@ -159,9 +159,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   network: {
-    display: 'flex',
+    display: "flex",
     marginRight: 30,
-    alignItems: 'center',
+    alignItems: "center",
     border: "0.5px solid white",
     borderRadius: 15,
     padding: 4,
@@ -174,13 +174,11 @@ const useStyles = makeStyles((theme) => ({
   },
   networkIcon: {
     width: 30,
-    height: 'auto'
-  }
+    height: "auto",
+  },
 }));
 
-const Navbar = ({
-  account: {currentNetwork },
-}) => {
+const Navbar = ({ currentNetwork }) => {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
@@ -238,14 +236,20 @@ const Navbar = ({
       <List>
         <ListItem button style={{ marginTop: 15 }}>
           <div className={classes.network}>
-            <img className={classes.networkIcon} src={currentNetwork === etheriumNetwork ? etherIcon : binanceIcon} alt={currentNetwork} />
-            <span style={{ color: 'white', marginLeft: 5 }}>{currentNetwork === etheriumNetwork ? "Etherium" : "Binance Smart Chain"}</span>
+            <img
+              className={classes.networkIcon}
+              src={currentNetwork === etheriumNetwork ? etherIcon : binanceIcon}
+              alt={currentNetwork}
+            />
+            <span style={{ color: "white", marginLeft: 5 }}>
+              {currentNetwork === etheriumNetwork
+                ? "Etherium"
+                : "Binance Smart Chain"}
+            </span>
           </div>
         </ListItem>
         <ListItem button style={{ marginTop: 15 }}>
-          <Wallet
-            onWalletClick={() => setAccountDialog(true)}
-          />
+          <Wallet onWalletClick={() => setAccountDialog(true)} />
         </ListItem>
       </List>
     </div>
@@ -308,17 +312,26 @@ const Navbar = ({
           <a href="#" className={classes.navbarItemsDesktop}>
             Prediction
           </a>
-          <a href="https://corgib.polkabridge.org/bet" className={classes.navbarItemsDesktop}>
+          <a
+            href="https://corgib.polkabridge.org/bet"
+            className={classes.navbarItemsDesktop}
+          >
             Betting
           </a>
           <div className={classes.grow} />
           <div className={classes.network}>
-            <img className={classes.networkIcon} src={currentNetwork === etheriumNetwork ? etherIcon : binanceIcon} alt={currentNetwork} />
-            <span style={{ color: 'white', marginLeft: 5 }}>{currentNetwork === etheriumNetwork ? "Etherium" : "Binance Smart Chain"}</span>
+            <img
+              className={classes.networkIcon}
+              src={currentNetwork === etheriumNetwork ? etherIcon : binanceIcon}
+              alt={currentNetwork}
+            />
+            <span style={{ color: "white", marginLeft: 5 }}>
+              {currentNetwork === etheriumNetwork
+                ? "Etherium"
+                : "Binance Smart Chain"}
+            </span>
           </div>
-          <Wallet
-            onWalletClick={() => setAccountDialog(true)}
-          />
+          <Wallet onWalletClick={() => setAccountDialog(true)} />
         </Toolbar>
 
         <Toolbar className={classes.sectionMobile}>

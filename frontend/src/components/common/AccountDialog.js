@@ -6,14 +6,12 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import CustomButton from "../Buttons/CustomButton";
-import {
-  ContactMailOutlined,
-} from "@material-ui/icons";
-import VisibilityIcon from '@material-ui/icons/Visibility';
+import { ContactMailOutlined } from "@material-ui/icons";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 import { etheriumNetwork } from "../../constants";
 import { formatCurrency, fromWei } from "../../utils/helper";
 import { connect } from "react-redux";
-import { logout} from '../../actions/accountActions';
+import { logout } from "../../actions/accountActions";
 
 const styles = (theme) => ({
   root: {
@@ -113,7 +111,6 @@ const AccountDialog = ({
   logout,
   account: { currentAccount, balance, connected, currentNetwork },
 }) => {
-
   const classes = useStyles();
   const onSingOut = () => {
     localStorage.setItem(`logout${currentAccount}`, currentAccount);
@@ -123,11 +120,15 @@ const AccountDialog = ({
 
   const getCoins = () => {
     if (currentNetwork === etheriumNetwork) {
-      return [{ coin: 'ETH', balance: formatCurrency(fromWei(balance))}]
+      return [
+        { coin: "ETH", balance: formatCurrency(fromWei(balance["ETH"])) },
+      ];
     } else {
-      return [{ coin: 'BNB', balance: formatCurrency(fromWei(balance))  }]
+      return [
+        { coin: "BNB", balance: formatCurrency(fromWei(balance["BNB"])) },
+      ];
     }
-  }
+  };
   return (
     <div>
       <Dialog
@@ -145,7 +146,7 @@ const AccountDialog = ({
             <span className={classes.heading}>My Wallet</span>
           </DialogTitle>
           <div className={classes.balanceCard}>
-            {getCoins().map(item => (
+            {getCoins().map((item) => (
               <div
                 style={{
                   display: "flex",
@@ -154,10 +155,7 @@ const AccountDialog = ({
                 }}
               >
                 <>
-                  <VisibilityIcon
-                    fontSize="small"
-                    className={classes.icon}
-                  />
+                  <VisibilityIcon fontSize="small" className={classes.icon} />
                   <span className={classes.icon}>{item.coin}</span>
                   <p className={classes.numbers}>{item.balance}</p>
                 </>
@@ -188,10 +186,10 @@ const AccountDialog = ({
       </Dialog>
     </div>
   );
-}
+};
 
 const mapStateToProps = (state) => ({
-  account: state.account
-})
+  account: state.account,
+});
 
-export default connect(mapStateToProps, {logout})(AccountDialog);
+export default connect(mapStateToProps, { logout })(AccountDialog);

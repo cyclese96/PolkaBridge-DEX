@@ -29,10 +29,8 @@ import {
   getCurrentNetworkId,
   getCurrentAccount,
 } from "../utils/helper";
-import web3 from "../web";
 import { CHANGE_NETWORK } from "../actions/types";
 import TabPage from "./TabPage";
-// import web3 from 'web3'
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -147,12 +145,13 @@ const Home = ({
     let network = "";
     const account = await getCurrentAccount();
 
-    // alert(account)
     if (isMetaMaskInstalled()) {
       const networkId = await getCurrentNetworkId();
 
       if (!supportedNetworks.includes(networkId.toString())) {
-        // alert('This network is not supported yet! Please switch to Ethereum or Smart Chain network')
+        // alert(
+        //   "This network is not supported yet! Please switch to Ethereum or Smart Chain network"
+        // );
       }
       network = getCurrentNetwork(networkId.toString());
       // alert(`current network set to  ${network}` )
@@ -177,12 +176,12 @@ const Home = ({
     <div>
       <section className="appbar-section">
         <Navbar
-          handleConnectWallet={handleConnectWallet}
-          handleSignOut={signOut}
-          account={currentAccount}
-          connected={connected}
+          // handleConnectWallet={handleConnectWallet}
+          // handleSignOut={signOut}
+          // account={currentAccount}
+          // connected={connected}
           currentNetwork={currentNetwork}
-          balance={balance}
+          // balance={balance}
         />
       </section>
 
