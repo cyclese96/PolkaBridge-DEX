@@ -176,6 +176,9 @@ const useStyles = makeStyles((theme) => ({
     width: 30,
     height: "auto",
   },
+  menuIcon: {
+    color: "rgba(255, 255, 255, 0.5)",
+  },
 }));
 
 const Navbar = ({ currentNetwork }) => {
@@ -247,9 +250,6 @@ const Navbar = ({ currentNetwork }) => {
                 : "Binance Smart Chain"}
             </span>
           </div>
-        </ListItem>
-        <ListItem button style={{ marginTop: 15 }}>
-          <Wallet onWalletClick={() => setAccountDialog(true)} />
         </ListItem>
       </List>
     </div>
@@ -345,6 +345,7 @@ const Navbar = ({ currentNetwork }) => {
             />
 
             <div className={classes.grow} />
+            <Wallet onWalletClick={() => setAccountDialog(true)} />
             <div>
               {["right"].map((anchor) => (
                 <React.Fragment key={anchor}>
@@ -354,7 +355,7 @@ const Navbar = ({ currentNetwork }) => {
                     className={classes.menuIcon}
                     onClick={toggleDrawer(anchor, true)}
                   >
-                    <MenuIcon />
+                    <MenuIcon className={classes.menuIcon} />
                   </IconButton>
 
                   <SwipeableDrawer

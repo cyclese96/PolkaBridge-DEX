@@ -1,29 +1,36 @@
 import React, { useEffect, useState } from "react";
 import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
+import { makeStyles, Slide } from "@material-ui/core";
 
 const Alert = (props) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 };
 
-const CustomSnackBar = ({ status, message, handleClose }) => {
-  const [alert, setAlert] = React.useState({
-    status: status,
-    message: message,
-  });
+const useStyles = makeStyles((theme) => ({
+  root: {
+    marginTop: 50,
+  },
+}));
+
+const CustomSnackBar = ({ status, message, error = false, handleClose }) => {
+  const classes = useStyles();
   const vertical = "top";
   const horizontal = "right";
 
+  const options = 4000;
+
   return (
     <Snackbar
-      autoHideDuration={4000}
+      autoHideDuration={1000}
       anchorOrigin={{ vertical, horizontal }}
-      open={alert.status}
+      open={status}
       onClose={handleClose}
-      message={alert.message}
+      message={message}
       key={vertical + horizontal}
+      className={classes.root}
     >
-      <Alert severity="error">{alert.message}</Alert>
+      <Alert severity={error ? "error" : "success"}>{message}</Alert>
     </Snackbar>
   );
 };

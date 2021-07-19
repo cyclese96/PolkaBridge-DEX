@@ -1,10 +1,9 @@
 import React from "react";
 import useStyles from "./styles";
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
-import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import TopTokens from "./TopTokens";
 import BarChart from "./BarChart";
 import AreaChart from "./AreaChart";
+import PercentLabel from "../../common/PercentLabel";
 
 const Analytics = () => {
   const classes = useStyles();
@@ -47,43 +46,22 @@ const Analytics = () => {
             <div className={classes.statsGroup}>
               <span className={classes.statLabel}>Volume 24H:</span>
               <span className={classes.statAmount}>$992.04M</span>
-              <div className={classes.statPercentageGreen}>
-                {"("}
-                <ArrowUpwardIcon
-                  fontSize="small"
-                  className={classes.arrowIcon}
-                />
-                <span>8%</span>
-                {")"}
-              </div>
+
+              <PercentLabel percentValue={5} braces={true} />
+            </div>
+
+            <div className={classes.statsGroup}>
+              <span className={classes.statLabel}>Fees 24H:</span>
+              <span className={classes.statAmount}>$1.24M</span>
+
+              <PercentLabel percentValue={8} braces={true} />
             </div>
 
             <div className={classes.statsGroup}>
               <span className={classes.statLabel}>Volume 24H:</span>
-              <span className={classes.statAmount}>$992.04M</span>
-              <div className={classes.statPercentageGreen}>
-                {"("}
-                <ArrowUpwardIcon
-                  fontSize="small"
-                  className={classes.arrowIcon}
-                />
-                <span>8%</span>
-                {")"}
-              </div>
-            </div>
+              <span className={classes.statAmount}>$1.6B</span>
 
-            <div className={classes.statsGroup}>
-              <span className={classes.statLabel}>Volume 24H:</span>
-              <span className={classes.statAmount}>$992.04M</span>
-              <div className={classes.statPercentageRed}>
-                {"("}
-                <ArrowDownwardIcon
-                  fontSize="small"
-                  className={classes.arrowIcon}
-                />
-                <span>8%</span>
-                {")"}
-              </div>
+              <PercentLabel percentValue={-8} braces={true} />
             </div>
           </div>
         </div>

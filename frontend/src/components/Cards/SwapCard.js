@@ -1,3 +1,4 @@
+import React from "react";
 import { makeStyles } from "@material-ui/core";
 import supply from "../../assets/supply.png";
 import biteImg from "../../assets/bite.png";
@@ -12,6 +13,7 @@ import SwapSettings from "../common/SwapSettings";
 import etherImg from "../../assets/ether.png";
 import CustomButton from "../Buttons/CustomButton";
 import BigNumber from "bignumber.js";
+import CustomSnackBar from "../common/CustomSnackbar";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -73,6 +75,11 @@ const SwapCard = ({ account: { balance, loading }, tokenType }) => {
   const [selectedToken2, setToken2] = useState({});
   const [token1Value, setToken1Value] = useState("");
   const [token2Value, setToken2Value] = useState("");
+
+  const [snackAlert, setAlert] = React.useState({
+    status: false,
+    message: "",
+  });
 
   const [swapStatus, setStatus] = useState({
     message: "Please select tokens",
@@ -143,11 +150,21 @@ const SwapCard = ({ account: { balance, loading }, tokenType }) => {
   };
 
   const handleSwapToken = () => {
+    setAlert({ status: true, message: "Transaction submitted " });
     //todo perform swap action on given input
+  };
+
+  const hideSnackbar = () => {
+    setAlert({ status: false });
   };
 
   return (
     <>
+      <CustomSnackBar
+        status={snackAlert.status}
+        message={snackAlert.message}
+        handleClose={hideSnackbar}
+      />
       <SwapSettings open={settingOpen} handleClose={close} />
       <div className={classes.card}>
         <div className="card-theme">

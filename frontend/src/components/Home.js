@@ -175,14 +175,7 @@ const Home = ({
   return (
     <div>
       <section className="appbar-section">
-        <Navbar
-          // handleConnectWallet={handleConnectWallet}
-          // handleSignOut={signOut}
-          // account={currentAccount}
-          // connected={connected}
-          currentNetwork={currentNetwork}
-          // balance={balance}
-        />
+        <Navbar currentNetwork={currentNetwork} />
       </section>
 
       <div className={classes.background}>
@@ -209,3 +202,4 @@ export default connect(mapStateToProps, {
   connectWallet,
   logout,
 })(Home);
+// balance={balance}

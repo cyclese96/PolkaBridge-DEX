@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import clsx from "clsx";
-import { lighten, makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -10,31 +9,21 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
-import Checkbox from "@material-ui/core/Checkbox";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
-import DeleteIcon from "@material-ui/icons/Delete";
-import FilterListIcon from "@material-ui/icons/FilterList";
 
-function createData(name, price, price_change, vol_24_h, tvl) {
-  return { name, price, price_change, vol_24_h, tvl };
+import PercentLabel from "../../common/PercentLabel";
+import { formatCurrency } from "../../../utils/helper";
+
+function createData(id, name, price, price_change, vol_24_h, tvl) {
+  return { id, name, price, price_change, vol_24_h, tvl };
 }
 
 const rows = [
-  createData("Ether", 2330, 2.74, 882.93, 573.84), // dataset contains coinName, currPrice, priceChange, Vol24H, TVL
-  createData("USD Coin", 1.0, 0.0, 529.2, 536.11),
-  createData("Tetcher USD", 1.0, -0.03, 162.22, 177.01),
-  createData("Dai Stablecoin", 1.0, 0.0, 92.56, 131.58),
-  createData("Dai Stablecoin", 1.0, 0.0, 92.56, 131.58),
-  createData("Dai Stablecoin", 1.0, 0.0, 92.56, 131.58),
-  createData("Dai Stablecoin", 1.0, 0.0, 92.56, 131.58),
-  createData("Dai Stablecoin", 1.0, 0.0, 92.56, 131.58),
-  createData("Dai Stablecoin", 1.0, 0.0, 92.56, 131.58),
+  createData(1, "Ether", 2330, 2.74, 882.93, 573.84), // dataset contains coinName, currPrice, priceChange, Vol24H, TVL
+  createData(2, "USD Coin", 1.0, 0.0, 529.2, 536.11),
+  createData(3, "Tetcher USD", 1.0, -0.03, 162.22, 177.01),
+  createData(4, "Polkabridge", 1.0, 0.0, 92.56, 131.58),
+  createData(5, "Polkawar", 1.0, 0.0, 92.56, 131.58),
+  createData(6, "Corgib", 1.0, 0.0, 92.56, 131.58),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -92,20 +81,12 @@ const headCellMobile = [
     disablePadding: true,
     label: "# Name",
   },
-  // { id: "price", numeric: true, disablePadding: false, label: "Price" },
-  // {
-  //   id: "price_change",
-  //   numeric: true,
-  //   disablePadding: false,
-  //   label: "Price Change",
-  // },
   {
     id: "vol_24_h",
     numeric: true,
     disablePadding: false,
     label: "Volume 24 H",
   },
-  // { id: "tvl", numeric: true, disablePadding: false, label: "TVL" },
 ];
 
 const useHeadStyles = makeStyles((theme) => ({
@@ -147,29 +128,43 @@ function EnhancedTableHead(props) {
   const ownClasses = useHeadStyles();
   console.log(window.innerWidth);
 
-  const currHeaderCells =
-    window.innerWidth <= 768
-      ? headCells.filter((item) => {
-          if (item.id === "name" || item.id === "vol_24_h") {
-            return true;
-          } else {
-            return false;
-          }
-        })
-      : headCells;
   return (
     <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox">
-          {/* <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ "aria-label": "select all desserts" }}
-          /> */}
-          {/* <span>#Name</span> */}
-        </TableCell>
-        {currHeaderCells.map((headCell) => (
+      <TableRow className={ownClasses.mobile}>
+        <TableCell padding="checkbox"></TableCell>
+        {headCellMobile.map((headCell) => (
+          <TableCell
+            key={headCell.id}
+            align={headCell.numeric ? "right" : "left"}
+            padding={headCell.disablePadding ? "none" : "normal"}
+            sortDirection={orderBy === headCell.id ? order : false}
+            // style={{ color: "#E0077D" }}s
+          >
+            <TableSortLabel
+              // active={orderBy === headCell.id}
+              direction={orderBy === headCell.id ? order : "asc"}
+              onClick={createSortHandler(headCell.id)}
+              classes={{
+                icon:
+                  orderBy !== headCell.id
+                    ? ownClasses.sortIcons
+                    : ownClasses.sortIcons,
+              }}
+            >
+              <p className={ownClasses.headStyle}>{headCell.label}</p>
+              {orderBy === headCell.id ? (
+                <span className={classes.visuallyHidden}>
+                  {order === "desc" ? "sorted descending" : "sorted ascending"}
+                </span>
+              ) : null}
+            </TableSortLabel>
+          </TableCell>
+        ))}
+      </TableRow>
+
+      <TableRow className={ownClasses.desktop}>
+        <TableCell padding="checkbox"></TableCell>
+        {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
@@ -212,77 +207,6 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
-const useToolbarStyles = makeStyles((theme) => ({
-  root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-  },
-  highlight:
-    theme.palette.type === "light"
-      ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
-      : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
-  title: {
-    flex: "1 1 100%",
-  },
-}));
-
-const EnhancedTableToolbar = (props) => {
-  const classes = useToolbarStyles();
-  const { numSelected } = props;
-
-  return (
-    <Toolbar
-      className={clsx(classes.root, {
-        [classes.highlight]: numSelected > 0,
-      })}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          className={classes.title}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          className={classes.title}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          Nutrition
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete">
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
-    </Toolbar>
-  );
-};
-
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
-
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -317,6 +241,16 @@ const useStyles = makeStyles((theme) => ({
   cellText: {
     color: "white",
   },
+  tableDesktop: {
+    [theme.breakpoints.down("sm")]: {
+      display: "none",
+    },
+  },
+  tableMobile: {
+    [theme.breakpoints.up("sm")]: {
+      display: "none",
+    },
+  },
 }));
 
 const TopTokens = () => {
@@ -328,6 +262,7 @@ const TopTokens = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const handleRequestSort = (event, property) => {
+    console.log("sort ", property);
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
@@ -343,23 +278,24 @@ const TopTokens = () => {
   };
 
   const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
+    console.log("ordering...");
+    // const selectedIndex = selected.indexOf(name);
+    // let newSelected = [];
 
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
+    // if (selectedIndex === -1) {
+    //   newSelected = newSelected.concat(selected, name);
+    // } else if (selectedIndex === 0) {
+    //   newSelected = newSelected.concat(selected.slice(1));
+    // } else if (selectedIndex === selected.length - 1) {
+    //   newSelected = newSelected.concat(selected.slice(0, -1));
+    // } else if (selectedIndex > 0) {
+    //   newSelected = newSelected.concat(
+    //     selected.slice(0, selectedIndex),
+    //     selected.slice(selectedIndex + 1)
+    //   );
+    // }
 
-    setSelected(newSelected);
+    // setSelected(newSelected);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -404,63 +340,69 @@ const TopTokens = () => {
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
-                    <TableRow
-                      hover
-                      //   onClick={(event) => handleClick(event, row.name)}
-                      //   role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.name}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        {/* <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ "aria-labelledby": labelId }}
-                        /> */}
-                      </TableCell>
-                      {window.innerWidth <= 768 ? (
-                        <>
-                          <TableCell
-                            component="th"
-                            id={labelId}
-                            scope="row"
-                            padding="none"
-                          >
-                            <span className={classes.cellText}>{row.name}</span>
-                          </TableCell>
+                    <>
+                      <TableRow
+                        hover
+                        onClick={(event) => handleClick(event, row.name)}
+                        //   role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={row.id}
+                        selected={isItemSelected}
+                        className={classes.tableMobile}
+                      >
+                        <TableCell padding="checkbox"></TableCell>
 
-                          <TableCell align="right" className={classes.cellText}>
-                            {row.vol_24_h}
-                          </TableCell>
-                        </>
-                      ) : (
-                        <>
-                          <TableCell
-                            component="th"
-                            id={labelId}
-                            scope="row"
-                            padding="none"
-                          >
-                            <span className={classes.cellText}>{row.name}</span>
-                          </TableCell>
-                          <TableCell align="right">
-                            <span className={classes.cellText}>
-                              {row.price}
-                            </span>
-                          </TableCell>
-                          <TableCell align="right" className={classes.cellText}>
-                            {row.price_change}
-                          </TableCell>
-                          <TableCell align="right" className={classes.cellText}>
-                            {row.vol_24_h}
-                          </TableCell>
-                          <TableCell align="right" className={classes.cellText}>
-                            {row.tvl}
-                          </TableCell>
-                        </>
-                      )}
-                    </TableRow>
+                        <TableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding="none"
+                        >
+                          <span className={classes.cellText}>{row.name}</span>
+                        </TableCell>
+
+                        <TableCell align="right" className={classes.cellText}>
+                          {formatCurrency(row.vol_24_h, true)}
+                        </TableCell>
+                      </TableRow>
+
+                      <TableRow
+                        hover
+                        onClick={(event) => handleClick(event, row.name)}
+                        //   role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={row.id}
+                        selected={isItemSelected}
+                        className={classes.tableDesktop}
+                      >
+                        <TableCell padding="checkbox"></TableCell>
+
+                        <TableCell
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding="none"
+                        >
+                          <span className={classes.cellText}>{row.name}</span>
+                        </TableCell>
+                        <TableCell align="right">
+                          <span className={classes.cellText}>
+                            {formatCurrency(row.price, true)}
+                          </span>
+                        </TableCell>
+                        <TableCell align="right" className={classes.cellText}>
+                          <PercentLabel percentValue={row.price_change} />
+                        </TableCell>
+                        <TableCell align="right" className={classes.cellText}>
+                          {formatCurrency(row.vol_24_h, true)}
+                        </TableCell>
+                        <TableCell align="right" className={classes.cellText}>
+                          {formatCurrency(row.tvl, true)}
+                        </TableCell>
+                      </TableRow>
+                    </>
                   );
                 })}
               {emptyRows > 0 && (

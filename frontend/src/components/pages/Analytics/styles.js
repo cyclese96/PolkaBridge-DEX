@@ -85,20 +85,20 @@ const useStyles = makeStyles((theme) => ({
     color: "rgba(255,255,255,0.5)",
   },
   statAmount: {},
-  statPercentageGreen: {
-    display: "flex",
-    justifyContent: "center",
-    color: "#4caf50",
-  },
-  statPercentageRed: {
-    display: "flex",
-    justifyContent: "center",
-    color: "#ff1744",
-  },
-  arrowIcon: {
-    margin: 0,
-    padding: 0,
-  },
+  // statPercentageGreen: {
+  //   display: "flex",
+  //   justifyContent: "center",
+  //   color: "#4caf50",
+  // },
+  // statPercentageRed: {
+  //   display: "flex",
+  //   justifyContent: "center",
+  //   color: "#ff1744",
+  // },
+  // arrowIcon: {
+  //   margin: 0,
+  //   padding: 0,
+  // },
   tokenListHeading: {
     width: "100%",
     marginTop: 30,
