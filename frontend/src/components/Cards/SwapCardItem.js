@@ -104,7 +104,7 @@ const SwapCardItem = ({
 
   const handleMax = () => {
     // setInput(balance ? balance : "0.6843");
-    onInputChange(balance ? balance[currentToken.symbol] : "0");
+    onInputChange(balance ? fromWei(balance[currentToken.symbol]) : "0");
   };
 
   return (
@@ -121,7 +121,8 @@ const SwapCardItem = ({
                 ""
               )}
               <p className={classes.labelFont}>
-                {inputType === "from" ? `Balance: ${"0.6843"}` : ""}
+                Balance:
+                {" " + formatCurrency(fromWei(balance[currentToken.symbol]))}
               </p>
             </div>
             <div className={classes.inputRow}>

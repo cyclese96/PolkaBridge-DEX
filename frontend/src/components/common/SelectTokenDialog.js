@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
@@ -10,6 +10,12 @@ import { connect } from "react-redux";
 import { logout } from "../../actions/accountActions";
 
 import TokenList from "./TokenList";
+import corgibImg from "../../assets/corgi.png";
+import pwarImg from "../../assets/pwar.png";
+import bite from "../../assets/bite.png";
+import pbrImg from "../../assets/balance.png";
+import etherImg from "../../assets/ether.png";
+import bnbImg from "../../assets/binance.png";
 
 const styles = (theme) => ({
   root: {
@@ -106,6 +112,59 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const tokens = [
+  {
+    icon: pbrImg,
+    name: "Polkabridge",
+    symbol: "PBR",
+  },
+  {
+    icon: bite,
+    name: "DragonBite",
+    symbol: "BITE",
+  },
+  {
+    icon: pwarImg,
+    name: "Polkawar",
+    symbol: "PWAR",
+  },
+  {
+    icon: corgibImg,
+    name: "Corgib meme coin",
+    symbol: "CORGIB",
+  },
+  {
+    icon: etherImg,
+    name: "Ethereum",
+    symbol: "ETH",
+  },
+  {
+    icon: bnbImg,
+    name: "Binance",
+    symbol: "BNB",
+  },
+  {
+    icon: "",
+    name: "US tether",
+    symbol: "USDT",
+  },
+  {
+    icon: "",
+    name: "US tether",
+    symbol: "USDT",
+  },
+  {
+    icon: "",
+    name: "US tether",
+    symbol: "USDT",
+  },
+  {
+    icon: "",
+    name: "US tether",
+    symbol: "USDT",
+  },
+];
+
 const SelectTokenDialog = ({
   open,
   handleClose,
@@ -114,9 +173,21 @@ const SelectTokenDialog = ({
 }) => {
   const classes = useStyles();
 
+  const [filteredTokens, setTokens] = useState(tokens);
+
   const onTokenSelect = (token) => {
     handleTokenSelected(token);
     handleClose();
+  };
+
+  const handleTokenFilter = (value) => {
+    console.log(value);
+    const filtered = tokens.filter(
+      (item) =>
+        item.symbol.toLocaleLowerCase().includes(value.toLocaleLowerCase()) ||
+        item.name.toLowerCase().includes(value.toLocaleLowerCase())
+    );
+    setTokens(filtered);
   };
 
   return (
@@ -140,9 +211,13 @@ const SelectTokenDialog = ({
             type="text"
             className={classes.input}
             placeholder="Search token"
+            onChange={({ target: { value } }) => handleTokenFilter(value)}
           />
           {/* <FixedSizeList> */}
-          <TokenList handleItemSelected={onTokenSelect} />
+          <TokenList
+            handleItemSelected={onTokenSelect}
+            tokens={filteredTokens}
+          />
           {/* </FixedSizeList> */}
           <div className={classes.buttons}>
             <CustomButton variant="light" onClick={handleClose}>

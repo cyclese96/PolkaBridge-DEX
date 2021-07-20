@@ -2,12 +2,14 @@ import { makeStyles } from "@material-ui/core";
 import { connect } from "react-redux";
 import TuneIcon from "@material-ui/icons/Tune";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SwapSettings from "../../common/SwapSettings";
 import etherImg from "../../../assets/ether.png";
+import bnbImg from "../../../assets/binance.png";
 import CustomButton from "../../Buttons/CustomButton";
 import SwapCardItem from "../../Cards/SwapCardItem";
 import AddIcon from "@material-ui/icons/Add";
+import { etheriumNetwork } from "../../../constants";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -128,7 +130,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AddCard = ({ account: { balance, loading }, tokenType, handleBack }) => {
+const AddCard = ({
+  account: { balance, loading, currentNetwork },
+  tokenType,
+  handleBack,
+}) => {
   const currentDefaultToken = {
     icon: etherImg,
     name: "Ethereum",
@@ -157,6 +163,22 @@ const AddCard = ({ account: { balance, loading }, tokenType, handleBack }) => {
   const close = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    if (currentNetwork === etheriumNetwork) {
+      setToken1({
+        icon: etherImg,
+        name: "Ethereum",
+        symbol: "ETH",
+      });
+    } else {
+      setToken1({
+        icon: bnbImg,
+        name: "Binance",
+        symbol: "BNB",
+      });
+    }
+  }, [currentNetwork]);
 
   const verifySwapStatus = (token1, token2) => {
     if (token1.selected.symbol === token2.selected.symbol) {

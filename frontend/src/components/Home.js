@@ -128,18 +128,18 @@ const Home = ({
     }
   }, []);
 
-  const signOut = async () => {
-    localStorage.setItem(`logout${currentAccount}`, currentAccount);
-    logout();
-  };
+  // const signOut = async () => {
+  //   localStorage.setItem(`logout${currentAccount}`, currentAccount);
+  //   logout();
+  // };
 
-  const handleConnectWallet = async () => {
-    if (!isMetaMaskInstalled()) {
-      alert("Please install Meta Mask to connect");
-      return;
-    }
-    await connectWallet(true, currentNetwork);
-  };
+  // const handleConnectWallet = async () => {
+  //   if (!isMetaMaskInstalled()) {
+  //     alert("Please install Meta Mask to connect");
+  //     return;
+  //   }
+  //   await connectWallet(true, currentNetwork);
+  // };
 
   useEffect(async () => {
     let network = "";

@@ -1,9 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core";
-import supply from "../../assets/supply.png";
-import biteImg from "../../assets/bite.png";
-import corgibImg from "../../assets/corgi.png";
-import pwarImg from "../../assets/pwar.png";
 import { connect } from "react-redux";
 import TuneIcon from "@material-ui/icons/Tune";
 import SwapCardItem from "./SwapCardItem";
@@ -11,9 +7,11 @@ import SwapVertIcon from "@material-ui/icons/SwapVert";
 import { useState } from "react";
 import SwapSettings from "../common/SwapSettings";
 import etherImg from "../../assets/ether.png";
+import bnbImg from "../../assets/binance.png";
 import CustomButton from "../Buttons/CustomButton";
 import BigNumber from "bignumber.js";
 import CustomSnackBar from "../common/CustomSnackbar";
+import { etheriumNetwork } from "../../constants";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -50,8 +48,16 @@ const useStyles = makeStyles((theme) => ({
   settingIcon: {
     color: "#f6f6f6",
     cursor: "pointer",
+    marginTop: 7,
+    marginBottom: 7,
+    transition: "all 0.4s ease",
   },
-
+  rotate1: {
+    transform: "rotateZ(0deg)",
+  },
+  rotate2: {
+    transform: "rotateZ(-180deg)",
+  },
   numbers: {
     color: "#E0077D",
     fontSize: 26,
@@ -64,7 +70,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SwapCard = ({ account: { balance, loading }, tokenType }) => {
+const SwapCard = ({
+  account: { balance, loading, currentNetwork },
+  tokenType,
+}) => {
   const classes = useStyles();
   const [settingOpen, setOpen] = useState(false);
   const [selectedToken1, setToken1] = useState({
@@ -76,6 +85,8 @@ const SwapCard = ({ account: { balance, loading }, tokenType }) => {
   const [token1Value, setToken1Value] = useState("");
   const [token2Value, setToken2Value] = useState("");
 
+  const [rotate, setRotate] = useState(false);
+
   const [snackAlert, setAlert] = React.useState({
     status: false,
     message: "",
@@ -85,6 +96,25 @@ const SwapCard = ({ account: { balance, loading }, tokenType }) => {
     message: "Please select tokens",
     disabled: true,
   });
+
+  useEffect(() => {
+    if (currentNetwork === etheriumNetwork) {
+      setToken1({
+        icon: etherImg,
+        name: "Ethereum",
+        symbol: "ETH",
+      });
+    } else {
+      setToken1({
+        icon: bnbImg,
+        name: "Binance",
+        symbol: "BNB",
+      });
+    }
+    setToken1Value("");
+    setToken2({});
+    setToken2Value("");
+  }, [currentNetwork]);
 
   const verifySwapStatus = (token1, token2) => {
     if (token1.selected.symbol === token2.selected.symbol) {
@@ -151,11 +181,21 @@ const SwapCard = ({ account: { balance, loading }, tokenType }) => {
 
   const handleSwapToken = () => {
     setAlert({ status: true, message: "Transaction submitted " });
-    //todo perform swap action on given input
   };
 
   const hideSnackbar = () => {
     setAlert({ status: false });
+  };
+
+  const handleSwapInputs = () => {
+    setRotate(!rotate);
+    const tokenSelected1 = selectedToken1;
+    setToken1(selectedToken2);
+    setToken2(tokenSelected1);
+
+    const tokenInput1 = token1Value;
+    setToken1Value(token2Value);
+    setToken2Value(tokenInput1);
   };
 
   return (
@@ -185,7 +225,14 @@ const SwapCard = ({ account: { balance, loading }, tokenType }) => {
               currentToken={selectedToken1}
               inputValue={token1Value}
             />
-            <SwapVertIcon fontSize="default" className={classes.settingIcon} />
+            <SwapVertIcon
+              fontSize="default"
+              className={[
+                classes.settingIcon,
+                rotate ? classes.rotate1 : classes.rotate2,
+              ].join(" ")}
+              onClick={handleSwapInputs}
+            />
             <SwapCardItem
               inputType="to"
               onInputChange={onToken2InputChange}
