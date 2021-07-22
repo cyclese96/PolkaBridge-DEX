@@ -19,6 +19,12 @@ export const corgibMemeCoinTestent =
 export const corgibMemeCoinMainnet =
   "0x1cfd6813a59d7b90c41dd5990ed99c3bf2eb8f55";
 
+//pbr-eth-pair router
+export const pbrEthPairAddressTestnet =
+  "0xc24e9758e2F229cb2235d7f1F8691f45Cb62dC0A";
+export const pbrEthPairAddressMainnet =
+  "0xc24e9758e2F229cb2235d7f1F8691f45Cb62dC0A";
+
 //pwar
 
 export const pwarAddressTestnet = "0x16153214E683018D5aA318864c8e692b66E16778";
@@ -37,6 +43,8 @@ export const supportedTokens = {
 };
 
 export const exchangeFee = 0.25;
+export const defaultSlippage = 0.5;
+export const defaultTransactionDeadline = 20; //20 minutes
 
 export const infuraKovenApi = `https://kovan.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`;
 export const infuraMainnetApi = `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`;
@@ -69,3 +77,9 @@ export const bscConfig = {
 };
 
 export const supportedNetworks = ["1", "56"];
+
+//pairs
+export const PBR_ETH = "PBR_ETH";
+export const PWAR_BNB = "PWAR_BNB";
+export const PWAR_CORGIB = "PWAR_CORGIB";
+export const CORGIB_BNB = "CORGIB_BNB";

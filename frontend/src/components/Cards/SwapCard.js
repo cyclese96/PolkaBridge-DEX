@@ -72,6 +72,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SwapCard = ({
   account: { balance, loading, currentNetwork },
+  dex: { swapSettings },
   tokenType,
 }) => {
   const classes = useStyles();
@@ -181,6 +182,8 @@ const SwapCard = ({
 
   const handleSwapToken = () => {
     setAlert({ status: true, message: "Transaction submitted " });
+
+    console.log(swapSettings);
   };
 
   const hideSnackbar = () => {
@@ -258,6 +261,7 @@ const SwapCard = ({
 
 const mapStateToProps = (state) => ({
   account: state.account,
+  dex: state.dex,
 });
 
 export default connect(mapStateToProps, {})(SwapCard);

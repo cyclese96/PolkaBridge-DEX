@@ -36,10 +36,7 @@ const initalState = {
     address: null,
   },
   error: null,
-  loading: {
-    from: false,
-    to: false,
-  },
+  loading: false,
   currentNetwork: etheriumNetwork,
 };
 
@@ -98,23 +95,10 @@ export default function (state = initalState, action) {
         to_token: temp,
       };
     case SHOW_LOADING:
-      if (action.payload === "from") {
-        return {
-          ...state,
-          loading: {
-            ...state.loading,
-            from: true,
-          },
-        };
-      } else {
-        return {
-          ...state,
-          loading: {
-            ...state.loading,
-            to: true,
-          },
-        };
-      }
+      return {
+        ...state,
+        loading: true,
+      };
     case CHANGE_NETWORK:
       return {
         ...state,
@@ -124,11 +108,7 @@ export default function (state = initalState, action) {
     case HIDE_LOADING:
       return {
         ...state,
-        loading: {
-          ...state.loading,
-          from: false,
-          to: false,
-        },
+        loading: false,
       };
     case ERROR:
       return {

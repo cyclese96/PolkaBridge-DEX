@@ -17,6 +17,8 @@ import {
   bscConfig,
   bscNetwork,
   claimTokens,
+  defaultSlippage,
+  defaultTransactionDeadline,
   etherConfig,
   etheriumNetwork,
   supportedNetworks,
@@ -29,7 +31,7 @@ import {
   getCurrentNetworkId,
   getCurrentAccount,
 } from "../utils/helper";
-import { CHANGE_NETWORK } from "../actions/types";
+import { CHANGE_NETWORK, UPDATE_SETTINGS } from "../actions/types";
 import TabPage from "./TabPage";
 
 const useStyles = makeStyles((theme) => ({
@@ -127,19 +129,6 @@ const Home = ({
       });
     }
   }, []);
-
-  // const signOut = async () => {
-  //   localStorage.setItem(`logout${currentAccount}`, currentAccount);
-  //   logout();
-  // };
-
-  // const handleConnectWallet = async () => {
-  //   if (!isMetaMaskInstalled()) {
-  //     alert("Please install Meta Mask to connect");
-  //     return;
-  //   }
-  //   await connectWallet(true, currentNetwork);
-  // };
 
   useEffect(async () => {
     let network = "";

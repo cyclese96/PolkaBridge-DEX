@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
@@ -9,6 +9,9 @@ import CustomButton from "../Buttons/CustomButton";
 import { connect } from "react-redux";
 import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 import CustomToolTip from "./CustomToolTip";
+import store from "../../store";
+import { UPDATE_SETTINGS } from "../../actions/types";
+import { defaultSlippage, defaultTransactionDeadline } from "../../constants";
 
 const styles = (theme) => ({
   root: {
@@ -131,13 +134,72 @@ const useStyles = makeStyles((theme) => ({
 const SwapSettings = ({
   open,
   handleClose,
-  account: { currentAccount, balance, connected, currentNetwork },
+  account: { currentAccount, currentNetwork },
+  dex: { swapSettings },
 }) => {
   const classes = useStyles();
+  const [slippage, setSlippage] = useState(swapSettings.slippage);
+  const [deadline, setDeadline] = useState(swapSettings.deadline);
+
   const onApply = () => {
-    //todo update settings state
+    //cache settings in local storage
+    localStorage.setItem(
+      `${currentAccount}_${currentNetwork}_slippage`,
+      slippage
+    );
+    localStorage.setItem(
+      `${currentAccount}_${currentNetwork}_deadline`,
+      deadline
+    );
+
+    store.dispatch({
+      type: UPDATE_SETTINGS,
+      payload: {
+        slippage: parseFloat(slippage),
+        deadline: parseFloat(deadline),
+      },
+    });
     handleClose();
   };
+
+  const handleDeadlingInput = (value) => {
+    setDeadline(value);
+  };
+
+  const handleSlippage = (value) => {
+    setSlippage(value);
+  };
+
+  const loadSettings = () => {
+    const _slippage = localStorage.getItem(
+      `${currentAccount}_${currentNetwork}_slippage`
+    );
+    const _deadline = localStorage.getItem(
+      `${currentAccount}_${currentNetwork}_deadline`
+    );
+
+    if (!_slippage && !_deadline) {
+      console.log("no state update");
+      return;
+    }
+    store.dispatch({
+      type: UPDATE_SETTINGS,
+      payload: {
+        slippage: _slippage ? parseFloat(_slippage) : defaultSlippage,
+        deadline: _deadline
+          ? parseFloat(_deadline)
+          : defaultTransactionDeadline,
+      },
+    });
+    setSlippage(_slippage);
+    setDeadline(_deadline);
+  };
+
+  useEffect(() => {
+    console.log("slippage", slippage);
+    console.log("setting", swapSettings);
+    loadSettings();
+  }, [currentNetwork, currentAccount]);
 
   return (
     <div>
@@ -163,9 +225,25 @@ const SwapSettings = ({
               </CustomToolTip>
             </span>
             <div>
-              <a className={classes.slippageItem}>0.5%</a>
-              <a className={classes.slippageItem}>1%</a>
-              <input type="text" className={classes.input} placeholder="0.0" />
+              <a
+                className={classes.slippageItem}
+                onClick={() => handleSlippage(0.5)}
+              >
+                0.5%
+              </a>
+              <a
+                className={classes.slippageItem}
+                onClick={() => handleSlippage(1)}
+              >
+                1%
+              </a>
+              <input
+                type="text"
+                className={classes.input}
+                placeholder="0.0"
+                onChange={({ target: { value } }) => handleSlippage(value)}
+                value={slippage}
+              />
             </div>
           </div>
           <div className={classes.settingRow}>
@@ -179,7 +257,13 @@ const SwapSettings = ({
               </CustomToolTip>
             </span>
             <div>
-              <input type="text" className={classes.input} placeholder="20" />
+              <input
+                type="text"
+                className={classes.input}
+                placeholder="20"
+                onChange={({ target: { value } }) => handleDeadlingInput(value)}
+                value={deadline}
+              />
               <span style={{ fontSize: 12, marginLeft: 10, color: "#919191" }}>
                 Minutes
               </span>
@@ -201,6 +285,7 @@ const SwapSettings = ({
 
 const mapStateToProps = (state) => ({
   account: state.account,
+  dex: state.dex,
 });
 
 export default connect(mapStateToProps, {})(SwapSettings);
