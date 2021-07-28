@@ -12,6 +12,9 @@ import CustomButton from "../Buttons/CustomButton";
 import BigNumber from "bignumber.js";
 import CustomSnackBar from "../common/CustomSnackbar";
 import { etheriumNetwork } from "../../constants";
+import { getTokenPrice } from "../../actions/dexActions";
+import CachedIcon from "@material-ui/icons/Cached";
+import { token1PerToken2, token2PerToken1 } from "../../utils/helper";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -68,12 +71,23 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 30,
     marginBottom: 5,
   },
+  priceRatio: {
+    display: "flex",
+    width: "70%",
+    alignItems: "center",
+    justifyContent: "space-around",
+    marginTop: 30,
+  },
+  resetIcon: {
+    cursor: "pointer",
+  },
 }));
 
 const SwapCard = ({
-  account: { balance, loading, currentNetwork },
+  account: { balance, loading, currentNetwork, from_token, to_token },
   dex: { swapSettings },
   tokenType,
+  getTokenPrice,
 }) => {
   const classes = useStyles();
   const [settingOpen, setOpen] = useState(false);
@@ -98,7 +112,17 @@ const SwapCard = ({
     disabled: true,
   });
 
-  useEffect(() => {
+  const updateTokenPrices = async () => {
+    console.log("updating...");
+    setTimeout(async () => {
+      await Promise.all([
+        getTokenPrice(0, currentNetwork),
+        getTokenPrice(1, currentNetwork),
+      ]);
+      await updateTokenPrices();
+    }, 1000);
+  };
+  useEffect(async () => {
     if (currentNetwork === etheriumNetwork) {
       setToken1({
         icon: etherImg,
@@ -115,6 +139,11 @@ const SwapCard = ({
     setToken1Value("");
     setToken2({});
     setToken2Value("");
+    // updateTokenPrices();
+
+    return () => {
+      console.log("unmounted");
+    };
   }, [currentNetwork]);
 
   const verifySwapStatus = (token1, token2) => {
@@ -144,6 +173,14 @@ const SwapCard = ({
       { value: tokens, selected: selectedToken1 },
       { value: token2Value, selected: selectedToken2 }
     );
+
+    //calculate resetpective value of token 2 if selected
+    if (selectedToken2.symbol && tokens) {
+      const t = token2PerToken1(from_token.price, to_token.price);
+      setToken2Value(parseFloat(tokens) * t);
+    } else if (selectedToken2.symbol && !tokens) {
+      setToken2Value("");
+    }
   };
 
   const onToken2InputChange = (tokens) => {
@@ -153,6 +190,15 @@ const SwapCard = ({
       { value: token1Value, selected: selectedToken1 },
       { value: tokens, selected: selectedToken2 }
     );
+
+    //calculate respective value of token1 if selected
+
+    if (selectedToken1.symbol && tokens) {
+      const t = token1PerToken2(from_token.price, to_token.price);
+      setToken1Value(parseFloat(tokens) * t);
+    } else if (selectedToken1.symbol && !tokens) {
+      setToken1Value("");
+    }
   };
 
   const onToken1Select = (token) => {
@@ -243,7 +289,11 @@ const SwapCard = ({
               currentToken={selectedToken2}
               inputValue={token2Value}
             />
-
+            <div className={classes.priceRatio}>
+              <small>Price</small>
+              <small>41,250 PBR per ETH </small>
+              <CachedIcon className={classes.resetIcon} fontSize="small" />
+            </div>
             <CustomButton
               variant="light"
               className={classes.addButton}
@@ -264,4 +314,4 @@ const mapStateToProps = (state) => ({
   dex: state.dex,
 });
 
-export default connect(mapStateToProps, {})(SwapCard);
+export default connect(mapStateToProps, { getTokenPrice })(SwapCard);

@@ -1,5 +1,5 @@
 import { pairContract } from "../contracts/connections";
-import { DEX_ERROR } from "./types";
+import { DEX_ERROR, SET_TOKEN0_PRICE, SET_TOKEN1_PRICE } from "./types";
 
 //token0: { amount: "", address: "", symbol:"PBR" }
 //token1 { amount: "", address: "", symbol: "ETH" }
@@ -24,10 +24,14 @@ export const getTokenPrice = (tokenNumber, network) => async (dispatch) => {
 
     const price =
       tokenNumber === 0
-        ? await _pairContract.methods.price0CumulativeLast.call()
-        : await _pairContract.methods.price1CumulativeLast.call();
+        ? await _pairContract.methods.price0CumulativeLast().call()
+        : await _pairContract.methods.price1CumulativeLast().call();
 
     console.log({ tokenNumber, price });
+    dispatch({
+      type: tokenNumber === 0 ? SET_TOKEN0_PRICE : SET_TOKEN1_PRICE,
+      payload: price,
+    });
   } catch (error) {
     console.log("getTokenPrice:  ", error);
     dispatch({

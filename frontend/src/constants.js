@@ -38,7 +38,7 @@ export const CORGIB = "CORGIB";
 export const PWAR = "PWAR";
 
 export const supportedTokens = {
-  ethereum: [PBR, BITE, ETH],
+  ethereum: [PBR, ETH],
   bsc: [BNB, CORGIB, PWAR],
 };
 

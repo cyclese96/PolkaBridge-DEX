@@ -112,3 +112,13 @@ export const isNumber = (value) => {
 export const isMetaMaskInstalled = () => {
   return typeof window.web3 !== "undefined";
 };
+
+export const token2PerToken1 = (token1UsdPrice, token2UsdPrice) => {
+  const price = token1UsdPrice / token2UsdPrice;
+  return price;
+};
+
+export const token1PerToken2 = (token1UsdPrice, token2UsdPrice) => {
+  const price = token2UsdPrice / token1UsdPrice;
+  return price;
+};

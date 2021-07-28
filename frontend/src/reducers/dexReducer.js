@@ -1,4 +1,9 @@
-import { DEX_ERROR, UPDATE_SETTINGS } from "../actions/types";
+import {
+  DEX_ERROR,
+  SET_TOKEN0_PRICE,
+  SET_TOKEN1_PRICE,
+  UPDATE_SETTINGS,
+} from "../actions/types";
 import {
   defaultSlippage,
   defaultTransactionDeadline,
@@ -8,6 +13,8 @@ import {
 const initalState = {
   error: null,
   recentSwaps: [],
+  token0Price: null,
+  token1Price: null,
   swapSettings: {
     swapFee: exchangeFee,
     slippage: defaultSlippage,
@@ -29,6 +36,16 @@ export default function (state = initalState, action) {
           ...state.swapSettings,
           ...action.payload,
         },
+      };
+    case SET_TOKEN0_PRICE:
+      return {
+        ...state,
+        token0Price: action.payload,
+      };
+    case SET_TOKEN1_PRICE:
+      return {
+        ...state,
+        token1Price: action.payload,
       };
     default:
       return state;

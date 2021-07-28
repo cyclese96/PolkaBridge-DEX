@@ -29,11 +29,13 @@ const initalState = {
     name: null,
     amount: null,
     address: null,
+    price: 1980,
   },
   to_token: {
     name: null,
     amount: null,
     address: null,
+    price: 0.048,
   },
   error: null,
   loading: false,
