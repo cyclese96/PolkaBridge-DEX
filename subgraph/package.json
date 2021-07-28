@@ -1,0 +1,16 @@
+{
+  "name": "pbr-dex",
+  "license": "UNLICENSED",
+  "scripts": {
+    "codegen": "graph codegen --output-dir src/generated/",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ pbr-dex",
+    "create-local": "graph create --node http://localhost:8020/ pbr-dex",
+    "remove-local": "graph remove --node http://localhost:8020/ pbr-dex",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 pbr-dex"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "^0.16.0",
+    "@graphprotocol/graph-ts": "^0.16.0"
+  }
+}
