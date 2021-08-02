@@ -1,7 +1,7 @@
 import Web3 from "web3";
 import Bite from "../abi/Bite.json";
 import PolkaBridge from "../abi/PolkaBridge.json";
-import CorgibStaking from "../abi/CorgibStaking.json";
+import PBR_ETH_pairBscAbi from "../abi/PairBscPBR_ETH.json";
 import PBR_ETH_pairAbi from "../abi/PairPBR_ETH.json";
 import PolkaBridgeMemeToken from "../abi/PolkaBridgeMemeToken.json";
 import pwarCoin from "../abi/Pwar.json";
@@ -19,6 +19,8 @@ import {
   etheriumNetwork,
   pbrAddressKoven,
   pbrAddressMainnet,
+  pbrEthPairAddressBscMainnet,
+  pbrEthPairAddressBscTestnet,
   pbrEthPairAddressMainnet,
   pbrEthPairAddressTestnet,
   pwarAddressMainnet,
@@ -68,16 +70,12 @@ export const pwarCoinContract = (network) => {
 
 export const pairContract = (network) => {
   if (network === bscNetwork) {
-    //TODO set pair contract for bsc
-    // if (pair === PWAR_BNB) {
-
-    // }
     const address =
       currentConnection === "testnet"
-        ? corgibStakingTestent
-        : corgibStakingMainent;
+        ? pbrEthPairAddressBscTestnet
+        : pbrEthPairAddressBscMainnet;
 
-    const abi = CorgibStaking;
+    const abi = PBR_ETH_pairBscAbi;
     const connection = getCurrentConnection(network, abi, address);
     return connection;
   } else {

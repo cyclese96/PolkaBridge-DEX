@@ -25,6 +25,11 @@ export const pbrEthPairAddressTestnet =
 export const pbrEthPairAddressMainnet =
   "0xc24e9758e2F229cb2235d7f1F8691f45Cb62dC0A";
 
+export const pbrEthPairAddressBscTestnet =
+  "0xc24e9758e2F229cb2235d7f1F8691f45Cb62dC0A";
+export const pbrEthPairAddressBscMainnet =
+  "0xc24e9758e2F229cb2235d7f1F8691f45Cb62dC0A";
+
 //pwar
 
 export const pwarAddressTestnet = "0x16153214E683018D5aA318864c8e692b66E16778";
