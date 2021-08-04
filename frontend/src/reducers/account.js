@@ -9,7 +9,6 @@ import {
   LOAD_TO_TOKEN,
   SWAP_TOKEN_SELECTION,
   CHANGE_NETWORK,
-  LOAD_NETWORK_BALANCE,
   LOAD_TOKEN_BALANCE,
 } from "../actions/types";
 import { etheriumNetwork } from "../constants";
