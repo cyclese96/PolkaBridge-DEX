@@ -246,7 +246,7 @@ const Navbar = ({ currentNetwork }) => {
             />
             <span style={{ color: "white", marginLeft: 5 }}>
               {currentNetwork === etheriumNetwork
-                ? "Etherium"
+                ? "Ethereum"
                 : "Binance Smart Chain"}
             </span>
           </div>
@@ -327,7 +327,7 @@ const Navbar = ({ currentNetwork }) => {
             />
             <span style={{ color: "white", marginLeft: 5 }}>
               {currentNetwork === etheriumNetwork
-                ? "Etherium"
+                ? "Ethereum"
                 : "Binance Smart Chain"}
             </span>
           </div>

@@ -1,3 +1,10 @@
+import { BITE, CORGIB, PBR, PWAR } from "../constants";
+import {
+  biteContract,
+  corgibCoinContract,
+  pbrContract,
+  pwarCoinContract,
+} from "../contracts/connections";
 import web3 from "../web";
 
 export const fromWei = (tokens) => {
@@ -121,4 +128,20 @@ export const token2PerToken1 = (token1UsdPrice, token2UsdPrice) => {
 export const token1PerToken2 = (token1UsdPrice, token2UsdPrice) => {
   const price = token2UsdPrice / token1UsdPrice;
   return price;
+};
+
+// current token contract
+export const getTokenContract = (network, tokenType) => {
+  switch (tokenType) {
+    case PBR:
+      return pbrContract(network);
+    case BITE:
+      return biteContract(network);
+    case CORGIB:
+      return corgibCoinContract(network);
+    case PWAR:
+      return pwarCoinContract(network);
+    default:
+      return pwarCoinContract(network);
+  }
 };

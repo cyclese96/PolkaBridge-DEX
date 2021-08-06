@@ -5,15 +5,15 @@ export const stakingAddressMainnet =
   "0x1b46b72c5280f30Fbe8A958B4f3c348FD0fD2E55";
 
 //koven contracts/
-export const pbrAddressKoven = "0x0D6ae2a429df13e44A07Cd2969E085e4833f64A0";
+export const pbrAddressTestnet = "0xEaa9e6F799366Ca952fE58a93D8711602AAa5d5b";
 export const biteAddressKoven = "0xA9Bf3904f7216B4cA2BA862Ac27b9469c030C0eA";
 export const stakingAddressKoven = "0x7678f0AF7304e01554E2D49D96E55C8de4975c66";
 
 // corgib
-export const corgibStakingTestent =
-  "0xA5c2186CFb734828EE89a4087FD571F12Af1E895";
-export const corgibStakingMainent =
-  "0x064dE1e65df3F40Afd7fb9E8A1Af61bD4545f4a1";
+// export const corgibStakingTestent =
+//   "0xA5c2186CFb734828EE89a4087FD571F12Af1E895";
+// export const corgibStakingMainent =
+//   "0x064dE1e65df3F40Afd7fb9E8A1Af61bD4545f4a1";
 export const corgibMemeCoinTestent =
   "0xE428Cc8A06Cdba0ad5074180f8E80ec6D4083b24";
 export const corgibMemeCoinMainnet =
@@ -21,7 +21,7 @@ export const corgibMemeCoinMainnet =
 
 //pbr-eth-pair router
 export const pbrEthPairAddressTestnet =
-  "0xc24e9758e2F229cb2235d7f1F8691f45Cb62dC0A";
+  "0x81d3742180E4D2d1FC07aE78d745Cf382449c86b";
 export const pbrEthPairAddressMainnet =
   "0xc24e9758e2F229cb2235d7f1F8691f45Cb62dC0A";
 
@@ -30,6 +30,7 @@ export const pbrEthPairAddressBscTestnet =
 export const pbrEthPairAddressBscMainnet =
   "0xc24e9758e2F229cb2235d7f1F8691f45Cb62dC0A";
 
+export const WETH_ADDRESS = '0xc778417e063141139fce010982780140aa0cd5ab';
 //pwar
 
 export const pwarAddressTestnet = "0x16153214E683018D5aA318864c8e692b66E16778";

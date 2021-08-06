@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import { CircularProgress, makeStyles } from "@material-ui/core";
 import { connect } from "react-redux";
 import TuneIcon from "@material-ui/icons/Tune";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
@@ -10,6 +10,13 @@ import CustomButton from "../../Buttons/CustomButton";
 import SwapCardItem from "../../Cards/SwapCardItem";
 import AddIcon from "@material-ui/icons/Add";
 import { etheriumNetwork } from "../../../constants";
+import {
+  formatCurrency,
+  token1PerToken2,
+  token2PerToken1,
+  toWei,
+} from "../../../utils/helper";
+import { addLiquidityEth } from "../../../actions/dexActions";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -131,8 +138,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const AddCard = ({
-  account: { balance, loading, currentNetwork },
-  tokenType,
+  account: { balance, loading, currentNetwork, currentAccount },
+  dex: { swapSettings, from_token, to_token },
+  addLiquidityEth,
   handleBack,
 }) => {
   const currentDefaultToken = {
@@ -144,11 +152,11 @@ const AddCard = ({
   const [settingOpen, setOpen] = useState(false);
   const [selectedToken1, setToken1] = useState(currentDefaultToken);
   const [selectedToken2, setToken2] = useState({});
-  const [token1Value, setToken1Value] = useState("");
-  const [token2Value, setToken2Value] = useState("");
+  const [token1Value, setToken1Value] = useState(""); // token1 for eth only
+  const [token2Value, setToken2Value] = useState(""); // token2 for pbr
 
-  const [token1PerToken2, setPerToken1] = useState("1.4545");
-  const [token2PerToken1, setPerToken2] = useState("0.66891");
+  // const [token1PerToken2, setPerToken1] = useState("1.4545");
+  // const [token2PerToken1, setPerToken2] = useState("0.66891");
   const [shareOfPool, setShare] = useState("0.04");
 
   const [addStatus, setStatus] = useState({
@@ -203,17 +211,37 @@ const AddCard = ({
   const onToken1InputChange = (tokens) => {
     setToken1Value(tokens);
 
+    //calculate resetpective value of token 2 if selected
+    let _token2Value;
+    if (selectedToken2.symbol && tokens) {
+      const t = token2PerToken1(from_token.price, to_token.price);
+      _token2Value = parseFloat(tokens) * t;
+      setToken2Value(_token2Value);
+    } else if (selectedToken2.symbol && !tokens) {
+      setToken2Value("");
+    }
+
     verifySwapStatus(
       { value: tokens, selected: selectedToken1 },
-      { value: token2Value, selected: selectedToken2 }
+      { value: _token2Value, selected: selectedToken2 }
     );
   };
 
   const onToken2InputChange = (tokens) => {
     setToken2Value(tokens);
 
+    //calculate respective value of token1 if selected
+    let _token1Value;
+    if (selectedToken1.symbol && tokens) {
+      const t = token1PerToken2(from_token.price, to_token.price);
+      _token1Value = parseFloat(tokens) * t;
+      setToken1Value(_token1Value);
+    } else if (selectedToken1.symbol && !tokens) {
+      setToken1Value("");
+    }
+
     verifySwapStatus(
-      { value: token1Value, selected: selectedToken1 },
+      { value: _token1Value, selected: selectedToken1 },
       { value: tokens, selected: selectedToken2 }
     );
   };
@@ -239,6 +267,34 @@ const AddCard = ({
     setToken2Value("");
     setToken1(currentDefaultToken);
     setToken2({});
+  };
+
+  const handleAddLiquidity = async () => {
+    const ether = {
+      amount: toWei(token1Value.toString()),
+      min: toWei(token1Value),
+      address: "",
+      symbol: "ETH",
+    };
+    const token = {
+      amount: toWei(token2Value.toString()),
+      min: toWei(token2Value.toString()),
+      symbol: selectedToken2.symbol,
+    };
+    console.log(
+      ether,
+      token,
+      currentAccount,
+      swapSettings.deadline,
+      currentNetwork
+    );
+    await addLiquidityEth(
+      ether,
+      token,
+      currentAccount,
+      swapSettings.deadline,
+      currentNetwork
+    );
   };
 
   return (
@@ -302,7 +358,12 @@ const AddCard = ({
                   <div className={classes.feeSelectContainer}>
                     <div className={classes.feeSelectHeading}>
                       <p className={classes.feeSelectHeadingP}>
-                        {token1PerToken2}
+                        {formatCurrency(
+                          token1PerToken2(from_token.price, to_token.price),
+                          false,
+                          7,
+                          false
+                        )}
                       </p>
                     </div>
                     <span className={classes.feeSelectHeadingSpan}>
@@ -313,7 +374,9 @@ const AddCard = ({
                   <div className={classes.feeSelectContainer}>
                     <div className={classes.feeSelectHeading}>
                       <p className={classes.feeSelectHeadingP}>
-                        {token2PerToken1}
+                        {formatCurrency(
+                          token2PerToken1(from_token.price, to_token.price)
+                        )}
                       </p>
                     </div>
                     <span className={classes.feeSelectHeadingSpan}>
@@ -340,9 +403,10 @@ const AddCard = ({
             <CustomButton
               variant="light"
               className={classes.addButton}
-              disabled={addStatus.disabled}
+              disabled={addStatus.disabled | loading}
+              onClick={handleAddLiquidity}
             >
-              {addStatus.message}
+              {loading ? <CircularProgress /> : addStatus.message}
             </CustomButton>
           </div>
         </div>
@@ -353,6 +417,7 @@ const AddCard = ({
 
 const mapStateToProps = (state) => ({
   account: state.account,
+  dex: state.dex,
 });
 
-export default connect(mapStateToProps, {})(AddCard);
+export default connect(mapStateToProps, { addLiquidityEth })(AddCard);

@@ -84,8 +84,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SwapCard = ({
-  account: { balance, loading, currentNetwork, from_token, to_token },
-  dex: { swapSettings },
+  account: { balance, loading, currentNetwork },
+  dex: { swapSettings, from_token, to_token },
   tokenType,
   getTokenPrice,
 }) => {

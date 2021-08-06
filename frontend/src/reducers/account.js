@@ -5,9 +5,6 @@ import {
   SHOW_LOADING,
   HIDE_LOADING,
   SET_ACCOUNT,
-  LOAD_FROM_TOKEN,
-  LOAD_TO_TOKEN,
-  SWAP_TOKEN_SELECTION,
   CHANGE_NETWORK,
   LOAD_TOKEN_BALANCE,
 } from "../actions/types";
@@ -16,25 +13,12 @@ import { etheriumNetwork } from "../constants";
 const initalState = {
   connected: false,
   currentAccount: "",
-  // balance: null,
   balance: {
     PBR: null,
     ETH: null,
     BNB: null,
     PWAR: null,
     CORGIB: null,
-  },
-  from_token: {
-    name: null,
-    amount: null,
-    address: null,
-    price: 1980,
-  },
-  to_token: {
-    name: null,
-    amount: null,
-    address: null,
-    price: 0.048,
   },
   error: null,
   loading: false,
@@ -67,33 +51,6 @@ export default function (state = initalState, action) {
           ...state.balance,
           ...action.payload,
         },
-      };
-    case LOAD_FROM_TOKEN:
-      return {
-        ...state,
-        from_token: {
-          ...state.from_token,
-          name: action.payload.name,
-          amount: action.payload.amount,
-          address: action.payload.amount,
-        },
-      };
-    case LOAD_TO_TOKEN:
-      return {
-        ...state,
-        from_token: {
-          ...state.from_token,
-          name: action.payload.name,
-          amount: action.payload.amount,
-          address: action.payload.amount,
-        },
-      };
-    case SWAP_TOKEN_SELECTION:
-      const temp = state.from_token;
-      return {
-        ...state,
-        from_token: state.to_token,
-        to_token: temp,
       };
     case SHOW_LOADING:
       return {

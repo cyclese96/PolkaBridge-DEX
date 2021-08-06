@@ -9,15 +9,12 @@ import pwarCoin from "../abi/Pwar.json";
 import {
   biteAddressKoven,
   biteAddressMainnet,
-  bscConfig,
   bscNetwork,
   corgibMemeCoinMainnet,
   corgibMemeCoinTestent,
-  corgibStakingMainent,
-  corgibStakingTestent,
   currentConnection,
   etheriumNetwork,
-  pbrAddressKoven,
+  pbrAddressTestnet,
   pbrAddressMainnet,
   pbrEthPairAddressBscMainnet,
   pbrEthPairAddressBscTestnet,
@@ -41,7 +38,7 @@ export const biteContract = (network) => {
 
 export const pbrContract = (network) => {
   const address =
-    currentConnection === "testnet" ? pbrAddressKoven : pbrAddressMainnet;
+    currentConnection === "testnet" ? pbrAddressTestnet : pbrAddressMainnet;
 
   const abi = PolkaBridge;
   const connection = getCurrentConnection(network, abi, address);

@@ -16,13 +16,11 @@ import store from "../store";
 import {
   bscConfig,
   bscNetwork,
-  claimTokens,
   defaultSlippage,
   defaultTransactionDeadline,
   etherConfig,
   etheriumNetwork,
   supportedNetworks,
-  supportedStaking,
 } from "../constants";
 import {
   fromWei,
