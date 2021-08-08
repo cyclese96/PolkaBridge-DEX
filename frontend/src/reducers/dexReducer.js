@@ -1,5 +1,7 @@
 import {
+  APPROVE_TOKEN,
   DEX_ERROR,
+  DISAPPROVE_TOKEN,
   LOAD_FROM_TOKEN,
   LOAD_TO_TOKEN,
   SET_TOKEN0_PRICE,
@@ -35,6 +37,7 @@ const initalState = {
     slippage: defaultSlippage,
     deadline: defaultTransactionDeadline,
   },
+  approvedTokens: {}, // { 'PBR':false, 'ETH': true}
 };
 
 export default function (state = initalState, action) {
@@ -88,6 +91,17 @@ export default function (state = initalState, action) {
         ...state,
         from_token: state.to_token,
         to_token: temp,
+      };
+    case APPROVE_TOKEN:
+      const _tokenToUpdate = action.payload;
+      const approvalState = {};
+      approvalState[`${_tokenToUpdate.symbol}`] = _tokenToUpdate.status;
+      return {
+        ...state,
+        approvedTokens: {
+          ...state.approvedTokens,
+          ...approvalState,
+        },
       };
     default:
       return state;

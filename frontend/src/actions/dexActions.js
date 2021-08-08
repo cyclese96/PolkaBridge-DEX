@@ -1,14 +1,34 @@
+import BigNumber from "bignumber.js";
 import { WETH_ADDRESS } from "../constants";
 import { pairContract } from "../contracts/connections";
-import { toWei, getTokenContract } from "../utils/helper";
-import { DEX_ERROR, SET_TOKEN0_PRICE, SET_TOKEN1_PRICE } from "./types";
+import { toWei, getTokenContract, getUnixTime } from "../utils/helper";
+import {
+  APPROVE_TOKEN,
+  APPROVE_TOKEN_SWAP,
+  DEX_ERROR,
+  SET_TOKEN0_PRICE,
+  SET_TOKEN1_PRICE,
+} from "./types";
 
 //token0: { amount: "", address: "", symbol:"PBR" }
 //token1 { amount: "", address: "", symbol: "ETH" }
 export const swapTokens =
-  (token0, token1, network, account) => async (dispatch) => {
+  (token0, token1, deadline, account, network) => async (dispatch) => {
     try {
       const _pairContract = pairContract(network);
+      const fromTokenName = token0.name;
+      const fromTokenAmount = toWei(token0.amount);
+
+      const toTokenName = token1.name;
+      const toTokenAmount = toWei(token1.outAmount);
+      const tokenAddress = token1.address;
+      const path = [tokenAddress];
+      const toAddress = account;
+      const _deadlineUnix = getUnixTime(deadline);
+
+      const swapRes = await _pairContract.methods
+        .swapExactEthForTokens(toTokenAmount, path, toAddress, _deadlineUnix)
+        .call();
 
       console.log({ token0, token1 });
     } catch (error) {
@@ -81,9 +101,7 @@ export const addLiquidityEth =
       const tokenAmountMin = token.min;
 
       // deadline should be passed in minites in calculation
-      const now = new Date();
-      now.setMinutes(now.getMinutes() + deadline); // timestamp
-      const _deadlineUnix = Math.floor(now / 1000);
+      const _deadlineUnix = getUnixTime(deadline);
 
       const liquidity = await _pairContract.methods
         .addLiquidityETH(
@@ -102,6 +120,56 @@ export const addLiquidityEth =
       dispatch({
         type: DEX_ERROR,
         payload: "Failed to add liquidity",
+      });
+    }
+  };
+
+export const checkAllowance = (token, account, network) => async (dispatch) => {
+  try {
+    const _tokenContract = getTokenContract(token.symbol);
+    const _pairContract = pairContract(network);
+
+    const tokenAllowance = await _tokenContract.methods
+      .allowance(account, _pairContract._address)
+      .call();
+
+    console.log("allowance ", tokenAllowance);
+    if (new BigNumber(tokenAllowance).gt(0)) {
+      dispatch({
+        type: APPROVE_TOKEN,
+        payload: { symbol: token.symbol, status: true },
+      });
+    } else {
+      dispatch({
+        type: APPROVE_TOKEN,
+        payload: { symbol: token.symbol, status: false },
+      });
+    }
+  } catch (error) {
+    console.log("checkAllowance ", error);
+    dispatch({
+      type: DEX_ERROR,
+      payload: "Failed to check allowance",
+    });
+  }
+};
+
+export const confirmAllowance =
+  (balance, token, account, network) => async (dispatch) => {
+    try {
+      const _tokenContract = getTokenContract(token.symbol);
+      const _pairContract = pairContract(network);
+
+      const tokenAllowance = await _tokenContract.methods
+        .approve(_pairContract._address, balance)
+        .send({ from: account });
+
+      // console.log('allowance confirmed ', res)
+    } catch (error) {
+      console.log("confirmAllowance ", error);
+      dispatch({
+        type: DEX_ERROR,
+        payload: "Failed to confirm allowance",
       });
     }
   };

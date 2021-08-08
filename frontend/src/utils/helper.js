@@ -145,3 +145,10 @@ export const getTokenContract = (network, tokenType) => {
       return pwarCoinContract(network);
   }
 };
+
+export const getUnixTime = (timeInMintes) => {
+  const now = new Date();
+  now.setMinutes(now.getMinutes() + timeInMintes); // timestamp
+  const _timeUnix = Math.floor(now / 1000);
+  return _timeUnix;
+};

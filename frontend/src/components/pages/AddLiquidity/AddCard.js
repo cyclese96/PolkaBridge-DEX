@@ -273,7 +273,7 @@ const AddCard = ({
     const ether = {
       amount: toWei(token1Value.toString()),
       min: toWei(token1Value),
-      address: "",
+      address: selectedToken1.address,
       symbol: "ETH",
     };
     const token = {
