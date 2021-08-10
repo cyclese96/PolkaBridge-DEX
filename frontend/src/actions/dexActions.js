@@ -1,25 +1,26 @@
 import BigNumber from "bignumber.js";
-import { WETH_ADDRESS } from "../constants";
+import { ETH, WETH_ADDRESS } from "../constants";
 import { pairContract } from "../contracts/connections";
 import { toWei, getTokenContract, getUnixTime } from "../utils/helper";
 import {
   APPROVE_TOKEN,
-  APPROVE_TOKEN_SWAP,
   DEX_ERROR,
   SET_TOKEN0_PRICE,
   SET_TOKEN1_PRICE,
 } from "./types";
 
-//token0: { amount: "", address: "", symbol:"PBR" }
-//token1 { amount: "", address: "", symbol: "ETH" }
-export const swapTokens =
+// Buy trade action
+// token0 will be eth and token1 could be any erc20 token
+export const swapExactEthForTokens =
   (token0, token1, deadline, account, network) => async (dispatch) => {
     try {
       const _pairContract = pairContract(network);
+      const _tokenContract = getTokenContract(network, token1.symbol);
+
       const fromTokenName = token0.name;
       const fromTokenAmount = toWei(token0.amount);
 
-      const toTokenName = token1.name;
+      const toTokenName = token1.name; // erc20 token name
       const toTokenAmount = toWei(token1.outAmount);
       const tokenAddress = token1.address;
       const path = [tokenAddress];
@@ -27,7 +28,39 @@ export const swapTokens =
       const _deadlineUnix = getUnixTime(deadline);
 
       const swapRes = await _pairContract.methods
-        .swapExactEthForTokens(toTokenAmount, path, toAddress, _deadlineUnix)
+        .swapExactETHForTokens(toTokenAmount, path, toAddress, _deadlineUnix)
+        .call();
+
+      console.log({ token0, token1 });
+    } catch (error) {
+      console.log("swapTokens: ", error);
+      dispatch({
+        type: DEX_ERROR,
+        payload: "Some went wrong with exchange",
+      });
+    }
+  };
+
+// Sell trade action
+// token0 will be erc20 token user want to sell and token1 is eth
+export const swapEthForExactTokens =
+  (token0, token1, deadline, account, network) => async (dispatch) => {
+    try {
+      const _pairContract = pairContract(network);
+      const _tokenContract = getTokenContract(network, token1.symbol);
+
+      const fromTokenName = token0.name; // erc20 token name
+      const fromTokenAmount = toWei(token0.outAmount);
+      const tokenAddress = _tokenContract._address;
+
+      // const maxEthAmount = toWei(token0.amount);
+
+      const path = [tokenAddress];
+      const toAddress = account;
+      const _deadlineUnix = getUnixTime(deadline);
+
+      const swapRes = await _pairContract.methods
+        .swapETHForExactTokens(fromTokenAmount, path, toAddress, _deadlineUnix)
         .call();
 
       console.log({ token0, token1 });
@@ -90,7 +123,7 @@ export const getAmountsOut =
 export const addLiquidityEth =
   (ether, token, account, deadline, network) => async (dispatch) => {
     try {
-      const _tokenContract = getTokenContract(token.symbol);
+      const _tokenContract = getTokenContract(network, token.symbol);
       const _pairContract = pairContract(network);
 
       console.log(_pairContract._address);
@@ -126,8 +159,16 @@ export const addLiquidityEth =
 
 export const checkAllowance = (token, account, network) => async (dispatch) => {
   try {
-    const _tokenContract = getTokenContract(token.symbol);
+    console.log("checking allowance");
+    const _tokenContract = getTokenContract(network, token.symbol);
     const _pairContract = pairContract(network);
+    if (token.symbol === ETH) {
+      dispatch({
+        type: APPROVE_TOKEN,
+        payload: { symbol: token.symbol, status: true },
+      });
+      return;
+    }
 
     const tokenAllowance = await _tokenContract.methods
       .allowance(account, _pairContract._address)
@@ -157,14 +198,14 @@ export const checkAllowance = (token, account, network) => async (dispatch) => {
 export const confirmAllowance =
   (balance, token, account, network) => async (dispatch) => {
     try {
-      const _tokenContract = getTokenContract(token.symbol);
+      const _tokenContract = getTokenContract(network, token.symbol);
       const _pairContract = pairContract(network);
 
       const tokenAllowance = await _tokenContract.methods
         .approve(_pairContract._address, balance)
         .send({ from: account });
 
-      // console.log('allowance confirmed ', res)
+      console.log("allowance confirmed ", tokenAllowance);
     } catch (error) {
       console.log("confirmAllowance ", error);
       dispatch({
