@@ -24,8 +24,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   tokenIcon: {
-    width: 25,
-    height: "auto",
+    width: "auto",
+    height: 22,
     marginRight: 2,
   },
   selectToken: {
