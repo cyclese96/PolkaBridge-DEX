@@ -5,6 +5,8 @@ import PBR_ETH_pairBscAbi from "../abi/PairBscPBR_ETH.json";
 import PBR_ETH_pairAbi from "../abi/PairPBR_ETH.json";
 import PolkaBridgeMemeToken from "../abi/PolkaBridgeMemeToken.json";
 import pwarCoin from "../abi/Pwar.json";
+import RouterAbi from "../abi/Router.json";
+import FactoryAbi from "../abi/Factory.json";
 
 import {
   biteAddressKoven,
@@ -23,6 +25,14 @@ import {
   pwarAddressMainnet,
   pwarAddressTestnet,
   PWAR_BNB,
+  routerAddressBscTestnet,
+  routerAddressBscMainnet,
+  routerAddressTestnet,
+  routerAddressMainnet,
+  facotryAddressBscTestnet,
+  factoryAddresBscMainnet,
+  facotryAddressTestnet,
+  factoryAddresMainnet,
 } from "../../constants";
 import { isMetaMaskInstalled } from "../../utils/helper";
 
@@ -82,6 +92,50 @@ export const pairContract = (network) => {
         : pbrEthPairAddressMainnet;
 
     const abi = PBR_ETH_pairAbi;
+    const connection = getCurrentConnection(network, abi, address);
+    return connection;
+  }
+};
+
+export const routerContract = (network) => {
+  if (network === bscNetwork) {
+    const address =
+      currentConnection === "testnet"
+        ? routerAddressBscTestnet
+        : routerAddressBscMainnet;
+
+    const abi = RouterAbi; // update for bsc
+    const connection = getCurrentConnection(network, abi, address);
+    return connection;
+  } else {
+    const address =
+      currentConnection === "testnet"
+        ? routerAddressTestnet
+        : routerAddressMainnet;
+
+    const abi = RouterAbi;
+    const connection = getCurrentConnection(network, abi, address);
+    return connection;
+  }
+};
+
+export const factoryContract = (network) => {
+  if (network === bscNetwork) {
+    const address =
+      currentConnection === "testnet"
+        ? facotryAddressBscTestnet
+        : factoryAddresBscMainnet;
+
+    const abi = FactoryAbi; // update for bsc
+    const connection = getCurrentConnection(network, abi, address);
+    return connection;
+  } else {
+    const address =
+      currentConnection === "testnet"
+        ? facotryAddressTestnet
+        : factoryAddresMainnet;
+
+    const abi = FactoryAbi;
     const connection = getCurrentConnection(network, abi, address);
     return connection;
   }

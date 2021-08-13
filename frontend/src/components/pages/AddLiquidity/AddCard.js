@@ -271,8 +271,8 @@ const AddCard = ({
 
   const handleAddLiquidity = async () => {
     const ether = {
-      amount: toWei(token1Value.toString()),
-      min: toWei(token1Value),
+      amount: token1Value.toString(),
+      min: token1Value,
       address: selectedToken1.address,
       symbol: "ETH",
     };
@@ -400,6 +400,24 @@ const AddCard = ({
               ""
             )}
 
+            {/* <div className="d-flex mt-4">
+              <CustomButton
+                variant="light"
+                className={classes.approveBtn}
+                disabled={true}
+                onClick={() => {}}
+              >
+                Approved
+              </CustomButton>
+              <CustomButton
+                variant="primary"
+                className={classes.removeBtn}
+                disabled={false}
+                onClick={() => {}}
+              >
+                Add liquidity
+              </CustomButton>
+            </div> */}
             <CustomButton
               variant="light"
               className={classes.addButton}

@@ -174,8 +174,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   networkIcon: {
-    width: 30,
-    height: "auto",
+    width: "auto",
+    height: 30,
   },
   menuIcon: {
     color: "rgba(255, 255, 255, 0.5)",
@@ -267,9 +267,7 @@ const Navbar = ({ currentNetwork }) => {
               alt={currentNetwork}
             />
             <span style={{ color: "white", marginLeft: 5 }}>
-              {currentNetwork === etheriumNetwork
-                ? "Ethereum"
-                : "Binance Smart Chain"}
+              {currentNetwork === etheriumNetwork ? "Ethereum" : "BSC"}
             </span>
           </div>
         </ListItem>
@@ -348,9 +346,7 @@ const Navbar = ({ currentNetwork }) => {
               alt={currentNetwork}
             />
             <span style={{ color: "white", marginLeft: 5 }}>
-              {currentNetwork === etheriumNetwork
-                ? "Ethereum"
-                : "Binance Smart Chain"}
+              {currentNetwork === etheriumNetwork ? "Ethereum" : "BSC"}
             </span>
           </div>
           <Wallet onWalletClick={() => setAccountDialog(true)} />

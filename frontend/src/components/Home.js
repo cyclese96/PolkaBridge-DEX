@@ -166,7 +166,7 @@ const Home = ({
       </section>
 
       <div className={classes.background}>
-        <p>Polkabridge DEX</p>
+        <p>Polkabridge AMM</p>
 
         <TabPage />
 

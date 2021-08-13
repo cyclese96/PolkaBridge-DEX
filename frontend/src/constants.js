@@ -19,12 +19,37 @@ export const corgibMemeCoinTestent =
 export const corgibMemeCoinMainnet =
   "0x1cfd6813a59d7b90c41dd5990ed99c3bf2eb8f55";
 
-//pbr-eth-pair router
+// factory ethereum
+export const facotryAddressTestnet =
+  "0xA1853078D1447C0060c71a672E6D13882f61A0a6";
+export const factoryAddresMainnet =
+  "0xA1853078D1447C0060c71a672E6D13882f61A0a6";
+// factory bsc
+export const facotryAddressBscTestnet =
+  "0xA1853078D1447C0060c71a672E6D13882f61A0a6";
+export const factoryAddresBscMainnet =
+  "0xA1853078D1447C0060c71a672E6D13882f61A0a6";
+
+// router ethereum
+export const routerAddressTestnet =
+  "0x050aAC21096e027142E3f5d089a9251FcCf191b9";
+export const routerAddressMainnet =
+  "0x050aAC21096e027142E3f5d089a9251FcCf191b9";
+
+// router bsc
+export const routerAddressBscTestnet =
+  "0x050aAC21096e027142E3f5d089a9251FcCf191b9";
+export const routerAddressBscMainnet =
+  "0x050aAC21096e027142E3f5d089a9251FcCf191b9";
+
+//pbr-eth-pair
+//ethereum
 export const pbrEthPairAddressTestnet =
-  "0x81d3742180E4D2d1FC07aE78d745Cf382449c86b";
+  "0x60A481261b545463425682d7de67CC363f351ce6";
 export const pbrEthPairAddressMainnet =
   "0xc24e9758e2F229cb2235d7f1F8691f45Cb62dC0A";
 
+// bsc
 export const pbrEthPairAddressBscTestnet =
   "0xc24e9758e2F229cb2235d7f1F8691f45Cb62dC0A";
 export const pbrEthPairAddressBscMainnet =

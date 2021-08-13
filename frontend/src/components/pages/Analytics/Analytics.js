@@ -10,7 +10,7 @@ const Analytics = () => {
 
   return (
     <div className={classes.container}>
-      <p>Polkabridge Dex Overview</p>
+      <p>AMM Overview</p>
 
       <div className={classes.cardsContainer}>
         <div className={classes.card}>
@@ -69,8 +69,13 @@ const Analytics = () => {
 
       <div className={classes.tokenListHeading}>Top Tokens</div>
       <div className={classes.tokenList}>
-        <TopTokens />
+        <TopTokens tableType="TopTokens" />
       </div>
+      <div className={classes.tokenListHeading}>Top Pools</div>
+      <div className={classes.tokenList}>
+        <TopTokens tableType="TopPools" />
+      </div>
+      <div className={classes.tokenListHeading}>Transactions</div>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 import { ETH, WETH_ADDRESS } from "../constants";
-import { pairContract } from "../contracts/connections";
+import { pairContract, routerContract } from "../contracts/connections";
 import { toWei, getTokenContract, getUnixTime } from "../utils/helper";
 import {
   APPROVE_TOKEN,
@@ -124,9 +124,9 @@ export const addLiquidityEth =
   (ether, token, account, deadline, network) => async (dispatch) => {
     try {
       const _tokenContract = getTokenContract(network, token.symbol);
-      const _pairContract = pairContract(network);
+      const _routerContract = routerContract(network);
 
-      console.log(_pairContract._address);
+      console.log(_routerContract._address);
       //input params
       const etherAmount = ether.amount;
       const etherAmountMin = ether.min;
@@ -136,7 +136,7 @@ export const addLiquidityEth =
       // deadline should be passed in minites in calculation
       const _deadlineUnix = getUnixTime(deadline);
 
-      const liquidity = await _pairContract.methods
+      const liquidity = await _routerContract.methods
         .addLiquidityETH(
           _tokenContract._address,
           tokenAmountDesired,
@@ -161,7 +161,7 @@ export const checkAllowance = (token, account, network) => async (dispatch) => {
   try {
     console.log("checking allowance");
     const _tokenContract = getTokenContract(network, token.symbol);
-    const _pairContract = pairContract(network);
+    const _routerContract = routerContract(network);
     if (token.symbol === ETH) {
       dispatch({
         type: APPROVE_TOKEN,
@@ -171,7 +171,7 @@ export const checkAllowance = (token, account, network) => async (dispatch) => {
     }
 
     const tokenAllowance = await _tokenContract.methods
-      .allowance(account, _pairContract._address)
+      .allowance(account, _routerContract._address)
       .call();
 
     console.log("allowance ", tokenAllowance);
@@ -199,10 +199,10 @@ export const confirmAllowance =
   (balance, token, account, network) => async (dispatch) => {
     try {
       const _tokenContract = getTokenContract(network, token.symbol);
-      const _pairContract = pairContract(network);
+      const _routerContract = routerContract(network);
 
       const tokenAllowance = await _tokenContract.methods
-        .approve(_pairContract._address, balance)
+        .approve(_routerContract._address, balance)
         .send({ from: account });
 
       console.log("allowance confirmed ", tokenAllowance);

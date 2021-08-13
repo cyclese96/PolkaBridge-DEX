@@ -8,6 +8,7 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Avatar from "@material-ui/core/Avatar";
 import { List } from "@material-ui/core";
 import { supportedTokens } from "../../constants";
+import tokenThumbnail from "../../utils/tokenThumbnail";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,7 +71,7 @@ const TokenList = ({
             onClick={() => handleItemSelected(token)}
           >
             <ListItemAvatar>
-              <Avatar src={token.icon}></Avatar>
+              <Avatar src={tokenThumbnail(token.symbol)}></Avatar>
             </ListItemAvatar>
             <ListItemText
               primary={
