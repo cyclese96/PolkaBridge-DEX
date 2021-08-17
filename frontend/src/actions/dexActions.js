@@ -5,8 +5,10 @@ import { toWei, getTokenContract, getUnixTime } from "../utils/helper";
 import {
   APPROVE_TOKEN,
   DEX_ERROR,
+  HIDE_LOADING,
   SET_TOKEN0_PRICE,
   SET_TOKEN1_PRICE,
+  SHOW_LOADING,
 } from "./types";
 
 // Buy trade action
@@ -14,7 +16,8 @@ import {
 export const swapExactEthForTokens =
   (token0, token1, deadline, account, network) => async (dispatch) => {
     try {
-      const _pairContract = pairContract(network);
+      // const _pairContract = pairContract(network);
+      const _routerContract = routerContract(network);
       const _tokenContract = getTokenContract(network, token1.symbol);
 
       const fromTokenName = token0.name;
@@ -26,10 +29,12 @@ export const swapExactEthForTokens =
       const path = [tokenAddress];
       const toAddress = account;
       const _deadlineUnix = getUnixTime(deadline);
-
-      const swapRes = await _pairContract.methods
+      dispatch({
+        type: SHOW_LOADING,
+      });
+      const swapRes = await _routerContract.methods
         .swapExactETHForTokens(toTokenAmount, path, toAddress, _deadlineUnix)
-        .call();
+        .send({ from: account });
 
       console.log({ token0, token1 });
     } catch (error) {
@@ -39,6 +44,9 @@ export const swapExactEthForTokens =
         payload: "Some went wrong with exchange",
       });
     }
+    dispatch({
+      type: HIDE_LOADING,
+    });
   };
 
 // Sell trade action
@@ -46,7 +54,8 @@ export const swapExactEthForTokens =
 export const swapEthForExactTokens =
   (token0, token1, deadline, account, network) => async (dispatch) => {
     try {
-      const _pairContract = pairContract(network);
+      // const _pairContract = pairContract(network);
+      const _routerContract = routerContract(network);
       const _tokenContract = getTokenContract(network, token1.symbol);
 
       const fromTokenName = token0.name; // erc20 token name
@@ -59,9 +68,12 @@ export const swapEthForExactTokens =
       const toAddress = account;
       const _deadlineUnix = getUnixTime(deadline);
 
-      const swapRes = await _pairContract.methods
+      dispatch({
+        type: SHOW_LOADING,
+      });
+      const swapRes = await _routerContract.methods
         .swapETHForExactTokens(fromTokenAmount, path, toAddress, _deadlineUnix)
-        .call();
+        .send({ from: account });
 
       console.log({ token0, token1 });
     } catch (error) {
@@ -71,6 +83,9 @@ export const swapEthForExactTokens =
         payload: "Some went wrong with exchange",
       });
     }
+    dispatch({
+      type: HIDE_LOADING,
+    });
   };
 
 export const getTokenPrice = (tokenNumber, network) => async (dispatch) => {
@@ -121,21 +136,30 @@ export const getAmountsOut =
 //token0: { amount: "", address: "", desired:"", min:"" }
 //token1 { amount: "", address: "", desired:"", min:"" }
 export const addLiquidityEth =
-  (ether, token, account, deadline, network) => async (dispatch) => {
+  (ethToken, erc20Token, account, deadline, network) => async (dispatch) => {
     try {
-      const _tokenContract = getTokenContract(network, token.symbol);
+      const _tokenContract = getTokenContract(network, erc20Token.symbol);
       const _routerContract = routerContract(network);
 
-      console.log(_routerContract._address);
+      dispatch({
+        type: SHOW_LOADING,
+      });
       //input params
-      const etherAmount = ether.amount;
-      const etherAmountMin = ether.min;
-      const tokenAmountDesired = token.amount;
-      const tokenAmountMin = token.min;
+      const etherAmount = ethToken.amount;
+      const etherAmountMin = ethToken.min;
+      const tokenAmountDesired = erc20Token.amount;
+      const tokenAmountMin = erc20Token.min;
 
       // deadline should be passed in minites in calculation
       const _deadlineUnix = getUnixTime(deadline);
-
+      console.log({
+        contAddres: _tokenContract._address,
+        tokenAmountDesired,
+        tokenAmountMin,
+        etherAmountMin,
+        account,
+        _deadlineUnix,
+      });
       const liquidity = await _routerContract.methods
         .addLiquidityETH(
           _tokenContract._address,
@@ -145,16 +169,20 @@ export const addLiquidityEth =
           account,
           _deadlineUnix
         )
-        .call();
+        .send({ from: account, value: toWei(ethToken.amount) });
 
       console.log(liquidity);
     } catch (error) {
-      console.log("addLiquidity: ", error);
+      console.log("addLiquidityEth: ", error);
       dispatch({
         type: DEX_ERROR,
         payload: "Failed to add liquidity",
       });
     }
+
+    dispatch({
+      type: HIDE_LOADING,
+    });
   };
 
 export const checkAllowance = (token, account, network) => async (dispatch) => {
@@ -169,7 +197,9 @@ export const checkAllowance = (token, account, network) => async (dispatch) => {
       });
       return;
     }
-
+    dispatch({
+      type: SHOW_LOADING,
+    });
     const tokenAllowance = await _tokenContract.methods
       .allowance(account, _routerContract._address)
       .call();
@@ -193,6 +223,9 @@ export const checkAllowance = (token, account, network) => async (dispatch) => {
       payload: "Failed to check allowance",
     });
   }
+  dispatch({
+    type: HIDE_LOADING,
+  });
 };
 
 export const confirmAllowance =
@@ -201,10 +234,17 @@ export const confirmAllowance =
       const _tokenContract = getTokenContract(network, token.symbol);
       const _routerContract = routerContract(network);
 
+      dispatch({
+        type: SHOW_LOADING,
+      });
       const tokenAllowance = await _tokenContract.methods
         .approve(_routerContract._address, balance)
         .send({ from: account });
 
+      dispatch({
+        type: APPROVE_TOKEN,
+        payload: { symbol: token.symbol, status: true },
+      });
       console.log("allowance confirmed ", tokenAllowance);
     } catch (error) {
       console.log("confirmAllowance ", error);
@@ -213,4 +253,7 @@ export const confirmAllowance =
         payload: "Failed to confirm allowance",
       });
     }
+    dispatch({
+      type: HIDE_LOADING,
+    });
   };

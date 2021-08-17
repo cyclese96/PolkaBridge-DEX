@@ -27,6 +27,9 @@ export const APPROVE_DEX = "APPROVE_DEX";
 export const APPROVE_TOKEN = "APPROVE_TOKEN";
 export const DISAPPROVE_TOKEN = "DISAPPROVE_TOKEN";
 
+export const SHOW_DEX_LOADING = "SHOW_DEX_LOADING";
+export const HIDE_DEX_LOADING = "HIDE_DEX_LOADING";
+
 export const CHANGE_NETWORK = "CHANGE_NETWORK";
 
 export const DEX_ERROR = "DEX_ERROR";

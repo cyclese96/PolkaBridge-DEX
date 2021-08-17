@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { makeStyles } from "@material-ui/core";
+import { CircularProgress, makeStyles } from "@material-ui/core";
 import { connect } from "react-redux";
 import TuneIcon from "@material-ui/icons/Tune";
 import SwapCardItem from "./SwapCardItem";
@@ -26,6 +26,7 @@ import {
   checkAllowance,
   confirmAllowance,
 } from "../../actions/dexActions";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -168,10 +169,15 @@ const SwapCard = ({
   }, [currentNetwork, currentAccount]);
 
   useEffect(async () => {
-    if (!selectedToken1.symbol || selectedToken1.symbol === ETH) {
+    if (
+      !selectedToken1.symbol ||
+      selectedToken1.symbol === ETH ||
+      approvedTokens[selectedToken1.symbol]
+    ) {
       //skip approve check for eth
       return;
     }
+    console.log("checking approval in swap");
     await checkAllowance(selectedToken1, currentAccount, currentNetwork);
   }, [selectedToken1, currentNetwork, currentAccount]);
 
@@ -376,8 +382,49 @@ const SwapCard = ({
                 fontSize="small"
               />
             </div>
-
-            <CustomButton
+            <div className="d-flex  mt-4">
+              <CustomButton
+                variant="light"
+                className={classes.approveBtn}
+                disabled={approvedTokens[selectedToken1.symbol]}
+                onClick={handleConfirmAllowance}
+              >
+                {approvedTokens[selectedToken1.symbol] ? (
+                  <>
+                    Approved{" "}
+                    <CheckCircleIcon
+                      style={{ color: "#E0077D", marginLeft: 5 }}
+                      fontSize="small"
+                    />{" "}
+                  </>
+                ) : loading ? (
+                  <CircularProgress
+                    style={{ color: "black" }}
+                    color="secondary"
+                    size={30}
+                  />
+                ) : (
+                  "Approve"
+                )}
+              </CustomButton>
+              <CustomButton
+                variant="primary"
+                // className={classes.addButton}
+                disabled={swapStatus.disabled | loading}
+                onClick={handleSwapToken}
+              >
+                {!swapStatus.disabled && loading ? (
+                  <CircularProgress
+                    style={{ color: "black" }}
+                    color="secondary"
+                    size={30}
+                  />
+                ) : (
+                  "Swap"
+                )}
+              </CustomButton>
+            </div>
+            {/* <CustomButton
               variant="light"
               className={classes.addButton}
               onClick={
@@ -394,7 +441,7 @@ const SwapCard = ({
               {!approvedTokens[selectedToken1.symbol]
                 ? `Approve ${selectedToken1.symbol} tokens`
                 : swapStatus.message}
-            </CustomButton>
+            </CustomButton> */}
           </div>
         </div>
       </div>

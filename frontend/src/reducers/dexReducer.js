@@ -16,7 +16,8 @@ import {
 } from "../constants";
 
 const initalState = {
-  error: null,
+  dexError: null,
+  dexLoading: false,
   recentSwaps: [],
   token0Price: null,
   token1Price: null,
@@ -24,13 +25,13 @@ const initalState = {
     name: null,
     amount: null,
     address: null,
-    price: 1980,
+    price: 3290,
   },
   to_token: {
     name: null,
     amount: null,
     address: null,
-    price: 0.048,
+    price: 0.15,
   },
   swapSettings: {
     swapFee: exchangeFee,
@@ -45,7 +46,7 @@ export default function (state = initalState, action) {
     case DEX_ERROR:
       return {
         ...state,
-        error: action.payload,
+        dexError: action.payload,
       };
     case UPDATE_SETTINGS:
       return {

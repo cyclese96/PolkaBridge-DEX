@@ -273,9 +273,7 @@ const SwapSettings = ({
             <CustomButton variant="light" onClick={handleClose}>
               Cancel
             </CustomButton>
-            <CustomButton onClick={onApply}>
-              <p>Apply</p>
-            </CustomButton>
+            <CustomButton onClick={onApply}>Apply</CustomButton>
           </div>
         </div>
       </Dialog>

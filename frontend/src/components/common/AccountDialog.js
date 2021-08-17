@@ -152,12 +152,13 @@ const AccountDialog = ({
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "start",
+                  paddingBottom: 10,
                 }}
               >
                 <>
                   <VisibilityIcon fontSize="small" className={classes.icon} />
                   <span className={classes.icon}>{item.coin}</span>
-                  <p className={classes.numbers}>{item.balance}</p>
+                  <span className={classes.numbers}>{item.balance}</span>
                 </>
               </div>
             ))}

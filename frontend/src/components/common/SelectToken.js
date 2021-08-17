@@ -58,7 +58,7 @@ const SelectToken = ({
         handleClose={tokensClose}
         handleTokenSelected={handleTokenSelected}
       />
-      <a
+      <span
         className={[classes.token, className].join(" ")}
         onClick={handleTokensOpen}
       >
@@ -75,7 +75,7 @@ const SelectToken = ({
           </span>
         )}
         <ArrowDropDownIcon />
-      </a>
+      </span>
     </>
   );
 };

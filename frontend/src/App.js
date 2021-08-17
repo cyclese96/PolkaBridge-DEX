@@ -10,9 +10,9 @@ import "./web";
 import { testQuery } from "./apollo/queries";
 
 function App() {
-  useEffect(async () => {
-    await testQuery();
-  }, []);
+  // useEffect(async () => {
+  //   await testQuery();
+  // }, []);
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
