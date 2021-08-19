@@ -1,29 +1,38 @@
 import Web3 from "web3";
 import Bite from "../abi/Bite.json";
 import PolkaBridge from "../abi/PolkaBridge.json";
-import CorgibStaking from "../abi/CorgibStaking.json";
+import PBR_ETH_pairBscAbi from "../abi/PairBscPBR_ETH.json";
 import PBR_ETH_pairAbi from "../abi/PairPBR_ETH.json";
 import PolkaBridgeMemeToken from "../abi/PolkaBridgeMemeToken.json";
 import pwarCoin from "../abi/Pwar.json";
+import RouterAbi from "../abi/Router.json";
+import FactoryAbi from "../abi/Factory.json";
 
 import {
   biteAddressKoven,
   biteAddressMainnet,
-  bscConfig,
   bscNetwork,
   corgibMemeCoinMainnet,
   corgibMemeCoinTestent,
-  corgibStakingMainent,
-  corgibStakingTestent,
   currentConnection,
   etheriumNetwork,
-  pbrAddressKoven,
+  pbrAddressTestnet,
   pbrAddressMainnet,
+  pbrEthPairAddressBscMainnet,
+  pbrEthPairAddressBscTestnet,
   pbrEthPairAddressMainnet,
   pbrEthPairAddressTestnet,
   pwarAddressMainnet,
   pwarAddressTestnet,
   PWAR_BNB,
+  routerAddressBscTestnet,
+  routerAddressBscMainnet,
+  routerAddressTestnet,
+  routerAddressMainnet,
+  facotryAddressBscTestnet,
+  factoryAddresBscMainnet,
+  facotryAddressTestnet,
+  factoryAddresMainnet,
 } from "../../constants";
 import { isMetaMaskInstalled } from "../../utils/helper";
 
@@ -39,7 +48,7 @@ export const biteContract = (network) => {
 
 export const pbrContract = (network) => {
   const address =
-    currentConnection === "testnet" ? pbrAddressKoven : pbrAddressMainnet;
+    currentConnection === "testnet" ? pbrAddressTestnet : pbrAddressMainnet;
 
   const abi = PolkaBridge;
   const connection = getCurrentConnection(network, abi, address);
@@ -68,16 +77,12 @@ export const pwarCoinContract = (network) => {
 
 export const pairContract = (network) => {
   if (network === bscNetwork) {
-    //TODO set pair contract for bsc
-    // if (pair === PWAR_BNB) {
-
-    // }
     const address =
       currentConnection === "testnet"
-        ? corgibStakingTestent
-        : corgibStakingMainent;
+        ? pbrEthPairAddressBscTestnet
+        : pbrEthPairAddressBscMainnet;
 
-    const abi = CorgibStaking;
+    const abi = PBR_ETH_pairBscAbi;
     const connection = getCurrentConnection(network, abi, address);
     return connection;
   } else {
@@ -87,6 +92,50 @@ export const pairContract = (network) => {
         : pbrEthPairAddressMainnet;
 
     const abi = PBR_ETH_pairAbi;
+    const connection = getCurrentConnection(network, abi, address);
+    return connection;
+  }
+};
+
+export const routerContract = (network) => {
+  if (network === bscNetwork) {
+    const address =
+      currentConnection === "testnet"
+        ? routerAddressBscTestnet
+        : routerAddressBscMainnet;
+
+    const abi = RouterAbi; // update for bsc
+    const connection = getCurrentConnection(network, abi, address);
+    return connection;
+  } else {
+    const address =
+      currentConnection === "testnet"
+        ? routerAddressTestnet
+        : routerAddressMainnet;
+
+    const abi = RouterAbi;
+    const connection = getCurrentConnection(network, abi, address);
+    return connection;
+  }
+};
+
+export const factoryContract = (network) => {
+  if (network === bscNetwork) {
+    const address =
+      currentConnection === "testnet"
+        ? facotryAddressBscTestnet
+        : factoryAddresBscMainnet;
+
+    const abi = FactoryAbi; // update for bsc
+    const connection = getCurrentConnection(network, abi, address);
+    return connection;
+  } else {
+    const address =
+      currentConnection === "testnet"
+        ? facotryAddressTestnet
+        : factoryAddresMainnet;
+
+    const abi = FactoryAbi;
     const connection = getCurrentConnection(network, abi, address);
     return connection;
   }

@@ -24,8 +24,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   tokenIcon: {
-    width: 25,
-    height: "auto",
+    width: "auto",
+    height: 22,
     marginRight: 2,
   },
   selectToken: {
@@ -58,7 +58,7 @@ const SelectToken = ({
         handleClose={tokensClose}
         handleTokenSelected={handleTokenSelected}
       />
-      <a
+      <span
         className={[classes.token, className].join(" ")}
         onClick={handleTokensOpen}
       >
@@ -75,7 +75,7 @@ const SelectToken = ({
           </span>
         )}
         <ArrowDropDownIcon />
-      </a>
+      </span>
     </>
   );
 };

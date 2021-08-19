@@ -16,13 +16,11 @@ import store from "../store";
 import {
   bscConfig,
   bscNetwork,
-  claimTokens,
   defaultSlippage,
   defaultTransactionDeadline,
   etherConfig,
   etheriumNetwork,
   supportedNetworks,
-  supportedStaking,
 } from "../constants";
 import {
   fromWei,
@@ -168,7 +166,7 @@ const Home = ({
       </section>
 
       <div className={classes.background}>
-        <p>Polkabridge DEX</p>
+        <p>Polkabridge AMM</p>
 
         <TabPage />
 

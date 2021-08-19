@@ -17,6 +17,7 @@ import FlareOutlined from "@material-ui/icons/FlareOutlined";
 import TouchAppOutlined from "@material-ui/icons/TouchAppOutlined";
 import VpnLockOutlined from "@material-ui/icons/VpnLockOutlined";
 import CategoryIcon from "@material-ui/icons/Category";
+import SwapVertIcon from "@material-ui/icons/SwapVert";
 
 import CustomSnackBar from "./CustomSnackbar";
 import { EqualizerOutlined } from "@material-ui/icons";
@@ -173,8 +174,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   networkIcon: {
-    width: 30,
-    height: "auto",
+    width: "auto",
+    height: 30,
   },
   menuIcon: {
     color: "rgba(255, 255, 255, 0.5)",
@@ -213,16 +214,37 @@ const Navbar = ({ currentNetwork }) => {
     >
       <List>
         {[
-          { name: "Staking", id: "staking", icon: <EqualizerOutlined /> },
-          { name: "Farm", id: "intro", icon: <TouchAppOutlined /> },
+          {
+            name: "Staking",
+            link: "https://stake.polkabridge.org/",
+            id: "staking",
+            icon: <EqualizerOutlined />,
+          },
+          {
+            name: "Farm",
+            link: "https://farm.polkabridge.org/",
+            id: "intro",
+            icon: <TouchAppOutlined />,
+          },
           {
             name: "Launchpad",
+            link: "https://launchpad.polkabridge.org/",
             id: "characters",
             icon: <PeopleAltOutlined />,
           },
-          { name: "Swap", id: "items", icon: <VpnLockOutlined /> },
-          { name: "Lending", id: "features", icon: <FlareOutlined /> },
-          { name: "Prediction", id: "usecase", icon: <CategoryIcon /> },
+          { name: "Swap", link: "#", id: "items", icon: <SwapVertIcon /> },
+          {
+            name: "Lending",
+            link: "#",
+            id: "features",
+            icon: <FlareOutlined />,
+          },
+          {
+            name: "Prediction",
+            link: "#",
+            id: "usecase",
+            icon: <CategoryIcon />,
+          },
           {},
         ].map((tab, index) => (
           <ListItem button key={tab.name} onClick={toggleDrawer(anchor, false)}>
@@ -245,9 +267,7 @@ const Navbar = ({ currentNetwork }) => {
               alt={currentNetwork}
             />
             <span style={{ color: "white", marginLeft: 5 }}>
-              {currentNetwork === etheriumNetwork
-                ? "Etherium"
-                : "Binance Smart Chain"}
+              {currentNetwork === etheriumNetwork ? "Ethereum" : "BSC"}
             </span>
           </div>
         </ListItem>
@@ -326,9 +346,7 @@ const Navbar = ({ currentNetwork }) => {
               alt={currentNetwork}
             />
             <span style={{ color: "white", marginLeft: 5 }}>
-              {currentNetwork === etheriumNetwork
-                ? "Etherium"
-                : "Binance Smart Chain"}
+              {currentNetwork === etheriumNetwork ? "Ethereum" : "BSC"}
             </span>
           </div>
           <Wallet onWalletClick={() => setAccountDialog(true)} />

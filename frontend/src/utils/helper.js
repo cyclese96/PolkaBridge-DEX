@@ -1,3 +1,11 @@
+import BigNumber from "bignumber.js";
+import { BITE, CORGIB, PBR, PWAR } from "../constants";
+import {
+  biteContract,
+  corgibCoinContract,
+  pbrContract,
+  pwarCoinContract,
+} from "../contracts/connections";
 import web3 from "../web";
 
 export const fromWei = (tokens) => {
@@ -121,4 +129,40 @@ export const token2PerToken1 = (token1UsdPrice, token2UsdPrice) => {
 export const token1PerToken2 = (token1UsdPrice, token2UsdPrice) => {
   const price = token2UsdPrice / token1UsdPrice;
   return price;
+};
+
+// current token contract
+export const getTokenContract = (network, tokenType) => {
+  switch (tokenType) {
+    case PBR:
+      return pbrContract(network);
+    case BITE:
+      return biteContract(network);
+    case CORGIB:
+      return corgibCoinContract(network);
+    case PWAR:
+      return pwarCoinContract(network);
+    default:
+      return pwarCoinContract(network);
+  }
+};
+
+export const getUnixTime = (timeInMintes) => {
+  const now = new Date();
+  now.setMinutes(now.getMinutes() + timeInMintes); // timestamp
+  const _timeUnix = Math.floor(now / 1000);
+  return _timeUnix;
+};
+
+export const getPercentage = (numerator, denominator) => {
+  const _nume = new BigNumber(numerator.toString());
+  const _dem = new BigNumber(denominator.toString());
+  if (_dem.lte(new BigNumber("0"))) {
+    return new BigNumber("100").toString();
+  }
+  if (_nume.lte(new BigNumber("0"))) {
+    return new BigNumber("0").toString();
+  }
+  const percent = _nume.div(_dem).multipliedBy(new BigNumber("100"));
+  return percent.toFixed(4).toString();
 };

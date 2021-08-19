@@ -12,19 +12,10 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 
 import PercentLabel from "../../common/PercentLabel";
 import { formatCurrency } from "../../../utils/helper";
-
-function createData(id, name, price, price_change, vol_24_h, tvl) {
-  return { id, name, price, price_change, vol_24_h, tvl };
-}
-
-const rows = [
-  createData(1, "Ether", 2330, 2.74, 882.93, 573.84), // dataset contains coinName, currPrice, priceChange, Vol24H, TVL
-  createData(2, "USD Coin", 1.0, 0.0, 529.2, 536.11),
-  createData(3, "Tetcher USD", 1.0, -0.03, 162.22, 177.01),
-  createData(4, "Polkabridge", 1.0, 0.0, 92.56, 131.58),
-  createData(5, "Polkawar", 1.0, 0.0, 92.56, 131.58),
-  createData(6, "Corgib", 1.0, 0.0, 92.56, 131.58),
-];
+import TokenIcon from "../../common/TokenIcon";
+import { topPoolsData, topTokensData } from "./tableData";
+import TokenRow from "./TableRows/TokenRow";
+import PoolRow from "./TableRows/PoolRow";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -52,28 +43,79 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
-  {
-    id: "name",
-    numeric: false,
-    disablePadding: true,
-    label: "# Name",
-  },
-  { id: "price", numeric: true, disablePadding: false, label: "Price" },
-  {
-    id: "price_change",
-    numeric: true,
-    disablePadding: false,
-    label: "Price Change",
-  },
-  {
-    id: "vol_24_h",
-    numeric: true,
-    disablePadding: false,
-    label: "Volume 24 H",
-  },
-  { id: "tvl", numeric: true, disablePadding: false, label: "TVL" },
-];
+const headCells = {
+  TopTokens: [
+    {
+      id: "name",
+      numeric: false,
+      disablePadding: true,
+      label: "# Name",
+    },
+    { id: "price", numeric: true, disablePadding: false, label: "Price" },
+    {
+      id: "price_change",
+      numeric: true,
+      disablePadding: false,
+      label: "Price Change",
+    },
+    {
+      id: "vol_24_h",
+      numeric: true,
+      disablePadding: false,
+      label: "Volume 24 H",
+    },
+    { id: "tvl", numeric: true, disablePadding: false, label: "TVL" },
+  ],
+  TopPools: [
+    {
+      id: "pool",
+      numeric: false,
+      disablePadding: true,
+      label: "# Pool",
+    },
+    { id: "tvl", numeric: true, disablePadding: false, label: "TVL" },
+    {
+      id: "vol_24_h",
+      numeric: true,
+      disablePadding: false,
+      label: "Volume 24H",
+    },
+    {
+      id: "vol_7_d",
+      numeric: true,
+      disablePadding: false,
+      label: "Volume 7D",
+    },
+  ],
+  Transactions: [
+    {
+      id: "type",
+      numeric: false,
+      disablePadding: true,
+      label: "#",
+    },
+    {
+      id: "total_value",
+      numeric: true,
+      disablePadding: false,
+      label: "Total Value",
+    },
+    {
+      id: "token1_amount",
+      numeric: true,
+      disablePadding: false,
+      label: "Token Amount",
+    },
+    {
+      id: "token2_amount",
+      numeric: true,
+      disablePadding: false,
+      label: "Token Amount",
+    },
+    { id: "account", numeric: true, disablePadding: false, label: "Account" },
+    { id: "time", numeric: true, disablePadding: false, label: "Time" },
+  ],
+};
 const headCellMobile = [
   {
     id: "name",
@@ -120,6 +162,7 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    tableType,
   } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -164,7 +207,7 @@ function EnhancedTableHead(props) {
 
       <TableRow className={ownClasses.desktop}>
         <TableCell padding="checkbox"></TableCell>
-        {headCells.map((headCell) => (
+        {headCells[tableType].map((headCell) => (
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
@@ -240,6 +283,11 @@ const useStyles = makeStyles((theme) => ({
   },
   cellText: {
     color: "white",
+    marginLeft: 6,
+    marginRight: 6,
+  },
+  cellTextSecondary: {
+    color: "rgba( 255, 255, 255, 0.4 )",
   },
   tableDesktop: {
     [theme.breakpoints.down("sm")]: {
@@ -251,9 +299,24 @@ const useStyles = makeStyles((theme) => ({
       display: "none",
     },
   },
+  tokenIcon: {
+    // marginRight: 7,
+  },
 }));
+// tableTypes:  "TopTokens" , "TopPools", "Transactions"
+// const rows = topTokensData;
 
-const TopTokens = () => {
+const rows = (tableType) => {
+  switch (tableType) {
+    case "TopTokens":
+      return topTokensData;
+    case "TopPools":
+      return topPoolsData;
+    default:
+      return topTokensData;
+  }
+};
+const TopTokens = ({ tableType = "TopTokens" }) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -270,7 +333,7 @@ const TopTokens = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = rows(tableType).map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -310,8 +373,38 @@ const TopTokens = () => {
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-
+    rowsPerPage -
+    Math.min(rowsPerPage, rows(tableType).length - page * rowsPerPage);
+  const currenTokenRow = (
+    tableType,
+    row,
+    classes,
+    isItemSelected,
+    labelId,
+    handleClick
+  ) => {
+    if (tableType === "TopTokens") {
+      return (
+        <TokenRow
+          row={row}
+          classes={classes}
+          isItemSelected={isItemSelected}
+          labelId={labelId}
+          handleClick={handleClick}
+        />
+      );
+    } else if (tableType === "TopPools") {
+      return (
+        <PoolRow
+          row={row}
+          classes={classes}
+          isItemSelected={isItemSelected}
+          labelId={labelId}
+          handleClick={handleClick}
+        />
+      );
+    }
+  };
   return (
     <div className={classes.root}>
       <div className="card-theme">
@@ -330,79 +423,23 @@ const TopTokens = () => {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={rows(tableType).length}
+              tableType={tableType}
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(rows(tableType), getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.name);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <>
-                      <TableRow
-                        hover
-                        onClick={(event) => handleClick(event, row.name)}
-                        //   role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={row.id}
-                        selected={isItemSelected}
-                        className={classes.tableMobile}
-                      >
-                        <TableCell padding="checkbox"></TableCell>
-
-                        <TableCell
-                          component="th"
-                          id={labelId}
-                          scope="row"
-                          padding="none"
-                        >
-                          <span className={classes.cellText}>{row.name}</span>
-                        </TableCell>
-
-                        <TableCell align="right" className={classes.cellText}>
-                          {formatCurrency(row.vol_24_h, true)}
-                        </TableCell>
-                      </TableRow>
-
-                      <TableRow
-                        hover
-                        onClick={(event) => handleClick(event, row.name)}
-                        //   role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
-                        key={row.id}
-                        selected={isItemSelected}
-                        className={classes.tableDesktop}
-                      >
-                        <TableCell padding="checkbox"></TableCell>
-
-                        <TableCell
-                          component="th"
-                          id={labelId}
-                          scope="row"
-                          padding="none"
-                        >
-                          <span className={classes.cellText}>{row.name}</span>
-                        </TableCell>
-                        <TableCell align="right">
-                          <span className={classes.cellText}>
-                            {formatCurrency(row.price, true)}
-                          </span>
-                        </TableCell>
-                        <TableCell align="right" className={classes.cellText}>
-                          <PercentLabel percentValue={row.price_change} />
-                        </TableCell>
-                        <TableCell align="right" className={classes.cellText}>
-                          {formatCurrency(row.vol_24_h, true)}
-                        </TableCell>
-                        <TableCell align="right" className={classes.cellText}>
-                          {formatCurrency(row.tvl, true)}
-                        </TableCell>
-                      </TableRow>
-                    </>
+                  return currenTokenRow(
+                    tableType,
+                    row,
+                    classes,
+                    isItemSelected,
+                    labelId,
+                    handleClick
                   );
                 })}
               {emptyRows > 0 && (
@@ -416,7 +453,7 @@ const TopTokens = () => {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={rows(tableType).length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

@@ -29,8 +29,9 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "space-evenly",
-    paddingLeft: 10,
-    paddingRight: 10,
+    // paddingLeft: 10,
+    // paddingRight: 10,
+    padding: 10,
   },
   labelFont: {
     fontSize: 14,
@@ -97,7 +98,7 @@ const SwapCardItem = ({
   const classes = useStyles();
 
   const handleInputChange = (event) => {
-    onInputChange(event.target.value);
+    onInputChange(event.target.value ? event.target.value : "0");
   };
 
   const handleMax = () => {
@@ -127,13 +128,13 @@ const SwapCardItem = ({
                 type="text"
                 className={classes.input}
                 onChange={handleInputChange}
-                value={inputValue}
+                value={inputValue === "0" ? "" : inputValue}
                 placeholder="0.0"
               />
 
-              <a className={classes.maxButton} onClick={handleMax}>
+              <span className={classes.maxButton} onClick={handleMax}>
                 Max
-              </a>
+              </span>
 
               <SelectToken
                 selectedToken={currentToken}

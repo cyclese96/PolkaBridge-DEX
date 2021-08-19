@@ -3,35 +3,54 @@ import { connect } from "react-redux";
 import { useState } from "react";
 import CustomButton from "../../Buttons/CustomButton";
 import AddIcon from "@material-ui/icons/Add";
+import RemoveIcon from "@material-ui/icons/Remove";
 import AddCard from "./AddCard";
+import RemoveCard from "./RemoveCard";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     height: 200,
+    display: "flex",
+    flexWrap: "wrap",
   },
   addButton: {
-    width: 150,
+    width: 170,
   },
 }));
 
 const AddLiquidity = ({ account: { balance, loading } }) => {
   const classes = useStyles();
-  const [showAdd, setShowAdd] = useState(false);
+  const [showCard, setShowAdd] = useState({ status: false, component: "" });
 
   return (
     <>
-      {!showAdd ? (
+      {!showCard.status ? (
         <div className={classes.root}>
           <CustomButton
             variant="light"
-            onClick={() => setShowAdd(true)}
+            onClick={() => setShowAdd({ status: true, component: "AddCard" })}
             className={classes.addButton}
           >
             <AddIcon /> Add liquidity
           </CustomButton>
+          <CustomButton
+            variant="light"
+            onClick={() =>
+              setShowAdd({ status: true, component: "RemoveCard" })
+            }
+            className={classes.addButton}
+          >
+            <RemoveIcon /> Remove liquidity
+          </CustomButton>
         </div>
+      ) : showCard.component === "AddCard" ? (
+        <AddCard
+          handleBack={() => setShowAdd({ status: false, component: "" })}
+        />
       ) : (
-        <AddCard handleBack={() => setShowAdd(false)} />
+        <RemoveCard
+          handleBack={() => setShowAdd({ status: false, component: "" })}
+        />
       )}
     </>
   );

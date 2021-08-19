@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { makeStyles } from "@material-ui/core";
+import { CircularProgress, makeStyles } from "@material-ui/core";
 import { connect } from "react-redux";
 import TuneIcon from "@material-ui/icons/Tune";
 import SwapCardItem from "./SwapCardItem";
@@ -11,10 +11,22 @@ import bnbImg from "../../assets/binance.png";
 import CustomButton from "../Buttons/CustomButton";
 import BigNumber from "bignumber.js";
 import CustomSnackBar from "../common/CustomSnackbar";
-import { etheriumNetwork } from "../../constants";
-import { getTokenPrice } from "../../actions/dexActions";
+import { ETH, etheriumNetwork } from "../../constants";
 import CachedIcon from "@material-ui/icons/Cached";
-import { token1PerToken2, token2PerToken1 } from "../../utils/helper";
+import {
+  fromWei,
+  token1PerToken2,
+  token2PerToken1,
+  toWei,
+} from "../../utils/helper";
+import {
+  swapEthForExactTokens,
+  swapExactEthForTokens,
+  getTokenPrice,
+  checkAllowance,
+  confirmAllowance,
+} from "../../actions/dexActions";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -84,8 +96,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SwapCard = ({
-  account: { balance, loading, currentNetwork, from_token, to_token },
-  dex: { swapSettings },
+  account: { balance, loading, currentNetwork, currentAccount },
+  dex: { swapSettings, from_token, to_token, approvedTokens },
+  swapEthForExactTokens,
+  swapExactEthForTokens,
+  checkAllowance,
+  confirmAllowance,
   tokenType,
   getTokenPrice,
 }) => {
@@ -122,29 +138,48 @@ const SwapCard = ({
       await updateTokenPrices();
     }, 1000);
   };
+
   useEffect(async () => {
+    let _token = {};
     if (currentNetwork === etheriumNetwork) {
-      setToken1({
+      _token = {
         icon: etherImg,
         name: "Ethereum",
         symbol: "ETH",
-      });
+      };
+      setToken1(_token);
     } else {
-      setToken1({
+      _token = {
         icon: bnbImg,
         name: "Binance",
         symbol: "BNB",
-      });
+      };
+      setToken1(_token);
     }
     setToken1Value("");
     setToken2({});
     setToken2Value("");
     // updateTokenPrices();
 
+    // check selected from token allowance
+    await checkAllowance(_token, currentAccount, currentNetwork);
     return () => {
       console.log("unmounted");
     };
-  }, [currentNetwork]);
+  }, [currentNetwork, currentAccount]);
+
+  useEffect(async () => {
+    if (
+      !selectedToken1.symbol ||
+      selectedToken1.symbol === ETH ||
+      approvedTokens[selectedToken1.symbol]
+    ) {
+      //skip approve check for eth
+      return;
+    }
+    console.log("checking approval in swap");
+    await checkAllowance(selectedToken1, currentAccount, currentNetwork);
+  }, [selectedToken1, currentNetwork, currentAccount]);
 
   const verifySwapStatus = (token1, token2) => {
     if (token1.selected.symbol === token2.selected.symbol) {
@@ -169,39 +204,44 @@ const SwapCard = ({
   const onToken1InputChange = (tokens) => {
     setToken1Value(tokens);
 
-    verifySwapStatus(
-      { value: tokens, selected: selectedToken1 },
-      { value: token2Value, selected: selectedToken2 }
-    );
-
     //calculate resetpective value of token 2 if selected
+    let _token2Value = "";
     if (selectedToken2.symbol && tokens) {
       const t = token2PerToken1(from_token.price, to_token.price);
-      setToken2Value(parseFloat(tokens) * t);
+      _token2Value = parseFloat(tokens) * t;
+      setToken2Value(_token2Value);
     } else if (selectedToken2.symbol && !tokens) {
       setToken2Value("");
     }
+
+    // verify swap status with current inputs
+    verifySwapStatus(
+      { value: tokens, selected: selectedToken1 },
+      { value: _token2Value, selected: selectedToken2 }
+    );
   };
 
   const onToken2InputChange = (tokens) => {
     setToken2Value(tokens);
 
-    verifySwapStatus(
-      { value: token1Value, selected: selectedToken1 },
-      { value: tokens, selected: selectedToken2 }
-    );
-
     //calculate respective value of token1 if selected
-
+    let _token1Value = "";
     if (selectedToken1.symbol && tokens) {
       const t = token1PerToken2(from_token.price, to_token.price);
-      setToken1Value(parseFloat(tokens) * t);
+      _token1Value = parseFloat(tokens) * t;
+      setToken1Value(_token1Value);
     } else if (selectedToken1.symbol && !tokens) {
       setToken1Value("");
     }
+
+    // verify swap status with current inputs
+    verifySwapStatus(
+      { value: _token1Value, selected: selectedToken1 },
+      { value: tokens, selected: selectedToken2 }
+    );
   };
 
-  const onToken1Select = (token) => {
+  const onToken1Select = async (token) => {
     setToken1(token);
     verifySwapStatus(
       { value: token1Value, selected: token },
@@ -226,10 +266,52 @@ const SwapCard = ({
     setOpen(false);
   };
 
-  const handleSwapToken = () => {
+  const handleConfirmAllowance = async () => {
+    const allowanceAmount = toWei("9999999999");
+    await confirmAllowance(
+      allowanceAmount,
+      selectedToken1,
+      currentAccount,
+      currentNetwork
+    );
+  };
+
+  const handleSwapToken = async () => {
     setAlert({ status: true, message: "Transaction submitted " });
 
+    const token1 = {
+      amount: toWei(token1Value.toString()),
+      min: toWei(token1Value.toString()),
+      symbol: selectedToken1.symbol,
+    };
+
+    const token2 = {
+      amount: toWei(token2Value.toString()),
+      min: toWei(token2Value.toString()),
+      symbol: selectedToken2.symbol,
+    };
+
     console.log(swapSettings);
+    console.log("final params", { token1, token2 });
+    if (token1.symbol === ETH) {
+      //buy trade
+      await swapExactEthForTokens(
+        token1,
+        token2,
+        swapSettings.deadline,
+        currentAccount,
+        currentNetwork
+      );
+    } else {
+      //sell trade
+      await swapEthForExactTokens(
+        token1,
+        token2,
+        swapSettings.deadline,
+        currentAccount,
+        currentNetwork
+      );
+    }
   };
 
   const hideSnackbar = () => {
@@ -246,6 +328,8 @@ const SwapCard = ({
     setToken1Value(token2Value);
     setToken2Value(tokenInput1);
   };
+
+  const handleTokenPriceRatio = () => {};
 
   return (
     <>
@@ -292,16 +376,72 @@ const SwapCard = ({
             <div className={classes.priceRatio}>
               <small>Price</small>
               <small>41,250 PBR per ETH </small>
-              <CachedIcon className={classes.resetIcon} fontSize="small" />
+              <CachedIcon
+                onClick={handleTokenPriceRatio}
+                className={classes.resetIcon}
+                fontSize="small"
+              />
             </div>
-            <CustomButton
+            <div className="d-flex  mt-4">
+              <CustomButton
+                variant="light"
+                className={classes.approveBtn}
+                disabled={approvedTokens[selectedToken1.symbol]}
+                onClick={handleConfirmAllowance}
+              >
+                {approvedTokens[selectedToken1.symbol] ? (
+                  <>
+                    Approved{" "}
+                    <CheckCircleIcon
+                      style={{ color: "#E0077D", marginLeft: 5 }}
+                      fontSize="small"
+                    />{" "}
+                  </>
+                ) : loading ? (
+                  <CircularProgress
+                    style={{ color: "black" }}
+                    color="secondary"
+                    size={30}
+                  />
+                ) : (
+                  "Approve"
+                )}
+              </CustomButton>
+              <CustomButton
+                variant="primary"
+                // className={classes.addButton}
+                disabled={swapStatus.disabled | loading}
+                onClick={handleSwapToken}
+              >
+                {!swapStatus.disabled && loading ? (
+                  <CircularProgress
+                    style={{ color: "black" }}
+                    color="secondary"
+                    size={30}
+                  />
+                ) : (
+                  "Swap"
+                )}
+              </CustomButton>
+            </div>
+            {/* <CustomButton
               variant="light"
               className={classes.addButton}
-              onClick={handleSwapToken}
-              disabled={swapStatus.disabled}
+              onClick={
+                !approvedTokens[selectedToken1.symbol]
+                  ? handleConfirmAllowance
+                  : handleSwapToken
+              }
+              disabled={
+                !approvedTokens[selectedToken1.symbol]
+                  ? false
+                  : swapStatus.disabled
+              }
             >
-              {swapStatus.message}
-            </CustomButton>
+              {!approvedTokens[selectedToken1.symbol]
+                ? `Approve ${selectedToken1.symbol} tokens`
+                : swapStatus.message}
+            </CustomButton> */}
           </div>
         </div>
       </div>
@@ -314,4 +454,10 @@ const mapStateToProps = (state) => ({
   dex: state.dex,
 });
 
-export default connect(mapStateToProps, { getTokenPrice })(SwapCard);
+export default connect(mapStateToProps, {
+  getTokenPrice,
+  swapEthForExactTokens,
+  swapExactEthForTokens,
+  checkAllowance,
+  confirmAllowance,
+})(SwapCard);

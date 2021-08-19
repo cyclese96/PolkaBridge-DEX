@@ -24,7 +24,7 @@ export const connectWallet =
       const accountAddress = await getCurrentAccount();
       console.log("connect wallet", accountAddress);
       if (
-        localStorage.getItem(`logout${accountAddress}`) == accountAddress &&
+        localStorage.getItem(`logout${accountAddress}`) === accountAddress &&
         !connect
       ) {
         dispatch({
@@ -32,7 +32,7 @@ export const connectWallet =
         });
         return;
       } else if (
-        localStorage.getItem(`logout${accountAddress}`) == accountAddress &&
+        localStorage.getItem(`logout${accountAddress}`) === accountAddress &&
         connect
       ) {
         localStorage.removeItem(`logout${accountAddress}`);
