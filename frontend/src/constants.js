@@ -45,7 +45,7 @@ export const routerAddressBscMainnet =
 //pbr-eth-pair
 //ethereum
 export const pbrEthPairAddressTestnet =
-  "0x60A481261b545463425682d7de67CC363f351ce6";
+  "0x493845349992318411Db0c472C7e7da345f1cDA4";
 export const pbrEthPairAddressMainnet =
   "0xc24e9758e2F229cb2235d7f1F8691f45Cb62dC0A";
 

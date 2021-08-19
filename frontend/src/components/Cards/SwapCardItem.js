@@ -98,7 +98,7 @@ const SwapCardItem = ({
   const classes = useStyles();
 
   const handleInputChange = (event) => {
-    onInputChange(event.target.value);
+    onInputChange(event.target.value ? event.target.value : "0");
   };
 
   const handleMax = () => {
@@ -128,7 +128,7 @@ const SwapCardItem = ({
                 type="text"
                 className={classes.input}
                 onChange={handleInputChange}
-                value={inputValue}
+                value={inputValue === "0" ? "" : inputValue}
                 placeholder="0.0"
               />
 

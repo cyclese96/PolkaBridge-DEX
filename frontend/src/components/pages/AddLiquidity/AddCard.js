@@ -20,6 +20,7 @@ import {
   addLiquidityEth,
   checkAllowance,
   confirmAllowance,
+  getPairReserves,
 } from "../../../actions/dexActions";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import tokenThumbnail from "../../../utils/tokenThumbnail";
@@ -152,10 +153,11 @@ const useStyles = makeStyles((theme) => ({
 const AddCard = (props) => {
   const {
     account: { balance, loading, currentNetwork, currentAccount },
-    dex: { swapSettings, from_token, to_token, approvedTokens },
+    dex: { swapSettings, approvedTokens, poolShare },
     addLiquidityEth,
     checkAllowance,
     confirmAllowance,
+    getPairReserves,
     handleBack,
   } = props;
 
@@ -168,12 +170,12 @@ const AddCard = (props) => {
   const [settingOpen, setOpen] = useState(false);
   const [selectedToken1, setToken1] = useState(currentDefaultToken);
   const [selectedToken2, setToken2] = useState({});
-  const [token1Value, setToken1Value] = useState(""); // token1 for eth only
-  const [token2Value, setToken2Value] = useState(""); // token2 for pbr
+  const [token1Value, setToken1Value] = useState("0"); // token1 for eth only
+  const [token2Value, setToken2Value] = useState("0"); // token2 for pbr
 
   // const [token1PerToken2, setPerToken1] = useState("1.4545");
   // const [token2PerToken1, setPerToken2] = useState("0.66891");
-  const [shareOfPool, setShare] = useState("0.04"); // to be calculated
+  // const [shareOfPool, setShare] = useState("0.04"); // to be calculated
 
   const [addStatus, setStatus] = useState({
     message: "Please select tokens",
@@ -201,8 +203,6 @@ const AddCard = (props) => {
         name: "Ethereum",
         symbol: "ETH",
       };
-      setToken1(defaultToken1);
-      setToken2(defaultToken2);
     } else {
       defaultToken1 = {
         icon: tokenThumbnail("PWAR"),
@@ -214,13 +214,12 @@ const AddCard = (props) => {
         name: "Binance",
         symbol: "BNB",
       };
-
-      setToken1(defaultToken1);
-      setToken2(defaultToken2);
     }
+    setToken1(defaultToken1);
+    setToken2(defaultToken2);
     verifySwapStatus(
-      { value: "", selected: defaultToken1 },
-      { value: "", selected: defaultToken2 }
+      { value: token1Value, selected: defaultToken1 },
+      { value: token2Value, selected: defaultToken2 }
     );
   }, [currentNetwork]);
 
@@ -248,22 +247,50 @@ const AddCard = (props) => {
   };
 
   const verifySwapStatus = (token1, token2) => {
+    console.log({ token1, token2 });
+    let message, disabled;
+    const _token1 = new BigNumber(token1.value);
+    const _token2 = new BigNumber(token2.value);
+
     if (token1.selected.symbol === token2.selected.symbol) {
-      setStatus({ message: "Invalid pair", disabled: true });
+      // setStatus({ message: "Invalid pair", disabled: true });
+      message = "Invalid pair";
+      disabled = true;
     } else if (
-      (!token1.value && token1.selected.symbol) ||
-      (!token2.value && token2.selected.symbol)
+      (_token1.eq("0") && token1.selected.symbol) ||
+      (_token2.eq("0") && token2.selected.symbol)
     ) {
-      setStatus({ message: "Enter amounts", disabled: true });
+      // setStatus({ message: "Enter amounts", disabled: true });
+      message = "Enter amounts";
+      disabled = true;
     } else if (!token1.selected.symbol || !token2.selected.symbol) {
-      setStatus({ message: "Select both tokens", disabled: true });
+      // setStatus({ message: "Select both tokens", disabled: true });
+      message = "Select both tokens";
+      disabled = true;
     } else if (
-      token1.value > 0 &&
-      token2.value > 0 &&
+      _token1.gt("0") &&
+      _token2.gt("0") &&
       token1.selected.symbol &&
       token2.selected.symbol
     ) {
-      setStatus({ message: "", disabled: false });
+      console.log("passed");
+
+      // setStatus({ message: "", disabled: false });
+      message = "";
+      disabled = false;
+    }
+
+    setStatus({ message, disabled });
+
+    if (!disabled) {
+      console.log("input  ", token1.value);
+      getPairReserves(
+        selectedToken1.symbol,
+        selectedToken2.symbol,
+        token1.value,
+        token2.value,
+        currentNetwork
+      );
     }
   };
 
@@ -369,11 +396,11 @@ const AddCard = (props) => {
   };
 
   const getPriceRatio = (token1, token2) => {
-    if (!token1 || !token2) {
-      return new BigNumber("0").toFixed(4).toString();
-    }
     const _token1 = new BigNumber(token1);
     const _token2 = new BigNumber(token2);
+    if (_token1.eq("0") || _token2.eq("0")) {
+      return new BigNumber("0").toFixed(4).toString();
+    }
     const _ratio = _token1.div(_token2).toFixed(4).toString();
     return _ratio;
   };
@@ -465,7 +492,7 @@ const AddCard = (props) => {
                     <div className={classes.feeSelectHeading}>
                       <p
                         className={classes.feeSelectHeadingP}
-                      >{`${shareOfPool}%`}</p>
+                      >{`${poolShare}%`}</p>
                     </div>
                     <span className={classes.feeSelectHeadingSpan}>
                       Share of pool
@@ -545,4 +572,5 @@ export default connect(mapStateToProps, {
   addLiquidityEth,
   checkAllowance,
   confirmAllowance,
+  getPairReserves,
 })(AddCard);

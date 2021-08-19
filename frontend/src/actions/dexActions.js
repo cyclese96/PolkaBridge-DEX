@@ -1,10 +1,17 @@
 import BigNumber from "bignumber.js";
 import { ETH, WETH_ADDRESS } from "../constants";
 import { pairContract, routerContract } from "../contracts/connections";
-import { toWei, getTokenContract, getUnixTime } from "../utils/helper";
+import {
+  toWei,
+  getTokenContract,
+  getUnixTime,
+  getPercentage,
+} from "../utils/helper";
 import {
   APPROVE_TOKEN,
   DEX_ERROR,
+  GET_PAIR_RESERVES,
+  GET_POOL_SHARE,
   HIDE_LOADING,
   SET_TOKEN0_PRICE,
   SET_TOKEN1_PRICE,
@@ -124,6 +131,49 @@ export const getAmountsOut =
         .call();
 
       console.log(amounts);
+    } catch (error) {
+      console.log("getTokenPrice:  ", error);
+      dispatch({
+        type: DEX_ERROR,
+        payload: "Failed to get token price",
+      });
+    }
+  };
+
+//
+export const getPairReserves =
+  (token0Symbol, token1Symbol, token0Input, token1Input, network) =>
+  async (dispatch) => {
+    try {
+      //TODO: change this to load requested pair contract
+      const _pairContract = pairContract(network); // pbr-eth pair default
+
+      const erc20TokenSymbol =
+        token0Symbol === ETH ? token1Symbol : token0Symbol;
+      const erc20InputValue = token0Symbol === ETH ? token1Input : token0Input;
+      const _erc20Contract = getTokenContract(network, erc20TokenSymbol);
+
+      const [token0Address, token1Address, reservesData] = await Promise.all([
+        _pairContract.methods.token0().call(),
+        _pairContract.methods.token1().call(),
+        _pairContract.methods.getReserves().call(),
+      ]);
+
+      // console.log({ token0Address, token1Address, reservesData });
+      let erc20Reserves = 0;
+      if (_erc20Contract._address === token0Address) {
+        erc20Reserves = reservesData._reserve0;
+      } else {
+        erc20Reserves = reservesData._reserve1;
+      }
+
+      const inputTokenValue = toWei(erc20InputValue);
+      const reserveTokenValue = erc20Reserves ? erc20Reserves : "0";
+
+      dispatch({
+        type: GET_POOL_SHARE,
+        payload: getPercentage(inputTokenValue, reserveTokenValue),
+      });
     } catch (error) {
       console.log("getTokenPrice:  ", error);
       dispatch({

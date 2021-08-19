@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js";
 import { BITE, CORGIB, PBR, PWAR } from "../constants";
 import {
   biteContract,
@@ -151,4 +152,17 @@ export const getUnixTime = (timeInMintes) => {
   now.setMinutes(now.getMinutes() + timeInMintes); // timestamp
   const _timeUnix = Math.floor(now / 1000);
   return _timeUnix;
+};
+
+export const getPercentage = (numerator, denominator) => {
+  const _nume = new BigNumber(numerator.toString());
+  const _dem = new BigNumber(denominator.toString());
+  if (_dem.lte(new BigNumber("0"))) {
+    return new BigNumber("100").toString();
+  }
+  if (_nume.lte(new BigNumber("0"))) {
+    return new BigNumber("0").toString();
+  }
+  const percent = _nume.div(_dem).multipliedBy(new BigNumber("100"));
+  return percent.toFixed(4).toString();
 };
