@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { logout } from "../../actions/accountActions";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import SelectTokenDialog from "./SelectTokenDialog";
+import tokenThumbnail from "../../utils/tokenThumbnail";
 
 const useStyles = makeStyles((theme) => ({
   token: {
@@ -38,6 +39,7 @@ const SelectToken = ({
   onClick,
   handleTokenSelected,
   className,
+  disableToken,
 }) => {
   const [tokensOpen, setTokensOpen] = useState(false);
 
@@ -57,6 +59,7 @@ const SelectToken = ({
         open={tokensOpen}
         handleClose={tokensClose}
         handleTokenSelected={handleTokenSelected}
+        disableToken={disableToken}
       />
       <span
         className={[classes.token, className].join(" ")}
@@ -64,7 +67,7 @@ const SelectToken = ({
       >
         <img
           className={classes.tokenIcon}
-          src={selectedToken ? selectedToken.icon : ""}
+          src={tokenThumbnail(selectedToken.symbol)}
           alt={""}
         />
         {!selectedToken.symbol ? (

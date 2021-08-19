@@ -16,6 +16,7 @@ import bite from "../../assets/bite.png";
 import pbrImg from "../../assets/balance.png";
 import etherImg from "../../assets/ether.png";
 import bnbImg from "../../assets/binance.png";
+import { tokens } from "../../constants";
 
 const styles = (theme) => ({
   root: {
@@ -112,64 +113,65 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const tokens = [
-  {
-    icon: pbrImg,
-    name: "Polkabridge",
-    symbol: "PBR",
-  },
-  {
-    icon: bite,
-    name: "DragonBite",
-    symbol: "BITE",
-  },
-  {
-    icon: pwarImg,
-    name: "Polkawar",
-    symbol: "PWAR",
-  },
-  {
-    icon: corgibImg,
-    name: "Corgib meme coin",
-    symbol: "CORGIB",
-  },
-  {
-    icon: etherImg,
-    name: "Ethereum",
-    symbol: "ETH",
-  },
-  {
-    icon: bnbImg,
-    name: "Binance",
-    symbol: "BNB",
-  },
-  {
-    icon: "",
-    name: "US tether",
-    symbol: "USDT",
-  },
-  {
-    icon: "",
-    name: "US tether",
-    symbol: "USDT",
-  },
-  {
-    icon: "",
-    name: "US tether",
-    symbol: "USDT",
-  },
-  {
-    icon: "",
-    name: "US tether",
-    symbol: "USDT",
-  },
-];
+// const tokens = [
+//   {
+//     icon: pbrImg,
+//     name: "Polkabridge",
+//     symbol: "PBR",
+//   },
+//   {
+//     icon: bite,
+//     name: "DragonBite",
+//     symbol: "BITE",
+//   },
+//   {
+//     icon: pwarImg,
+//     name: "Polkawar",
+//     symbol: "PWAR",
+//   },
+//   {
+//     icon: corgibImg,
+//     name: "Corgib meme coin",
+//     symbol: "CORGIB",
+//   },
+//   {
+//     icon: etherImg,
+//     name: "Ethereum",
+//     symbol: "ETH",
+//   },
+//   {
+//     icon: bnbImg,
+//     name: "Binance",
+//     symbol: "BNB",
+//   },
+//   {
+//     icon: "",
+//     name: "US tether",
+//     symbol: "USDT",
+//   },
+//   {
+//     icon: "",
+//     name: "US tether",
+//     symbol: "USDT",
+//   },
+//   {
+//     icon: "",
+//     name: "US tether",
+//     symbol: "USDT",
+//   },
+//   {
+//     icon: "",
+//     name: "US tether",
+//     symbol: "USDT",
+//   },
+// ];
 
 const SelectTokenDialog = ({
   open,
   handleClose,
   account: { currentAccount, balance, connected, currentNetwork },
   handleTokenSelected,
+  disableToken,
 }) => {
   const classes = useStyles();
 
@@ -217,6 +219,7 @@ const SelectTokenDialog = ({
           <TokenList
             handleItemSelected={onTokenSelect}
             tokens={filteredTokens}
+            disableToken={disableToken}
           />
           {/* </FixedSizeList> */}
           <div className={classes.buttons}>

@@ -67,9 +67,10 @@ export const PBR = "PBR";
 export const BITE = "BITE";
 export const CORGIB = "CORGIB";
 export const PWAR = "PWAR";
+export const USDT = "USDT";
 
 export const supportedTokens = {
-  ethereum: [PBR, ETH],
+  ethereum: [PBR, ETH, USDT],
   bsc: [BNB, CORGIB, PWAR],
 };
 
@@ -114,3 +115,34 @@ export const PBR_ETH = "PBR_ETH";
 export const PWAR_BNB = "PWAR_BNB";
 export const PWAR_CORGIB = "PWAR_CORGIB";
 export const CORGIB_BNB = "CORGIB_BNB";
+
+export const tokens = [
+  {
+    name: "Polkabridge",
+    symbol: "PBR",
+  },
+  {
+    name: "DragonBite",
+    symbol: "BITE",
+  },
+  {
+    name: "Polkawar",
+    symbol: "PWAR",
+  },
+  {
+    name: "Corgib meme coin",
+    symbol: "CORGIB",
+  },
+  {
+    name: "Ethereum",
+    symbol: "ETH",
+  },
+  {
+    name: "Binance",
+    symbol: "BNB",
+  },
+  {
+    name: "US Tether",
+    symbol: "USDT",
+  },
+];

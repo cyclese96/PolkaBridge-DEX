@@ -356,6 +356,7 @@ const SwapCard = ({
               onInputChange={onToken1InputChange}
               onTokenChange={onToken1Select}
               currentToken={selectedToken1}
+              disableToken={selectedToken2}
               inputValue={token1Value}
             />
             <SwapVertIcon
@@ -371,6 +372,7 @@ const SwapCard = ({
               onInputChange={onToken2InputChange}
               onTokenChange={onToken2Select}
               currentToken={selectedToken2}
+              disableToken={selectedToken1}
               inputValue={token2Value}
             />
             <div className={classes.priceRatio}>

@@ -87,14 +87,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SwapCardItem = ({
-  account: { balance, loading },
-  inputType,
-  onInputChange,
-  onTokenChange,
-  currentToken,
-  inputValue,
-}) => {
+const SwapCardItem = (props) => {
+  const {
+    account: { balance, loading },
+    inputType,
+    onInputChange,
+    onTokenChange,
+    currentToken,
+    inputValue,
+    disableToken,
+  } = props;
   const classes = useStyles();
 
   const handleInputChange = (event) => {
@@ -138,6 +140,7 @@ const SwapCardItem = ({
 
               <SelectToken
                 selectedToken={currentToken}
+                disableToken={disableToken}
                 handleTokenSelected={onTokenChange}
               />
             </div>

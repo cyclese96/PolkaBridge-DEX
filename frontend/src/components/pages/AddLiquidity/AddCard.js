@@ -438,6 +438,7 @@ const AddCard = (props) => {
               onInputChange={onToken1InputChange}
               onTokenChange={onToken1Select}
               currentToken={selectedToken1}
+              disableToken={selectedToken2}
               inputValue={token1Value}
             />
             <AddIcon fontSize="default" className={classes.settingIcon} />
@@ -445,6 +446,7 @@ const AddCard = (props) => {
               onInputChange={onToken2InputChange}
               onTokenChange={onToken2Select}
               currentToken={selectedToken2}
+              disableToken={selectedToken1}
               inputValue={token2Value}
             />
 

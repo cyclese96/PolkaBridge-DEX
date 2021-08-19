@@ -59,6 +59,7 @@ const TokenList = ({
   account: { currentAccount, balance, connected, currentNetwork },
   handleItemSelected,
   tokens,
+  disableToken,
 }) => {
   const classes = useStyles();
 
@@ -73,7 +74,9 @@ const TokenList = ({
             button
             key={index}
             onClick={() => handleItemSelected(token)}
-            disabled={false}
+            disabled={
+              !disableToken ? false : token.symbol === disableToken.symbol
+            }
           >
             <ListItemAvatar>
               {/* <Avatar src={tokenThumbnail(token.symbol)}></Avatar> */}
