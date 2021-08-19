@@ -1,10 +1,11 @@
 import BigNumber from "bignumber.js";
-import { BITE, CORGIB, PBR, PWAR } from "../constants";
+import { BITE, CORGIB, PBR, PWAR, USDT } from "../constants";
 import {
   biteContract,
   corgibCoinContract,
   pbrContract,
   pwarCoinContract,
+  usdtContract,
 } from "../contracts/connections";
 import web3 from "../web";
 
@@ -142,6 +143,8 @@ export const getTokenContract = (network, tokenType) => {
       return corgibCoinContract(network);
     case PWAR:
       return pwarCoinContract(network);
+    case USDT:
+      return usdtContract(network);
     default:
       return pwarCoinContract(network);
   }
@@ -163,6 +166,6 @@ export const getPercentage = (numerator, denominator) => {
   if (_nume.lte(new BigNumber("0"))) {
     return new BigNumber("0").toString();
   }
-  const percent = _nume.div(_dem).multipliedBy(new BigNumber("100"));
+  const percent = _nume.div(_dem.plus(_nume)).multipliedBy("100");
   return percent.toFixed(4).toString();
 };

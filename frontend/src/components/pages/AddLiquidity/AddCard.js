@@ -20,11 +20,13 @@ import {
   addLiquidityEth,
   checkAllowance,
   confirmAllowance,
-  getPairReserves,
+  getPoolShare,
 } from "../../../actions/dexActions";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import tokenThumbnail from "../../../utils/tokenThumbnail";
 import BigNumber from "bignumber.js";
+import store from "../../../store";
+import { RESET_POOL_SHARE } from "../../../actions/types";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -157,7 +159,7 @@ const AddCard = (props) => {
     addLiquidityEth,
     checkAllowance,
     confirmAllowance,
-    getPairReserves,
+    getPoolShare,
     handleBack,
   } = props;
 
@@ -284,7 +286,7 @@ const AddCard = (props) => {
 
     if (!disabled) {
       console.log("input  ", token1.value);
-      getPairReserves(
+      getPoolShare(
         selectedToken1.symbol,
         selectedToken2.symbol,
         token1.value,
@@ -332,8 +334,15 @@ const AddCard = (props) => {
     );
   };
 
+  const resetInput = () => {
+    setToken1Value("0");
+    setToken2Value("0");
+    store.dispatch({ type: RESET_POOL_SHARE });
+  };
+
   const onToken1Select = (token) => {
     setToken1(token);
+    resetInput();
 
     verifySwapStatus(
       { value: token1Value, selected: token },
@@ -342,6 +351,8 @@ const AddCard = (props) => {
   };
   const onToken2Select = (token) => {
     setToken2(token);
+    resetInput();
+
     verifySwapStatus(
       { value: token1Value, selected: selectedToken1 },
       { value: token2Value, selected: token }
@@ -574,5 +585,5 @@ export default connect(mapStateToProps, {
   addLiquidityEth,
   checkAllowance,
   confirmAllowance,
-  getPairReserves,
+  getPoolShare,
 })(AddCard);

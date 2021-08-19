@@ -1,12 +1,13 @@
 import Web3 from "web3";
 import Bite from "../abi/Bite.json";
 import PolkaBridge from "../abi/PolkaBridge.json";
-import PBR_ETH_pairBscAbi from "../abi/PairBscPBR_ETH.json";
 import PBR_ETH_pairAbi from "../abi/PairPBR_ETH.json";
 import PolkaBridgeMemeToken from "../abi/PolkaBridgeMemeToken.json";
 import pwarCoin from "../abi/Pwar.json";
 import RouterAbi from "../abi/Router.json";
 import FactoryAbi from "../abi/Factory.json";
+import UsdtAbi from "../abi/Usdt.json";
+import PairUsdtEthAbi from "../abi/PairUsdtEth.json";
 
 import {
   biteAddressKoven,
@@ -33,6 +34,10 @@ import {
   factoryAddresBscMainnet,
   facotryAddressTestnet,
   factoryAddresMainnet,
+  usdtTestnetAddress,
+  usdtMainnetAddress,
+  usdtEthPairAddressTestnet,
+  usdtEthPairAddressMainnet,
 } from "../../constants";
 import { isMetaMaskInstalled } from "../../utils/helper";
 
@@ -51,6 +56,15 @@ export const pbrContract = (network) => {
     currentConnection === "testnet" ? pbrAddressTestnet : pbrAddressMainnet;
 
   const abi = PolkaBridge;
+  const connection = getCurrentConnection(network, abi, address);
+  return connection;
+};
+
+export const usdtContract = (network) => {
+  const address =
+    currentConnection === "testnet" ? usdtTestnetAddress : usdtMainnetAddress;
+
+  const abi = UsdtAbi;
   const connection = getCurrentConnection(network, abi, address);
   return connection;
 };
@@ -75,26 +89,35 @@ export const pwarCoinContract = (network) => {
   return connection;
 };
 
-export const pairContract = (network) => {
-  if (network === bscNetwork) {
-    const address =
-      currentConnection === "testnet"
-        ? pbrEthPairAddressBscTestnet
-        : pbrEthPairAddressBscMainnet;
-
-    const abi = PBR_ETH_pairBscAbi;
-    const connection = getCurrentConnection(network, abi, address);
-    return connection;
-  } else {
-    const address =
-      currentConnection === "testnet"
-        ? pbrEthPairAddressTestnet
-        : pbrEthPairAddressMainnet;
-
-    const abi = PBR_ETH_pairAbi;
-    const connection = getCurrentConnection(network, abi, address);
-    return connection;
+// returns [address, abi]
+const getPairInfo = (token0Symbol, token1Symbol) => {
+  switch (`${token0Symbol}_${token1Symbol}`) {
+    case "PBR_ETH" || "ETH_PBR":
+      const addr =
+        currentConnection === "testnet"
+          ? pbrEthPairAddressTestnet
+          : pbrEthPairAddressMainnet;
+      const abi = PBR_ETH_pairAbi;
+      return [addr, abi];
+    case "USDT_ETH" || "ETH_USDT":
+      const addr2 =
+        currentConnection === "testnet"
+          ? usdtEthPairAddressTestnet
+          : usdtEthPairAddressMainnet;
+      const abi2 = PairUsdtEthAbi;
+      return [addr2, abi2];
+    default:
+      return [null, null];
   }
+};
+
+export const pairContract = (token0Symbol, token1Symbol, network) => {
+  const [address, abi] = getPairInfo(token0Symbol, token1Symbol);
+  if (!address || !abi) {
+    return null;
+  }
+  const connection = getCurrentConnection(network, abi, address);
+  return connection;
 };
 
 export const routerContract = (network) => {

@@ -4,10 +4,13 @@ export const biteAddressMainnet = "0x4eed0fa8de12d5a86517f214c2f11586ba2ed88d";
 export const stakingAddressMainnet =
   "0x1b46b72c5280f30Fbe8A958B4f3c348FD0fD2E55";
 
-//koven contracts/
+//testnet contracts/
 export const pbrAddressTestnet = "0xf6c9FF0543f932178262DF8C81A12A3132129b51";
 export const biteAddressKoven = "0xA9Bf3904f7216B4cA2BA862Ac27b9469c030C0eA";
-export const stakingAddressKoven = "0x7678f0AF7304e01554E2D49D96E55C8de4975c66";
+// export const stakingAddressKoven = "0x7678f0AF7304e01554E2D49D96E55C8de4975c66";
+
+export const usdtTestnetAddress = "0x117e41ec3ec246873D69BFA5659B8eB209e687d8";
+export const usdtMainnetAddress = "0x117e41ec3ec246873D69BFA5659B8eB209e687d8";
 
 // corgib
 // export const corgibStakingTestent =
@@ -48,11 +51,15 @@ export const pbrEthPairAddressTestnet =
   "0x493845349992318411Db0c472C7e7da345f1cDA4";
 export const pbrEthPairAddressMainnet =
   "0xc24e9758e2F229cb2235d7f1F8691f45Cb62dC0A";
+export const usdtEthPairAddressTestnet =
+  "0x75a009DD194D335E085a0bE6edbCb159cb3185f3";
+export const usdtEthPairAddressMainnet =
+  "0x75a009DD194D335E085a0bE6edbCb159cb3185f3";
 
-// bsc
-export const pbrEthPairAddressBscTestnet =
+// bsc pairs
+export const pwarBnbPairAddressTestnet =
   "0xc24e9758e2F229cb2235d7f1F8691f45Cb62dC0A";
-export const pbrEthPairAddressBscMainnet =
+export const pwarBnbPairAddressBscMainnet =
   "0xc24e9758e2F229cb2235d7f1F8691f45Cb62dC0A";
 
 export const WETH_ADDRESS = "0xc778417e063141139fce010982780140aa0cd5ab";

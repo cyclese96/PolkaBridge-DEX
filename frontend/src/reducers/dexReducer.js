@@ -6,6 +6,7 @@ import {
   GET_POOL_SHARE,
   LOAD_FROM_TOKEN,
   LOAD_TO_TOKEN,
+  RESET_POOL_SHARE,
   SET_TOKEN0_PRICE,
   SET_TOKEN1_PRICE,
   SWAP_TOKEN_SELECTION,
@@ -118,6 +119,12 @@ export default function (state = initalState, action) {
         ...state,
         poolShare: action.payload,
       };
+    case RESET_POOL_SHARE:
+      return {
+        ...state,
+        poolShare: "0",
+      };
+
     default:
       return state;
   }

@@ -141,24 +141,33 @@ export const getAmountsOut =
   };
 
 //
-export const getPairReserves =
+export const getPoolShare =
   (token0Symbol, token1Symbol, token0Input, token1Input, network) =>
   async (dispatch) => {
     try {
       //TODO: change this to load requested pair contract
-      const _pairContract = pairContract(network); // pbr-eth pair default
+      const _pairContract = pairContract(token0Symbol, token1Symbol, network); // pbr-eth pair default
 
       const erc20TokenSymbol =
         token0Symbol === ETH ? token1Symbol : token0Symbol;
       const erc20InputValue = token0Symbol === ETH ? token1Input : token0Input;
       const _erc20Contract = getTokenContract(network, erc20TokenSymbol);
 
+      const inputTokenValue = toWei(erc20InputValue);
+
+      if (!_pairContract) {
+        dispatch({
+          type: GET_POOL_SHARE,
+          payload: getPercentage(inputTokenValue, "0"),
+        });
+        return;
+      }
+
       const [token0Address, token1Address, reservesData] = await Promise.all([
         _pairContract.methods.token0().call(),
         _pairContract.methods.token1().call(),
         _pairContract.methods.getReserves().call(),
       ]);
-
       // console.log({ token0Address, token1Address, reservesData });
       let erc20Reserves = 0;
       if (_erc20Contract._address === token0Address) {
@@ -167,7 +176,6 @@ export const getPairReserves =
         erc20Reserves = reservesData._reserve1;
       }
 
-      const inputTokenValue = toWei(erc20InputValue);
       const reserveTokenValue = erc20Reserves ? erc20Reserves : "0";
 
       dispatch({
