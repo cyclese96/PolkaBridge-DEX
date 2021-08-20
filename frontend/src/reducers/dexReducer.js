@@ -124,7 +124,6 @@ export default function (state = initalState, action) {
         ...state,
         poolShare: "0",
       };
-
     default:
       return state;
   }

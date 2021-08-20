@@ -145,8 +145,8 @@ export const getPoolShare =
   (token0Symbol, token1Symbol, token0Input, token1Input, network) =>
   async (dispatch) => {
     try {
-      //TODO: change this to load requested pair contract
-      const _pairContract = pairContract(token0Symbol, token1Symbol, network); // pbr-eth pair default
+      //Load pair contract of selected token pair
+      const _pairContract = pairContract(token0Symbol, token1Symbol, network);
 
       const erc20TokenSymbol =
         token0Symbol === ETH ? token1Symbol : token0Symbol;
