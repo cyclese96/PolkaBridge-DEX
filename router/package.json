@@ -1,0 +1,28 @@
+{
+  "name": "router",
+  "version": "1.0.0",
+  "description": "[![Actions Status](https://github.com/Uniswap/uniswap-v2-periphery/workflows/CI/badge.svg)](https://github.com/Uniswap/uniswap-v2-periphery/actions) [![npm](https://img.shields.io/npm/v/@uniswap/v2-periphery?style=flat-square)](https://npmjs.com/package/@uniswap/v2-periphery)",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Uniswap/uniswap-v2-periphery.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Uniswap/uniswap-v2-periphery/issues"
+  },
+  "homepage": "https://github.com/Uniswap/uniswap-v2-periphery#readme",
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^1.4.3",
+    "@uniswap/lib": "^4.0.1-alpha",
+    "@uniswap/v2-core": "^1.0.1",
+    "fs": "0.0.1-security"
+  }
+}

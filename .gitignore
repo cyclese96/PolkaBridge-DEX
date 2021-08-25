@@ -1,0 +1,5 @@
+factory/node_modules
+factory/.secret
+Oracle/node_modules
+router/node_modules
+router/.secret
