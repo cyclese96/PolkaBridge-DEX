@@ -37,3 +37,6 @@ export const CHANGE_NETWORK = "CHANGE_NETWORK";
 
 export const DEX_ERROR = "DEX_ERROR";
 export const UPDATE_SETTINGS = "UPDATE_SETTINGS";
+
+export const LOAD_TOKEN_LIST = "LOAD_TOKEN_LIST";
+export const IMPORT_TOKEN = "IMPORT_TOKEN";

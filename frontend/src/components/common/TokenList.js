@@ -63,41 +63,37 @@ const TokenList = ({
 }) => {
   const classes = useStyles();
 
-  const currentSupportedTokens = supportedTokens[currentNetwork];
-
   return (
     <List className={classes.root}>
-      {tokens
-        .filter((item) => currentSupportedTokens.includes(item.symbol))
-        .map((token, index) => (
-          <ListItem
-            button
-            key={index}
-            onClick={() => handleItemSelected(token)}
-            disabled={
-              !disableToken ? false : token.symbol === disableToken.symbol
+      {tokens.map((token, index) => (
+        <ListItem
+          button
+          key={index}
+          onClick={() => handleItemSelected(token)}
+          disabled={
+            !disableToken ? false : token.symbol === disableToken.symbol
+          }
+        >
+          <ListItemAvatar>
+            {/* <Avatar src={tokenThumbnail(token.symbol)}></Avatar> */}
+            <TokenIcon symbol={token.symbol} className={classes.tokenIcon} />
+          </ListItemAvatar>
+          <ListItemText
+            primary={
+              <p style={{ padding: 0, margin: 0, color: "white" }}>
+                {token.symbol}
+              </p>
             }
-          >
-            <ListItemAvatar>
-              {/* <Avatar src={tokenThumbnail(token.symbol)}></Avatar> */}
-              <TokenIcon symbol={token.symbol} className={classes.tokenIcon} />
-            </ListItemAvatar>
-            <ListItemText
-              primary={
-                <p style={{ padding: 0, margin: 0, color: "white" }}>
-                  {token.symbol}
-                </p>
-              }
-              secondary={
-                <span
-                  style={{ color: "rgba(255, 255, 255, 0.7)", fontWeight: 200 }}
-                >
-                  {token.name}
-                </span>
-              }
-            />
-          </ListItem>
-        ))}
+            secondary={
+              <span
+                style={{ color: "rgba(255, 255, 255, 0.7)", fontWeight: 200 }}
+              >
+                {token.name}
+              </span>
+            }
+          />
+        </ListItem>
+      ))}
     </List>
   );
 };

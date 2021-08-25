@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
@@ -6,17 +6,10 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import CustomButton from "../Buttons/CustomButton";
-import { connect } from "react-redux";
-import { logout } from "../../actions/accountActions";
-
 import TokenList from "./TokenList";
-import corgibImg from "../../assets/corgi.png";
-import pwarImg from "../../assets/pwar.png";
-import bite from "../../assets/bite.png";
-import pbrImg from "../../assets/balance.png";
-import etherImg from "../../assets/ether.png";
-import bnbImg from "../../assets/binance.png";
-import { tokens } from "../../constants";
+import { importToken } from "../../actions/dexActions";
+import { connect } from "react-redux";
+import { CircularProgress } from "@material-ui/core";
 
 const styles = (theme) => ({
   root: {
@@ -87,15 +80,16 @@ const useStyles = makeStyles((theme) => ({
   input: {
     backgroundColor: "transparent",
     borderRadius: 5,
-    height: 40,
+    height: 50,
     width: "auto",
     borderColor: "rgba(255, 255, 255, 0.1)",
     borderRadius: 10,
     fontSize: 18,
-    width: "80%",
+    width: "90%",
     color: "white",
+    padding: 10,
     [theme.breakpoints.down("sm")]: {
-      height: 100,
+      height: 50,
     },
   },
   buttons: {
@@ -113,90 +107,68 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// const tokens = [
-//   {
-//     icon: pbrImg,
-//     name: "Polkabridge",
-//     symbol: "PBR",
-//   },
-//   {
-//     icon: bite,
-//     name: "DragonBite",
-//     symbol: "BITE",
-//   },
-//   {
-//     icon: pwarImg,
-//     name: "Polkawar",
-//     symbol: "PWAR",
-//   },
-//   {
-//     icon: corgibImg,
-//     name: "Corgib meme coin",
-//     symbol: "CORGIB",
-//   },
-//   {
-//     icon: etherImg,
-//     name: "Ethereum",
-//     symbol: "ETH",
-//   },
-//   {
-//     icon: bnbImg,
-//     name: "Binance",
-//     symbol: "BNB",
-//   },
-//   {
-//     icon: "",
-//     name: "US tether",
-//     symbol: "USDT",
-//   },
-//   {
-//     icon: "",
-//     name: "US tether",
-//     symbol: "USDT",
-//   },
-//   {
-//     icon: "",
-//     name: "US tether",
-//     symbol: "USDT",
-//   },
-//   {
-//     icon: "",
-//     name: "US tether",
-//     symbol: "USDT",
-//   },
-// ];
-
 const SelectTokenDialog = ({
   open,
   handleClose,
-  account: { currentAccount, balance, connected, currentNetwork },
   handleTokenSelected,
   disableToken,
+  importToken,
+  dex: { tokenList, importedTokens, dexLoading },
+  account: { currentAccount, currentNetwork },
 }) => {
   const classes = useStyles();
 
-  const [filteredTokens, setTokens] = useState(tokens);
+  const [filteredTokens, setTokens] = useState([]);
+  const [showImported, setShowImported] = useState(false);
+  const [_importedTokens, setImported] = useState([]);
 
   const onTokenSelect = (token) => {
     handleTokenSelected(token);
     handleClose();
   };
 
-  const handleTokenFilter = (value) => {
-    console.log(value);
-    const filtered = tokens.filter(
+  useEffect(() => {
+    setTokens(tokenList);
+  }, [tokenList]);
+
+  useEffect(() => {
+    if (importedTokens.symbol) {
+      setImported([importedTokens]);
+    }
+  }, [importedTokens]);
+
+  const applyFilter = (value) => {
+    const filtered = tokenList.filter(
       (item) =>
         item.symbol.toLocaleLowerCase().includes(value.toLocaleLowerCase()) ||
-        item.name.toLowerCase().includes(value.toLocaleLowerCase())
+        item.name.toLowerCase().includes(value.toLocaleLowerCase()) ||
+        (item.address &&
+          item.address.toLowerCase().includes(value.toLocaleLowerCase()))
     );
     setTokens(filtered);
+  };
+
+  const handleTokenFilter = async (value) => {
+    applyFilter(value);
+    if (value.length === 42) {
+      setShowImported(true);
+      await importToken(value, currentAccount, currentNetwork);
+    } else {
+      setShowImported(false);
+    }
+  };
+
+  const onClose = () => {
+    handleClose();
+    setShowImported(false);
   };
 
   return (
     <div>
       <Dialog
-        onClose={handleClose}
+        onClose={onClose}
         open={open}
+        // onLoad={() => filterTokens("")}
         disableBackdropClick
         className={classes.dialog}
         color="transparent"
@@ -205,25 +177,30 @@ const SelectTokenDialog = ({
         }}
       >
         <div className={classes.background}>
-          <DialogTitle onClose={() => handleClose()}>
+          <DialogTitle onClose={onClose}>
             <span className={classes.heading}>Select a token</span>
           </DialogTitle>
 
           <input
             type="text"
             className={classes.input}
-            placeholder="Search token"
+            placeholder="Search name or paste address"
             onChange={({ target: { value } }) => handleTokenFilter(value)}
           />
           {/* <FixedSizeList> */}
-          <TokenList
-            handleItemSelected={onTokenSelect}
-            tokens={filteredTokens}
-            disableToken={disableToken}
-          />
+          {dexLoading ? (
+            <CircularProgress />
+          ) : (
+            <TokenList
+              handleItemSelected={onTokenSelect}
+              tokens={showImported ? _importedTokens : filteredTokens}
+              disableToken={disableToken}
+            />
+          )}
+
           {/* </FixedSizeList> */}
           <div className={classes.buttons}>
-            <CustomButton variant="light" onClick={handleClose}>
+            <CustomButton variant="light" onClick={onClose}>
               Cancel
             </CustomButton>
           </div>
@@ -234,7 +211,8 @@ const SelectTokenDialog = ({
 };
 
 const mapStateToProps = (state) => ({
+  dex: state.dex,
   account: state.account,
 });
 
-export default connect(mapStateToProps, { logout })(SelectTokenDialog);
+export default connect(mapStateToProps, { importToken })(SelectTokenDialog);

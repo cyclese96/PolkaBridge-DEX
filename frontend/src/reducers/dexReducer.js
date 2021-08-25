@@ -4,7 +4,9 @@ import {
   DISAPPROVE_TOKEN,
   GET_PAIR_RESERVES,
   GET_POOL_SHARE,
+  IMPORT_TOKEN,
   LOAD_FROM_TOKEN,
+  LOAD_TOKEN_LIST,
   LOAD_TO_TOKEN,
   RESET_POOL_SHARE,
   SET_TOKEN0_PRICE,
@@ -42,13 +44,9 @@ const initalState = {
     deadline: defaultTransactionDeadline,
   },
   approvedTokens: {}, // { 'PBR':false, 'ETH': true}
-  pairReserves: {
-    address0: "",
-    reserve0: "",
-    address1: "",
-    reserve1: "",
-  },
   poolShare: "0",
+  tokenList: [], // { name, symbol }
+  importedTokens: {}, // { 'PBR': { abi:[], address:'', symbol:'', name:'', thumbnail:''} }
 };
 
 export default function (state = initalState, action) {
@@ -123,6 +121,31 @@ export default function (state = initalState, action) {
       return {
         ...state,
         poolShare: "0",
+      };
+    case LOAD_TOKEN_LIST:
+      return {
+        ...state,
+        tokenList: action.payload,
+      };
+    case IMPORT_TOKEN:
+      const _importedData = action.payload.importedData;
+      const _listData = action.payload.listData;
+      const _index = state.tokenList.findIndex(
+        (item) => item.symbol === _listData.symbol
+      );
+      console.log(_index);
+      let _updatedTokenList = [];
+      if (_index < 0) {
+        _updatedTokenList = [...state.tokenList, _listData];
+      } else {
+        _updatedTokenList = [...state.tokenList];
+      }
+      return {
+        ...state,
+        tokenList: _updatedTokenList,
+        importedTokens: {
+          ..._importedData,
+        },
       };
     default:
       return state;

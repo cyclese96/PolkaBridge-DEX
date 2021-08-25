@@ -6,8 +6,6 @@ import SwapCardItem from "./SwapCardItem";
 import SwapVertIcon from "@material-ui/icons/SwapVert";
 import { useState } from "react";
 import SwapSettings from "../common/SwapSettings";
-import etherImg from "../../assets/ether.png";
-import bnbImg from "../../assets/binance.png";
 import CustomButton from "../Buttons/CustomButton";
 import BigNumber from "bignumber.js";
 import CustomSnackBar from "../common/CustomSnackbar";
@@ -108,7 +106,6 @@ const SwapCard = ({
   const classes = useStyles();
   const [settingOpen, setOpen] = useState(false);
   const [selectedToken1, setToken1] = useState({
-    icon: etherImg,
     name: "Ethereum",
     symbol: "ETH",
   });
@@ -143,14 +140,12 @@ const SwapCard = ({
     let _token = {};
     if (currentNetwork === etheriumNetwork) {
       _token = {
-        icon: etherImg,
         name: "Ethereum",
         symbol: "ETH",
       };
       setToken1(_token);
     } else {
       _token = {
-        icon: bnbImg,
         name: "Binance",
         symbol: "BNB",
       };

@@ -5,7 +5,6 @@ import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import { useCallback, useEffect, useState } from "react";
 import SwapSettings from "../../common/SwapSettings";
 import etherImg from "../../../assets/ether.png";
-import bnbImg from "../../../assets/binance.png";
 import CustomButton from "../../Buttons/CustomButton";
 import SwapCardItem from "../../Cards/SwapCardItem";
 import AddIcon from "@material-ui/icons/Add";

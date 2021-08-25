@@ -16,6 +16,7 @@
     "axios": "^0.21.1",
     "big-number": "^2.0.0",
     "bignumber.js": "^9.0.1",
+    "dotenv": "^8.2.0",
     "graphql": "^15.5.1",
     "lodash": "^4.17.21",
     "prop-types": "^15.7.2",
