@@ -18,11 +18,11 @@
  *
  */
 
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
+const HDWalletProvider = require('@truffle/hdwallet-provider');
 // const infuraKey = "fj4jll3k.....";
 //
-// const fs = require('fs');
-// const mnemonic = fs.readFileSync(".secret").toString().trim();
+const fs = require('fs');
+const mnemonic = fs.readFileSync(".secret").toString().trim();
 
 module.exports = {
   /**
@@ -72,6 +72,16 @@ module.exports = {
     // network_id: 2111,   // This network is yours, in the cloud.
     // production: true    // Treats this network as if it was a public net. (default: false)
     // }
+    rinkeby: {
+      networkCheckTimeout: 10000, 
+      provider: function() { 
+       return new HDWalletProvider(mnemonic, "wss://rinkeby.infura.io/ws/v3/b8a10907bdda41c6ac713b5efc0257ee");
+       
+      },
+      network_id: 4,
+      gas: 6721975,
+      gasPrice: 20000000000
+    }
   },
 
   // Set default mocha options here, use special reporters etc.

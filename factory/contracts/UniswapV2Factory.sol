@@ -8,7 +8,7 @@ contract UniswapV2Factory is IUniswapV2Factory {
     address public feeToSetter;
 
     mapping(address => mapping(address => address)) public getPair;
-    address[] public allPairs;
+    address[] public allPairs; // storage of all pairs
 
     event PairCreated(address indexed token0, address indexed token1, address pair, uint);
     bytes32 public constant INIT_CODE_PAIR_HASH = keccak256(abi.encodePacked(type(UniswapV2Pair).creationCode));
@@ -17,6 +17,7 @@ contract UniswapV2Factory is IUniswapV2Factory {
     }
 
     function allPairsLength() external view returns (uint) {
+        // return pair length
         return allPairs.length;
     }
 

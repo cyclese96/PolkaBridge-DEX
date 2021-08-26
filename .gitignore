@@ -1,5 +1,8 @@
 factory/node_modules
 factory/.secret
 Oracle/node_modules
+Oracle/.secret
 router/node_modules
 router/.secret
+proxy/node_modules
+proxy/.secret
