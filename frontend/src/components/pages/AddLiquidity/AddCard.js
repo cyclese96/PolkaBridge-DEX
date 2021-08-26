@@ -11,6 +11,7 @@ import AddIcon from "@material-ui/icons/Add";
 import { ETH, etheriumNetwork } from "../../../constants";
 import {
   formatCurrency,
+  getPriceRatio,
   token1PerToken2,
   token2PerToken1,
   toWei,
@@ -400,15 +401,15 @@ const AddCard = (props) => {
     );
   };
 
-  const getPriceRatio = (token1, token2) => {
-    const _token1 = new BigNumber(token1);
-    const _token2 = new BigNumber(token2);
-    if (_token1.eq("0") || _token2.eq("0")) {
-      return new BigNumber("0").toFixed(4).toString();
-    }
-    const _ratio = _token1.div(_token2).toFixed(4).toString();
-    return _ratio;
-  };
+  // const getPriceRatio = (token1, token2) => {
+  //   const _token1 = new BigNumber(token1);
+  //   const _token2 = new BigNumber(token2);
+  //   if (_token1.eq("0") || _token2.eq("0")) {
+  //     return new BigNumber("0").toFixed(4).toString();
+  //   }
+  //   const _ratio = _token1.div(_token2).toFixed(4).toString();
+  //   return _ratio;
+  // };
 
   return (
     <>

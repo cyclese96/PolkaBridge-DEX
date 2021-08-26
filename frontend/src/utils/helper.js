@@ -194,3 +194,27 @@ export const fetchTokenInfo = async (address) => {
     return {};
   }
 };
+
+export const getPriceRatio = (token1, token2) => {
+  const _token1 = new BigNumber(token1);
+  const _token2 = new BigNumber(token2);
+  if (_token1.eq("0") || _token2.eq("0")) {
+    return new BigNumber("0").toFixed(4).toString();
+  }
+  const _ratio = _token1.div(_token2);
+  if (_ratio.gt(1)) {
+    return _ratio.toFixed(2).toString();
+  }
+  return _ratio.toFixed(5).toString();
+};
+
+export const getPercentAmount = (amount, percent) => {
+  const _amount = new BigNumber(amount ? amount.toString() : 0);
+  const _percent = percent ? percent.toString() : 0;
+
+  return _amount
+    .multipliedBy(_percent)
+    .div(100)
+    .integerValue(BigNumber.ROUND_FLOOR)
+    .toString();
+};

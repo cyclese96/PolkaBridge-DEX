@@ -1,16 +1,21 @@
 import {
+  APPROVE_LP_TOKENS,
   APPROVE_TOKEN,
   DEX_ERROR,
   DISAPPROVE_TOKEN,
   GET_PAIR_RESERVES,
   GET_POOL_SHARE,
+  HIDE_DEX_LOADING,
   IMPORT_TOKEN,
   LOAD_FROM_TOKEN,
   LOAD_TOKEN_LIST,
   LOAD_TO_TOKEN,
   RESET_POOL_SHARE,
+  SET_LP_BALANCE,
+  SET_POOL_RESERVES,
   SET_TOKEN0_PRICE,
   SET_TOKEN1_PRICE,
+  SHOW_DEX_LOADING,
   SWAP_TOKEN_SELECTION,
   UPDATE_SETTINGS,
 } from "../actions/types";
@@ -47,6 +52,9 @@ const initalState = {
   poolShare: "0",
   tokenList: [], // { name, symbol }
   importedTokens: {}, // { 'PBR': { abi:[], address:'', symbol:'', name:'', thumbnail:''} }
+  lpBalance: {}, // {PBR_ETH:12333, USDT_ETH:22323  }
+  lpApproved: {}, // { "PBR_ETH": false, "USDTH_ETH": true }
+  poolReserves: {}, // { "PBR": 1223432, "ETH":21, "TOTAL":123232}
 };
 
 export default function (state = initalState, action) {
@@ -146,6 +154,43 @@ export default function (state = initalState, action) {
         importedTokens: {
           ..._importedData,
         },
+      };
+    case APPROVE_LP_TOKENS:
+      const _lpToUpdate = action.payload;
+      const lpApprovalState = {};
+      lpApprovalState[`${_lpToUpdate.pair}`] = _lpToUpdate.status;
+      return {
+        ...state,
+        lpApproved: {
+          ...state.lpApproved,
+          ...lpApprovalState,
+        },
+      };
+    case SET_LP_BALANCE:
+      const _lpData = action.payload;
+      const balanceObj = {};
+      balanceObj[`${_lpData.pair}`] = _lpData.amount;
+      return {
+        ...state,
+        lpBalance: {
+          ...state.lpBalance,
+          ...balanceObj,
+        },
+      };
+    case SET_POOL_RESERVES:
+      return {
+        ...state,
+        poolReserves: action.payload,
+      };
+    case SHOW_DEX_LOADING:
+      return {
+        ...state,
+        dexLoading: true,
+      };
+    case HIDE_DEX_LOADING:
+      return {
+        ...state,
+        dexLoading: false,
       };
     default:
       return state;

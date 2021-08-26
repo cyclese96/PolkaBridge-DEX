@@ -10,16 +10,29 @@ import CustomButton from "../../Buttons/CustomButton";
 import SwapCardItem from "../../Cards/SwapCardItem";
 import AddIcon from "@material-ui/icons/Add";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
-import { etheriumNetwork } from "../../../constants";
+import { ETH, etheriumNetwork, tokens } from "../../../constants";
 import {
   formatCurrency,
+  fromWei,
+  getPercentage,
+  getPercentAmount,
+  getPriceRatio,
   token1PerToken2,
   token2PerToken1,
   toWei,
 } from "../../../utils/helper";
 import pbrIcon from "../../../assets/balance.png";
-import { addLiquidityEth } from "../../../actions/dexActions";
+import {
+  checkLpAllowance,
+  confirmLPAllowance,
+  getLpBalance,
+  removeLiquidityEth,
+} from "../../../actions/dexActions";
 import pwarImg from "../../../assets/pwar.png";
+import SelectToken from "../../common/SelectToken";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import tokenThumbnail from "../../../utils/tokenThumbnail";
+import BigNumber from "bignumber.js";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -198,12 +211,26 @@ const useStyles = makeStyles((theme) => ({
     width: "90%",
     padding: 15,
   },
+  spinner: {
+    color: "#E0077D",
+  },
 }));
 
 const RemoveCard = ({
   account: { balance, loading, currentNetwork, currentAccount },
-  dex: { swapSettings, from_token, to_token },
+  dex: {
+    lpApproved,
+    lpBalance,
+    dexLoading,
+    poolReserves,
+    poolShare,
+    swapSettings,
+  },
   handleBack,
+  checkLpAllowance,
+  confirmLPAllowance,
+  getLpBalance,
+  removeLiquidityEth,
 }) => {
   const currentDefaultToken = {
     icon: etherImg,
@@ -212,15 +239,10 @@ const RemoveCard = ({
   };
   const classes = useStyles();
   const [liquidityPercent, setLiquidityPercent] = useState(0);
+  const [liquidityInputTemp, setLiquidityInputTemp] = useState("");
   const [settingOpen, setOpen] = useState(false);
   const [selectedToken1, setToken1] = useState(currentDefaultToken);
   const [selectedToken2, setToken2] = useState({});
-  const [token1Value, setToken1Value] = useState(""); // token1 for eth only
-  const [token2Value, setToken2Value] = useState(""); // token2 for pbr
-
-  // const [token1PerToken2, setPerToken1] = useState("1.4545");
-  // const [token2PerToken1, setPerToken2] = useState("0.66891");
-  const [shareOfPool, setShare] = useState("0.04");
 
   const [addStatus, setStatus] = useState({
     message: "Please select tokens",
@@ -237,16 +259,8 @@ const RemoveCard = ({
 
   useEffect(() => {
     if (currentNetwork === etheriumNetwork) {
-      setToken1({
-        icon: pbrIcon,
-        name: "Polkabridge",
-        symbol: "PBR",
-      });
-      setToken2({
-        icon: etherImg,
-        name: "Ethereum",
-        symbol: "ETH",
-      });
+      setToken1(tokens[0]);
+      setToken2(tokens[3]);
     } else {
       setToken1({
         icon: bnbImg,
@@ -261,118 +275,170 @@ const RemoveCard = ({
     }
   }, [currentNetwork]);
 
-  const verifySwapStatus = (token1, token2) => {
-    if (token1.selected.symbol === token2.selected.symbol) {
-      setStatus({ message: "Invalid pair", disabled: true });
-    } else if (
-      (!token1.value && token1.selected.symbol) ||
-      (!token2.value && token2.selected.symbol)
+  const currentLpApproved = () => {
+    if (
+      Object.keys(lpApproved).includes(
+        `${selectedToken1.symbol}_${selectedToken2.symbol}`
+      )
     ) {
-      setStatus({ message: "Enter amounts", disabled: true });
-    } else if (!token1.selected.symbol || !token2.selected.symbol) {
-      setStatus({ message: "Select both tokens", disabled: true });
-    } else if (
-      token1.value > 0 &&
-      token2.value > 0 &&
-      token1.selected.symbol &&
-      token2.selected.symbol
-    ) {
-      setStatus({ message: "Add liquidity", disabled: false });
+      return lpApproved[`${selectedToken1.symbol}_${selectedToken2.symbol}`];
+    } else {
+      return lpApproved[`${selectedToken2.symbol}_${selectedToken1.symbol}`];
     }
   };
 
-  const onToken1InputChange = (tokens) => {
-    setToken1Value(tokens);
-
-    //calculate resetpective value of token 2 if selected
-    let _token2Value;
-    if (selectedToken2.symbol && tokens) {
-      const t = token2PerToken1(from_token.price, to_token.price);
-      _token2Value = parseFloat(tokens) * t;
-      setToken2Value(_token2Value);
-    } else if (selectedToken2.symbol && !tokens) {
-      setToken2Value("");
-    }
-
-    verifySwapStatus(
-      { value: tokens, selected: selectedToken1 },
-      { value: _token2Value, selected: selectedToken2 }
+  const handleConfirmAllowance = async () => {
+    const allowanceAmount = toWei("999999999");
+    await confirmLPAllowance(
+      allowanceAmount,
+      selectedToken1,
+      selectedToken2,
+      currentAccount,
+      currentNetwork
     );
   };
 
-  const onToken2InputChange = (tokens) => {
-    setToken2Value(tokens);
-
-    //calculate respective value of token1 if selected
-    let _token1Value;
-    if (selectedToken1.symbol && tokens) {
-      const t = token1PerToken2(from_token.price, to_token.price);
-      _token1Value = parseFloat(tokens) * t;
-      setToken1Value(_token1Value);
-    } else if (selectedToken1.symbol && !tokens) {
-      setToken1Value("");
+  const currentLpBalance = () => {
+    if (
+      Object.keys(lpBalance).includes(
+        `${selectedToken1.symbol}_${selectedToken2.symbol}`
+      )
+    ) {
+      return lpBalance[`${selectedToken1.symbol}_${selectedToken2.symbol}`];
+    } else {
+      return lpBalance[`${selectedToken2.symbol}_${selectedToken1.symbol}`];
+    }
+  };
+  useEffect(async () => {
+    if (!currentLpApproved()) {
+      // console.log("checking approval");
+      await checkLpAllowance(
+        selectedToken1,
+        selectedToken2,
+        currentAccount,
+        currentNetwork
+      );
     }
 
-    verifySwapStatus(
-      { value: _token1Value, selected: selectedToken1 },
-      { value: tokens, selected: selectedToken2 }
+    await getLpBalance(
+      selectedToken1,
+      selectedToken2,
+      currentAccount,
+      currentNetwork
     );
-  };
+  }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
+
+  // const verifySwapStatus = (token1, token2) => {
+  //   if (token1.selected.symbol === token2.selected.symbol) {
+  //     setStatus({ message: "Invalid pair", disabled: true });
+  //   } else if (
+  //     (!token1.value && token1.selected.symbol) ||
+  //     (!token2.value && token2.selected.symbol)
+  //   ) {
+  //     setStatus({ message: "Enter amounts", disabled: true });
+  //   } else if (!token1.selected.symbol || !token2.selected.symbol) {
+  //     setStatus({ message: "Select both tokens", disabled: true });
+  //   } else if (
+  //     token1.value > 0 &&
+  //     token2.value > 0 &&
+  //     token1.selected.symbol &&
+  //     token2.selected.symbol
+  //   ) {
+  //     setStatus({ message: "Add liquidity", disabled: false });
+  //   }
+  // };
+
+  // const onToken1InputChange = (tokens) => {
+  //   setToken1Value(tokens);
+
+  //   //calculate resetpective value of token 2 if selected
+  //   let _token2Value;
+  //   if (selectedToken2.symbol && tokens) {
+  //     const t = token2PerToken1(from_token.price, to_token.price);
+  //     _token2Value = parseFloat(tokens) * t;
+  //     setToken2Value(_token2Value);
+  //   } else if (selectedToken2.symbol && !tokens) {
+  //     setToken2Value("");
+  //   }
+
+  //   verifySwapStatus(
+  //     { value: tokens, selected: selectedToken1 },
+  //     { value: _token2Value, selected: selectedToken2 }
+  //   );
+  // };
+
+  // const onToken2InputChange = (tokens) => {
+  //   setToken2Value(tokens);
+
+  //   //calculate respective value of token1 if selected
+  //   let _token1Value;
+  //   if (selectedToken1.symbol && tokens) {
+  //     const t = token1PerToken2(from_token.price, to_token.price);
+  //     _token1Value = parseFloat(tokens) * t;
+  //     setToken1Value(_token1Value);
+  //   } else if (selectedToken1.symbol && !tokens) {
+  //     setToken1Value("");
+  //   }
+
+  //   verifySwapStatus(
+  //     { value: _token1Value, selected: selectedToken1 },
+  //     { value: tokens, selected: selectedToken2 }
+  //   );
+  // };
 
   const onToken1Select = (token) => {
     setToken1(token);
 
-    verifySwapStatus(
-      { value: token1Value, selected: token },
-      { value: token2Value, selected: selectedToken2 }
-    );
+    // verifySwapStatus(
+    //   { value: token1Value, selected: token },
+    //   { value: token2Value, selected: selectedToken2 }
+    // );
   };
   const onToken2Select = (token) => {
     setToken2(token);
-    verifySwapStatus(
-      { value: token1Value, selected: selectedToken1 },
-      { value: token2Value, selected: token }
-    );
+    // verifySwapStatus(
+    //   { value: token1Value, selected: selectedToken1 },
+    //   { value: token2Value, selected: token }
+    // );
   };
 
   const handleClearState = () => {
-    // setToken1Value("");
-    // setToken2Value("");
-    // setToken1(currentDefaultToken);
-    // setToken2({});
+    handleInputChange("");
   };
 
-  const handleAddLiquidity = async () => {
-    const ether = {
-      amount: toWei(token1Value.toString()),
-      min: toWei(token1Value),
-      address: selectedToken1.address,
-      symbol: "ETH",
-    };
-    const token = {
-      amount: toWei(token2Value.toString()),
-      min: toWei(token2Value.toString()),
-      symbol: selectedToken2.symbol,
-    };
-    console.log(
-      ether,
-      token,
+  const handleRemoveLiquidity = async () => {
+    const ethToken =
+      selectedToken1.symbol === ETH ? selectedToken1 : selectedToken2;
+    const erc20Token =
+      selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
+    const lpAmount = getPercentAmount(currentLpBalance(), liquidityPercent);
+    console.log({ ethToken, erc20Token, lpAmount });
+    await removeLiquidityEth(
+      ethToken,
+      erc20Token,
       currentAccount,
+      lpAmount,
       swapSettings.deadline,
       currentNetwork
     );
-    await addLiquidityEth(
-      ether,
-      token,
+
+    await getLpBalance(
+      selectedToken1,
+      selectedToken2,
       currentAccount,
-      swapSettings.deadline,
       currentNetwork
     );
+
+    handleClearState();
   };
 
   const handleInputChange = (value) => {
-    // onInputChange(event.target.value);
-    setLiquidityPercent(value);
+    if (!value) {
+      setLiquidityPercent("0");
+    } else {
+      setLiquidityPercent(value);
+    }
+    setLiquidityInputTemp(value);
   };
 
   return (
@@ -413,7 +479,7 @@ const RemoveCard = ({
                   type="text"
                   className={classes.input}
                   onChange={({ target: { value } }) => handleInputChange(value)}
-                  value={liquidityPercent}
+                  value={liquidityInputTemp}
                   placeholder="0.0"
                 />
                 <span style={{ fontSize: 50 }}>%</span>
@@ -422,25 +488,25 @@ const RemoveCard = ({
               <div className={classes.percentageBtnGrp}>
                 <span
                   className={classes.percentInputBtn}
-                  onClick={() => handleInputChange(25)}
+                  onClick={() => handleInputChange("25")}
                 >
                   25%
                 </span>
                 <span
                   className={classes.percentInputBtn}
-                  onClick={() => handleInputChange(50)}
+                  onClick={() => handleInputChange("50")}
                 >
                   50%
                 </span>
                 <span
                   className={classes.percentInputBtn}
-                  onClick={() => handleInputChange(75)}
+                  onClick={() => handleInputChange("75")}
                 >
                   75%
                 </span>
                 <span
                   className={classes.percentInputBtn}
-                  onClick={() => handleInputChange(100)}
+                  onClick={() => handleInputChange("100")}
                 >
                   Max
                 </span>
@@ -453,60 +519,108 @@ const RemoveCard = ({
 
             <div className={classes.pairDetail}>
               <div className="d-flex justify-content-between">
-                <div>
-                  <h5>42100</h5>
+                <div className="d-flex">
+                  <SelectToken
+                    selectedToken={selectedToken1}
+                    disableToken={selectedToken2}
+                    handleTokenSelected={onToken1Select}
+                  />
                 </div>
                 <div className="d-flex">
-                  <img
-                    className={classes.tokenIcon}
-                    src={selectedToken1 ? selectedToken1.icon : ""}
-                    alt={""}
+                  <SelectToken
+                    selectedToken={selectedToken2}
+                    disableToken={selectedToken1}
+                    handleTokenSelected={onToken2Select}
                   />
-                  <h5>{selectedToken1.symbol}</h5>
                 </div>
               </div>
-              <div className="d-flex justify-content-between">
+              {/* <div className="d-flex justify-content-between mt-2">
                 <div>
-                  <h5>0.9999</h5>
+                  <h5></h5>
                 </div>
                 <div className="d-flex">
-                  <img
+                   <img
                     className={classes.tokenIcon}
                     src={selectedToken2 ? selectedToken2.icon : ""}
                     alt={""}
                   />
+                  <SelectToken
+                    selectedToken={selectedToken2}
+                    disableToken={selectedToken1}
+                    handleTokenSelected={onToken2Select}
+                  />
                   <h5>{selectedToken2.symbol}</h5>
                 </div>
-              </div>
+              </div>  */}
               <div className="d-flex justify-content-end mb-1">
-                <span className={classes.clearButton}>Receive WETH</span>
+                {/* <span className={classes.clearButton}>Receive WETH</span> */}
               </div>
             </div>
 
             <div className={classes.priceContainer}>
-              <div className="d-flex justify-content-between">
-                <span>Price:</span>
-                <span>1 PBR = 0.000024 ETH</span>
-              </div>
-              <div className="d-flex justify-content-between">
-                <span></span>
-                <span>1 ETH = 41250 ETH</span>
-              </div>
+              {dexLoading ? (
+                <div className="d-flex justify-content-center">
+                  <CircularProgress className={classes.spinner} size={30} />
+                </div>
+              ) : (
+                <>
+                  <div className="d-flex justify-content-between">
+                    <span>Price:</span>
+                    <span>
+                      1 {selectedToken1.symbol} ={" "}
+                      {getPriceRatio(
+                        poolReserves[selectedToken2.symbol],
+                        poolReserves[selectedToken1.symbol]
+                      )}{" "}
+                      {selectedToken2.symbol}
+                    </span>
+                  </div>
+                  <div className="d-flex justify-content-between">
+                    <span></span>
+                    <span>
+                      {" "}
+                      1 {selectedToken2.symbol} ={" "}
+                      {getPriceRatio(
+                        poolReserves[selectedToken1.symbol],
+                        poolReserves[selectedToken2.symbol]
+                      )}{" "}
+                      {selectedToken1.symbol}
+                    </span>
+                  </div>
+                </>
+              )}
             </div>
             <div className="d-flex mt-4">
               <CustomButton
                 variant="light"
                 className={classes.approveBtn}
-                disabled={true}
-                onClick={() => {}}
+                disabled={dexLoading || currentLpApproved()}
+                onClick={handleConfirmAllowance}
               >
-                Approved
+                {currentLpApproved() ? (
+                  <>
+                    Approved{" "}
+                    <CheckCircleIcon
+                      style={{ color: "#E0077D", marginLeft: 5 }}
+                      fontSize="small"
+                    />{" "}
+                  </>
+                ) : dexLoading ? (
+                  <CircularProgress className={classes.spinner} size={30} />
+                ) : (
+                  "Approve"
+                )}
               </CustomButton>
               <CustomButton
                 variant="primary"
                 className={classes.removeBtn}
-                disabled={false}
-                onClick={() => {}}
+                disabled={
+                  dexLoading ||
+                  !currentLpApproved() ||
+                  new BigNumber(currentLpBalance()).eq(0) ||
+                  new BigNumber(liquidityPercent).eq(0)
+                }
+                onClick={handleRemoveLiquidity}
               >
                 Remove
               </CustomButton>
@@ -519,40 +633,41 @@ const RemoveCard = ({
         <div className={classes.card}>
           <div className="card-theme2">
             <div className={classes.priceContainer}>
-              <div className="d-flex justify-content-between">
-                <span>Your Position</span>
-                <span></span>
-              </div>
-              <div className="d-flex justify-content-between mt-2 mb-2">
-                <div>
-                  <img
-                    className={classes.tokenIcon}
-                    src={selectedToken1 ? selectedToken1.icon : ""}
-                    alt={""}
-                  />
-                  <img
-                    className={classes.tokenIcon}
-                    src={selectedToken2 ? selectedToken2.icon : ""}
-                    alt={""}
-                  />
-                  <span>
-                    {selectedToken1.symbol}/{selectedToken2.symbol}
-                  </span>
+              {dexLoading ? (
+                <div className="d-flex justify-content-center pt-2 pb-2">
+                  <CircularProgress className={classes.spinner} size={30} />
                 </div>
-                <span>0.00001169</span>
-              </div>
-              <div className="d-flex justify-content-between mt-1 mb-1">
-                <span>Your pool share:</span>
-                <span>0.003%</span>
-              </div>
-              <div className="d-flex justify-content-between mt-1 mb-1">
-                <span>{selectedToken1.symbol}:</span>
-                <span>41250</span>
-              </div>
-              <div className="d-flex justify-content-between mt-1 mb-1">
-                <span>{selectedToken2.symbol}:</span>
-                <span>0.99</span>
-              </div>
+              ) : (
+                <>
+                  <div className="d-flex justify-content-between">
+                    <span>Your Position</span>
+                    <span></span>
+                  </div>
+                  <div className="d-flex justify-content-between mt-2 mb-2">
+                    <div>
+                      <img
+                        className={classes.tokenIcon}
+                        src={tokenThumbnail(selectedToken1.symbol)}
+                        alt={""}
+                      />
+                      <img
+                        className={classes.tokenIcon}
+                        src={tokenThumbnail(selectedToken2.symbol)}
+                        alt={""}
+                      />
+                      <span>
+                        {selectedToken1.symbol}/{selectedToken2.symbol}{" "}
+                        {`( LP tokens )`}
+                      </span>
+                    </div>
+                    <span>{formatCurrency(fromWei(currentLpBalance()))}</span>
+                  </div>
+                  <div className="d-flex justify-content-between mt-1 mb-1">
+                    <span>Your pool share:</span>
+                    <span>{poolShare} %</span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -566,4 +681,9 @@ const mapStateToProps = (state) => ({
   dex: state.dex,
 });
 
-export default connect(mapStateToProps, {})(RemoveCard);
+export default connect(mapStateToProps, {
+  checkLpAllowance,
+  confirmLPAllowance,
+  getLpBalance,
+  removeLiquidityEth,
+})(RemoveCard);

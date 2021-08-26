@@ -62,7 +62,12 @@ export const pwarBnbPairAddressTestnet =
 export const pwarBnbPairAddressBscMainnet =
   "0xc24e9758e2F229cb2235d7f1F8691f45Cb62dC0A";
 
-export const WETH_ADDRESS = "0xc778417e063141139fce010982780140aa0cd5ab";
+export const WETH_ADDRESS_TESTNET =
+  "0xc778417e063141139fce010982780140aa0cd5ab";
+
+export const WETH_ADDRESS_MAINNET =
+  "0xc778417e063141139fce010982780140aa0cd5ab";
+
 //pwar
 
 export const pwarAddressTestnet = "0x16153214E683018D5aA318864c8e692b66E16778";
@@ -127,7 +132,7 @@ export const tokens = [
   {
     name: "Polkabridge",
     symbol: "PBR",
-    address: null,
+    address: pbrAddressTestnet,
   },
   // {
   //   name: "DragonBite",
@@ -137,17 +142,17 @@ export const tokens = [
   {
     name: "Polkawar",
     symbol: "PWAR",
-    address: null,
+    address: pwarAddressTestnet,
   },
   {
     name: "Corgib meme coin",
     symbol: "CORGIB",
-    address: null,
+    address: corgibMemeCoinTestent,
   },
   {
     name: "Ethereum",
     symbol: "ETH",
-    address: null,
+    address: WETH_ADDRESS_TESTNET,
   },
   {
     name: "Binance",
@@ -157,6 +162,6 @@ export const tokens = [
   {
     name: "US Tether",
     symbol: "USDT",
-    address: null,
+    address: usdtTestnetAddress,
   },
 ];
