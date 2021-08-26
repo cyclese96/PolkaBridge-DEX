@@ -77,7 +77,7 @@ export const PWAR = "PWAR";
 export const USDT = "USDT";
 
 export const supportedTokens = {
-  ethereum: [PBR, ETH, USDT],
+  ethereum: [PBR, ETH, USDT, BITE],
   bsc: [BNB, CORGIB, PWAR],
 };
 
@@ -127,29 +127,36 @@ export const tokens = [
   {
     name: "Polkabridge",
     symbol: "PBR",
+    address: null,
   },
-  {
-    name: "DragonBite",
-    symbol: "BITE",
-  },
+  // {
+  //   name: "DragonBite",
+  //   symbol: "BITE",
+  //   address: null,
+  // },
   {
     name: "Polkawar",
     symbol: "PWAR",
+    address: null,
   },
   {
     name: "Corgib meme coin",
     symbol: "CORGIB",
+    address: null,
   },
   {
     name: "Ethereum",
     symbol: "ETH",
+    address: null,
   },
   {
     name: "Binance",
     symbol: "BNB",
+    address: null,
   },
   {
     name: "US Tether",
     symbol: "USDT",
+    address: null,
   },
 ];

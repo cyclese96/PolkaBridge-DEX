@@ -1,20 +1,30 @@
 import BigNumber from "bignumber.js";
-import { ETH, WETH_ADDRESS } from "../constants";
-import { pairContract, routerContract } from "../contracts/connections";
+import { ETH, supportedTokens, tokens, WETH_ADDRESS } from "../constants";
+import {
+  pairContract,
+  routerContract,
+  tokenContract,
+} from "../contracts/connections";
 import {
   toWei,
   getTokenContract,
   getUnixTime,
   getPercentage,
+  fetchTokenAbi,
+  fetchTokenInfo,
 } from "../utils/helper";
 import {
   APPROVE_TOKEN,
   DEX_ERROR,
   GET_PAIR_RESERVES,
   GET_POOL_SHARE,
+  HIDE_DEX_LOADING,
   HIDE_LOADING,
+  IMPORT_TOKEN,
+  LOAD_TOKEN_LIST,
   SET_TOKEN0_PRICE,
   SET_TOKEN1_PRICE,
+  SHOW_DEX_LOADING,
   SHOW_LOADING,
 } from "./types";
 
@@ -145,8 +155,8 @@ export const getPoolShare =
   (token0Symbol, token1Symbol, token0Input, token1Input, network) =>
   async (dispatch) => {
     try {
-      //TODO: change this to load requested pair contract
-      const _pairContract = pairContract(token0Symbol, token1Symbol, network); // pbr-eth pair default
+      //Load pair contract of selected token pair
+      const _pairContract = pairContract(token0Symbol, token1Symbol, network);
 
       const erc20TokenSymbol =
         token0Symbol === ETH ? token1Symbol : token0Symbol;
@@ -246,7 +256,9 @@ export const addLiquidityEth =
 export const checkAllowance = (token, account, network) => async (dispatch) => {
   try {
     console.log("checking allowance");
-    const _tokenContract = getTokenContract(network, token.symbol);
+    const _tokenContract = token.imported
+      ? tokenContract(token.address, token.abi, network)
+      : getTokenContract(network, token.symbol);
     const _routerContract = routerContract(network);
     if (token.symbol === ETH) {
       dispatch({
@@ -289,7 +301,9 @@ export const checkAllowance = (token, account, network) => async (dispatch) => {
 export const confirmAllowance =
   (balance, token, account, network) => async (dispatch) => {
     try {
-      const _tokenContract = getTokenContract(network, token.symbol);
+      const _tokenContract = token.imported
+        ? tokenContract(token.address, token.abi, network)
+        : getTokenContract(network, token.symbol);
       const _routerContract = routerContract(network);
 
       dispatch({
@@ -315,3 +329,78 @@ export const confirmAllowance =
       type: HIDE_LOADING,
     });
   };
+
+// load token list to be selected
+export const loadTokens = (network) => async (dispatch) => {
+  try {
+    dispatch({
+      type: SHOW_LOADING,
+    });
+
+    // todo:
+    // check imported tokens from local storage
+    const currentSupportedTokens = supportedTokens[network];
+
+    dispatch({
+      type: LOAD_TOKEN_LIST,
+      payload: tokens.filter((item) =>
+        currentSupportedTokens.includes(item.symbol)
+      ),
+    });
+  } catch (error) {
+    console.log("loadTokens ", error);
+    dispatch({
+      type: DEX_ERROR,
+      payload: "Failed to confirm allowance",
+    });
+  }
+  dispatch({
+    type: HIDE_LOADING,
+  });
+};
+
+export const importToken = (address, account, network) => async (dispatch) => {
+  try {
+    dispatch({
+      type: SHOW_DEX_LOADING,
+    });
+
+    const [abiData, tokenInfoData] = await Promise.all([
+      fetchTokenAbi(address),
+      fetchTokenInfo(address),
+    ]);
+
+    const tokenInfo = tokenInfoData.result[0];
+    const contractABI = JSON.parse(abiData.result);
+    const _importedData = {
+      name: tokenInfo.tokenName,
+      symbol: tokenInfo.symbol,
+      address: address,
+      abi: contractABI,
+      imported: true,
+    };
+
+    dispatch({
+      type: IMPORT_TOKEN,
+      payload: {
+        importedData: _importedData,
+        listData: {
+          name: tokenInfo.tokenName,
+          symbol: tokenInfo.symbol,
+          address: address,
+          abi: contractABI,
+          imported: true,
+        },
+      },
+    });
+  } catch (error) {
+    console.log("importToken ", error);
+    dispatch({
+      type: DEX_ERROR,
+      payload: "Failed to importToken",
+    });
+  }
+  dispatch({
+    type: HIDE_DEX_LOADING,
+  });
+};

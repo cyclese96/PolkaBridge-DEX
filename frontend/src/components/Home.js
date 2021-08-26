@@ -5,11 +5,7 @@ import { Avatar, CircularProgress } from "@material-ui/core";
 import Navbar from "./common/Navbar";
 import Footer from "./common/Footer";
 
-import {
-  connectWallet,
-  getAccountBalance,
-  logout,
-} from "../actions/accountActions";
+import { connectWallet, getAccountBalance } from "../actions/accountActions";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import store from "../store";
@@ -31,6 +27,7 @@ import {
 } from "../utils/helper";
 import { CHANGE_NETWORK, UPDATE_SETTINGS } from "../actions/types";
 import TabPage from "./TabPage";
+import { loadTokens } from "../actions/dexActions";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -82,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Home = ({
   connectWallet,
-  logout,
+  loadTokens,
   account: { currentAccount, balance, connected, currentNetwork },
 }) => {
   const classes = useStyles();
@@ -157,6 +154,7 @@ const Home = ({
 
     await connectWallet(false, network);
     // await getAccountBalance(network);
+    await loadTokens(network);
   }, []);
 
   return (
@@ -187,6 +185,6 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   connectWallet,
-  logout,
+  loadTokens,
 })(Home);
 // balance={balance}

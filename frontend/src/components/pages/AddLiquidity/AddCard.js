@@ -2,10 +2,9 @@ import { CircularProgress, makeStyles } from "@material-ui/core";
 import { connect } from "react-redux";
 import TuneIcon from "@material-ui/icons/Tune";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import SwapSettings from "../../common/SwapSettings";
 import etherImg from "../../../assets/ether.png";
-import bnbImg from "../../../assets/binance.png";
 import CustomButton from "../../Buttons/CustomButton";
 import SwapCardItem from "../../Cards/SwapCardItem";
 import AddIcon from "@material-ui/icons/Add";
@@ -27,6 +26,7 @@ import tokenThumbnail from "../../../utils/tokenThumbnail";
 import BigNumber from "bignumber.js";
 import store from "../../../store";
 import { RESET_POOL_SHARE } from "../../../actions/types";
+import debounce from "lodash.debounce";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -234,12 +234,12 @@ const AddCard = (props) => {
       //skip approve check for eth
       return;
     }
-    console.log("checking approval");
+    // console.log("checking approval");
     await checkAllowance(selectedToken1, currentAccount, currentNetwork);
   }, [selectedToken1, currentNetwork, currentAccount]);
 
   const handleConfirmAllowance = async () => {
-    const allowanceAmount = toWei("9999999999");
+    const allowanceAmount = toWei("999999999");
     await confirmAllowance(
       allowanceAmount,
       selectedToken1,
@@ -249,24 +249,20 @@ const AddCard = (props) => {
   };
 
   const verifySwapStatus = (token1, token2) => {
-    console.log({ token1, token2 });
     let message, disabled;
     const _token1 = new BigNumber(token1.value);
     const _token2 = new BigNumber(token2.value);
 
     if (token1.selected.symbol === token2.selected.symbol) {
-      // setStatus({ message: "Invalid pair", disabled: true });
       message = "Invalid pair";
       disabled = true;
     } else if (
       (_token1.eq("0") && token1.selected.symbol) ||
       (_token2.eq("0") && token2.selected.symbol)
     ) {
-      // setStatus({ message: "Enter amounts", disabled: true });
       message = "Enter amounts";
       disabled = true;
     } else if (!token1.selected.symbol || !token2.selected.symbol) {
-      // setStatus({ message: "Select both tokens", disabled: true });
       message = "Select both tokens";
       disabled = true;
     } else if (
@@ -275,9 +271,6 @@ const AddCard = (props) => {
       token1.selected.symbol &&
       token2.selected.symbol
     ) {
-      console.log("passed");
-
-      // setStatus({ message: "", disabled: false });
       message = "";
       disabled = false;
     }
@@ -285,8 +278,7 @@ const AddCard = (props) => {
     setStatus({ message, disabled });
 
     if (!disabled) {
-      console.log("input  ", token1.value);
-      getPoolShare(
+      debouncedPoolShareCall(
         selectedToken1.symbol,
         selectedToken2.symbol,
         token1.value,
@@ -295,6 +287,11 @@ const AddCard = (props) => {
       );
     }
   };
+
+  const debouncedPoolShareCall = useCallback(
+    debounce((...params) => getPoolShare(...params), 1000),
+    [] // will be created only once initially
+  );
 
   const onToken1InputChange = (tokens) => {
     setToken1Value(tokens);
@@ -345,8 +342,8 @@ const AddCard = (props) => {
     resetInput();
 
     verifySwapStatus(
-      { value: token1Value, selected: token },
-      { value: token2Value, selected: selectedToken2 }
+      { value: "0", selected: token },
+      { value: "0", selected: selectedToken2 }
     );
   };
   const onToken2Select = (token) => {
@@ -354,16 +351,13 @@ const AddCard = (props) => {
     resetInput();
 
     verifySwapStatus(
-      { value: token1Value, selected: selectedToken1 },
-      { value: token2Value, selected: token }
+      { value: "0", selected: selectedToken1 },
+      { value: "0", selected: token }
     );
   };
 
   const handleClearState = () => {
-    setToken1Value("");
-    setToken2Value("");
-    // setToken1(currentDefaultToken);
-    // setToken2({});
+    resetInput();
 
     verifySwapStatus(
       { value: "", selected: selectedToken1 },

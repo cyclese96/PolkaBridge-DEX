@@ -120,6 +120,15 @@ export const pairContract = (token0Symbol, token1Symbol, network) => {
   return connection;
 };
 
+//get connecttion of imported contract
+export const tokenContract = (address, abi, network) => {
+  const _address = address;
+
+  const _abi = abi;
+  const connection = getCurrentConnection(network, _abi, _address);
+  return connection;
+};
+
 export const routerContract = (network) => {
   if (network === bscNetwork) {
     const address =
