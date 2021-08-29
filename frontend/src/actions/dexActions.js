@@ -34,6 +34,7 @@ import {
   SET_TOKEN1_PRICE,
   SHOW_DEX_LOADING,
   SHOW_LOADING,
+  VERIFY_SLIPPAGE,
 } from "./types";
 
 // Buy trade action
@@ -41,27 +42,69 @@ import {
 export const swapExactEthForTokens =
   (token0, token1, deadline, account, network) => async (dispatch) => {
     try {
-      // const _pairContract = pairContract(network);
+      console.log("swapExactEthForTokens");
       const _routerContract = routerContract(network);
-      const _tokenContract = getTokenContract(network, token1.symbol);
 
-      const fromTokenName = token0.name;
-      const fromTokenAmount = toWei(token0.amount);
+      const maxTokenOutAmount = "0"; //token1.amount; // erc20 amount
+      const exactEthTokenInAmount = token0.amount;
 
-      const toTokenName = token1.name; // erc20 token name
-      const toTokenAmount = toWei(token1.outAmount);
-      const tokenAddress = token1.address;
-      const path = [tokenAddress];
+      const path = [token0.address, token1.address];
+      const toAddress = account;
+      const _deadlineUnix = getUnixTime(deadline);
+      dispatch({
+        type: SHOW_LOADING,
+      });
+      console.log({ outAmount: maxTokenOutAmount, path: path });
+      const swapRes = await _routerContract.methods
+        .swapExactETHForTokens(
+          maxTokenOutAmount,
+          path,
+          toAddress,
+          _deadlineUnix
+        )
+        .send({ from: account, value: exactEthTokenInAmount });
+
+      // console.log({ token0, token1 });
+    } catch (error) {
+      console.log("swapTokens: ", error);
+      dispatch({
+        type: DEX_ERROR,
+        payload: "Some went wrong with exchange",
+      });
+    }
+    dispatch({
+      type: HIDE_LOADING,
+    });
+  };
+
+// Sell trade action, user send tokens get eth
+// token0 will be erc20 and token1 is eth
+export const swapExactTokensForEth =
+  (token0, token1, deadline, account, network) => async (dispatch) => {
+    try {
+      console.log("swapExactTokensForEth");
+      const _routerContract = routerContract(network);
+
+      const exactTokenIn = token0.amount;
+      const minTokenOutAmount = "0"; //token1.amount; // eth amount
+
+      const path = [token0.address, token1.address];
       const toAddress = account;
       const _deadlineUnix = getUnixTime(deadline);
       dispatch({
         type: SHOW_LOADING,
       });
       const swapRes = await _routerContract.methods
-        .swapExactETHForTokens(toTokenAmount, path, toAddress, _deadlineUnix)
+        .swapExactTokensForETH(
+          exactTokenIn,
+          minTokenOutAmount,
+          path,
+          toAddress,
+          _deadlineUnix
+        )
         .send({ from: account });
 
-      console.log({ token0, token1 });
+      // console.log({ token0, token1 });
     } catch (error) {
       console.log("swapTokens: ", error);
       dispatch({
@@ -79,28 +122,31 @@ export const swapExactEthForTokens =
 export const swapEthForExactTokens =
   (token0, token1, deadline, account, network) => async (dispatch) => {
     try {
-      // const _pairContract = pairContract(network);
+      console.log("swapEthForExactTokens");
       const _routerContract = routerContract(network);
-      const _tokenContract = getTokenContract(network, token1.symbol);
 
-      const fromTokenName = token0.name; // erc20 token name
-      const fromTokenAmount = toWei(token0.outAmount);
-      const tokenAddress = _tokenContract._address;
+      const exactTokenOutAmount = "0"; //token0.amount;
 
-      // const maxEthAmount = toWei(token0.amount);
+      const minEthTokenInAmount = token1.amount;
 
-      const path = [tokenAddress];
+      const path = [token1.address, token0.address];
       const toAddress = account;
       const _deadlineUnix = getUnixTime(deadline);
 
       dispatch({
         type: SHOW_LOADING,
       });
+      // console.log({ fromTokenAmount, path, toAddress });
       const swapRes = await _routerContract.methods
-        .swapETHForExactTokens(fromTokenAmount, path, toAddress, _deadlineUnix)
-        .send({ from: account });
+        .swapETHForExactTokens(
+          exactTokenOutAmount,
+          path,
+          toAddress,
+          _deadlineUnix
+        )
+        .send({ from: account, value: minEthTokenInAmount });
 
-      console.log({ token0, token1 });
+      // console.log({ token0, token1 });
     } catch (error) {
       console.log("swapTokens: ", error);
       dispatch({
@@ -528,6 +574,7 @@ export const importToken = (address, account, network) => async (dispatch) => {
 // load token list to be selected
 export const getLpBalance =
   (token1, token2, account, network) => async (dispatch) => {
+    console.log("getting balance");
     try {
       const _pairContract = pairContract(token1.symbol, token2.symbol, network);
 
@@ -543,28 +590,14 @@ export const getLpBalance =
           _pairContract.methods.totalSupply().call(),
         ]);
 
-      console.log({
-        lpBalance,
-        token0Addr,
-        token1Addr,
-        reservesData,
-        totalSupply,
-      });
-      // let erc20Reserves = 0;
-      console.log("token1 ", token1.address);
-      console.log("token2 ", token2._address);
       let reserve = {};
-      if (token1.address === token0Addr) {
-        console.log("first token is ", token1.symbol);
+
+      if (token1.address.toLowerCase() === token0Addr.toLowerCase()) {
         reserve[token1.symbol] = reservesData._reserve0;
         reserve[token2.symbol] = reservesData._reserve1;
-        // reserve["TOTAL"] = totalSupply;
-        // erc20Reserves = reservesData._reserve0;
       } else {
-        console.log("first token is ", token2.symbol);
         reserve[token1.symbol] = reservesData._reserve1;
         reserve[token2.symbol] = reservesData._reserve0;
-        // reserve["TOTAL"] = totalSupply;
       }
 
       dispatch({
@@ -584,12 +617,50 @@ export const getLpBalance =
           amount: lpBalance,
         },
       });
-      console.log("lpBalance ", lpBalance);
+      // console.log("lpBalance ", lpBalance);
     } catch (error) {
       console.log("lpBalance ", error);
       dispatch({
         type: DEX_ERROR,
         payload: "Failed to fetch lpBalance",
+      });
+    }
+    dispatch({
+      type: HIDE_DEX_LOADING,
+    });
+  };
+
+export const verifySlippage =
+  (slippage, token1, token2, account, network) => async (dispatch) => {
+    try {
+      const _pairContract = pairContract(token1.symbol, token2.symbol, network);
+
+      dispatch({
+        type: SHOW_DEX_LOADING,
+      });
+      console.log("verifying slippage", { token1, token2 });
+      const [lpBalance, token0Addr, token1Addr, reservesData, totalSupply] =
+        await Promise.all([
+          _pairContract.methods.balanceOf(account).call(),
+          _pairContract.methods.token0().call(),
+          _pairContract.methods.token1().call(),
+          _pairContract.methods.getReserves().call(),
+          _pairContract.methods.totalSupply().call(),
+        ]);
+
+      dispatch({
+        type: VERIFY_SLIPPAGE,
+        payload: true,
+      });
+    } catch (error) {
+      console.log("getTokenPrice:  ", error);
+      dispatch({
+        type: VERIFY_SLIPPAGE,
+        payload: false,
+      });
+      dispatch({
+        type: DEX_ERROR,
+        payload: "Failed to get token price",
       });
     }
     dispatch({

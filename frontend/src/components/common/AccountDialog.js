@@ -179,9 +179,7 @@ const AccountDialog = ({
             <CustomButton variant="light" onClick={handleClose}>
               Cancel
             </CustomButton>
-            <CustomButton onClick={onSingOut}>
-              <p>Sign out</p>
-            </CustomButton>
+            <CustomButton onClick={onSingOut}>Sign out</CustomButton>
           </div>
         </div>
       </Dialog>

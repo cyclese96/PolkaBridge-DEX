@@ -91,23 +91,23 @@ export const pwarCoinContract = (network) => {
 
 // returns [address, abi]
 const getPairInfo = (token0Symbol, token1Symbol) => {
-  switch (`${token0Symbol}_${token1Symbol}`) {
-    case "PBR_ETH" || "ETH_PBR":
-      const addr =
-        currentConnection === "testnet"
-          ? pbrEthPairAddressTestnet
-          : pbrEthPairAddressMainnet;
-      const abi = PBR_ETH_pairAbi;
-      return [addr, abi];
-    case "USDT_ETH" || "ETH_USDT":
-      const addr2 =
-        currentConnection === "testnet"
-          ? usdtEthPairAddressTestnet
-          : usdtEthPairAddressMainnet;
-      const abi2 = PairUsdtEthAbi;
-      return [addr2, abi2];
-    default:
-      return [null, null];
+  const pairName = `${token0Symbol}_${token1Symbol}`;
+  if (pairName === "PBR_ETH" || pairName === "ETH_PBR") {
+    const addr =
+      currentConnection === "testnet"
+        ? pbrEthPairAddressTestnet
+        : pbrEthPairAddressMainnet;
+    const abi = PBR_ETH_pairAbi;
+    return [addr, abi];
+  } else if (pairName === "PBR_ETH" || pairName === "ETH_PBR") {
+    const addr2 =
+      currentConnection === "testnet"
+        ? usdtEthPairAddressTestnet
+        : usdtEthPairAddressMainnet;
+    const abi2 = PairUsdtEthAbi;
+    return [addr2, abi2];
+  } else {
+    return [null, null];
   }
 };
 

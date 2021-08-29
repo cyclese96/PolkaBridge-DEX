@@ -171,6 +171,20 @@ export const getPercentage = (numerator, denominator) => {
   return percent.toFixed(4).toString();
 };
 
+export const getPercentageAmount = (value, percent) => {
+  const _value = new BigNumber(value.toString());
+  const _percent = new BigNumber(percent.toString());
+  if (_value.lte(new BigNumber("0"))) {
+    return new BigNumber("0").toString();
+  }
+  if (_percent.lte(new BigNumber("0"))) {
+    return new BigNumber("0").toString();
+  }
+
+  const percentValue = _value.multipliedBy(_percent).div(100);
+  return percentValue.toString();
+};
+
 export const fetchTokenAbi = async (address) => {
   try {
     const _api = `https://api.etherscan.io/api?module=contract&action=getabi&address=${address}&apikey=${process.env.REACT_APP_ETHER_SCAN_API}`;
@@ -201,14 +215,39 @@ export const getPriceRatio = (token1, token2) => {
   if (_token1.eq("0") || _token2.eq("0")) {
     return new BigNumber("0").toFixed(4).toString();
   }
-  const _ratio = _token1.div(_token2);
-  if (_ratio.gt(1)) {
-    return _ratio.toFixed(2).toString();
+  try {
+    const _ratio = _token1.div(_token2);
+    if (_ratio.gt(1)) {
+      return _ratio.toFixed(2).toString();
+    }
+    return _ratio.toFixed(5).toString();
+  } catch (error) {
+    console.log("exeption in getPriceRatio", error);
+    return "0";
   }
-  return _ratio.toFixed(5).toString();
 };
 
-export const getPercentAmount = (amount, percent) => {
+export const getTokenOut = (tokenIn, token1Reserve, token2Reserve) => {
+  const _token1 = new BigNumber(token1Reserve);
+  const _token2 = new BigNumber(token2Reserve);
+
+  if (_token1.eq("0") || _token2.eq("0")) {
+    return new BigNumber("0").toFixed(4).toString();
+  }
+
+  try {
+    const _out = _token1.div(_token2).multipliedBy(tokenIn);
+    if (_out.gt(1)) {
+      return _out.toFixed(2).toString();
+    }
+    return _out.toFixed(5).toString();
+  } catch (error) {
+    console.log("exeption getTokenOut", error);
+    return "0";
+  }
+};
+
+export const getPercentAmountWithFloor = (amount, percent) => {
   const _amount = new BigNumber(amount ? amount.toString() : 0);
   const _percent = percent ? percent.toString() : 0;
 
@@ -217,4 +256,41 @@ export const getPercentAmount = (amount, percent) => {
     .div(100)
     .integerValue(BigNumber.ROUND_FLOOR)
     .toString();
+};
+
+export const buyPriceImpact = (yTokenamount, yTokenReserves) => {
+  const _yAmount = new BigNumber(yTokenamount);
+
+  try {
+    const buyImpact = _yAmount.multipliedBy(0.98).div(yTokenReserves);
+    console.log("buy impact ", buyImpact.toString());
+    return buyImpact.toString();
+  } catch (error) {
+    console.log("exeption buyPriceImpact", error);
+    return "0";
+  }
+};
+
+export const sellPriceImpact = (xTokenAmount, yTokenAmount, xReserve) => {
+  const u = new BigNumber(yTokenAmount);
+
+  const x = new BigNumber(xTokenAmount);
+  const y = new BigNumber(yTokenAmount);
+
+  try {
+    const er = x.minus(x.multipliedBy(y).div(y.plus(u.multipliedBy(0.98))));
+
+    const sellImpact = er.multipliedBy(0.98).div(xReserve);
+
+    console.log("sell price impact ", sellImpact.toString());
+    return sellImpact.toString();
+  } catch (error) {
+    console.log("exeption at sellPriceImpact", error);
+    return "0";
+  }
+};
+
+export const formatFloat = (floatValue) => {
+  const _f = new BigNumber(floatValue);
+  return _f.toFixed(4).toString();
 };

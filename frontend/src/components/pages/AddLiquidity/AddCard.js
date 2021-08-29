@@ -8,10 +8,11 @@ import etherImg from "../../../assets/ether.png";
 import CustomButton from "../../Buttons/CustomButton";
 import SwapCardItem from "../../Cards/SwapCardItem";
 import AddIcon from "@material-ui/icons/Add";
-import { ETH, etheriumNetwork } from "../../../constants";
+import { ETH, etheriumNetwork, tokens } from "../../../constants";
 import {
   formatCurrency,
   getPriceRatio,
+  getTokenOut,
   token1PerToken2,
   token2PerToken1,
   toWei,
@@ -21,6 +22,7 @@ import {
   checkAllowance,
   confirmAllowance,
   getPoolShare,
+  getLpBalance,
 } from "../../../actions/dexActions";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import tokenThumbnail from "../../../utils/tokenThumbnail";
@@ -156,12 +158,13 @@ const useStyles = makeStyles((theme) => ({
 const AddCard = (props) => {
   const {
     account: { balance, loading, currentNetwork, currentAccount },
-    dex: { swapSettings, approvedTokens, poolShare },
+    dex: { swapSettings, approvedTokens, poolShare, poolReserves },
     addLiquidityEth,
     checkAllowance,
     confirmAllowance,
     getPoolShare,
     handleBack,
+    getLpBalance,
   } = props;
 
   const currentDefaultToken = {
@@ -173,8 +176,8 @@ const AddCard = (props) => {
   const [settingOpen, setOpen] = useState(false);
   const [selectedToken1, setToken1] = useState(currentDefaultToken);
   const [selectedToken2, setToken2] = useState({});
-  const [token1Value, setToken1Value] = useState("0"); // token1 for eth only
-  const [token2Value, setToken2Value] = useState("0"); // token2 for pbr
+  const [token1Value, setToken1Value] = useState(""); // token1 for eth only
+  const [token2Value, setToken2Value] = useState(""); // token2 for pbr
 
   // const [token1PerToken2, setPerToken1] = useState("1.4545");
   // const [token2PerToken1, setPerToken2] = useState("0.66891");
@@ -193,19 +196,11 @@ const AddCard = (props) => {
     setOpen(false);
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     let defaultToken1, defaultToken2;
     if (currentNetwork === etheriumNetwork) {
-      defaultToken1 = {
-        icon: tokenThumbnail("PBR"),
-        name: "Polkabridge",
-        symbol: "PBR",
-      };
-      defaultToken2 = {
-        icon: etherImg,
-        name: "Ethereum",
-        symbol: "ETH",
-      };
+      defaultToken1 = tokens[0];
+      defaultToken2 = tokens[3];
     } else {
       defaultToken1 = {
         icon: tokenThumbnail("PWAR"),
@@ -237,6 +232,12 @@ const AddCard = (props) => {
     }
     // console.log("checking approval");
     await checkAllowance(selectedToken1, currentAccount, currentNetwork);
+    await debouncedGetLpBalance(
+      selectedToken1,
+      selectedToken2,
+      currentAccount,
+      currentNetwork
+    );
   }, [selectedToken1, currentNetwork, currentAccount]);
 
   const handleConfirmAllowance = async () => {
@@ -251,8 +252,8 @@ const AddCard = (props) => {
 
   const verifySwapStatus = (token1, token2) => {
     let message, disabled;
-    const _token1 = new BigNumber(token1.value);
-    const _token2 = new BigNumber(token2.value);
+    const _token1 = new BigNumber(token1.value ? token1.value : 0);
+    const _token2 = new BigNumber(token2.value ? token2.value : 0);
 
     if (token1.selected.symbol === token2.selected.symbol) {
       message = "Invalid pair";
@@ -294,40 +295,64 @@ const AddCard = (props) => {
     [] // will be created only once initially
   );
 
-  const onToken1InputChange = (tokens) => {
+  const debouncedGetLpBalance = useCallback(
+    debounce((...params) => getLpBalance(...params), 1000),
+    [] // will be created only once initially
+  );
+
+  const onToken1InputChange = async (tokens) => {
     setToken1Value(tokens);
 
     //calculate resetpective value of token 2 if selected
     let _token2Value = "";
-    // if (selectedToken2.symbol && tokens) {
-    //   const t = token2PerToken1(from_token.price, to_token.price);
-    //   _token2Value = parseFloat(tokens) * t;
-    //   setToken2Value(_token2Value);
-    // } else if (selectedToken2.symbol && !tokens) {
-    //   setToken2Value("");
-    // }
+    if (selectedToken2.symbol && tokens) {
+      await debouncedGetLpBalance(
+        selectedToken1,
+        selectedToken2,
+        currentAccount,
+        currentNetwork
+      );
+
+      _token2Value = getTokenOut(
+        tokens,
+        poolReserves[selectedToken2.symbol],
+        poolReserves[selectedToken1.symbol]
+      );
+      setToken2Value(_token2Value);
+    } else if (selectedToken2.symbol && !tokens) {
+      setToken2Value("");
+    }
 
     verifySwapStatus(
       { value: tokens, selected: selectedToken1 },
-      { value: token2Value, selected: selectedToken2 }
+      { value: _token2Value, selected: selectedToken2 }
     );
   };
 
-  const onToken2InputChange = (tokens) => {
+  const onToken2InputChange = async (tokens) => {
     setToken2Value(tokens);
 
-    //calculate respective value of token1 if selected
     let _token1Value = "";
-    // if (selectedToken1.symbol && tokens) {
-    //   const t = token1PerToken2(from_token.price, to_token.price);
-    //   _token1Value = parseFloat(tokens) * t;
-    //   setToken1Value(_token1Value);
-    // } else if (selectedToken1.symbol && !tokens) {
-    //   setToken1Value("");
-    // }
+    if (selectedToken1.symbol && tokens) {
+      await debouncedGetLpBalance(
+        selectedToken1,
+        selectedToken2,
+        currentAccount,
+        currentNetwork
+      );
+
+      _token1Value = getTokenOut(
+        tokens,
+        poolReserves[selectedToken1.symbol],
+        poolReserves[selectedToken2.symbol]
+      );
+      setToken1Value(_token1Value);
+    } else if (selectedToken1.symbol && !tokens) {
+      setToken1Value("");
+    }
 
     verifySwapStatus(
-      { value: token1Value, selected: selectedToken1 },
+      { value: _token1Value, selected: selectedToken1 },
       { value: tokens, selected: selectedToken2 }
     );
   };
@@ -581,4 +606,5 @@ export default connect(mapStateToProps, {
   checkAllowance,
   confirmAllowance,
   getPoolShare,
+  getLpBalance,
 })(AddCard);

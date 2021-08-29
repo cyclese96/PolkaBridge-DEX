@@ -10,6 +10,7 @@ import {
   LOAD_FROM_TOKEN,
   LOAD_TOKEN_LIST,
   LOAD_TO_TOKEN,
+  PRICE_UPDATE,
   RESET_POOL_SHARE,
   SET_LP_BALANCE,
   SET_POOL_RESERVES,
@@ -18,6 +19,7 @@ import {
   SHOW_DEX_LOADING,
   SWAP_TOKEN_SELECTION,
   UPDATE_SETTINGS,
+  VERIFY_SLIPPAGE,
 } from "../actions/types";
 import {
   defaultSlippage,
@@ -50,11 +52,12 @@ const initalState = {
   },
   approvedTokens: {}, // { 'PBR':false, 'ETH': true}
   poolShare: "0",
-  tokenList: [], // { name, symbol }
+  tokenList: [], // { name, symbol, address, imported, abi }
   importedTokens: {}, // { 'PBR': { abi:[], address:'', symbol:'', name:'', thumbnail:''} }
   lpBalance: {}, // {PBR_ETH:12333, USDT_ETH:22323  }
   lpApproved: {}, // { "PBR_ETH": false, "USDTH_ETH": true }
   poolReserves: {}, // { "PBR": 1223432, "ETH":21, "TOTAL":123232}
+  isValidSlippage: false,
 };
 
 export default function (state = initalState, action) {
@@ -186,11 +189,22 @@ export default function (state = initalState, action) {
       return {
         ...state,
         dexLoading: true,
+        isValidSlippage: false,
       };
     case HIDE_DEX_LOADING:
       return {
         ...state,
         dexLoading: false,
+      };
+    case VERIFY_SLIPPAGE:
+      return {
+        ...state,
+        isValidSlippage: action.payload,
+      };
+    case PRICE_UPDATE:
+      return {
+        ...state,
+        poolReserves: action.payload,
       };
     default:
       return state;

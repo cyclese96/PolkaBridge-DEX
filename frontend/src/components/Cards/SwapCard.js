@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { CircularProgress, makeStyles } from "@material-ui/core";
 import { connect } from "react-redux";
 import TuneIcon from "@material-ui/icons/Tune";
@@ -9,10 +9,16 @@ import SwapSettings from "../common/SwapSettings";
 import CustomButton from "../Buttons/CustomButton";
 import BigNumber from "bignumber.js";
 import CustomSnackBar from "../common/CustomSnackbar";
-import { ETH, etheriumNetwork } from "../../constants";
+import { ETH, etheriumNetwork, tokens } from "../../constants";
 import CachedIcon from "@material-ui/icons/Cached";
 import {
+  buyPriceImpact,
   fromWei,
+  getPercentageAmount,
+  getPercentAmount,
+  getPriceRatio,
+  getTokenOut,
+  sellPriceImpact,
   token1PerToken2,
   token2PerToken1,
   toWei,
@@ -23,8 +29,12 @@ import {
   getTokenPrice,
   checkAllowance,
   confirmAllowance,
+  getLpBalance,
+  verifySlippage,
 } from "../../actions/dexActions";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import SwapConfirm from "../common/SwapConfirm";
+import debounce from "lodash.debounce";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -93,16 +103,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SwapCard = ({
-  account: { balance, loading, currentNetwork, currentAccount },
-  dex: { swapSettings, from_token, to_token, approvedTokens },
-  swapEthForExactTokens,
-  swapExactEthForTokens,
-  checkAllowance,
-  confirmAllowance,
-  tokenType,
-  getTokenPrice,
-}) => {
+const SwapCard = (props) => {
+  const {
+    account: { balance, loading, currentNetwork, currentAccount },
+    dex: {
+      swapSettings,
+      from_token,
+      to_token,
+      approvedTokens,
+      dexLoading,
+      poolReserves,
+    },
+    swapEthForExactTokens,
+    swapExactEthForTokens,
+    checkAllowance,
+    confirmAllowance,
+    tokenType,
+    getTokenPrice,
+    getLpBalance,
+    verifySlippage,
+  } = props;
+
   const classes = useStyles();
   const [settingOpen, setOpen] = useState(false);
   const [selectedToken1, setToken1] = useState({
@@ -125,6 +146,10 @@ const SwapCard = ({
     disabled: true,
   });
 
+  const [swapDialogOpen, setSwapDialog] = useState(false);
+
+  const [priceImpact, setPriceImpact] = useState(null);
+
   const updateTokenPrices = async () => {
     console.log("updating...");
     setTimeout(async () => {
@@ -139,10 +164,7 @@ const SwapCard = ({
   useEffect(async () => {
     let _token = {};
     if (currentNetwork === etheriumNetwork) {
-      _token = {
-        name: "Ethereum",
-        symbol: "ETH",
-      };
+      _token = tokens[3];
       setToken1(_token);
     } else {
       _token = {
@@ -157,53 +179,81 @@ const SwapCard = ({
     // updateTokenPrices();
 
     // check selected from token allowance
-    await checkAllowance(_token, currentAccount, currentNetwork);
-    return () => {
-      console.log("unmounted");
-    };
+    // await checkAllowance(_token, currentAccount, currentNetwork);
   }, [currentNetwork, currentAccount]);
 
   useEffect(async () => {
-    if (
-      !selectedToken1.symbol ||
-      selectedToken1.symbol === ETH ||
-      approvedTokens[selectedToken1.symbol]
-    ) {
+    if (selectedToken1.symbol && !approvedTokens[selectedToken1.symbol]) {
       //skip approve check for eth
-      return;
+      // return;
+      console.log("checking approval in swap");
+      await checkAllowance(selectedToken1, currentAccount, currentNetwork);
     }
-    console.log("checking approval in swap");
-    await checkAllowance(selectedToken1, currentAccount, currentNetwork);
-  }, [selectedToken1, currentNetwork, currentAccount]);
+    if (selectedToken1.symbol && selectedToken2.symbol) {
+      await getLpBalance(
+        selectedToken1,
+        selectedToken2,
+        currentAccount,
+        currentNetwork
+      );
+    }
+  }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
   const verifySwapStatus = (token1, token2) => {
+    let message, disabled;
+    const _token1 = new BigNumber(token1.value ? token1.value : 0);
+    const _token2 = new BigNumber(token2.value ? token2.value : 0);
+
     if (token1.selected.symbol === token2.selected.symbol) {
-      setStatus({ message: "Invalid pair", disabled: true });
+      message = "Invalid pair";
+      disabled = true;
     } else if (
-      (!token1.value && token1.selected.symbol) ||
-      (!token2.value && token2.selected.symbol)
+      (_token1.eq("0") && token1.selected.symbol) ||
+      (_token2.eq("0") && token2.selected.symbol)
     ) {
-      setStatus({ message: "Enter amounts", disabled: true });
+      message = "Enter amounts";
+      disabled = true;
     } else if (!token1.selected.symbol || !token2.selected.symbol) {
-      setStatus({ message: "Select both tokens", disabled: true });
+      message = "Select both tokens";
+      disabled = true;
     } else if (
-      token1.value > 0 &&
-      token2.value > 0 &&
+      _token1.gt("0") &&
+      _token2.gt("0") &&
       token1.selected.symbol &&
       token2.selected.symbol
     ) {
-      setStatus({ message: "Swap Tokens", disabled: false });
+      message = "";
+      disabled = false;
     }
+
+    setStatus({ message, disabled });
   };
 
-  const onToken1InputChange = (tokens) => {
+  const debouncedGetLpBalance = useCallback(
+    debounce((...params) => getLpBalance(...params), 1000),
+    [] // will be created only once initially
+  );
+
+  const onToken1InputChange = async (tokens) => {
     setToken1Value(tokens);
 
-    //calculate resetpective value of token 2 if selected
+    // calculate resetpective value of token 2 if selected
     let _token2Value = "";
     if (selectedToken2.symbol && tokens) {
-      const t = token2PerToken1(from_token.price, to_token.price);
-      _token2Value = parseFloat(tokens) * t;
+      await debouncedGetLpBalance(
+        selectedToken1,
+        selectedToken2,
+        currentAccount,
+        currentNetwork
+      );
+
+      //input tokens will be 99.8% of input value 0.2% will be deducted for fee
+      const _withoutFeeInputToken = getPercentageAmount(tokens, 99.8);
+      _token2Value = getTokenOut(
+        _withoutFeeInputToken,
+        poolReserves[selectedToken2.symbol],
+        poolReserves[selectedToken1.symbol]
+      );
       setToken2Value(_token2Value);
     } else if (selectedToken2.symbol && !tokens) {
       setToken2Value("");
@@ -216,14 +266,24 @@ const SwapCard = ({
     );
   };
 
-  const onToken2InputChange = (tokens) => {
+  const onToken2InputChange = async (tokens) => {
     setToken2Value(tokens);
 
     //calculate respective value of token1 if selected
     let _token1Value = "";
     if (selectedToken1.symbol && tokens) {
-      const t = token1PerToken2(from_token.price, to_token.price);
-      _token1Value = parseFloat(tokens) * t;
+      await debouncedGetLpBalance(
+        selectedToken1,
+        selectedToken2,
+        currentAccount,
+        currentNetwork
+      );
+
+      _token1Value = getTokenOut(
+        tokens,
+        poolReserves[selectedToken1.symbol],
+        poolReserves[selectedToken2.symbol]
+      );
       setToken1Value(_token1Value);
     } else if (selectedToken1.symbol && !tokens) {
       setToken1Value("");
@@ -231,7 +291,7 @@ const SwapCard = ({
 
     // verify swap status with current inputs
     verifySwapStatus(
-      { value: _token1Value, selected: selectedToken1 },
+      { value: token1Value, selected: selectedToken1 },
       { value: tokens, selected: selectedToken2 }
     );
   };
@@ -272,41 +332,59 @@ const SwapCard = ({
   };
 
   const handleSwapToken = async () => {
-    setAlert({ status: true, message: "Transaction submitted " });
+    // setAlert({ status: true, message: "Transaction submitted " });
 
-    const token1 = {
-      amount: toWei(token1Value.toString()),
-      min: toWei(token1Value.toString()),
-      symbol: selectedToken1.symbol,
-    };
+    // console.log(swapSettings);
+    checkPriceImpact();
 
-    const token2 = {
-      amount: toWei(token2Value.toString()),
-      min: toWei(token2Value.toString()),
-      symbol: selectedToken2.symbol,
-    };
+    verifySlippage(
+      swapSettings.slippage,
+      { ...selectedToken1, amount: token1Value },
+      { ...selectedToken2, amount: token2Value },
+      currentAccount,
+      currentNetwork
+    );
+    setSwapDialog(true);
+    // if (token1.symbol === ETH) {
+    //   //buy trade
+    //   await swapExactEthForTokens(
+    //     token1,
+    //     token2,
+    //     swapSettings.deadline,
+    //     currentAccount,
+    //     currentNetwork
+    //   );
+    // } else {
+    //   //sell trade
+    //   await swapEthForExactTokens(
+    //     token1,
+    //     token2,
+    //     swapSettings.deadline,
+    //     currentAccount,
+    //     currentNetwork
+    //   );
+    // }
+  };
 
-    console.log(swapSettings);
-    console.log("final params", { token1, token2 });
-    if (token1.symbol === ETH) {
-      //buy trade
-      await swapExactEthForTokens(
-        token1,
-        token2,
-        swapSettings.deadline,
-        currentAccount,
-        currentNetwork
+  const handleSwapConfirm = () => {
+    //todo
+  };
+
+  const checkPriceImpact = () => {
+    let impact;
+    if (selectedToken1.symbol === ETH) {
+      impact = buyPriceImpact(
+        toWei(token2Value),
+        poolReserves[selectedToken2.symbol]
       );
     } else {
-      //sell trade
-      await swapEthForExactTokens(
-        token1,
-        token2,
-        swapSettings.deadline,
-        currentAccount,
-        currentNetwork
+      impact = sellPriceImpact(
+        toWei(token1Value),
+        toWei(token2Value),
+        poolReserves[selectedToken1.symbol]
       );
     }
+    setPriceImpact(impact);
   };
 
   const hideSnackbar = () => {
@@ -324,7 +402,7 @@ const SwapCard = ({
     setToken2Value(tokenInput1);
   };
 
-  const handleTokenPriceRatio = () => {};
+  // const handleTokenPriceRatio = () => {};
 
   return (
     <>
@@ -332,6 +410,15 @@ const SwapCard = ({
         status={snackAlert.status}
         message={snackAlert.message}
         handleClose={hideSnackbar}
+      />
+      <SwapConfirm
+        open={swapDialogOpen}
+        handleClose={() => setSwapDialog(false)}
+        selectedToken1={selectedToken1}
+        selectedToken2={selectedToken2}
+        token1Value={token1Value}
+        token2Value={token2Value}
+        priceImpact={priceImpact}
       />
       <SwapSettings open={settingOpen} handleClose={close} />
       <div className={classes.card}>
@@ -370,7 +457,7 @@ const SwapCard = ({
               disableToken={selectedToken1}
               inputValue={token2Value}
             />
-            <div className={classes.priceRatio}>
+            {/* <div className={classes.priceRatio}>
               <small>Price</small>
               <small>41,250 PBR per ETH </small>
               <CachedIcon
@@ -378,12 +465,28 @@ const SwapCard = ({
                 className={classes.resetIcon}
                 fontSize="small"
               />
-            </div>
+            </div> */}
+            {!swapStatus.disabled ? (
+              <div className="d-flex justify-content-around w-100 mt-4 mb-1 ">
+                <span>Price</span>
+                <span>
+                  1 {selectedToken1.symbol} {" = "}{" "}
+                  {getPriceRatio(
+                    poolReserves[selectedToken2.symbol],
+                    poolReserves[selectedToken1.symbol]
+                  )}{" "}
+                  {selectedToken2.symbol}
+                </span>
+              </div>
+            ) : (
+              ""
+            )}
+
             <div className="d-flex  mt-4">
               <CustomButton
                 variant="light"
                 className={classes.approveBtn}
-                disabled={approvedTokens[selectedToken1.symbol]}
+                disabled={approvedTokens[selectedToken1.symbol] || dexLoading}
                 onClick={handleConfirmAllowance}
               >
                 {approvedTokens[selectedToken1.symbol] ? (
@@ -394,7 +497,7 @@ const SwapCard = ({
                       fontSize="small"
                     />{" "}
                   </>
-                ) : loading ? (
+                ) : dexLoading ? (
                   <CircularProgress
                     style={{ color: "black" }}
                     color="secondary"
@@ -407,10 +510,10 @@ const SwapCard = ({
               <CustomButton
                 variant="primary"
                 // className={classes.addButton}
-                disabled={swapStatus.disabled | loading}
+                disabled={swapStatus.disabled | dexLoading}
                 onClick={handleSwapToken}
               >
-                {!swapStatus.disabled && loading ? (
+                {!swapStatus.disabled && dexLoading ? (
                   <CircularProgress
                     style={{ color: "black" }}
                     color="secondary"
@@ -457,4 +560,6 @@ export default connect(mapStateToProps, {
   swapExactEthForTokens,
   checkAllowance,
   confirmAllowance,
+  getLpBalance,
+  verifySlippage,
 })(SwapCard);

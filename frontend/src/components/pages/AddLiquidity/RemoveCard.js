@@ -15,7 +15,7 @@ import {
   formatCurrency,
   fromWei,
   getPercentage,
-  getPercentAmount,
+  getPercentAmountWithFloor,
   getPriceRatio,
   token1PerToken2,
   token2PerToken1,
@@ -411,7 +411,10 @@ const RemoveCard = ({
       selectedToken1.symbol === ETH ? selectedToken1 : selectedToken2;
     const erc20Token =
       selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
-    const lpAmount = getPercentAmount(currentLpBalance(), liquidityPercent);
+    const lpAmount = getPercentAmountWithFloor(
+      currentLpBalance(),
+      liquidityPercent
+    );
     console.log({ ethToken, erc20Token, lpAmount });
     await removeLiquidityEth(
       ethToken,
