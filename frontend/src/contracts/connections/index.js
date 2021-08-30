@@ -99,7 +99,7 @@ const getPairInfo = (token0Symbol, token1Symbol) => {
         : pbrEthPairAddressMainnet;
     const abi = PBR_ETH_pairAbi;
     return [addr, abi];
-  } else if (pairName === "PBR_ETH" || pairName === "ETH_PBR") {
+  } else if (pairName === "USDT_ETH" || pairName === "ETH_USDT") {
     const addr2 =
       currentConnection === "testnet"
         ? usdtEthPairAddressTestnet

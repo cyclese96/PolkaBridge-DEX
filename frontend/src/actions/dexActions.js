@@ -574,10 +574,11 @@ export const importToken = (address, account, network) => async (dispatch) => {
 // load token list to be selected
 export const getLpBalance =
   (token1, token2, account, network) => async (dispatch) => {
-    console.log("getting balance");
+    console.log("getting balance", { token1, token2 });
     try {
       const _pairContract = pairContract(token1.symbol, token2.symbol, network);
 
+      console.log("pair contract ", _pairContract._address);
       dispatch({
         type: SHOW_DEX_LOADING,
       });
