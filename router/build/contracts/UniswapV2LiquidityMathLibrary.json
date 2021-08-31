@@ -36,7 +36,7 @@
         "id": 6083,
         "nodeType": "ImportDirective",
         "scope": 6547,
-        "sourceUnit": 9845,
+        "sourceUnit": 9601,
         "src": "26:66:17",
         "symbolAliases": [],
         "unitAlias": ""
@@ -47,7 +47,7 @@
         "id": 6084,
         "nodeType": "ImportDirective",
         "scope": 6547,
-        "sourceUnit": 9603,
+        "sourceUnit": 9359,
         "src": "93:69:17",
         "symbolAliases": [],
         "unitAlias": ""
@@ -58,7 +58,7 @@
         "id": 6085,
         "nodeType": "ImportDirective",
         "scope": 6547,
-        "sourceUnit": 8238,
+        "sourceUnit": 7994,
         "src": "163:57:17",
         "symbolAliases": [],
         "unitAlias": ""
@@ -69,7 +69,7 @@
         "id": 6086,
         "nodeType": "ImportDirective",
         "scope": 6547,
-        "sourceUnit": 9366,
+        "sourceUnit": 9122,
         "src": "221:55:17",
         "symbolAliases": [],
         "unitAlias": ""
@@ -241,10 +241,10 @@
                             "name": "FullMath",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 9365,
+                            "referencedDeclaration": 9121,
                             "src": "871:8:17",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_type$_t_contract$_FullMath_$9365_$",
+                              "typeIdentifier": "t_type$_t_contract$_FullMath_$9121_$",
                               "typeString": "type(library FullMath)"
                             }
                           },
@@ -255,7 +255,7 @@
                           "lValueRequested": false,
                           "memberName": "mulDiv",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 9364,
+                          "referencedDeclaration": 9120,
                           "src": "871:15:17",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$_t_uint256_$returns$_t_uint256_$",
@@ -727,10 +727,10 @@
                             "name": "FullMath",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 9365,
+                            "referencedDeclaration": 9121,
                             "src": "1053:8:17",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_type$_t_contract$_FullMath_$9365_$",
+                              "typeIdentifier": "t_type$_t_contract$_FullMath_$9121_$",
                               "typeString": "type(library FullMath)"
                             }
                           },
@@ -741,7 +741,7 @@
                           "lValueRequested": false,
                           "memberName": "mulDiv",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 9364,
+                          "referencedDeclaration": 9120,
                           "src": "1053:15:17",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$_t_uint256_$returns$_t_uint256_$",
@@ -777,10 +777,10 @@
                         "name": "Babylonian",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 8237,
+                        "referencedDeclaration": 7993,
                         "src": "1024:10:17",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_Babylonian_$8237_$",
+                          "typeIdentifier": "t_type$_t_contract$_Babylonian_$7993_$",
                           "typeString": "type(library Babylonian)"
                         }
                       },
@@ -791,7 +791,7 @@
                       "lValueRequested": false,
                       "memberName": "sqrt",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 8236,
+                      "referencedDeclaration": 7992,
                       "src": "1024:15:17",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_pure$_t_uint256_$returns$_t_uint256_$",
@@ -3056,10 +3056,10 @@
                               "name": "Babylonian",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 8237,
+                              "referencedDeclaration": 7993,
                               "src": "3237:10:17",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_type$_t_contract$_Babylonian_$8237_$",
+                                "typeIdentifier": "t_type$_t_contract$_Babylonian_$7993_$",
                                 "typeString": "type(library Babylonian)"
                               }
                             },
@@ -3070,7 +3070,7 @@
                             "lValueRequested": false,
                             "memberName": "sqrt",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 8236,
+                            "referencedDeclaration": 7992,
                             "src": "3237:15:17",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_internal_pure$_t_uint256_$returns$_t_uint256_$",
@@ -3160,10 +3160,10 @@
                               "name": "Babylonian",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 8237,
+                              "referencedDeclaration": 7993,
                               "src": "3309:10:17",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_type$_t_contract$_Babylonian_$8237_$",
+                                "typeIdentifier": "t_type$_t_contract$_Babylonian_$7993_$",
                                 "typeString": "type(library Babylonian)"
                               }
                             },
@@ -3174,7 +3174,7 @@
                             "lValueRequested": false,
                             "memberName": "sqrt",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 8236,
+                            "referencedDeclaration": 7992,
                             "src": "3309:15:17",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_internal_pure$_t_uint256_$returns$_t_uint256_$",
@@ -3670,10 +3670,10 @@
                                     "name": "FullMath",
                                     "nodeType": "Identifier",
                                     "overloadedDeclarations": [],
-                                    "referencedDeclaration": 9365,
+                                    "referencedDeclaration": 9121,
                                     "src": "3573:8:17",
                                     "typeDescriptions": {
-                                      "typeIdentifier": "t_type$_t_contract$_FullMath_$9365_$",
+                                      "typeIdentifier": "t_type$_t_contract$_FullMath_$9121_$",
                                       "typeString": "type(library FullMath)"
                                     }
                                   },
@@ -3684,7 +3684,7 @@
                                   "lValueRequested": false,
                                   "memberName": "mulDiv",
                                   "nodeType": "MemberAccess",
-                                  "referencedDeclaration": 9364,
+                                  "referencedDeclaration": 9120,
                                   "src": "3573:15:17",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$_t_uint256_$returns$_t_uint256_$",
@@ -4477,7 +4477,7 @@
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_IUniswapV2Pair_$9844",
+                        "typeIdentifier": "t_contract$_IUniswapV2Pair_$9600",
                         "typeString": "contract IUniswapV2Pair"
                       },
                       "typeName": {
@@ -4485,10 +4485,10 @@
                         "id": 6405,
                         "name": "IUniswapV2Pair",
                         "nodeType": "UserDefinedTypeName",
-                        "referencedDeclaration": 9844,
+                        "referencedDeclaration": 9600,
                         "src": "4408:14:17",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_IUniswapV2Pair_$9844",
+                          "typeIdentifier": "t_contract$_IUniswapV2Pair_$9600",
                           "typeString": "contract IUniswapV2Pair"
                         }
                       },
@@ -4612,10 +4612,10 @@
                       "name": "IUniswapV2Pair",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 9844,
+                      "referencedDeclaration": 9600,
                       "src": "4430:14:17",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_type$_t_contract$_IUniswapV2Pair_$9844_$",
+                        "typeIdentifier": "t_type$_t_contract$_IUniswapV2Pair_$9600_$",
                         "typeString": "type(contract IUniswapV2Pair)"
                       }
                     },
@@ -4630,7 +4630,7 @@
                     "src": "4430:65:17",
                     "tryCall": false,
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IUniswapV2Pair_$9844",
+                      "typeIdentifier": "t_contract$_IUniswapV2Pair_$9600",
                       "typeString": "contract IUniswapV2Pair"
                     }
                   },
@@ -4716,10 +4716,10 @@
                             "name": "IUniswapV2Factory",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 9602,
+                            "referencedDeclaration": 9358,
                             "src": "4518:17:17",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_type$_t_contract$_IUniswapV2Factory_$9602_$",
+                              "typeIdentifier": "t_type$_t_contract$_IUniswapV2Factory_$9358_$",
                               "typeString": "type(contract IUniswapV2Factory)"
                             }
                           },
@@ -4734,7 +4734,7 @@
                           "src": "4518:26:17",
                           "tryCall": false,
                           "typeDescriptions": {
-                            "typeIdentifier": "t_contract$_IUniswapV2Factory_$9602",
+                            "typeIdentifier": "t_contract$_IUniswapV2Factory_$9358",
                             "typeString": "contract IUniswapV2Factory"
                           }
                         },
@@ -4745,7 +4745,7 @@
                         "lValueRequested": false,
                         "memberName": "feeTo",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 9556,
+                        "referencedDeclaration": 9312,
                         "src": "4518:32:17",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_external_view$__$returns$_t_address_$",
@@ -4933,7 +4933,7 @@
                           "referencedDeclaration": 6406,
                           "src": "4597:4:17",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_contract$_IUniswapV2Pair_$9844",
+                            "typeIdentifier": "t_contract$_IUniswapV2Pair_$9600",
                             "typeString": "contract IUniswapV2Pair"
                           }
                         },
@@ -4944,7 +4944,7 @@
                         "lValueRequested": false,
                         "memberName": "kLast",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 9801,
+                        "referencedDeclaration": 9557,
                         "src": "4597:10:17",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_external_view$__$returns$_t_uint256_$",
@@ -5023,7 +5023,7 @@
                         "referencedDeclaration": 6406,
                         "src": "4642:4:17",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_IUniswapV2Pair_$9844",
+                          "typeIdentifier": "t_contract$_IUniswapV2Pair_$9600",
                           "typeString": "contract IUniswapV2Pair"
                         }
                       },
@@ -5034,7 +5034,7 @@
                       "lValueRequested": false,
                       "memberName": "totalSupply",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 9640,
+                      "referencedDeclaration": 9396,
                       "src": "4642:16:17",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$__$returns$_t_uint256_$",
@@ -5486,10 +5486,10 @@
                             "name": "IUniswapV2Factory",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 9602,
+                            "referencedDeclaration": 9358,
                             "src": "5335:17:17",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_type$_t_contract$_IUniswapV2Factory_$9602_$",
+                              "typeIdentifier": "t_type$_t_contract$_IUniswapV2Factory_$9358_$",
                               "typeString": "type(contract IUniswapV2Factory)"
                             }
                           },
@@ -5504,7 +5504,7 @@
                           "src": "5335:26:17",
                           "tryCall": false,
                           "typeDescriptions": {
-                            "typeIdentifier": "t_contract$_IUniswapV2Factory_$9602",
+                            "typeIdentifier": "t_contract$_IUniswapV2Factory_$9358",
                             "typeString": "contract IUniswapV2Factory"
                           }
                         },
@@ -5515,7 +5515,7 @@
                         "lValueRequested": false,
                         "memberName": "feeTo",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 9556,
+                        "referencedDeclaration": 9312,
                         "src": "5335:32:17",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_external_view$__$returns$_t_address_$",
@@ -5631,7 +5631,7 @@
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_IUniswapV2Pair_$9844",
+                        "typeIdentifier": "t_contract$_IUniswapV2Pair_$9600",
                         "typeString": "contract IUniswapV2Pair"
                       },
                       "typeName": {
@@ -5639,10 +5639,10 @@
                         "id": 6486,
                         "name": "IUniswapV2Pair",
                         "nodeType": "UserDefinedTypeName",
-                        "referencedDeclaration": 9844,
+                        "referencedDeclaration": 9600,
                         "src": "5393:14:17",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_IUniswapV2Pair_$9844",
+                          "typeIdentifier": "t_contract$_IUniswapV2Pair_$9600",
                           "typeString": "contract IUniswapV2Pair"
                         }
                       },
@@ -5766,10 +5766,10 @@
                       "name": "IUniswapV2Pair",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 9844,
+                      "referencedDeclaration": 9600,
                       "src": "5415:14:17",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_type$_t_contract$_IUniswapV2Pair_$9844_$",
+                        "typeIdentifier": "t_type$_t_contract$_IUniswapV2Pair_$9600_$",
                         "typeString": "type(contract IUniswapV2Pair)"
                       }
                     },
@@ -5784,7 +5784,7 @@
                     "src": "5415:65:17",
                     "tryCall": false,
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_IUniswapV2Pair_$9844",
+                      "typeIdentifier": "t_contract$_IUniswapV2Pair_$9600",
                       "typeString": "contract IUniswapV2Pair"
                     }
                   },
@@ -5880,7 +5880,7 @@
                           "referencedDeclaration": 6487,
                           "src": "5511:4:17",
                           "typeDescriptions": {
-                            "typeIdentifier": "t_contract$_IUniswapV2Pair_$9844",
+                            "typeIdentifier": "t_contract$_IUniswapV2Pair_$9600",
                             "typeString": "contract IUniswapV2Pair"
                           }
                         },
@@ -5891,7 +5891,7 @@
                         "lValueRequested": false,
                         "memberName": "kLast",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 9801,
+                        "referencedDeclaration": 9557,
                         "src": "5511:10:17",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_external_view$__$returns$_t_uint256_$",
@@ -5970,7 +5970,7 @@
                         "referencedDeclaration": 6487,
                         "src": "5556:4:17",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_IUniswapV2Pair_$9844",
+                          "typeIdentifier": "t_contract$_IUniswapV2Pair_$9600",
                           "typeString": "contract IUniswapV2Pair"
                         }
                       },
@@ -5981,7 +5981,7 @@
                       "lValueRequested": false,
                       "memberName": "totalSupply",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 9640,
+                      "referencedDeclaration": 9396,
                       "src": "5556:16:17",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$__$returns$_t_uint256_$",
@@ -6802,7 +6802,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 9845,
+          "SourceUnit": 9601,
           "absolutePath": "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol",
           "file": "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol",
           "scope": 6547,
@@ -6817,7 +6817,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 9603,
+          "SourceUnit": 9359,
           "absolutePath": "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol",
           "file": "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol",
           "scope": 6547,
@@ -6832,7 +6832,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 8238,
+          "SourceUnit": 7994,
           "absolutePath": "@uniswap/lib/contracts/libraries/Babylonian.sol",
           "file": "@uniswap/lib/contracts/libraries/Babylonian.sol",
           "scope": 6547,
@@ -6847,7 +6847,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 9366,
+          "SourceUnit": 9122,
           "absolutePath": "@uniswap/lib/contracts/libraries/FullMath.sol",
           "file": "@uniswap/lib/contracts/libraries/FullMath.sol",
           "scope": 6547,
@@ -7216,7 +7216,7 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "member_name": "mulDiv",
-                                      "referencedDeclaration": 9364,
+                                      "referencedDeclaration": 9120,
                                       "type": "function (uint256,uint256,uint256) pure returns (uint256)"
                                     },
                                     "children": [
@@ -7226,7 +7226,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 9365,
+                                          "referencedDeclaration": 9121,
                                           "type": "type(library FullMath)",
                                           "value": "FullMath"
                                         },
@@ -7490,7 +7490,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "sqrt",
-                              "referencedDeclaration": 8236,
+                              "referencedDeclaration": 7992,
                               "type": "function (uint256) pure returns (uint256)"
                             },
                             "children": [
@@ -7500,7 +7500,7 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
-                                  "referencedDeclaration": 8237,
+                                  "referencedDeclaration": 7993,
                                   "type": "type(library Babylonian)",
                                   "value": "Babylonian"
                                 },
@@ -7550,7 +7550,7 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "mulDiv",
-                                  "referencedDeclaration": 9364,
+                                  "referencedDeclaration": 9120,
                                   "type": "function (uint256,uint256,uint256) pure returns (uint256)"
                                 },
                                 "children": [
@@ -7560,7 +7560,7 @@
                                       "overloadedDeclarations": [
                                         null
                                       ],
-                                      "referencedDeclaration": 9365,
+                                      "referencedDeclaration": 9121,
                                       "type": "type(library FullMath)",
                                       "value": "FullMath"
                                     },
@@ -10210,7 +10210,7 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "member_name": "sqrt",
-                                      "referencedDeclaration": 8236,
+                                      "referencedDeclaration": 7992,
                                       "type": "function (uint256) pure returns (uint256)"
                                     },
                                     "children": [
@@ -10220,7 +10220,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 8237,
+                                          "referencedDeclaration": 7993,
                                           "type": "type(library Babylonian)",
                                           "value": "Babylonian"
                                         },
@@ -10378,7 +10378,7 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "member_name": "sqrt",
-                                      "referencedDeclaration": 8236,
+                                      "referencedDeclaration": 7992,
                                       "type": "function (uint256) pure returns (uint256)"
                                     },
                                     "children": [
@@ -10388,7 +10388,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 8237,
+                                          "referencedDeclaration": 7993,
                                           "type": "type(library Babylonian)",
                                           "value": "Babylonian"
                                         },
@@ -10888,7 +10888,7 @@
                                               "isPure": false,
                                               "lValueRequested": false,
                                               "member_name": "mulDiv",
-                                              "referencedDeclaration": 9364,
+                                              "referencedDeclaration": 9120,
                                               "type": "function (uint256,uint256,uint256) pure returns (uint256)"
                                             },
                                             "children": [
@@ -10898,7 +10898,7 @@
                                                   "overloadedDeclarations": [
                                                     null
                                                   ],
-                                                  "referencedDeclaration": 9365,
+                                                  "referencedDeclaration": 9121,
                                                   "type": "type(library FullMath)",
                                                   "value": "FullMath"
                                                 },
@@ -11742,7 +11742,7 @@
                             "attributes": {
                               "contractScope": null,
                               "name": "IUniswapV2Pair",
-                              "referencedDeclaration": 9844,
+                              "referencedDeclaration": 9600,
                               "type": "contract IUniswapV2Pair"
                             },
                             "id": 6405,
@@ -11781,7 +11781,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 9844,
+                              "referencedDeclaration": 9600,
                               "type": "type(contract IUniswapV2Pair)",
                               "value": "IUniswapV2Pair"
                             },
@@ -11985,7 +11985,7 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "feeTo",
-                                  "referencedDeclaration": 9556,
+                                  "referencedDeclaration": 9312,
                                   "type": "function () view external returns (address)"
                                 },
                                 "children": [
@@ -12016,7 +12016,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 9602,
+                                          "referencedDeclaration": 9358,
                                           "type": "type(contract IUniswapV2Factory)",
                                           "value": "IUniswapV2Factory"
                                         },
@@ -12218,7 +12218,7 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "kLast",
-                                  "referencedDeclaration": 9801,
+                                  "referencedDeclaration": 9557,
                                   "type": "function () view external returns (uint256)"
                                 },
                                 "children": [
@@ -12337,7 +12337,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "totalSupply",
-                              "referencedDeclaration": 9640,
+                              "referencedDeclaration": 9396,
                               "type": "function () view external returns (uint256)"
                             },
                             "children": [
@@ -12873,7 +12873,7 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "feeTo",
-                                  "referencedDeclaration": 9556,
+                                  "referencedDeclaration": 9312,
                                   "type": "function () view external returns (address)"
                                 },
                                 "children": [
@@ -12904,7 +12904,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 9602,
+                                          "referencedDeclaration": 9358,
                                           "type": "type(contract IUniswapV2Factory)",
                                           "value": "IUniswapV2Factory"
                                         },
@@ -13043,7 +13043,7 @@
                             "attributes": {
                               "contractScope": null,
                               "name": "IUniswapV2Pair",
-                              "referencedDeclaration": 9844,
+                              "referencedDeclaration": 9600,
                               "type": "contract IUniswapV2Pair"
                             },
                             "id": 6486,
@@ -13082,7 +13082,7 @@
                               "overloadedDeclarations": [
                                 null
                               ],
-                              "referencedDeclaration": 9844,
+                              "referencedDeclaration": 9600,
                               "type": "type(contract IUniswapV2Pair)",
                               "value": "IUniswapV2Pair"
                             },
@@ -13295,7 +13295,7 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "kLast",
-                                  "referencedDeclaration": 9801,
+                                  "referencedDeclaration": 9557,
                                   "type": "function () view external returns (uint256)"
                                 },
                                 "children": [
@@ -13414,7 +13414,7 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "totalSupply",
-                              "referencedDeclaration": 9640,
+                              "referencedDeclaration": 9396,
                               "type": "function () view external returns (uint256)"
                             },
                             "children": [
@@ -14010,7 +14010,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-08-12T03:31:23.750Z",
+  "updatedAt": "2021-08-31T08:20:06.349Z",
   "devdoc": {
     "methods": {}
   },
