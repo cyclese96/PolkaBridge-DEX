@@ -163,6 +163,7 @@ const SwapCard = (props) => {
   const [swapDialogOpen, setSwapDialog] = useState(false);
 
   const [priceImpact, setPriceImpact] = useState(null);
+  const [liquidityStatus, setLiquidityStatus] = useState(false);
 
   const updateTokenPrices = async () => {
     console.log("updating...");
@@ -178,7 +179,7 @@ const SwapCard = (props) => {
   useEffect(async () => {
     let _token = {};
     if (currentNetwork === etheriumNetwork) {
-      _token = tokens[3];
+      _token = tokens[2];
       setToken1(_token);
     } else {
       _token = {
@@ -287,6 +288,10 @@ const SwapCard = (props) => {
         );
       }
 
+      if (!_pairAddress) {
+        setLiquidityStatus(true);
+      }
+
       if (!_pairAbi) {
         _pairAbi = await fetchContractAbi(_pairAddress, currentNetwork);
       }
@@ -374,7 +379,9 @@ const SwapCard = (props) => {
         poolReserves[selectedToken2.symbol],
         poolReserves[selectedToken1.symbol]
       );
-      setToken2Value(_token2Value);
+      if (new BigNumber(_token2Value).gt(0)) {
+        setToken2Value(_token2Value);
+      }
     } else if (selectedToken2.symbol && !tokens) {
       setToken2Value("");
     }
@@ -404,7 +411,9 @@ const SwapCard = (props) => {
         poolReserves[selectedToken1.symbol],
         poolReserves[selectedToken2.symbol]
       );
-      setToken1Value(_token1Value);
+      if (new BigNumber(_token1Value).gt(0)) {
+        setToken1Value(_token1Value);
+      }
     } else if (selectedToken1.symbol && !tokens) {
       setToken1Value("");
     }
@@ -586,7 +595,7 @@ const SwapCard = (props) => {
                 fontSize="small"
               />
             </div> */}
-            {!swapStatus.disabled ? (
+            {!swapStatus.disabled && !liquidityStatus ? (
               <div className="d-flex justify-content-around w-100 mt-4 mb-1 ">
                 <span>Price</span>
                 <span>
@@ -598,6 +607,8 @@ const SwapCard = (props) => {
                   {selectedToken2.symbol}
                 </span>
               </div>
+            ) : liquidityStatus ? (
+              "No liquidity availabe for this pair"
             ) : (
               ""
             )}
@@ -606,7 +617,11 @@ const SwapCard = (props) => {
               <CustomButton
                 variant="light"
                 className={classes.approveBtn}
-                disabled={approvedTokens[selectedToken1.symbol] || dexLoading}
+                disabled={
+                  approvedTokens[selectedToken1.symbol] ||
+                  dexLoading ||
+                  liquidityStatus
+                }
                 onClick={handleConfirmAllowance}
               >
                 {approvedTokens[selectedToken1.symbol] ? (
@@ -630,7 +645,7 @@ const SwapCard = (props) => {
               <CustomButton
                 variant="primary"
                 // className={classes.addButton}
-                disabled={swapStatus.disabled | dexLoading}
+                disabled={swapStatus.disabled | dexLoading || liquidityStatus}
                 onClick={handleSwapToken}
               >
                 {!swapStatus.disabled && dexLoading ? (

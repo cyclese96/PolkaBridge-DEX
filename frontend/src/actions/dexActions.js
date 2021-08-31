@@ -1,6 +1,8 @@
 import BigNumber from "bignumber.js";
 import {
+  bscTokens,
   ETH,
+  etheriumNetwork,
   nullAddress,
   supportedTokens,
   tokens,
@@ -511,13 +513,12 @@ export const loadTokens = (network) => async (dispatch) => {
 
     // todo:
     // check imported tokens from local storage
-    const currentSupportedTokens = supportedTokens[network];
+    const currentSupportedTokens =
+      network === etheriumNetwork ? tokens : bscTokens;
 
     dispatch({
       type: LOAD_TOKEN_LIST,
-      payload: tokens.filter((item) =>
-        currentSupportedTokens.includes(item.symbol)
-      ),
+      payload: currentSupportedTokens,
     });
   } catch (error) {
     console.log("loadTokens ", error);

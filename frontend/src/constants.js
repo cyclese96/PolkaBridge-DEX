@@ -66,7 +66,7 @@ export const WETH_ADDRESS_TESTNET =
   "0xc778417e063141139fce010982780140aa0cd5ab";
 
 export const WETH_ADDRESS_MAINNET =
-  "0xc778417e063141139fce010982780140aa0cd5ab";
+  "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2";
 
 //pwar
 
@@ -128,41 +128,88 @@ export const PWAR_BNB = "PWAR_BNB";
 export const PWAR_CORGIB = "PWAR_CORGIB";
 export const CORGIB_BNB = "CORGIB_BNB";
 
-export const tokens = [
-  {
-    name: "Polkabridge",
-    symbol: "PBR",
-    address: pbrAddressTestnet,
-  },
-  // {
-  //   name: "DragonBite",
-  //   symbol: "BITE",
-  //   address: null,
-  // },
+export const bscTokens = [
   {
     name: "Polkawar",
     symbol: "PWAR",
-    address: pwarAddressTestnet,
+    address:
+      currentConnection === "testnet" ? pwarAddressTestnet : pwarAddressMainnet,
   },
   {
     name: "Corgib meme coin",
     symbol: "CORGIB",
-    address: corgibMemeCoinTestent,
-  },
-  {
-    name: "Ethereum",
-    symbol: "ETH",
-    address: WETH_ADDRESS_TESTNET,
+    address:
+      currentConnection === "testnet"
+        ? corgibMemeCoinTestent
+        : corgibMemeCoinMainnet,
   },
   {
     name: "Binance",
     symbol: "BNB",
     address: null,
   },
+];
+export const tokens = [
+  {
+    name: "Polkabridge",
+    symbol: "PBR",
+    address:
+      currentConnection === "testnet" ? pbrAddressTestnet : pbrAddressMainnet,
+  },
+  {
+    name: "DragonBite",
+    symbol: "BITE",
+    address:
+      currentConnection === "testnet" ? biteAddressKoven : biteAddressMainnet,
+  },
+  {
+    name: "Ethereum",
+    symbol: "ETH",
+    address:
+      currentConnection === "testnet"
+        ? WETH_ADDRESS_TESTNET
+        : WETH_ADDRESS_MAINNET,
+  },
   {
     name: "US Tether",
     symbol: "USDT",
-    address: usdtTestnetAddress,
+    address:
+      currentConnection === "testnet" ? usdtTestnetAddress : usdtMainnetAddress,
+  },
+  {
+    name: "USD Coin",
+    symbol: "USDC",
+    address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+  },
+  {
+    name: "1INCH Token",
+    symbol: "1INCH",
+    address: "0x111111111117dc0aa78b770fa6a738034120c302",
+  },
+  {
+    name: "Dai Stablecoin",
+    symbol: "DAI",
+    address: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+  },
+  {
+    name: "Aave Token",
+    symbol: "AAVE",
+    address: "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9",
+  },
+  {
+    name: "Amp",
+    symbol: "AMP",
+    address: "0xfF20817765cB7f73d4bde2e66e067E58D11095C2",
+  },
+  {
+    name: "Aragon Network Token",
+    symbol: "ANT",
+    address: "0xa117000000f279d81a1d3cc75430faa017fa5a2e",
+  },
+  {
+    name: "Matic Token",
+    symbol: "MATIC",
+    address: "0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0",
   },
 ];
 

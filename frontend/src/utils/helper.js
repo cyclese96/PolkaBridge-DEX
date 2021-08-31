@@ -248,8 +248,8 @@ export const getPriceRatio = (token1, token2) => {
 };
 
 export const getTokenOut = (tokenIn, token1Reserve, token2Reserve) => {
-  const _token1 = new BigNumber(token1Reserve);
-  const _token2 = new BigNumber(token2Reserve);
+  const _token1 = new BigNumber(token1Reserve ? token1Reserve : "0");
+  const _token2 = new BigNumber(token2Reserve ? token2Reserve : "0");
 
   if (_token1.eq("0") || _token2.eq("0")) {
     return new BigNumber("0").toFixed(4).toString();
