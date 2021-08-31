@@ -13,6 +13,7 @@ import { ETH, etheriumNetwork, tokens } from "../../constants";
 import CachedIcon from "@material-ui/icons/Cached";
 import {
   buyPriceImpact,
+  fetchTokenAbi,
   fromWei,
   getPercentageAmount,
   getPercentAmount,
@@ -31,10 +32,21 @@ import {
   confirmAllowance,
   getLpBalance,
   verifySlippage,
+  loadPairContractAbi,
 } from "../../actions/dexActions";
+import { getAccountBalance } from "../../actions/accountActions";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import SwapConfirm from "../common/SwapConfirm";
 import debounce from "lodash.debounce";
+import {
+  getPairAbi,
+  getPairAddress,
+  getTokenAbi,
+  getTokenAddress,
+} from "../../utils/connectionUtils";
+import store from "../../store";
+import { SET_TOKEN_ABI } from "../../actions/types";
+import { fetchContractAbi } from "../../utils/httpUtils";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -105,14 +117,14 @@ const useStyles = makeStyles((theme) => ({
 
 const SwapCard = (props) => {
   const {
-    account: { balance, loading, currentNetwork, currentAccount },
+    account: { currentNetwork, currentAccount },
     dex: {
       swapSettings,
-      from_token,
-      to_token,
       approvedTokens,
       dexLoading,
       poolReserves,
+      tokenData,
+      pairContractData,
     },
     swapEthForExactTokens,
     swapExactEthForTokens,
@@ -122,6 +134,8 @@ const SwapCard = (props) => {
     getTokenPrice,
     getLpBalance,
     verifySlippage,
+    getAccountBalance,
+    loadPairContractAbi,
   } = props;
 
   const classes = useStyles();
@@ -182,20 +196,126 @@ const SwapCard = (props) => {
     // await checkAllowance(_token, currentAccount, currentNetwork);
   }, [currentNetwork, currentAccount]);
 
-  useEffect(async () => {
-    if (selectedToken1.symbol && !approvedTokens[selectedToken1.symbol]) {
-      //skip approve check for eth
-      // return;
-      console.log("checking approval in swap");
-      await checkAllowance(selectedToken1, currentAccount, currentNetwork);
+  const currentPairAddress = () => {
+    if (
+      Object.keys(pairContractData).includes(
+        `${selectedToken1.symbol}_${selectedToken2.symbol}`
+      )
+    ) {
+      return pairContractData[
+        `${selectedToken1.symbol}_${selectedToken2.symbol}`
+      ].address;
+    } else if (
+      Object.keys(pairContractData).includes(
+        `${selectedToken2.symbol}_${selectedToken1.symbol}`
+      )
+    ) {
+      return pairContractData[
+        `${selectedToken2.symbol}_${selectedToken1.symbol}`
+      ].address;
+    } else {
+      return null;
     }
+  };
+
+  const currentPairAbi = () => {
+    if (
+      Object.keys(pairContractData).includes(
+        `${selectedToken1.symbol}_${selectedToken2.symbol}`
+      )
+    ) {
+      return pairContractData[
+        `${selectedToken1.symbol}_${selectedToken2.symbol}`
+      ].abi;
+    } else if (
+      Object.keys(pairContractData).includes(
+        `${selectedToken2.symbol}_${selectedToken1.symbol}`
+      )
+    ) {
+      return pairContractData[
+        `${selectedToken2.symbol}_${selectedToken1.symbol}`
+      ].abi;
+    } else {
+      return null;
+    }
+  };
+
+  useEffect(async () => {
+    // if (selectedToken1.symbol && !approvedTokens[selectedToken1.symbol]) {
+    //   //skip approve check for eth
+    //   // return;
+    //   console.log("checking approval in swap");
+    //   await checkAllowance(selectedToken1, currentAccount, currentNetwork);
+    // }
     if (selectedToken1.symbol && selectedToken2.symbol) {
+      // load erc20 token abi and balance
+      const erc20Token =
+        selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
+      let erc20Abi = erc20Token.imported
+        ? tokenData[erc20Token.symbol].abi
+        : getTokenAbi(erc20Token.symbol);
+
+      if (!erc20Abi) {
+        // load token abi if not loaded
+        erc20Abi = await fetchTokenAbi(erc20Token.address);
+        store.dispatch({
+          type: SET_TOKEN_ABI,
+          payload: erc20Abi,
+        });
+      }
+      await getAccountBalance(
+        {
+          ...erc20Token,
+          abi: erc20Abi,
+        },
+        currentNetwork
+      );
+      // load current pair ABI
+      let _pairAbi = currentPairAbi();
+
+      if (!_pairAbi) {
+        _pairAbi = getPairAbi(selectedToken1.symbol, selectedToken2.symbol);
+      }
+
+      let _pairAddress = currentPairAddress();
+      console.log("current pair address ", _pairAddress);
+      if (!_pairAddress) {
+        _pairAddress = await getPairAddress(
+          selectedToken1.address,
+          selectedToken2.address,
+          currentNetwork
+        );
+      }
+
+      if (!_pairAbi) {
+        _pairAbi = await fetchContractAbi(_pairAddress, currentNetwork);
+      }
+      // laod current pair reserves
+      let _pairData = { abi: _pairAbi, address: _pairAddress };
+
+      // update pair data into reducer if not available
+      if (!currentPairAddress()) {
+        loadPairContractAbi(
+          selectedToken1.symbol,
+          selectedToken2.symbol,
+          _pairData,
+          currentNetwork
+        );
+      }
+
+      console.log("final pair data ", _pairData);
       await getLpBalance(
         selectedToken1,
         selectedToken2,
+        _pairData,
         currentAccount,
         currentNetwork
       );
+
+      //   console.log("checking approval in swap");
+      if (!approvedTokens[selectedToken1.symbol]) {
+        await checkAllowance(selectedToken1, currentAccount, currentNetwork);
+      }
     }
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
@@ -562,4 +682,6 @@ export default connect(mapStateToProps, {
   confirmAllowance,
   getLpBalance,
   verifySlippage,
+  getAccountBalance,
+  loadPairContractAbi,
 })(SwapCard);

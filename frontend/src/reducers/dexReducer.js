@@ -13,9 +13,12 @@ import {
   PRICE_UPDATE,
   RESET_POOL_SHARE,
   SET_LP_BALANCE,
+  SET_PAIR_ABI,
+  SET_PAIR_DATA,
   SET_POOL_RESERVES,
   SET_TOKEN0_PRICE,
   SET_TOKEN1_PRICE,
+  SET_TOKEN_ABI,
   SHOW_DEX_LOADING,
   SWAP_TOKEN_SELECTION,
   UPDATE_SETTINGS,
@@ -33,18 +36,18 @@ const initalState = {
   recentSwaps: [],
   token0Price: null,
   token1Price: null,
-  from_token: {
-    name: null,
-    amount: null,
-    address: null,
-    price: 3290,
-  },
-  to_token: {
-    name: null,
-    amount: null,
-    address: null,
-    price: 0.15,
-  },
+  // from_token: {
+  //   name: null,
+  //   amount: null,
+  //   address: null,
+  //   price: 3290,
+  // },
+  // to_token: {
+  //   name: null,
+  //   amount: null,
+  //   address: null,
+  //   price: 0.15,
+  // },
   swapSettings: {
     swapFee: exchangeFee,
     slippage: defaultSlippage,
@@ -58,6 +61,8 @@ const initalState = {
   lpApproved: {}, // { "PBR_ETH": false, "USDTH_ETH": true }
   poolReserves: {}, // { "PBR": 1223432, "ETH":21, "TOTAL":123232}
   isValidSlippage: false,
+  pairContractData: {}, // { "PBR_ETH": { abi: [], address: ""  }  }
+  tokenData: {}, // { "PBR": { abi: [], address: ""  }  }
 };
 
 export default function (state = initalState, action) {
@@ -85,26 +90,26 @@ export default function (state = initalState, action) {
         ...state,
         token1Price: action.payload,
       };
-    case LOAD_FROM_TOKEN:
-      return {
-        ...state,
-        from_token: {
-          ...state.from_token,
-          name: action.payload.name,
-          amount: action.payload.amount,
-          address: action.payload.amount,
-        },
-      };
-    case LOAD_TO_TOKEN:
-      return {
-        ...state,
-        from_token: {
-          ...state.from_token,
-          name: action.payload.name,
-          amount: action.payload.amount,
-          address: action.payload.amount,
-        },
-      };
+    // case LOAD_FROM_TOKEN:
+    //   return {
+    //     ...state,
+    //     from_token: {
+    //       ...state.from_token,
+    //       name: action.payload.name,
+    //       amount: action.payload.amount,
+    //       address: action.payload.amount,
+    //     },
+    //   };
+    // case LOAD_TO_TOKEN:
+    //   return {
+    //     ...state,
+    //     from_token: {
+    //       ...state.from_token,
+    //       name: action.payload.name,
+    //       amount: action.payload.amount,
+    //       address: action.payload.amount,
+    //     },
+    //   };
     case SWAP_TOKEN_SELECTION:
       const temp = state.from_token;
       return {
@@ -205,6 +210,22 @@ export default function (state = initalState, action) {
       return {
         ...state,
         poolReserves: action.payload,
+      };
+    case SET_TOKEN_ABI:
+      return {
+        ...state,
+        tokenData: {
+          ...state.tokenData,
+          ...action.payload,
+        },
+      };
+    case SET_PAIR_DATA:
+      return {
+        ...state,
+        pairContractData: {
+          ...state.pairContractData,
+          ...action.payload,
+        },
       };
     default:
       return state;

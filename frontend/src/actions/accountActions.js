@@ -7,12 +7,17 @@ import {
   LOAD_FROM_TOKEN,
   LOAD_TOKEN_BALANCE,
 } from "./types";
-import { getCurrentAccount, getNetworkBalance } from "../utils/helper";
+import {
+  getCurrentAccount,
+  getNetworkBalance,
+  getTokenContract,
+} from "../utils/helper";
 import {
   pbrContract,
   biteContract,
   corgibCoinContract,
   pwarCoinContract,
+  tokenContract,
 } from "../contracts/connections";
 import { CORGIB, etheriumNetwork } from "../constants";
 
@@ -65,10 +70,10 @@ export const connectWallet =
           type: LOAD_TOKEN_BALANCE,
           payload: { PBR: pbrWei, ETH: ethWei },
         });
-        dispatch({
-          type: LOAD_FROM_TOKEN,
-          payload: { name: "ETH", amount: 0, address: "" },
-        });
+        // dispatch({
+        //   type: LOAD_FROM_TOKEN,
+        //   payload: { name: "ETH", amount: 0, address: "" },
+        // });
       } else {
         const [corgibWei, pwarWei, bnbWei] = await Promise.all([
           corgibCoinContract(network).methods.balanceOf(accountAddress).call(),
@@ -81,10 +86,10 @@ export const connectWallet =
           type: LOAD_TOKEN_BALANCE,
           payload: { CORGIB: corgibWei, PWAR: pwarWei, BNB: bnbWei },
         });
-        dispatch({
-          type: LOAD_FROM_TOKEN,
-          payload: { name: "BNB", amount: 0, address: "" },
-        });
+        // dispatch({
+        //   type: LOAD_FROM_TOKEN,
+        //   payload: { name: "BNB", amount: 0, address: "" },
+        // });
       }
     } catch (error) {
       console.log("connectWallet ", error);
@@ -99,28 +104,30 @@ export const connectWallet =
     });
   };
 
-export const getAccountBalance = (network) => async (dispatch) => {
+export const getAccountBalance = (token, network) => async (dispatch) => {
   dispatch({
     type: SHOW_LOADING,
   });
   try {
     const accountAddress = await getCurrentAccount();
+    const _tokenContract = await tokenContract(
+      token.address,
+      token.abi,
+      network
+    );
 
     if (network === etheriumNetwork) {
       console.log("connectWallet: fetching from", network);
-      const [pbrWei, ethWei] = await Promise.all([
-        pbrContract(network).methods.balanceOf(accountAddress).call(),
+      const [tokenWei, ethWei] = await Promise.all([
+        _tokenContract.methods.balanceOf(accountAddress).call(),
         getNetworkBalance(accountAddress),
       ]);
       console.log("curr network bal ", ethWei);
-
+      const balanceObject = {};
+      balanceObject[token.symbol] = tokenWei;
       dispatch({
         type: LOAD_TOKEN_BALANCE,
-        payload: { PBR: pbrWei, ETH: ethWei },
-      });
-      dispatch({
-        type: LOAD_FROM_TOKEN,
-        payload: { name: "ETH", amount: 0, address: "" },
+        payload: balanceObject,
       });
     } else {
       const [corgibWei, pwarWei, bnbWei] = await Promise.all([

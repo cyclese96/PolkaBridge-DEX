@@ -126,7 +126,7 @@ const SwapConfirm = (props) => {
     selectedToken2,
     token1Value,
     token2Value,
-    dex: { swapSettings, poolReserves, dexLoading },
+    dex: { swapSettings, poolReserves, dexLoading, pairContractData },
     swapExactEthForTokens,
     swapExactTokensForEth,
   } = props;

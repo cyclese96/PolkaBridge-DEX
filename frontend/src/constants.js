@@ -165,3 +165,5 @@ export const tokens = [
     address: usdtTestnetAddress,
   },
 ];
+
+export const nullAddress = "0x0000000000000000000000000000000000000000";

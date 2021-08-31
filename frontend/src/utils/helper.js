@@ -1,5 +1,25 @@
 import BigNumber from "bignumber.js";
-import { BITE, CORGIB, PBR, PWAR, USDT } from "../constants";
+import {
+  BITE,
+  biteAddressKoven,
+  biteAddressMainnet,
+  BNB,
+  CORGIB,
+  corgibMemeCoinMainnet,
+  corgibMemeCoinTestent,
+  currentConnection,
+  ETH,
+  PBR,
+  pbrAddressMainnet,
+  pbrAddressTestnet,
+  PWAR,
+  pwarAddressMainnet,
+  pwarAddressTestnet,
+  USDT,
+  usdtMainnetAddress,
+  usdtTestnetAddress,
+  WETH_ADDRESS_MAINNET,
+} from "../constants";
 import {
   biteContract,
   corgibCoinContract,
