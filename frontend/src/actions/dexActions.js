@@ -628,7 +628,7 @@ export const getLpBalance =
       // const _pairAddress = getPairInfo
       const _pairContract = pairContract2(pairData, network);
 
-      console.log("pair contract ", _pairContract._address);
+      // console.log("pair contract ", _pairContract._address);
       dispatch({
         type: SHOW_DEX_LOADING,
       });

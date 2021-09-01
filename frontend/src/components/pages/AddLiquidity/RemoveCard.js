@@ -40,7 +40,7 @@ import {
   getPairAddress,
   getTokenAbi,
 } from "../../../utils/connectionUtils";
-import { SET_TOKEN_ABI } from "../../../actions/types";
+import { RESET_POOL_DATA, SET_TOKEN_ABI } from "../../../actions/types";
 import store from "../../../store";
 import { fetchContractAbi } from "../../../utils/httpUtils";
 
@@ -273,7 +273,7 @@ const RemoveCard = ({
   useEffect(() => {
     if (currentNetwork === etheriumNetwork) {
       setToken1(tokens[0]);
-      setToken2(tokens[3]);
+      setToken2(tokens[2]);
     } else {
       setToken1({
         icon: bnbImg,
@@ -372,6 +372,12 @@ const RemoveCard = ({
   // new use effect
   useEffect(async () => {
     if (selectedToken1.symbol && selectedToken2.symbol) {
+      // reset input on token change
+      handleClearState();
+      store.dispatch({
+        type: RESET_POOL_DATA,
+      });
+
       // load erc20 token abi and balance
       const erc20Token =
         selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
@@ -427,7 +433,6 @@ const RemoveCard = ({
         );
       }
 
-      console.log("final pair data ", _pairData);
       await getLpBalance(
         selectedToken1,
         selectedToken2,

@@ -242,12 +242,6 @@ const SwapCard = (props) => {
   };
 
   useEffect(async () => {
-    // if (selectedToken1.symbol && !approvedTokens[selectedToken1.symbol]) {
-    //   //skip approve check for eth
-    //   // return;
-    //   console.log("checking approval in swap");
-    //   await checkAllowance(selectedToken1, currentAccount, currentNetwork);
-    // }
     if (selectedToken1.symbol && selectedToken2.symbol) {
       // reset token input on token selection
 
@@ -327,13 +321,13 @@ const SwapCard = (props) => {
       );
 
       //   console.log("checking approval in swap");
-      // if (!currentTokenApprovalStatus()) {
-      await checkAllowance(
-        { ...selectedToken1, abi: erc20Abi },
-        currentAccount,
-        currentNetwork
-      );
-      // }
+      if (!currentTokenApprovalStatus()) {
+        await checkAllowance(
+          { ...selectedToken1, abi: erc20Abi },
+          currentAccount,
+          currentNetwork
+        );
+      }
     }
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 

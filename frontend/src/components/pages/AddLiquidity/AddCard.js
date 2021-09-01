@@ -218,7 +218,7 @@ const AddCard = (props) => {
     let defaultToken1, defaultToken2;
     if (currentNetwork === etheriumNetwork) {
       defaultToken1 = tokens[0];
-      defaultToken2 = tokens[3];
+      defaultToken2 = tokens[2];
     } else {
       defaultToken1 = {
         icon: tokenThumbnail("PWAR"),
@@ -283,14 +283,14 @@ const AddCard = (props) => {
     }
   };
 
+  const currentTokenApprovalStatus = () => {
+    return selectedToken1.symbol === "ETH"
+      ? true
+      : approvedTokens[selectedToken1.symbol];
+  };
+
   // new use effect
   useEffect(async () => {
-    // if (selectedToken1.symbol && !approvedTokens[selectedToken1.symbol]) {
-    //   //skip approve check for eth
-    //   // return;
-    //   console.log("checking approval in swap");
-    //   await checkAllowance(selectedToken1, currentAccount, currentNetwork);
-    // }
     if (selectedToken1.symbol && selectedToken2.symbol) {
       // load erc20 token abi and balance
       const erc20Token =
@@ -357,9 +357,13 @@ const AddCard = (props) => {
       );
 
       //   console.log("checking approval in swap");
-      if (!approvedTokens[selectedToken1.symbol]) {
-        await checkAllowance(selectedToken1, currentAccount, currentNetwork);
-      }
+      // if (!currentTokenApprovalStatus()) {
+      await checkAllowance(
+        { ...selectedToken1, abi: erc20Abi },
+        currentAccount,
+        currentNetwork
+      );
+      // }
     }
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
