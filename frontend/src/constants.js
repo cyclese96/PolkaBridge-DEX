@@ -211,6 +211,106 @@ export const tokens = [
     symbol: "MATIC",
     address: "0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0",
   },
+  {
+    name: "Pax Dollar",
+    symbol: "PAX",
+    address: "0x8e870d67f660d95d5be530380d0ec0bd388289e1",
+  },
+  {
+    name: "yearn.finance",
+    symbol: "YFI",
+    address: "0x0bc529c00c6401aef6d220be8c6ea1667f6ad93e",
+  },
+  {
+    name: "DFI.Money",
+    symbol: "YFII",
+    address: "0xa1d0E215a23d7030842FC67cE582a6aFa3CCaB83",
+  },
+  {
+    name: "Wrapped Bitcoin",
+    symbol: "WBTC",
+    address: "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+  },
+  {
+    name: "wDogecoin",
+    symbol: "WDOGE",
+    address: "0xf40c1f421ee02a550afdd8712ef34dce97eec6f2",
+  },
+  {
+    name: "Shiba Inu",
+    symbol: "SHIB",
+    address: "0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce",
+  },
+  {
+    name: "Maker",
+    symbol: "MKR",
+    address: "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2",
+  },
+  {
+    name: "Compound",
+    symbol: "COMP",
+    address: "0xc00e94cb662c3520282e6f5717214004a7f26888",
+  },
+  {
+    name: "The Sandbox",
+    symbol: "SAND",
+    address: "0x3845badAde8e6dFF049820680d1F14bD3903a5d0",
+  },
+  {
+    name: "Uniswap",
+    symbol: "UNI",
+    address: "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+  },
+  {
+    name: "Balancer",
+    symbol: "BAL",
+    address: "0xba100000625a3754423978a60c9317c58a424e3D",
+  },
+  {
+    name: "Curve DAO Token",
+    symbol: "CRV",
+    address: "0xD533a949740bb3306d119CC777fa900bA034cd52",
+  },
+  {
+    name: "The Graph",
+    symbol: "GRT",
+    address: "0xc944e90c64b2c07662a292be6244bdf05cda44a7",
+  },
+  {
+    name: "Kyber Network Crystal v2",
+    symbol: "KNC",
+    address: "0xdeFA4e8a7bcBA345F687a2f1456F5Edd9CE97202",
+  },
+  {
+    name: "Decentraland",
+    symbol: "MANA",
+    address: "0x0f5d2fb29fb7d3cfee444a200298f468908cc942",
+  },
+  {
+    name: "0x",
+    symbol: "ZRX",
+    address: "0xe41d2489571d322189246dafa5ebde1f4699f498",
+  },
+  {
+    name: "Axie Infinity",
+    symbol: "AXS",
+    address: "0xbb0e17ef65f82ab018d8edd776e8dd940327b28b",
+  },
+  {
+    name: "THORChain",
+    symbol: "RUNE",
+    address: "RUNE-B1A",
+  },
+  {
+    name: "NEXO",
+    symbol: "NEXO",
+    address: "0xb62132e35a6c13ee1ee0f84dc5d40bad8d815206",
+  },
+  {
+    name: "Basic Attention Token",
+    symbol: "BAT",
+    address: "0x0d8775f648430679a709e98d2b0cb6250d2887ef",
+  },
 ];
 
 export const nullAddress = "0x0000000000000000000000000000000000000000";

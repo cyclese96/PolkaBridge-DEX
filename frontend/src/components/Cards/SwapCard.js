@@ -249,6 +249,11 @@ const SwapCard = (props) => {
     //   await checkAllowance(selectedToken1, currentAccount, currentNetwork);
     // }
     if (selectedToken1.symbol && selectedToken2.symbol) {
+      // reset token input on token selection
+
+      setToken1Value("");
+      setToken2Value("");
+
       // load erc20 token abi and balance
       const erc20Token =
         selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
@@ -259,9 +264,11 @@ const SwapCard = (props) => {
       if (!erc20Abi) {
         // load token abi if not loaded
         erc20Abi = await fetchTokenAbi(erc20Token.address);
+        const abiData = {};
+        abiData[`${erc20Token.symbol}`] = erc20Abi;
         store.dispatch({
           type: SET_TOKEN_ABI,
-          payload: erc20Abi,
+          payload: abiData,
         });
       }
       await getAccountBalance(
@@ -290,6 +297,8 @@ const SwapCard = (props) => {
 
       if (!_pairAddress) {
         setLiquidityStatus(true);
+      } else {
+        setLiquidityStatus(false);
       }
 
       if (!_pairAbi) {
@@ -318,9 +327,13 @@ const SwapCard = (props) => {
       );
 
       //   console.log("checking approval in swap");
-      if (!approvedTokens[selectedToken1.symbol]) {
-        await checkAllowance(selectedToken1, currentAccount, currentNetwork);
-      }
+      // if (!currentTokenApprovalStatus()) {
+      await checkAllowance(
+        { ...selectedToken1, abi: erc20Abi },
+        currentAccount,
+        currentNetwork
+      );
+      // }
     }
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
@@ -461,9 +474,6 @@ const SwapCard = (props) => {
   };
 
   const handleSwapToken = async () => {
-    // setAlert({ status: true, message: "Transaction submitted " });
-
-    // console.log(swapSettings);
     checkPriceImpact();
 
     verifySlippage(
@@ -474,25 +484,6 @@ const SwapCard = (props) => {
       currentNetwork
     );
     setSwapDialog(true);
-    // if (token1.symbol === ETH) {
-    //   //buy trade
-    //   await swapExactEthForTokens(
-    //     token1,
-    //     token2,
-    //     swapSettings.deadline,
-    //     currentAccount,
-    //     currentNetwork
-    //   );
-    // } else {
-    //   //sell trade
-    //   await swapEthForExactTokens(
-    //     token1,
-    //     token2,
-    //     swapSettings.deadline,
-    //     currentAccount,
-    //     currentNetwork
-    //   );
-    // }
   };
 
   const handleSwapConfirm = () => {
@@ -529,6 +520,19 @@ const SwapCard = (props) => {
     const tokenInput1 = token1Value;
     setToken1Value(token2Value);
     setToken2Value(tokenInput1);
+  };
+
+  const currentTokenApprovalStatus = () => {
+    return selectedToken1.symbol === "ETH"
+      ? true
+      : approvedTokens[selectedToken1.symbol];
+  };
+
+  const isBothTokenSelected = () => {
+    if (selectedToken1.symbol && selectedToken2.symbol) {
+      return true;
+    }
+    return false;
   };
 
   // const handleTokenPriceRatio = () => {};
@@ -595,7 +599,7 @@ const SwapCard = (props) => {
                 fontSize="small"
               />
             </div> */}
-            {!swapStatus.disabled && !liquidityStatus ? (
+            {!swapStatus.disabled && !liquidityStatus && !dexLoading ? (
               <div className="d-flex justify-content-around w-100 mt-4 mb-1 ">
                 <span>Price</span>
                 <span>
@@ -618,13 +622,14 @@ const SwapCard = (props) => {
                 variant="light"
                 className={classes.approveBtn}
                 disabled={
-                  approvedTokens[selectedToken1.symbol] ||
+                  currentTokenApprovalStatus() ||
                   dexLoading ||
+                  !isBothTokenSelected() ||
                   liquidityStatus
                 }
                 onClick={handleConfirmAllowance}
               >
-                {approvedTokens[selectedToken1.symbol] ? (
+                {currentTokenApprovalStatus() && isBothTokenSelected() ? (
                   <>
                     Approved{" "}
                     <CheckCircleIcon

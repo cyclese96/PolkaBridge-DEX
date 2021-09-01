@@ -22,6 +22,8 @@ import {
   getPercentage,
   fetchTokenAbi,
   fetchTokenInfo,
+  cacheImportedToken,
+  getCachedTokens,
 } from "../utils/helper";
 import {
   APPROVE_LP_TOKENS,
@@ -355,12 +357,15 @@ export const removeLiquidityEth =
     });
   };
 
+// token: { symbol, name, address, abi }
 export const checkAllowance = (token, account, network) => async (dispatch) => {
   try {
-    console.log("checking allowance");
-    const _tokenContract = token.imported
-      ? tokenContract(token.address, token.abi, network)
-      : getTokenContract(network, token.symbol);
+    console.log("checking allowance", token);
+    // const _tokenContract = token.imported
+    //   ? tokenContract(token.address, token.abi, network)
+    //   : getTokenContract(network, token.symbol);
+    const _tokenContract = tokenContract(token.address, token.abi, network);
+
     const _routerContract = routerContract(network);
     if (token.symbol === ETH) {
       dispatch({
@@ -403,9 +408,11 @@ export const checkAllowance = (token, account, network) => async (dispatch) => {
 export const confirmAllowance =
   (balance, token, account, network) => async (dispatch) => {
     try {
-      const _tokenContract = token.imported
-        ? tokenContract(token.address, token.abi, network)
-        : getTokenContract(network, token.symbol);
+      // const _tokenContract = token.imported
+      //   ? tokenContract(token.address, token.abi, network)
+      //   : getTokenContract(network, token.symbol);
+      const _tokenContract = tokenContract(token.address, token.abi, network);
+
       const _routerContract = routerContract(network);
 
       dispatch({
@@ -511,14 +518,17 @@ export const loadTokens = (network) => async (dispatch) => {
       type: SHOW_LOADING,
     });
 
-    // todo:
-    // check imported tokens from local storage
     const currentSupportedTokens =
       network === etheriumNetwork ? tokens : bscTokens;
 
+    const cachedTokens = getCachedTokens();
+    const allTokens =
+      cachedTokens.length > 0
+        ? [...cachedTokens, ...currentSupportedTokens]
+        : [...currentSupportedTokens];
     dispatch({
       type: LOAD_TOKEN_LIST,
-      payload: currentSupportedTokens,
+      payload: allTokens,
     });
   } catch (error) {
     console.log("loadTokens ", error);
@@ -538,32 +548,23 @@ export const importToken = (address, account, network) => async (dispatch) => {
       type: SHOW_DEX_LOADING,
     });
 
-    const [abiData, tokenInfoData] = await Promise.all([
-      fetchTokenAbi(address),
+    const [tokenInfoData] = await Promise.all([
+      // fetchTokenAbi(address),
       fetchTokenInfo(address),
     ]);
 
     const tokenInfo = tokenInfoData.result[0];
-    const contractABI = JSON.parse(abiData.result);
-    const _importedData = {
+
+    const tokenObj = {
       name: tokenInfo.tokenName,
       symbol: tokenInfo.symbol,
       address: address,
-      abi: contractABI,
-      imported: true,
     };
-
+    cacheImportedToken(tokenObj);
     dispatch({
       type: IMPORT_TOKEN,
       payload: {
-        importedData: _importedData,
-        listData: {
-          name: tokenInfo.tokenName,
-          symbol: tokenInfo.symbol,
-          address: address,
-          abi: contractABI,
-          imported: true,
-        },
+        listData: tokenObj,
       },
     });
   } catch (error) {

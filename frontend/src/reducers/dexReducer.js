@@ -36,18 +36,6 @@ const initalState = {
   recentSwaps: [],
   token0Price: null,
   token1Price: null,
-  // from_token: {
-  //   name: null,
-  //   amount: null,
-  //   address: null,
-  //   price: 3290,
-  // },
-  // to_token: {
-  //   name: null,
-  //   amount: null,
-  //   address: null,
-  //   price: 0.15,
-  // },
   swapSettings: {
     swapFee: exchangeFee,
     slippage: defaultSlippage,
@@ -56,7 +44,7 @@ const initalState = {
   approvedTokens: {}, // { 'PBR':false, 'ETH': true}
   poolShare: "0",
   tokenList: [], // { name, symbol, address, imported, abi }
-  importedTokens: {}, // { 'PBR': { abi:[], address:'', symbol:'', name:'', thumbnail:''} }
+  importedToken: [], // {name, symbol, address}
   lpBalance: {}, // {PBR_ETH:12333, USDT_ETH:22323  }
   lpApproved: {}, // { "PBR_ETH": false, "USDTH_ETH": true }
   poolReserves: {}, // { "PBR": 1223432, "ETH":21, "TOTAL":123232}
@@ -90,26 +78,6 @@ export default function (state = initalState, action) {
         ...state,
         token1Price: action.payload,
       };
-    // case LOAD_FROM_TOKEN:
-    //   return {
-    //     ...state,
-    //     from_token: {
-    //       ...state.from_token,
-    //       name: action.payload.name,
-    //       amount: action.payload.amount,
-    //       address: action.payload.amount,
-    //     },
-    //   };
-    // case LOAD_TO_TOKEN:
-    //   return {
-    //     ...state,
-    //     from_token: {
-    //       ...state.from_token,
-    //       name: action.payload.name,
-    //       amount: action.payload.amount,
-    //       address: action.payload.amount,
-    //     },
-    //   };
     case SWAP_TOKEN_SELECTION:
       const temp = state.from_token;
       return {
@@ -144,24 +112,23 @@ export default function (state = initalState, action) {
         tokenList: action.payload,
       };
     case IMPORT_TOKEN:
-      const _importedData = action.payload.importedData;
+      // const _importedData = action.payload.importedData;
       const _listData = action.payload.listData;
       const _index = state.tokenList.findIndex(
         (item) => item.symbol === _listData.symbol
       );
-      console.log(_index);
+
       let _updatedTokenList = [];
       if (_index < 0) {
         _updatedTokenList = [...state.tokenList, _listData];
       } else {
         _updatedTokenList = [...state.tokenList];
+        // _updatedTokenList[_index] = _listData;
       }
       return {
         ...state,
         tokenList: _updatedTokenList,
-        importedTokens: {
-          ..._importedData,
-        },
+        importedToken: _listData,
       };
     case APPROVE_LP_TOKENS:
       const _lpToUpdate = action.payload;

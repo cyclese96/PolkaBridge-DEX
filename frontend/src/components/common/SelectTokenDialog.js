@@ -113,7 +113,7 @@ const SelectTokenDialog = ({
   handleTokenSelected,
   disableToken,
   importToken,
-  dex: { tokenList, importedTokens, dexLoading },
+  dex: { tokenList, importedToken, dexLoading },
   account: { currentAccount, currentNetwork },
 }) => {
   const classes = useStyles();
@@ -132,25 +132,33 @@ const SelectTokenDialog = ({
   }, [tokenList]);
 
   useEffect(() => {
-    if (importedTokens.symbol) {
-      setImported([importedTokens]);
+    console.log("current imported token ", importedToken);
+    if (importedToken.symbol) {
+      console.log("applying filter now");
+      const filteredList = applyFilter(tokenList, importedToken.symbol);
+      console.log("filtered result", filteredList);
+      setTokens(filteredList);
     }
-  }, [importedTokens]);
+  }, [importedToken, tokenList]);
 
-  const applyFilter = (value) => {
-    const filtered = tokenList.filter(
+  const applyFilter = (list, value) => {
+    // console.log("token list", list);
+    // console.log("on alue", value);
+    const filtered = list.filter(
       (item) =>
         item.symbol.toLocaleLowerCase().includes(value.toLocaleLowerCase()) ||
         item.name.toLowerCase().includes(value.toLocaleLowerCase()) ||
         (item.address &&
           item.address.toLowerCase().includes(value.toLocaleLowerCase()))
     );
-    setTokens(filtered);
+    // setTokens(filtered);
+    return filtered;
   };
 
   const handleTokenFilter = async (value) => {
-    applyFilter(value);
-    if (value.length === 42) {
+    const filteredList = applyFilter(tokenList, value);
+    setTokens(filteredList);
+    if (value.length === 42 && filteredList.length === 0) {
       setShowImported(true);
       await importToken(value, currentAccount, currentNetwork);
     } else {
@@ -193,7 +201,7 @@ const SelectTokenDialog = ({
           ) : (
             <TokenList
               handleItemSelected={onTokenSelect}
-              tokens={showImported ? _importedTokens : filteredTokens}
+              tokens={filteredTokens}
               disableToken={disableToken}
             />
           )}
