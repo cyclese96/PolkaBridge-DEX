@@ -369,15 +369,22 @@ const SwapCard = (props) => {
     [] // will be created only once initially
   );
 
+  const getCurrentPairData = () => {
+    const pairData = { abi: currentPairAbi(), address: currentPairAddress() };
+    return pairData;
+  };
+
   const onToken1InputChange = async (tokens) => {
     setToken1Value(tokens);
 
     // calculate resetpective value of token 2 if selected
     let _token2Value = "";
-    if (selectedToken2.symbol && tokens) {
+    if (selectedToken2.symbol && new BigNumber(tokens).gt(0)) {
+      const pairData = getCurrentPairData();
       await debouncedGetLpBalance(
         selectedToken1,
         selectedToken2,
+        pairData,
         currentAccount,
         currentNetwork
       );
@@ -408,10 +415,12 @@ const SwapCard = (props) => {
 
     //calculate respective value of token1 if selected
     let _token1Value = "";
-    if (selectedToken1.symbol && tokens) {
+    if (selectedToken1.symbol && new BigNumber(tokens).gt(0)) {
+      const pairData = getCurrentPairData();
       await debouncedGetLpBalance(
         selectedToken1,
         selectedToken2,
+        pairData,
         currentAccount,
         currentNetwork
       );

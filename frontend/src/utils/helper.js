@@ -178,16 +178,16 @@ export const getUnixTime = (timeInMintes) => {
   return _timeUnix;
 };
 
-export const getPercentage = (numerator, denominator) => {
-  const _nume = new BigNumber(numerator ? numerator : 0);
-  const _dem = new BigNumber(denominator ? denominator : 0);
-  if (_dem.lte(new BigNumber("0"))) {
-    return new BigNumber("100").toString();
-  }
-  if (_nume.lte(new BigNumber("0"))) {
+export const getPercentage = (yourValue, totalValue) => {
+  const _your = new BigNumber(yourValue ? yourValue : 0);
+  const _total = new BigNumber(totalValue ? totalValue : 0);
+  if (_your.lte(new BigNumber("0"))) {
     return new BigNumber("0").toString();
   }
-  const percent = _nume.div(_dem.plus(_nume)).multipliedBy("100");
+  if (_total.lte(new BigNumber("0"))) {
+    return new BigNumber("0").toString();
+  }
+  const percent = _your.div(_total).multipliedBy(100);
   return percent.toFixed(4).toString();
 };
 

@@ -12,6 +12,7 @@ import { ETH, etheriumNetwork, tokens } from "../../../constants";
 import {
   fetchTokenAbi,
   formatCurrency,
+  getPercentage,
   getPriceRatio,
   getTokenOut,
   token1PerToken2,
@@ -449,13 +450,18 @@ const AddCard = (props) => {
     [] // will be created only once initially
   );
 
+  const getCurrentPairData = () => {
+    const pairData = { abi: currentPairAbi(), address: currentPairAddress() };
+    return pairData;
+  };
+
   const onToken1InputChange = async (tokens) => {
     setToken1Value(tokens);
 
     //calculate resetpective value of token 2 if selected
     let _token2Value = "";
     if (selectedToken2.symbol && tokens) {
-      const pairData = { abi: currentPairAbi(), address: currentPairAddress() };
+      const pairData = getCurrentPairData();
 
       await debouncedGetLpBalance(
         selectedToken1,
@@ -491,7 +497,7 @@ const AddCard = (props) => {
 
     let _token1Value = "";
     if (selectedToken1.symbol && tokens) {
-      const pairData = { abi: currentPairAbi(), address: currentPairAddress() };
+      const pairData = getCurrentPairData();
       await debouncedGetLpBalance(
         selectedToken1,
         selectedToken2,
@@ -584,6 +590,22 @@ const AddCard = (props) => {
       swapSettings.deadline,
       currentNetwork
     );
+  };
+
+  const currentPoolShare = () => {
+    if (
+      !poolReserves[selectedToken1.symbol] ||
+      !poolReserves[selectedToken2.symbol]
+    ) {
+      return "100";
+    }
+    const token1Amount = toWei(token1Value);
+    const token1Reserves = new BigNumber(poolReserves[selectedToken1.symbol]);
+    const share = getPercentage(
+      token1Amount,
+      token1Reserves.plus(token1Amount).toString()
+    );
+    return share;
   };
 
   // const getPriceRatio = (token1, token2) => {
@@ -685,7 +707,7 @@ const AddCard = (props) => {
                     <div className={classes.feeSelectHeading}>
                       <p
                         className={classes.feeSelectHeadingP}
-                      >{`${poolShare}%`}</p>
+                      >{`${currentPoolShare()}%`}</p>
                     </div>
                     <span className={classes.feeSelectHeadingSpan}>
                       Share of pool

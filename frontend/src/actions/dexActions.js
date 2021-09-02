@@ -35,6 +35,7 @@ import {
   HIDE_LOADING,
   IMPORT_TOKEN,
   LOAD_TOKEN_LIST,
+  RESET_POOL_DATA,
   SET_LP_BALANCE,
   SET_PAIR_DATA,
   SET_POOL_RESERVES,
@@ -630,24 +631,23 @@ export const getLpBalance =
   (token1, token2, pairData, account, network) => async (dispatch) => {
     // console.log("getting balance", { token1, token2 });
     try {
-      // const _pairAddress = getPairInfo
       const _pairContract = pairContract2(pairData, network);
 
-      // console.log("pair contract ", _pairContract._address);
+      console.log("pair contract ", _pairContract._address);
       dispatch({
         type: SHOW_DEX_LOADING,
       });
 
-      if (!_pairContract._address) {
-        dispatch({
-          type: GET_POOL_SHARE,
-          payload: "100",
-        });
-        dispatch({
-          type: HIDE_DEX_LOADING,
-        });
-        return;
-      }
+      // if (!_pairContract._address) {
+      //   dispatch({
+      //     type: GET_POOL_SHARE,
+      //     payload: "100",
+      //   });
+      //   dispatch({
+      //     type: HIDE_DEX_LOADING,
+      //   });
+      //   return;
+      // }
       const [lpBalance, token0Addr, token1Addr, reservesData, totalSupply] =
         await Promise.all([
           _pairContract.methods.balanceOf(account).call(),
@@ -692,6 +692,10 @@ export const getLpBalance =
         payload: "Failed to fetch lpBalance",
       });
     }
+
+    // dispatch({
+    //   type: RESET_POOL_DATA,
+    // });
     dispatch({
       type: HIDE_DEX_LOADING,
     });

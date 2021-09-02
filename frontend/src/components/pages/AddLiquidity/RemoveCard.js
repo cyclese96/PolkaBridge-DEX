@@ -476,78 +476,11 @@ const RemoveCard = ({
   //   );
   // }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
-  // const verifySwapStatus = (token1, token2) => {
-  //   if (token1.selected.symbol === token2.selected.symbol) {
-  //     setStatus({ message: "Invalid pair", disabled: true });
-  //   } else if (
-  //     (!token1.value && token1.selected.symbol) ||
-  //     (!token2.value && token2.selected.symbol)
-  //   ) {
-  //     setStatus({ message: "Enter amounts", disabled: true });
-  //   } else if (!token1.selected.symbol || !token2.selected.symbol) {
-  //     setStatus({ message: "Select both tokens", disabled: true });
-  //   } else if (
-  //     token1.value > 0 &&
-  //     token2.value > 0 &&
-  //     token1.selected.symbol &&
-  //     token2.selected.symbol
-  //   ) {
-  //     setStatus({ message: "Add liquidity", disabled: false });
-  //   }
-  // };
-
-  // const onToken1InputChange = (tokens) => {
-  //   setToken1Value(tokens);
-
-  //   //calculate resetpective value of token 2 if selected
-  //   let _token2Value;
-  //   if (selectedToken2.symbol && tokens) {
-  //     const t = token2PerToken1(from_token.price, to_token.price);
-  //     _token2Value = parseFloat(tokens) * t;
-  //     setToken2Value(_token2Value);
-  //   } else if (selectedToken2.symbol && !tokens) {
-  //     setToken2Value("");
-  //   }
-
-  //   verifySwapStatus(
-  //     { value: tokens, selected: selectedToken1 },
-  //     { value: _token2Value, selected: selectedToken2 }
-  //   );
-  // };
-
-  // const onToken2InputChange = (tokens) => {
-  //   setToken2Value(tokens);
-
-  //   //calculate respective value of token1 if selected
-  //   let _token1Value;
-  //   if (selectedToken1.symbol && tokens) {
-  //     const t = token1PerToken2(from_token.price, to_token.price);
-  //     _token1Value = parseFloat(tokens) * t;
-  //     setToken1Value(_token1Value);
-  //   } else if (selectedToken1.symbol && !tokens) {
-  //     setToken1Value("");
-  //   }
-
-  //   verifySwapStatus(
-  //     { value: _token1Value, selected: selectedToken1 },
-  //     { value: tokens, selected: selectedToken2 }
-  //   );
-  // };
-
   const onToken1Select = (token) => {
     setToken1(token);
-
-    // verifySwapStatus(
-    //   { value: token1Value, selected: token },
-    //   { value: token2Value, selected: selectedToken2 }
-    // );
   };
   const onToken2Select = (token) => {
     setToken2(token);
-    // verifySwapStatus(
-    //   { value: token1Value, selected: selectedToken1 },
-    //   { value: token2Value, selected: token }
-    // );
   };
 
   const handleClearState = () => {
