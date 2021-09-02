@@ -257,7 +257,10 @@ const SwapCard = (props) => {
 
       if (!erc20Abi) {
         // load token abi if not loaded
-        erc20Abi = await fetchTokenAbi(erc20Token.address);
+        console.log("getting token abi", erc20Token);
+        erc20Abi = await fetchContractAbi(erc20Token.address, currentNetwork);
+
+        console.log("erc20 abi", erc20Abi);
         const abiData = {};
         abiData[`${erc20Token.symbol}`] = erc20Abi;
         store.dispatch({
@@ -461,7 +464,7 @@ const SwapCard = (props) => {
     const allowanceAmount = toWei("9999999999");
     await confirmAllowance(
       allowanceAmount,
-      selectedToken1,
+      { ...selectedToken1, abi: tokenData[selectedToken1.symbol] },
       currentAccount,
       currentNetwork
     );

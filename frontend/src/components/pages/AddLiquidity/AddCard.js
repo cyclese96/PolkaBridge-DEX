@@ -301,10 +301,12 @@ const AddCard = (props) => {
 
       if (!erc20Abi) {
         // load token abi if not loaded
-        erc20Abi = await fetchTokenAbi(erc20Token.address);
+        erc20Abi = await fetchContractAbi(erc20Token.address, currentNetwork);
+        const abiData = {};
+        abiData[`${erc20Token.symbol}`] = erc20Abi;
         store.dispatch({
           type: SET_TOKEN_ABI,
-          payload: erc20Abi,
+          payload: abiData,
         });
       }
       await getAccountBalance(
@@ -391,7 +393,7 @@ const AddCard = (props) => {
     const allowanceAmount = toWei("999999999");
     await confirmAllowance(
       allowanceAmount,
-      selectedToken1,
+      { ...selectedToken1, abi: tokenData[selectedToken1.symbol] },
       currentAccount,
       currentNetwork
     );
@@ -468,14 +470,19 @@ const AddCard = (props) => {
         poolReserves[selectedToken2.symbol],
         poolReserves[selectedToken1.symbol]
       );
-      setToken2Value(_token2Value);
+      if (new BigNumber(_token2Value).gt(0)) {
+        setToken2Value(_token2Value);
+      }
     } else if (selectedToken2.symbol && !tokens) {
       setToken2Value("");
     }
 
     verifySwapStatus(
       { value: tokens, selected: selectedToken1 },
-      { value: _token2Value, selected: selectedToken2 }
+      {
+        value: new BigNumber(_token2Value).gt(0) ? _token2Value : token2Value,
+        selected: selectedToken2,
+      }
     );
   };
 
@@ -498,13 +505,18 @@ const AddCard = (props) => {
         poolReserves[selectedToken1.symbol],
         poolReserves[selectedToken2.symbol]
       );
-      setToken1Value(_token1Value);
+      if (new BigNumber(_token1Value).gt(0)) {
+        setToken1Value(_token1Value);
+      }
     } else if (selectedToken1.symbol && !tokens) {
       setToken1Value("");
     }
 
     verifySwapStatus(
-      { value: _token1Value, selected: selectedToken1 },
+      {
+        value: new BigNumber(_token1Value).gt(0) ? _token1Value : token1Value,
+        selected: selectedToken1,
+      },
       { value: tokens, selected: selectedToken2 }
     );
   };
@@ -547,25 +559,21 @@ const AddCard = (props) => {
     let etherToken, erc20Token;
     if (selectedToken1.symbol === ETH) {
       etherToken = {
+        ...selectedToken1,
         amount: token1Value.toString(),
-        min: token1Value,
-        symbol: selectedToken1.symbol,
       };
       erc20Token = {
+        ...selectedToken2,
         amount: toWei(token2Value.toString()),
-        min: toWei(token2Value.toString()),
-        symbol: selectedToken2.symbol,
       };
     } else {
       etherToken = {
+        ...selectedToken2,
         amount: token2Value.toString(),
-        min: token2Value,
-        symbol: "ETH",
       };
       erc20Token = {
+        ...selectedToken1,
         amount: toWei(token1Value.toString()),
-        min: toWei(token1Value.toString()),
-        symbol: selectedToken1.symbol,
       };
     }
 

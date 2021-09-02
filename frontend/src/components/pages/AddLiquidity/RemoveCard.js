@@ -302,7 +302,7 @@ const RemoveCard = ({
 
   const handleConfirmAllowance = async () => {
     const allowanceAmount = toWei("999999999");
-    const pairData = { pair: currentPairAbi(), address: currentPairAddress() };
+    const pairData = { abi: currentPairAbi(), address: currentPairAddress() };
     await confirmLPAllowance(
       allowanceAmount,
       selectedToken1,
@@ -387,10 +387,12 @@ const RemoveCard = ({
 
       if (!erc20Abi) {
         // load token abi if not loaded
-        erc20Abi = await fetchTokenAbi(erc20Token.address);
+        erc20Abi = await fetchContractAbi(erc20Token.address, currentNetwork);
+        const abiData = {};
+        abiData[`${erc20Token.symbol}`] = erc20Abi;
         store.dispatch({
           type: SET_TOKEN_ABI,
-          payload: erc20Abi,
+          payload: abiData,
         });
       }
       // await getAccountBalance(

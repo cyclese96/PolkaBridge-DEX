@@ -268,7 +268,8 @@ export const getPoolShare =
 export const addLiquidityEth =
   (ethToken, erc20Token, account, deadline, network) => async (dispatch) => {
     try {
-      const _tokenContract = getTokenContract(network, erc20Token.symbol);
+      console.log({ token0: ethToken, token1: erc20Token });
+      // const _tokenContract = getTokenContract(network, erc20Token.symbol);
       const _routerContract = routerContract(network);
 
       dispatch({
@@ -278,12 +279,13 @@ export const addLiquidityEth =
       const etherAmount = ethToken.amount;
       const etherAmountMin = "0";
       const tokenAmountDesired = erc20Token.amount;
-      const tokenAmountMin = erc20Token.min;
+      const tokenAmountMin = "0";
+      const tokenAddress = erc20Token.address;
 
       // deadline should be passed in minites in calculation
       const _deadlineUnix = getUnixTime(deadline);
       console.log({
-        contAddres: _tokenContract._address,
+        contAddres: tokenAddress,
         tokenAmountDesired,
         tokenAmountMin,
         etherAmountMin,
@@ -292,16 +294,16 @@ export const addLiquidityEth =
       });
       const liquidity = await _routerContract.methods
         .addLiquidityETH(
-          _tokenContract._address,
+          tokenAddress,
           tokenAmountDesired,
           tokenAmountMin,
           etherAmountMin,
           account,
           _deadlineUnix
         )
-        .send({ from: account, value: toWei(ethToken.amount) });
+        .send({ from: account, value: toWei(etherAmount) });
 
-      console.log(liquidity);
+      // console.log(liquidity);
     } catch (error) {
       console.log("addLiquidityEth: ", error);
       dispatch({
@@ -321,7 +323,7 @@ export const removeLiquidityEth =
   (ethToken, erc20Token, account, lpAmount, deadline, network) =>
   async (dispatch) => {
     try {
-      const _tokenContract = getTokenContract(network, erc20Token.symbol);
+      // const _tokenContract = getTokenContract(network, erc20Token.symbol);
       const _routerContract = routerContract(network);
 
       dispatch({
@@ -329,8 +331,9 @@ export const removeLiquidityEth =
       });
       //input params
       // const etherAmount = ethToken.amount;
-      const etherAmountMin = 0;
-      const tokenAmountMin = 0;
+      const erc20Address = erc20Token.address;
+      const etherAmountMin = "0";
+      const tokenAmountMin = "0";
       const lpTokenAmount = lpAmount;
 
       // deadline should be passed in minites in calculation
@@ -338,7 +341,7 @@ export const removeLiquidityEth =
 
       const rmLiquidity = await _routerContract.methods
         .removeLiquidityETH(
-          _tokenContract._address,
+          erc20Address,
           lpTokenAmount,
           tokenAmountMin,
           etherAmountMin,
@@ -411,6 +414,7 @@ export const confirmAllowance =
       // const _tokenContract = token.imported
       //   ? tokenContract(token.address, token.abi, network)
       //   : getTokenContract(network, token.symbol);
+      console.log("token", token);
       const _tokenContract = tokenContract(token.address, token.abi, network);
 
       const _routerContract = routerContract(network);
@@ -483,6 +487,7 @@ export const checkLpAllowance =
 export const confirmLPAllowance =
   (balance, token1, token2, pairData, account, network) => async (dispatch) => {
     try {
+      console.log(pairData);
       // const _pairContract = pairContract(token1.symbol, token2.symbol, network);
       const _pairContract = pairContract2(pairData, network);
       const _routerContract = routerContract(network);
@@ -632,6 +637,17 @@ export const getLpBalance =
       dispatch({
         type: SHOW_DEX_LOADING,
       });
+
+      if (!_pairContract._address) {
+        dispatch({
+          type: GET_POOL_SHARE,
+          payload: "100",
+        });
+        dispatch({
+          type: HIDE_DEX_LOADING,
+        });
+        return;
+      }
       const [lpBalance, token0Addr, token1Addr, reservesData, totalSupply] =
         await Promise.all([
           _pairContract.methods.balanceOf(account).call(),
