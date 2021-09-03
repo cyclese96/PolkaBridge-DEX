@@ -14,11 +14,13 @@ const useStyles = makeStyles({
     marginBottom: 50,
   },
   default_tabStyle: {
-    color: "rgba(255, 255, 255, 0.3)",
+    color: "rgba(255, 255, 255, 0.5)",
     fontSize: 14,
   },
   active_tabStyle: {
     fontSize: 14,
+    backgroundColor: "#D3057E",
+    borderRadius: 7,
     color: "white",
   },
 });
@@ -95,8 +97,8 @@ export default function TabPage() {
       <TabPanel value={value} index={1}>
         <AddLiquidity />
       </TabPanel>
-      <TabPanel value={value} index={2} >
-          <Analytics />
+      <TabPanel value={value} index={2}>
+        <Analytics />
       </TabPanel>
     </>
   );

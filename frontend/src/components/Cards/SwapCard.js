@@ -1,5 +1,11 @@
 import React, { useCallback, useEffect } from "react";
-import { CircularProgress, makeStyles } from "@material-ui/core";
+import {
+  Button,
+  Card,
+  CircularProgress,
+  IconButton,
+  makeStyles,
+} from "@material-ui/core";
 import { connect } from "react-redux";
 import TuneIcon from "@material-ui/icons/Tune";
 import SwapCardItem from "./SwapCardItem";
@@ -50,7 +56,13 @@ import { fetchContractAbi } from "../../utils/httpUtils";
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    width: 450,
+    width: 500,
+    borderRadius: 15,
+    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 15,
+    paddingBottom: 15,
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 0,
       paddingRight: 0,
@@ -61,7 +73,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: 15,
   },
   avatar: {
     zIndex: 2,
@@ -75,17 +86,37 @@ const useStyles = makeStyles((theme) => ({
     height: 160,
   },
   cardHeading: {
-    display: "flex",
     width: "100%",
-    alignItems: "center",
+    display: "flex",
     justifyContent: "space-between",
+    alignItems: "flex-start",
   },
   settingIcon: {
     color: "#f6f6f6",
-    cursor: "pointer",
+    transition: "all 0.4s ease",
+  },
+  iconButton: {
+    margin: 0,
+    padding: 2,
+  },
+  swapIcon: {
+    color: "#f6f6f6",
     marginTop: 7,
     marginBottom: 7,
     transition: "all 0.4s ease",
+  },
+  swapButton: {
+    marginTop: 20,
+    backgroundColor: "rgba(224, 7, 125, 0.9)",
+    color: "white",
+    width: "95%",
+    textTransform: "none",
+    fontSize: 21,
+    borderRadius: 20,
+    padding: "12px 50px 12px 50px",
+    "&:hover": {
+      background: "rgba(224, 7, 125, 0.7)",
+    },
   },
   rotate1: {
     transform: "rotateZ(0deg)",
@@ -554,43 +585,47 @@ const SwapCard = (props) => {
         priceImpact={priceImpact}
       />
       <SwapSettings open={settingOpen} handleClose={close} />
-      <div className={classes.card}>
-        <div className="card-theme">
-          <div className={classes.cardContents}>
-            <div className={classes.cardHeading}>
-              <p>Swap tokens </p>
+      <Card elevation={20} className={classes.card}>
+        <div className={classes.cardContents}>
+          <div className={classes.cardHeading}>
+            <p>Swap </p>
+            <IconButton className={classes.iconButton}>
               <TuneIcon
                 fontSize="default"
                 onClick={handleSettings}
                 className={classes.settingIcon}
               />
-            </div>
+            </IconButton>
+          </div>
 
-            <SwapCardItem
-              inputType="from"
-              onInputChange={onToken1InputChange}
-              onTokenChange={onToken1Select}
-              currentToken={selectedToken1}
-              disableToken={selectedToken2}
-              inputValue={token1Value}
-            />
+          <SwapCardItem
+            inputType="from"
+            onInputChange={onToken1InputChange}
+            onTokenChange={onToken1Select}
+            currentToken={selectedToken1}
+            disableToken={selectedToken2}
+            inputValue={token1Value}
+          />
+          <IconButton className={classes.iconButton}>
+            {" "}
             <SwapVertIcon
               fontSize="default"
               className={[
-                classes.settingIcon,
+                classes.swapIcon,
                 rotate ? classes.rotate1 : classes.rotate2,
               ].join(" ")}
               onClick={handleSwapInputs}
             />
-            <SwapCardItem
-              inputType="to"
-              onInputChange={onToken2InputChange}
-              onTokenChange={onToken2Select}
-              currentToken={selectedToken2}
-              disableToken={selectedToken1}
-              inputValue={token2Value}
-            />
-            {/* <div className={classes.priceRatio}>
+          </IconButton>
+          <SwapCardItem
+            inputType="to"
+            onInputChange={onToken2InputChange}
+            onTokenChange={onToken2Select}
+            currentToken={selectedToken2}
+            disableToken={selectedToken1}
+            inputValue={token2Value}
+          />
+          {/* <div className={classes.priceRatio}>
               <small>Price</small>
               <small>41,250 PBR per ETH </small>
               <CachedIcon
@@ -599,72 +634,77 @@ const SwapCard = (props) => {
                 fontSize="small"
               />
             </div> */}
-            {!swapStatus.disabled && !liquidityStatus && !dexLoading ? (
-              <div className="d-flex justify-content-around w-100 mt-4 mb-1 ">
-                <span>Price</span>
-                <span>
-                  1 {selectedToken1.symbol} {" = "}{" "}
-                  {getPriceRatio(
-                    poolReserves[selectedToken2.symbol],
-                    poolReserves[selectedToken1.symbol]
-                  )}{" "}
-                  {selectedToken2.symbol}
-                </span>
-              </div>
-            ) : liquidityStatus ? (
-              "No liquidity availabe for this pair"
-            ) : (
-              ""
-            )}
-
-            <div className="d-flex  mt-4">
-              <CustomButton
-                variant="light"
-                className={classes.approveBtn}
-                disabled={
-                  currentTokenApprovalStatus() ||
-                  dexLoading ||
-                  !isBothTokenSelected() ||
-                  liquidityStatus
-                }
-                onClick={handleConfirmAllowance}
-              >
-                {currentTokenApprovalStatus() && isBothTokenSelected() ? (
-                  <>
-                    Approved{" "}
-                    <CheckCircleIcon
-                      style={{ color: "#E0077D", marginLeft: 5 }}
-                      fontSize="small"
-                    />{" "}
-                  </>
-                ) : dexLoading ? (
-                  <CircularProgress
-                    style={{ color: "black" }}
-                    color="secondary"
-                    size={30}
-                  />
-                ) : (
-                  "Approve"
-                )}
-              </CustomButton>
-              <CustomButton
-                variant="primary"
-                // className={classes.addButton}
-                disabled={swapStatus.disabled | dexLoading || liquidityStatus}
-                onClick={handleSwapToken}
-              >
-                {!swapStatus.disabled && dexLoading ? (
-                  <CircularProgress
-                    style={{ color: "black" }}
-                    color="secondary"
-                    size={30}
-                  />
-                ) : (
-                  "Swap"
-                )}
-              </CustomButton>
+          {!swapStatus.disabled && !liquidityStatus && !dexLoading ? (
+            <div className="d-flex justify-content-around w-100 mt-4 mb-1 ">
+              <span>Price</span>
+              <span>
+                1 {selectedToken1.symbol} {" = "}{" "}
+                {getPriceRatio(
+                  poolReserves[selectedToken2.symbol],
+                  poolReserves[selectedToken1.symbol]
+                )}{" "}
+                {selectedToken2.symbol}
+              </span>
             </div>
-            {/* <CustomButton
+          ) : liquidityStatus ? (
+            "No liquidity availabe for this pair"
+          ) : (
+            ""
+          )}
+          <Button variant="contained" className={classes.swapButton}>
+            Swap
+          </Button>
+
+          {/* <div className="d-flex  mt-4">
+            <CustomButton
+              variant="light"
+              className={classes.approveBtn}
+              disabled={
+                currentTokenApprovalStatus() ||
+                dexLoading ||
+                !isBothTokenSelected() ||
+                liquidityStatus
+              }
+              onClick={handleConfirmAllowance}
+            >
+              {currentTokenApprovalStatus() && isBothTokenSelected() ? (
+                <>
+                  Approved{" "}
+                  <CheckCircleIcon
+                    style={{ color: "#E0077D", marginLeft: 5 }}
+                    fontSize="small"
+                  />{" "}
+                </>
+              ) : dexLoading ? (
+                <CircularProgress
+                  style={{ color: "black" }}
+                  color="secondary"
+                  size={30}
+                />
+              ) : (
+                "Approve"
+              )}
+            </CustomButton>
+
+            <CustomButton
+              variant="primary"
+              // className={classes.addButton}
+              disabled={swapStatus.disabled | dexLoading || liquidityStatus}
+              onClick={handleSwapToken}
+            >
+              {!swapStatus.disabled && dexLoading ? (
+                <CircularProgress
+                  style={{ color: "black" }}
+                  color="secondary"
+                  size={30}
+                />
+              ) : (
+                "Swap"
+              )}
+            </CustomButton>
+          </div>
+           */}
+          {/* <CustomButton
               variant="light"
               className={classes.addButton}
               onClick={
@@ -682,9 +722,8 @@ const SwapCard = (props) => {
                 ? `Approve ${selectedToken1.symbol} tokens`
                 : swapStatus.message}
             </CustomButton> */}
-          </div>
         </div>
-      </div>
+      </Card>
     </>
   );
 };

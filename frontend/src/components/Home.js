@@ -36,7 +36,8 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    backgroundColor: "#121827",
+    // backgroundColor: "#121827",
+    background: `linear-gradient(to bottom,#2D252D,#121827)`,
   },
 
   heading: {
@@ -164,10 +165,7 @@ const Home = ({
       </section>
 
       <div className={classes.background}>
-        <p>Polkabridge AMM</p>
-
         <TabPage />
-
         <Footer />
       </div>
     </div>
