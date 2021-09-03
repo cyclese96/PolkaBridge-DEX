@@ -101,9 +101,13 @@ const useStyles = makeStyles((theme) => ({
   },
   swapIcon: {
     color: "#f6f6f6",
-    marginTop: 7,
-    marginBottom: 7,
+    marginTop: -12,
+    marginBottom: -12,
+    borderRadius: "36%",
+    border: "3px solid #212121",
     transition: "all 0.4s ease",
+    fontSize: 28,
+    backgroundColor: "#191B1E",
   },
   swapButton: {
     marginTop: 20,
