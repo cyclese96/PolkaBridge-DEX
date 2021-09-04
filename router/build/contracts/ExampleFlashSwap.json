@@ -145,7 +145,7 @@
         "id": 3803,
         "nodeType": "ImportDirective",
         "scope": 4178,
-        "sourceUnit": 9540,
+        "sourceUnit": 9296,
         "src": "25:68:4",
         "symbolAliases": [],
         "unitAlias": ""
@@ -226,10 +226,10 @@
               "id": 3810,
               "name": "IUniswapV2Callee",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 9539,
+              "referencedDeclaration": 9295,
               "src": "384:16:4",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_IUniswapV2Callee_$9539",
+                "typeIdentifier": "t_contract$_IUniswapV2Callee_$9295",
                 "typeString": "contract IUniswapV2Callee"
               }
             },
@@ -239,7 +239,7 @@
           }
         ],
         "contractDependencies": [
-          9539
+          9295
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -247,7 +247,7 @@
         "id": 4177,
         "linearizedBaseContracts": [
           4177,
-          9539
+          9295
         ],
         "name": "ExampleFlashSwap",
         "nodeType": "ContractDefinition",
@@ -781,7 +781,7 @@
           },
           {
             "baseFunctions": [
-              9538
+              9294
             ],
             "body": {
               "id": 4175,
@@ -1081,10 +1081,10 @@
                               "name": "IUniswapV2Pair",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 9844,
+                              "referencedDeclaration": 9600,
                               "src": "1378:14:4",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_type$_t_contract$_IUniswapV2Pair_$9844_$",
+                                "typeIdentifier": "t_type$_t_contract$_IUniswapV2Pair_$9600_$",
                                 "typeString": "type(contract IUniswapV2Pair)"
                               }
                             },
@@ -1099,7 +1099,7 @@
                             "src": "1378:26:4",
                             "tryCall": false,
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_IUniswapV2Pair_$9844",
+                              "typeIdentifier": "t_contract$_IUniswapV2Pair_$9600",
                               "typeString": "contract IUniswapV2Pair"
                             }
                           },
@@ -1110,7 +1110,7 @@
                           "lValueRequested": false,
                           "memberName": "token0",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 9772,
+                          "referencedDeclaration": 9528,
                           "src": "1378:33:4",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$__$returns$_t_address_$",
@@ -1220,10 +1220,10 @@
                               "name": "IUniswapV2Pair",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
-                              "referencedDeclaration": 9844,
+                              "referencedDeclaration": 9600,
                               "src": "1440:14:4",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_type$_t_contract$_IUniswapV2Pair_$9844_$",
+                                "typeIdentifier": "t_type$_t_contract$_IUniswapV2Pair_$9600_$",
                                 "typeString": "type(contract IUniswapV2Pair)"
                               }
                             },
@@ -1238,7 +1238,7 @@
                             "src": "1440:26:4",
                             "tryCall": false,
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_IUniswapV2Pair_$9844",
+                              "typeIdentifier": "t_contract$_IUniswapV2Pair_$9600",
                               "typeString": "contract IUniswapV2Pair"
                             }
                           },
@@ -1249,7 +1249,7 @@
                           "lValueRequested": false,
                           "memberName": "token1",
                           "nodeType": "MemberAccess",
-                          "referencedDeclaration": 9777,
+                          "referencedDeclaration": 9533,
                           "src": "1440:33:4",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$__$returns$_t_address_$",
@@ -5575,7 +5575,7 @@
       },
       {
         "attributes": {
-          "SourceUnit": 9540,
+          "SourceUnit": 9296,
           "absolutePath": "@uniswap/v2-core/contracts/interfaces/IUniswapV2Callee.sol",
           "file": "@uniswap/v2-core/contracts/interfaces/IUniswapV2Callee.sol",
           "scope": 4178,
@@ -5682,14 +5682,14 @@
         "attributes": {
           "abstract": false,
           "contractDependencies": [
-            9539
+            9295
           ],
           "contractKind": "contract",
           "documentation": null,
           "fullyImplemented": true,
           "linearizedBaseContracts": [
             4177,
-            9539
+            9295
           ],
           "name": "ExampleFlashSwap",
           "scope": 4178
@@ -5704,7 +5704,7 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "IUniswapV2Callee",
-                  "referencedDeclaration": 9539,
+                  "referencedDeclaration": 9295,
                   "type": "contract IUniswapV2Callee"
                 },
                 "id": 3810,
@@ -6313,7 +6313,7 @@
           {
             "attributes": {
               "baseFunctions": [
-                9538
+                9294
               ],
               "documentation": null,
               "functionSelector": "10d1e85c",
@@ -6752,7 +6752,7 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "token0",
-                                  "referencedDeclaration": 9772,
+                                  "referencedDeclaration": 9528,
                                   "type": "function () view external returns (address)"
                                 },
                                 "children": [
@@ -6783,7 +6783,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 9844,
+                                          "referencedDeclaration": 9600,
                                           "type": "type(contract IUniswapV2Pair)",
                                           "value": "IUniswapV2Pair"
                                         },
@@ -6907,7 +6907,7 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "token1",
-                                  "referencedDeclaration": 9777,
+                                  "referencedDeclaration": 9533,
                                   "type": "function () view external returns (address)"
                                 },
                                 "children": [
@@ -6938,7 +6938,7 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
-                                          "referencedDeclaration": 9844,
+                                          "referencedDeclaration": 9600,
                                           "type": "type(contract IUniswapV2Pair)",
                                           "value": "IUniswapV2Pair"
                                         },
@@ -11399,7 +11399,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-08-12T03:31:23.704Z",
+  "updatedAt": "2021-08-31T08:20:06.146Z",
   "devdoc": {
     "methods": {}
   },

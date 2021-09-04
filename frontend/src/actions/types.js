@@ -49,3 +49,9 @@ export const SET_POOL_RESERVES = "SET_POOL_RESERVES";
 export const VERIFY_SLIPPAGE = "VERIFY_SLIPPAGE";
 
 export const PRICE_UPDATE = "PRICE_UPDATE";
+
+export const SET_TOKEN_ABI = "SET_TOKEN_ABI";
+export const SET_PAIR_DATA = "SET_PAIR_DATA";
+export const RESET_PAIR_DATA = "RESET_PAIR_DATA";
+
+export const RESET_POOL_DATA = "RESET_POOL_DATA";

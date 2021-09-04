@@ -12,6 +12,7 @@ import AddIcon from "@material-ui/icons/Add";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import { ETH, etheriumNetwork, tokens } from "../../../constants";
 import {
+  fetchTokenAbi,
   formatCurrency,
   fromWei,
   getPercentage,
@@ -27,12 +28,21 @@ import {
   confirmLPAllowance,
   getLpBalance,
   removeLiquidityEth,
+  loadPairContractAbi,
 } from "../../../actions/dexActions";
 import pwarImg from "../../../assets/pwar.png";
 import SelectToken from "../../common/SelectToken";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import tokenThumbnail from "../../../utils/tokenThumbnail";
 import BigNumber from "bignumber.js";
+import {
+  getPairAbi,
+  getPairAddress,
+  getTokenAbi,
+} from "../../../utils/connectionUtils";
+import { RESET_POOL_DATA, SET_TOKEN_ABI } from "../../../actions/types";
+import store from "../../../store";
+import { fetchContractAbi } from "../../../utils/httpUtils";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -225,12 +235,15 @@ const RemoveCard = ({
     poolReserves,
     poolShare,
     swapSettings,
+    pairContractData,
+    tokenData,
   },
   handleBack,
   checkLpAllowance,
   confirmLPAllowance,
   getLpBalance,
   removeLiquidityEth,
+  loadPairContractAbi,
 }) => {
   const currentDefaultToken = {
     icon: etherImg,
@@ -260,7 +273,7 @@ const RemoveCard = ({
   useEffect(() => {
     if (currentNetwork === etheriumNetwork) {
       setToken1(tokens[0]);
-      setToken2(tokens[3]);
+      setToken2(tokens[2]);
     } else {
       setToken1({
         icon: bnbImg,
@@ -289,10 +302,12 @@ const RemoveCard = ({
 
   const handleConfirmAllowance = async () => {
     const allowanceAmount = toWei("999999999");
+    const pairData = { abi: currentPairAbi(), address: currentPairAddress() };
     await confirmLPAllowance(
       allowanceAmount,
       selectedToken1,
       selectedToken2,
+      pairData,
       currentAccount,
       currentNetwork
     );
@@ -309,97 +324,163 @@ const RemoveCard = ({
       return lpBalance[`${selectedToken2.symbol}_${selectedToken1.symbol}`];
     }
   };
+
+  const currentPairAddress = () => {
+    if (
+      Object.keys(pairContractData).includes(
+        `${selectedToken1.symbol}_${selectedToken2.symbol}`
+      )
+    ) {
+      return pairContractData[
+        `${selectedToken1.symbol}_${selectedToken2.symbol}`
+      ].address;
+    } else if (
+      Object.keys(pairContractData).includes(
+        `${selectedToken2.symbol}_${selectedToken1.symbol}`
+      )
+    ) {
+      return pairContractData[
+        `${selectedToken2.symbol}_${selectedToken1.symbol}`
+      ].address;
+    } else {
+      return null;
+    }
+  };
+
+  const currentPairAbi = () => {
+    if (
+      Object.keys(pairContractData).includes(
+        `${selectedToken1.symbol}_${selectedToken2.symbol}`
+      )
+    ) {
+      return pairContractData[
+        `${selectedToken1.symbol}_${selectedToken2.symbol}`
+      ].abi;
+    } else if (
+      Object.keys(pairContractData).includes(
+        `${selectedToken2.symbol}_${selectedToken1.symbol}`
+      )
+    ) {
+      return pairContractData[
+        `${selectedToken2.symbol}_${selectedToken1.symbol}`
+      ].abi;
+    } else {
+      return null;
+    }
+  };
+
+  // new use effect
   useEffect(async () => {
-    if (!currentLpApproved()) {
-      // console.log("checking approval");
-      await checkLpAllowance(
+    if (selectedToken1.symbol && selectedToken2.symbol) {
+      // reset input on token change
+      handleClearState();
+      store.dispatch({
+        type: RESET_POOL_DATA,
+      });
+
+      // load erc20 token abi and balance
+      const erc20Token =
+        selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
+      let erc20Abi = erc20Token.imported
+        ? tokenData[erc20Token.symbol].abi
+        : getTokenAbi(erc20Token.symbol);
+
+      if (!erc20Abi) {
+        // load token abi if not loaded
+        erc20Abi = await fetchContractAbi(erc20Token.address, currentNetwork);
+        const abiData = {};
+        abiData[`${erc20Token.symbol}`] = erc20Abi;
+        store.dispatch({
+          type: SET_TOKEN_ABI,
+          payload: abiData,
+        });
+      }
+      // await getAccountBalance(
+      //   {
+      //     ...erc20Token,
+      //     abi: erc20Abi,
+      //   },
+      //   currentNetwork
+      // );
+      // load current pair ABI
+      let _pairAbi = currentPairAbi();
+
+      if (!_pairAbi) {
+        _pairAbi = getPairAbi(selectedToken1.symbol, selectedToken2.symbol);
+      }
+
+      let _pairAddress = currentPairAddress();
+      console.log("current pair address ", _pairAddress);
+      if (!_pairAddress) {
+        _pairAddress = await getPairAddress(
+          selectedToken1.address,
+          selectedToken2.address,
+          currentNetwork
+        );
+      }
+
+      if (!_pairAbi) {
+        _pairAbi = await fetchContractAbi(_pairAddress, currentNetwork);
+      }
+      // laod current pair reserves
+      let _pairData = { abi: _pairAbi, address: _pairAddress };
+
+      // update pair data into reducer if not available
+      if (!currentPairAddress()) {
+        loadPairContractAbi(
+          selectedToken1.symbol,
+          selectedToken2.symbol,
+          _pairData,
+          currentNetwork
+        );
+      }
+
+      await getLpBalance(
         selectedToken1,
         selectedToken2,
+        _pairData,
         currentAccount,
         currentNetwork
       );
-    }
 
-    await getLpBalance(
-      selectedToken1,
-      selectedToken2,
-      currentAccount,
-      currentNetwork
-    );
+      if (!currentLpApproved()) {
+        // console.log("checking approval");
+        await checkLpAllowance(
+          selectedToken1,
+          selectedToken2,
+          _pairData,
+          currentAccount,
+          currentNetwork
+        );
+      }
+    }
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
-  // const verifySwapStatus = (token1, token2) => {
-  //   if (token1.selected.symbol === token2.selected.symbol) {
-  //     setStatus({ message: "Invalid pair", disabled: true });
-  //   } else if (
-  //     (!token1.value && token1.selected.symbol) ||
-  //     (!token2.value && token2.selected.symbol)
-  //   ) {
-  //     setStatus({ message: "Enter amounts", disabled: true });
-  //   } else if (!token1.selected.symbol || !token2.selected.symbol) {
-  //     setStatus({ message: "Select both tokens", disabled: true });
-  //   } else if (
-  //     token1.value > 0 &&
-  //     token2.value > 0 &&
-  //     token1.selected.symbol &&
-  //     token2.selected.symbol
-  //   ) {
-  //     setStatus({ message: "Add liquidity", disabled: false });
-  //   }
-  // };
-
-  // const onToken1InputChange = (tokens) => {
-  //   setToken1Value(tokens);
-
-  //   //calculate resetpective value of token 2 if selected
-  //   let _token2Value;
-  //   if (selectedToken2.symbol && tokens) {
-  //     const t = token2PerToken1(from_token.price, to_token.price);
-  //     _token2Value = parseFloat(tokens) * t;
-  //     setToken2Value(_token2Value);
-  //   } else if (selectedToken2.symbol && !tokens) {
-  //     setToken2Value("");
+  // old use effect
+  // useEffect(async () => {
+  //   if (!currentLpApproved()) {
+  //     // console.log("checking approval");
+  //     await checkLpAllowance(
+  //       selectedToken1,
+  //       selectedToken2,
+  //       currentAccount,
+  //       currentNetwork
+  //     );
   //   }
 
-  //   verifySwapStatus(
-  //     { value: tokens, selected: selectedToken1 },
-  //     { value: _token2Value, selected: selectedToken2 }
+  //   await getLpBalance(
+  //     selectedToken1,
+  //     selectedToken2,
+  //     currentAccount,
+  //     currentNetwork
   //   );
-  // };
-
-  // const onToken2InputChange = (tokens) => {
-  //   setToken2Value(tokens);
-
-  //   //calculate respective value of token1 if selected
-  //   let _token1Value;
-  //   if (selectedToken1.symbol && tokens) {
-  //     const t = token1PerToken2(from_token.price, to_token.price);
-  //     _token1Value = parseFloat(tokens) * t;
-  //     setToken1Value(_token1Value);
-  //   } else if (selectedToken1.symbol && !tokens) {
-  //     setToken1Value("");
-  //   }
-
-  //   verifySwapStatus(
-  //     { value: _token1Value, selected: selectedToken1 },
-  //     { value: tokens, selected: selectedToken2 }
-  //   );
-  // };
+  // }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
   const onToken1Select = (token) => {
     setToken1(token);
-
-    // verifySwapStatus(
-    //   { value: token1Value, selected: token },
-    //   { value: token2Value, selected: selectedToken2 }
-    // );
   };
   const onToken2Select = (token) => {
     setToken2(token);
-    // verifySwapStatus(
-    //   { value: token1Value, selected: selectedToken1 },
-    //   { value: token2Value, selected: token }
-    // );
   };
 
   const handleClearState = () => {
@@ -425,9 +506,11 @@ const RemoveCard = ({
       currentNetwork
     );
 
+    const pairData = { address: currentPairAddress(), abi: currentPairAbi() };
     await getLpBalance(
       selectedToken1,
       selectedToken2,
+      pairData,
       currentAccount,
       currentNetwork
     );
@@ -689,4 +772,5 @@ export default connect(mapStateToProps, {
   confirmLPAllowance,
   getLpBalance,
   removeLiquidityEth,
+  loadPairContractAbi,
 })(RemoveCard);

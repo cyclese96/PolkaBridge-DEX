@@ -1,12 +1,17 @@
 import BigNumber from "bignumber.js";
 import {
+  bscTokens,
   ETH,
+  etheriumNetwork,
+  nullAddress,
   supportedTokens,
   tokens,
   WETH_ADDRESS_TESTNET,
 } from "../constants";
 import {
+  factoryContract,
   pairContract,
+  pairContract2,
   routerContract,
   tokenContract,
 } from "../contracts/connections";
@@ -17,6 +22,8 @@ import {
   getPercentage,
   fetchTokenAbi,
   fetchTokenInfo,
+  cacheImportedToken,
+  getCachedTokens,
 } from "../utils/helper";
 import {
   APPROVE_LP_TOKENS,
@@ -28,7 +35,9 @@ import {
   HIDE_LOADING,
   IMPORT_TOKEN,
   LOAD_TOKEN_LIST,
+  RESET_POOL_DATA,
   SET_LP_BALANCE,
+  SET_PAIR_DATA,
   SET_POOL_RESERVES,
   SET_TOKEN0_PRICE,
   SET_TOKEN1_PRICE,
@@ -37,7 +46,7 @@ import {
   VERIFY_SLIPPAGE,
 } from "./types";
 
-// Buy trade action
+// Buy trade action // in use
 // token0 will be eth and token1 could be any erc20 token
 export const swapExactEthForTokens =
   (token0, token1, deadline, account, network) => async (dispatch) => {
@@ -76,7 +85,7 @@ export const swapExactEthForTokens =
       type: HIDE_LOADING,
     });
   };
-
+// in use
 // Sell trade action, user send tokens get eth
 // token0 will be erc20 and token1 is eth
 export const swapExactTokensForEth =
@@ -260,7 +269,8 @@ export const getPoolShare =
 export const addLiquidityEth =
   (ethToken, erc20Token, account, deadline, network) => async (dispatch) => {
     try {
-      const _tokenContract = getTokenContract(network, erc20Token.symbol);
+      console.log({ token0: ethToken, token1: erc20Token });
+      // const _tokenContract = getTokenContract(network, erc20Token.symbol);
       const _routerContract = routerContract(network);
 
       dispatch({
@@ -268,14 +278,15 @@ export const addLiquidityEth =
       });
       //input params
       const etherAmount = ethToken.amount;
-      const etherAmountMin = ethToken.min;
+      const etherAmountMin = "0";
       const tokenAmountDesired = erc20Token.amount;
-      const tokenAmountMin = erc20Token.min;
+      const tokenAmountMin = "0";
+      const tokenAddress = erc20Token.address;
 
       // deadline should be passed in minites in calculation
       const _deadlineUnix = getUnixTime(deadline);
       console.log({
-        contAddres: _tokenContract._address,
+        contAddres: tokenAddress,
         tokenAmountDesired,
         tokenAmountMin,
         etherAmountMin,
@@ -284,16 +295,16 @@ export const addLiquidityEth =
       });
       const liquidity = await _routerContract.methods
         .addLiquidityETH(
-          _tokenContract._address,
+          tokenAddress,
           tokenAmountDesired,
           tokenAmountMin,
           etherAmountMin,
           account,
           _deadlineUnix
         )
-        .send({ from: account, value: toWei(ethToken.amount) });
+        .send({ from: account, value: toWei(etherAmount) });
 
-      console.log(liquidity);
+      // console.log(liquidity);
     } catch (error) {
       console.log("addLiquidityEth: ", error);
       dispatch({
@@ -313,7 +324,7 @@ export const removeLiquidityEth =
   (ethToken, erc20Token, account, lpAmount, deadline, network) =>
   async (dispatch) => {
     try {
-      const _tokenContract = getTokenContract(network, erc20Token.symbol);
+      // const _tokenContract = getTokenContract(network, erc20Token.symbol);
       const _routerContract = routerContract(network);
 
       dispatch({
@@ -321,8 +332,9 @@ export const removeLiquidityEth =
       });
       //input params
       // const etherAmount = ethToken.amount;
-      const etherAmountMin = 0;
-      const tokenAmountMin = 0;
+      const erc20Address = erc20Token.address;
+      const etherAmountMin = "0";
+      const tokenAmountMin = "0";
       const lpTokenAmount = lpAmount;
 
       // deadline should be passed in minites in calculation
@@ -330,7 +342,7 @@ export const removeLiquidityEth =
 
       const rmLiquidity = await _routerContract.methods
         .removeLiquidityETH(
-          _tokenContract._address,
+          erc20Address,
           lpTokenAmount,
           tokenAmountMin,
           etherAmountMin,
@@ -349,12 +361,15 @@ export const removeLiquidityEth =
     });
   };
 
+// token: { symbol, name, address, abi }
 export const checkAllowance = (token, account, network) => async (dispatch) => {
   try {
-    console.log("checking allowance");
-    const _tokenContract = token.imported
-      ? tokenContract(token.address, token.abi, network)
-      : getTokenContract(network, token.symbol);
+    console.log("checking allowance", token);
+    // const _tokenContract = token.imported
+    //   ? tokenContract(token.address, token.abi, network)
+    //   : getTokenContract(network, token.symbol);
+    const _tokenContract = tokenContract(token.address, token.abi, network);
+
     const _routerContract = routerContract(network);
     if (token.symbol === ETH) {
       dispatch({
@@ -397,9 +412,12 @@ export const checkAllowance = (token, account, network) => async (dispatch) => {
 export const confirmAllowance =
   (balance, token, account, network) => async (dispatch) => {
     try {
-      const _tokenContract = token.imported
-        ? tokenContract(token.address, token.abi, network)
-        : getTokenContract(network, token.symbol);
+      // const _tokenContract = token.imported
+      //   ? tokenContract(token.address, token.abi, network)
+      //   : getTokenContract(network, token.symbol);
+      console.log("token", token);
+      const _tokenContract = tokenContract(token.address, token.abi, network);
+
       const _routerContract = routerContract(network);
 
       dispatch({
@@ -427,10 +445,11 @@ export const confirmAllowance =
   };
 
 export const checkLpAllowance =
-  (token1, token2, account, network) => async (dispatch) => {
+  (token1, token2, pairData, account, network) => async (dispatch) => {
     try {
       // console.log("checking allowance");
-      const _pairContract = pairContract(token1.symbol, token2.symbol, network);
+      // const _pairContract = pairContract(token1.symbol, token2.symbol, network);
+      const _pairContract = pairContract2(pairData, network);
       const _routerContract = routerContract(network);
 
       dispatch({
@@ -467,9 +486,11 @@ export const checkLpAllowance =
   };
 
 export const confirmLPAllowance =
-  (balance, token1, token2, account, network) => async (dispatch) => {
+  (balance, token1, token2, pairData, account, network) => async (dispatch) => {
     try {
-      const _pairContract = pairContract(token1.symbol, token2.symbol, network);
+      console.log(pairData);
+      // const _pairContract = pairContract(token1.symbol, token2.symbol, network);
+      const _pairContract = pairContract2(pairData, network);
       const _routerContract = routerContract(network);
 
       dispatch({
@@ -503,15 +524,17 @@ export const loadTokens = (network) => async (dispatch) => {
       type: SHOW_LOADING,
     });
 
-    // todo:
-    // check imported tokens from local storage
-    const currentSupportedTokens = supportedTokens[network];
+    const currentSupportedTokens =
+      network === etheriumNetwork ? tokens : bscTokens;
 
+    const cachedTokens = getCachedTokens();
+    const allTokens =
+      cachedTokens.length > 0
+        ? [...cachedTokens, ...currentSupportedTokens]
+        : [...currentSupportedTokens];
     dispatch({
       type: LOAD_TOKEN_LIST,
-      payload: tokens.filter((item) =>
-        currentSupportedTokens.includes(item.symbol)
-      ),
+      payload: allTokens,
     });
   } catch (error) {
     console.log("loadTokens ", error);
@@ -531,32 +554,23 @@ export const importToken = (address, account, network) => async (dispatch) => {
       type: SHOW_DEX_LOADING,
     });
 
-    const [abiData, tokenInfoData] = await Promise.all([
-      fetchTokenAbi(address),
+    const [tokenInfoData] = await Promise.all([
+      // fetchTokenAbi(address),
       fetchTokenInfo(address),
     ]);
 
     const tokenInfo = tokenInfoData.result[0];
-    const contractABI = JSON.parse(abiData.result);
-    const _importedData = {
+
+    const tokenObj = {
       name: tokenInfo.tokenName,
       symbol: tokenInfo.symbol,
       address: address,
-      abi: contractABI,
-      imported: true,
     };
-
+    cacheImportedToken(tokenObj);
     dispatch({
       type: IMPORT_TOKEN,
       payload: {
-        importedData: _importedData,
-        listData: {
-          name: tokenInfo.tokenName,
-          symbol: tokenInfo.symbol,
-          address: address,
-          abi: contractABI,
-          imported: true,
-        },
+        listData: tokenObj,
       },
     });
   } catch (error) {
@@ -571,17 +585,69 @@ export const importToken = (address, account, network) => async (dispatch) => {
   });
 };
 
-// load token list to be selected
-export const getLpBalance =
-  (token1, token2, account, network) => async (dispatch) => {
-    console.log("getting balance", { token1, token2 });
+export const loadPairContractAbi =
+  (token0Symbol, token1Symbol, pairData, network) => async (dispatch) => {
     try {
-      const _pairContract = pairContract(token1.symbol, token2.symbol, network);
+      dispatch({
+        type: SHOW_DEX_LOADING,
+      });
+
+      const pairAddress = pairData.address;
+
+      const _data = {};
+      _data[`${token0Symbol}_${token1Symbol}`] = pairData;
+
+      if (pairAddress === nullAddress) {
+        dispatch({
+          type: SET_PAIR_DATA,
+          payload: _data,
+        });
+      } else {
+        console.log("loading pair data ", pairData);
+
+        dispatch({
+          type: SET_PAIR_DATA,
+          payload: _data,
+        });
+      }
+      // fetch pair abi and load
+      // 1. laod from local if avialable
+      // 2 . download from etherscan if not avialable
+    } catch (error) {
+      console.log("importToken ", error);
+      dispatch({
+        type: DEX_ERROR,
+        payload: "Pair not founds",
+      });
+    }
+    dispatch({
+      type: HIDE_DEX_LOADING,
+    });
+  };
+
+// load token list to be selected
+// pairData = { abi:[], address:"" }
+export const getLpBalance =
+  (token1, token2, pairData, account, network) => async (dispatch) => {
+    // console.log("getting balance", { token1, token2 });
+    try {
+      const _pairContract = pairContract2(pairData, network);
 
       console.log("pair contract ", _pairContract._address);
       dispatch({
         type: SHOW_DEX_LOADING,
       });
+
+      // if (!_pairContract._address) {
+      //   dispatch({
+      //     type: GET_POOL_SHARE,
+      //     payload: "100",
+      //   });
+      //   dispatch({
+      //     type: HIDE_DEX_LOADING,
+      //   });
+      //   return;
+      // }
       const [lpBalance, token0Addr, token1Addr, reservesData, totalSupply] =
         await Promise.all([
           _pairContract.methods.balanceOf(account).call(),
@@ -618,7 +684,7 @@ export const getLpBalance =
           amount: lpBalance,
         },
       });
-      // console.log("lpBalance ", lpBalance);
+      console.log("lpBalance ", lpBalance);
     } catch (error) {
       console.log("lpBalance ", error);
       dispatch({
@@ -626,6 +692,10 @@ export const getLpBalance =
         payload: "Failed to fetch lpBalance",
       });
     }
+
+    // dispatch({
+    //   type: RESET_POOL_DATA,
+    // });
     dispatch({
       type: HIDE_DEX_LOADING,
     });

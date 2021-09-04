@@ -1,5 +1,25 @@
 import BigNumber from "bignumber.js";
-import { BITE, CORGIB, PBR, PWAR, USDT } from "../constants";
+import {
+  BITE,
+  biteAddressKoven,
+  biteAddressMainnet,
+  BNB,
+  CORGIB,
+  corgibMemeCoinMainnet,
+  corgibMemeCoinTestent,
+  currentConnection,
+  ETH,
+  PBR,
+  pbrAddressMainnet,
+  pbrAddressTestnet,
+  PWAR,
+  pwarAddressMainnet,
+  pwarAddressTestnet,
+  USDT,
+  usdtMainnetAddress,
+  usdtTestnetAddress,
+  WETH_ADDRESS_MAINNET,
+} from "../constants";
 import {
   biteContract,
   corgibCoinContract,
@@ -158,22 +178,22 @@ export const getUnixTime = (timeInMintes) => {
   return _timeUnix;
 };
 
-export const getPercentage = (numerator, denominator) => {
-  const _nume = new BigNumber(numerator.toString());
-  const _dem = new BigNumber(denominator.toString());
-  if (_dem.lte(new BigNumber("0"))) {
-    return new BigNumber("100").toString();
-  }
-  if (_nume.lte(new BigNumber("0"))) {
+export const getPercentage = (yourValue, totalValue) => {
+  const _your = new BigNumber(yourValue ? yourValue : 0);
+  const _total = new BigNumber(totalValue ? totalValue : 0);
+  if (_your.lte(new BigNumber("0"))) {
     return new BigNumber("0").toString();
   }
-  const percent = _nume.div(_dem.plus(_nume)).multipliedBy("100");
+  if (_total.lte(new BigNumber("0"))) {
+    return new BigNumber("0").toString();
+  }
+  const percent = _your.div(_total).multipliedBy(100);
   return percent.toFixed(4).toString();
 };
 
 export const getPercentageAmount = (value, percent) => {
-  const _value = new BigNumber(value.toString());
-  const _percent = new BigNumber(percent.toString());
+  const _value = new BigNumber(value ? value : 0);
+  const _percent = new BigNumber(percent ? percent : 0);
   if (_value.lte(new BigNumber("0"))) {
     return new BigNumber("0").toString();
   }
@@ -190,7 +210,12 @@ export const fetchTokenAbi = async (address) => {
     const _api = `https://api.etherscan.io/api?module=contract&action=getabi&address=${address}&apikey=${process.env.REACT_APP_ETHER_SCAN_API}`;
     // console.log(_api);
     const res = await axios.get(_api);
-    return res.data;
+    const data = res.data;
+    if (data.status !== "1") {
+      return [];
+    }
+    const result = JSON.parse(data.result);
+    return result;
   } catch (error) {
     console.log("fetchTokenAbi", error);
     return {};
@@ -210,8 +235,8 @@ export const fetchTokenInfo = async (address) => {
 };
 
 export const getPriceRatio = (token1, token2) => {
-  const _token1 = new BigNumber(token1);
-  const _token2 = new BigNumber(token2);
+  const _token1 = new BigNumber(token1 ? token1 : 0);
+  const _token2 = new BigNumber(token2 ? token2 : 0);
   if (_token1.eq("0") || _token2.eq("0")) {
     return new BigNumber("0").toFixed(4).toString();
   }
@@ -228,8 +253,8 @@ export const getPriceRatio = (token1, token2) => {
 };
 
 export const getTokenOut = (tokenIn, token1Reserve, token2Reserve) => {
-  const _token1 = new BigNumber(token1Reserve);
-  const _token2 = new BigNumber(token2Reserve);
+  const _token1 = new BigNumber(token1Reserve ? token1Reserve : 0);
+  const _token2 = new BigNumber(token2Reserve ? token2Reserve : 0);
 
   if (_token1.eq("0") || _token2.eq("0")) {
     return new BigNumber("0").toFixed(4).toString();
@@ -248,8 +273,8 @@ export const getTokenOut = (tokenIn, token1Reserve, token2Reserve) => {
 };
 
 export const getPercentAmountWithFloor = (amount, percent) => {
-  const _amount = new BigNumber(amount ? amount.toString() : 0);
-  const _percent = percent ? percent.toString() : 0;
+  const _amount = new BigNumber(amount ? amount : 0);
+  const _percent = percent ? percent : 0;
 
   return _amount
     .multipliedBy(_percent)
@@ -259,10 +284,11 @@ export const getPercentAmountWithFloor = (amount, percent) => {
 };
 
 export const buyPriceImpact = (yTokenamount, yTokenReserves) => {
-  const _yAmount = new BigNumber(yTokenamount);
+  const _yAmount = new BigNumber(yTokenamount ? yTokenamount : 0);
+  const _yTokenReserves = yTokenReserves ? yTokenReserves : 0;
 
   try {
-    const buyImpact = _yAmount.multipliedBy(0.98).div(yTokenReserves);
+    const buyImpact = _yAmount.multipliedBy(0.98).div(_yTokenReserves);
     console.log("buy impact ", buyImpact.toString());
     return buyImpact.toString();
   } catch (error) {
@@ -272,10 +298,10 @@ export const buyPriceImpact = (yTokenamount, yTokenReserves) => {
 };
 
 export const sellPriceImpact = (xTokenAmount, yTokenAmount, xReserve) => {
-  const u = new BigNumber(yTokenAmount);
+  const u = new BigNumber(yTokenAmount ? yTokenAmount : 0);
 
-  const x = new BigNumber(xTokenAmount);
-  const y = new BigNumber(yTokenAmount);
+  const x = new BigNumber(xTokenAmount ? xTokenAmount : 0);
+  const y = new BigNumber(yTokenAmount ? yTokenAmount : 0);
 
   try {
     const er = x.minus(x.multipliedBy(y).div(y.plus(u.multipliedBy(0.98))));
@@ -291,6 +317,25 @@ export const sellPriceImpact = (xTokenAmount, yTokenAmount, xReserve) => {
 };
 
 export const formatFloat = (floatValue) => {
-  const _f = new BigNumber(floatValue);
+  const _f = new BigNumber(floatValue ? floatValue : 0);
   return _f.toFixed(4).toString();
+};
+
+export const cacheImportedToken = (tokenData) => {
+  let tokens = localStorage.getItem("tokens");
+  if (!tokens) {
+    localStorage.setItem("tokens", JSON.stringify([tokenData]));
+  } else {
+    tokens = JSON.parse(tokens);
+    tokens = [tokenData, ...tokens];
+    localStorage.setItem(JSON.stringify(tokens));
+  }
+};
+
+export const getCachedTokens = () => {
+  let tokens = localStorage.getItem("tokens");
+  if (!tokens) {
+    return [];
+  }
+  return JSON.parse(tokens);
 };

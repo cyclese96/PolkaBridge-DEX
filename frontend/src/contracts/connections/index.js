@@ -120,6 +120,15 @@ export const pairContract = (token0Symbol, token1Symbol, network) => {
   return connection;
 };
 
+export const pairContract2 = (pairData, network) => {
+  const connection = getCurrentConnection(
+    network,
+    pairData.abi,
+    pairData.address
+  );
+  return connection;
+};
+
 //get connecttion of imported contract
 export const tokenContract = (address, abi, network) => {
   const _address = address;
@@ -181,8 +190,8 @@ const getCurrentConnection = (blockChainNetwork, abi, contractAddress) => {
     } else {
       const infura =
         currentConnection === "testnet"
-          ? `https://kovan.infura.io/v3/8bcf728cb2074a07a3f3d8069cf8c855`
-          : `https://mainnet.infura.io/v3/8bcf728cb2074a07a3f3d8069cf8c855`;
+          ? `https://kovan.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`
+          : `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`;
 
       const web3 = new Web3(new Web3.providers.HttpProvider(infura));
       return new web3.eth.Contract(abi, contractAddress);
