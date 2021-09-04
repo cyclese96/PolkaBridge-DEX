@@ -53,6 +53,7 @@ import {
 import store from "../../store";
 import { SET_TOKEN_ABI } from "../../actions/types";
 import { fetchContractAbi } from "../../utils/httpUtils";
+import { Settings } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -597,7 +598,7 @@ const SwapCard = (props) => {
           <div className={classes.cardHeading}>
             <p>Swap </p>
             <IconButton className={classes.iconButton}>
-              <TuneIcon
+              <Settings
                 fontSize="default"
                 onClick={handleSettings}
                 className={classes.settingIcon}
@@ -658,16 +659,9 @@ const SwapCard = (props) => {
           ) : (
             ""
           )}
+
           <Button variant="contained" className={classes.swapButton}>
-            {!swapStatus.disabled && dexLoading ? (
-              <CircularProgress
-                style={{ color: "black" }}
-                color="secondary"
-                size={30}
-              />
-            ) : (
-              "Swap"
-            )}
+            Swap
           </Button>
 
           {/* <div className="d-flex  mt-4">
