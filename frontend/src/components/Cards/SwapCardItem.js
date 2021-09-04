@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
       rgba(255, 255, 255, 0.02)
     )`,
     border: "1px solid #414141",
+
     borderRadius: 15,
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 0,
@@ -47,12 +48,12 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     backgroundColor: "transparent",
-    borderRadius: 5,
-    height: 33,
+
     borderColor: "transparent",
-    fontSize: 20,
+    fontSize: 22,
     color: "white",
     maxWidth: 200,
+    outline: "none",
     [theme.breakpoints.down("sm")]: {
       maxWidth: 100,
     },

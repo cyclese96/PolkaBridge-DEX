@@ -18,8 +18,8 @@ const useStyles = makeStyles({
     fontSize: 14,
   },
   active_tabStyle: {
-    fontSize: 14,
-    backgroundColor: "#D3057E",
+    fontSize: 16,
+    fontWeight: 500,
     borderRadius: 7,
     color: "white",
   },

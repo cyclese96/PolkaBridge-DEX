@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
     height: 160,
   },
   cardHeading: {
-    width: "100%",
+    width: "95%",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "flex-start",
@@ -117,6 +117,9 @@ const useStyles = makeStyles((theme) => ({
     textTransform: "none",
     fontSize: 21,
     borderRadius: 20,
+    willChange: "transform",
+    transition: "transform 450ms ease 0s",
+    transform: "perspective(1px) translateZ(0px)",
     padding: "12px 50px 12px 50px",
     "&:hover": {
       background: "rgba(224, 7, 125, 0.7)",
@@ -656,7 +659,15 @@ const SwapCard = (props) => {
             ""
           )}
           <Button variant="contained" className={classes.swapButton}>
-            Swap
+            {!swapStatus.disabled && dexLoading ? (
+              <CircularProgress
+                style={{ color: "black" }}
+                color="secondary"
+                size={30}
+              />
+            ) : (
+              "Swap"
+            )}
           </Button>
 
           {/* <div className="d-flex  mt-4">
@@ -695,19 +706,9 @@ const SwapCard = (props) => {
               // className={classes.addButton}
               disabled={swapStatus.disabled | dexLoading || liquidityStatus}
               onClick={handleSwapToken}
-            >
-              {!swapStatus.disabled && dexLoading ? (
-                <CircularProgress
-                  style={{ color: "black" }}
-                  color="secondary"
-                  size={30}
-                />
-              ) : (
-                "Swap"
-              )}
-            </CustomButton>
-          </div>
-           */}
+            ></CustomButton>
+          </div> */}
+
           {/* <CustomButton
               variant="light"
               className={classes.addButton}

@@ -9,7 +9,8 @@ import CustomButton from "../Buttons/CustomButton";
 import TokenList from "./TokenList";
 import { importToken } from "../../actions/dexActions";
 import { connect } from "react-redux";
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress, Divider } from "@material-ui/core";
+import { Close } from "@material-ui/icons";
 
 const styles = (theme) => ({
   root: {
@@ -59,7 +60,8 @@ const useStyles = makeStyles((theme) => ({
   heading: {
     fontSize: 18,
     fontWeight: 400,
-    color: "#919191",
+    textAlign: "left",
+    color: "#e5e5e5",
   },
   subheading: {
     fontSize: 12,
@@ -83,27 +85,29 @@ const useStyles = makeStyles((theme) => ({
     height: 50,
     width: "auto",
     borderColor: "rgba(255, 255, 255, 0.1)",
-    borderRadius: 10,
+    borderRadius: 15,
     fontSize: 18,
     width: "90%",
     color: "white",
     padding: 10,
+    outline: "none",
     [theme.breakpoints.down("sm")]: {
       height: 50,
     },
   },
   buttons: {
+    marginBottom: 7,
     // marginTop: 80,
     // marginBottom: 20,
   },
+
   numbers: {
     color: "#E0077D",
     fontSize: 20,
     marginLeft: 15,
   },
   icon: {
-    marginRight: 5,
-    color: "#919191",
+    color: "#e5e5e5",
   },
 }));
 
@@ -172,49 +176,69 @@ const SelectTokenDialog = ({
   };
 
   return (
-    <div>
-      <Dialog
-        onClose={onClose}
-        open={open}
-        // onLoad={() => filterTokens("")}
-        disableBackdropClick
-        className={classes.dialog}
-        color="transparent"
-        PaperProps={{
-          style: { borderRadius: 15 },
-        }}
-      >
-        <div className={classes.background}>
-          <DialogTitle onClose={onClose}>
-            <span className={classes.heading}>Select a token</span>
-          </DialogTitle>
-
-          <input
-            type="text"
-            className={classes.input}
-            placeholder="Search name or paste address"
-            onChange={({ target: { value } }) => handleTokenFilter(value)}
-          />
-          {/* <FixedSizeList> */}
-          {dexLoading ? (
-            <CircularProgress />
-          ) : (
-            <TokenList
-              handleItemSelected={onTokenSelect}
-              tokens={filteredTokens}
-              disableToken={disableToken}
-            />
-          )}
-
-          {/* </FixedSizeList> */}
-          <div className={classes.buttons}>
-            <CustomButton variant="light" onClick={onClose}>
-              Cancel
-            </CustomButton>
+    <Dialog
+      onClose={onClose}
+      open={open}
+      // onLoad={() => filterTokens("")}
+      disableBackdropClick
+      className={classes.dialog}
+      color="transparent"
+      PaperProps={{
+        style: { borderRadius: 20, backgroundColor: "#121827" },
+      }}
+    >
+      <div className={classes.background}>
+        <div
+          className="d-flex justify-content-between"
+          style={{ width: "90%", paddingTop: 20, paddingBottom: 15 }}
+        >
+          <div className={classes.heading}>Select a token</div>
+          <div>
+            <IconButton style={{ margin: 0, padding: 0 }}>
+              <Close onClick={onClose} className={classes.icon}></Close>
+            </IconButton>
           </div>
         </div>
-      </Dialog>
-    </div>
+
+        <input
+          type="text"
+          className={classes.input}
+          placeholder="Search name or paste address"
+          onChange={({ target: { value } }) => handleTokenFilter(value)}
+        />
+        {/* <FixedSizeList> */}
+        <Divider
+          style={{
+            width: "100%",
+            borderTop: "1px solid #616161",
+            marginTop: 15,
+          }}
+        />
+        {dexLoading ? (
+          <CircularProgress />
+        ) : (
+          <TokenList
+            handleItemSelected={onTokenSelect}
+            tokens={filteredTokens}
+            disableToken={disableToken}
+          />
+        )}
+        <Divider
+          style={{
+            width: "100%",
+            borderTop: "1px solid #616161",
+            marginTop: 15,
+            marginBottom: 10,
+          }}
+        />
+        {/* </FixedSizeList> */}
+        <div className={classes.buttons}>
+          <CustomButton variant="light" onClick={onClose}>
+            Cancel
+          </CustomButton>
+        </div>
+      </div>
+    </Dialog>
   );
 };
 

@@ -44,6 +44,7 @@ const useStyles = makeStyles((theme) => ({
     width: "auto",
     height: 22,
     marginRight: 2,
+    borderRadius: "50%",
     color: "#e5e5e5",
   },
 
