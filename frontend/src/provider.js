@@ -1,7 +1,7 @@
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
 const provider = new WalletConnectProvider({
-  infuraId: "6f0ba6da417340e6b1511be0f2bc389b",
+  infuraId: "8bcf728cb2074a07a3f3d8069cf8c855",
   qrcodeModalOptions: {
     mobileLinks: ['metamask', 'trust'],
   },

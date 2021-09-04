@@ -181,8 +181,8 @@ const getCurrentConnection = (blockChainNetwork, abi, contractAddress) => {
     } else {
       const infura =
         currentConnection === "testnet"
-          ? `https://kovan.infura.io/v3/6f0ba6da417340e6b1511be0f2bc389b`
-          : `https://mainnet.infura.io/v3/6f0ba6da417340e6b1511be0f2bc389b`;
+          ? `https://kovan.infura.io/v3/8bcf728cb2074a07a3f3d8069cf8c855`
+          : `https://mainnet.infura.io/v3/8bcf728cb2074a07a3f3d8069cf8c855`;
 
       const web3 = new Web3(new Web3.providers.HttpProvider(infura));
       return new web3.eth.Contract(abi, contractAddress);
