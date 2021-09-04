@@ -1,6 +1,8 @@
 import {
+  Button,
   Card,
   CircularProgress,
+  Divider,
   IconButton,
   makeStyles,
 } from "@material-ui/core";
@@ -196,6 +198,22 @@ const useStyles = makeStyles((theme) => ({
   iconButton: {
     margin: 0,
     padding: 2,
+  },
+  addLiquidityButton: {
+    marginTop: 20,
+    backgroundColor: "rgba(224, 7, 125, 0.9)",
+    color: "white",
+    width: "95%",
+    textTransform: "none",
+    fontSize: 20,
+    borderRadius: 20,
+    willChange: "transform",
+    transition: "transform 450ms ease 0s",
+    transform: "perspective(1px) translateZ(0px)",
+    padding: "10px 50px 10px 50px",
+    "&:hover": {
+      background: "rgba(224, 7, 125, 0.7)",
+    },
   },
 }));
 
@@ -712,9 +730,17 @@ const AddCard = (props) => {
             </span>
           </div>
 
-          <div className="d-flex justify-content-center mt-2 mb-1">
-            <span>{addStatus.message}</span>
-          </div>
+          <Button variant="contained" className={classes.addLiquidityButton}>
+            {!addStatus.disabled && loading ? (
+              <CircularProgress
+                style={{ color: "black" }}
+                color="secondary"
+                size={30}
+              />
+            ) : (
+              "Add liquidity"
+            )}
+          </Button>
           <div className="d-flex  mt-4">
             <CustomButton
               variant="light"
@@ -756,6 +782,9 @@ const AddCard = (props) => {
                 "Add liquidity"
               )}
             </CustomButton>
+          </div>
+          <div className="d-flex justify-content-center mt-2 mb-1">
+            <span>{addStatus.message}</span>
           </div>
         </div>
       </Card>
