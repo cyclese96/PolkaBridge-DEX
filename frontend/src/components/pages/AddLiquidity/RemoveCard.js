@@ -46,7 +46,7 @@ import {
   getPairAddress,
   getTokenAbi,
 } from "../../../utils/connectionUtils";
-import { SET_TOKEN_ABI } from "../../../actions/types";
+import { RESET_POOL_DATA, SET_TOKEN_ABI } from "../../../actions/types";
 import store from "../../../store";
 import { fetchContractAbi } from "../../../utils/httpUtils";
 import { Settings } from "@material-ui/icons";
@@ -302,7 +302,7 @@ const RemoveCard = ({
   useEffect(() => {
     if (currentNetwork === etheriumNetwork) {
       setToken1(tokens[0]);
-      setToken2(tokens[3]);
+      setToken2(tokens[2]);
     } else {
       setToken1({
         icon: bnbImg,
@@ -331,7 +331,7 @@ const RemoveCard = ({
 
   const handleConfirmAllowance = async () => {
     const allowanceAmount = toWei("999999999");
-    const pairData = { pair: currentPairAbi(), address: currentPairAddress() };
+    const pairData = { abi: currentPairAbi(), address: currentPairAddress() };
     await confirmLPAllowance(
       allowanceAmount,
       selectedToken1,
@@ -401,6 +401,12 @@ const RemoveCard = ({
   // new use effect
   useEffect(async () => {
     if (selectedToken1.symbol && selectedToken2.symbol) {
+      // reset input on token change
+      handleClearState();
+      store.dispatch({
+        type: RESET_POOL_DATA,
+      });
+
       // load erc20 token abi and balance
       const erc20Token =
         selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
@@ -410,10 +416,12 @@ const RemoveCard = ({
 
       if (!erc20Abi) {
         // load token abi if not loaded
-        erc20Abi = await fetchTokenAbi(erc20Token.address);
+        erc20Abi = await fetchContractAbi(erc20Token.address, currentNetwork);
+        const abiData = {};
+        abiData[`${erc20Token.symbol}`] = erc20Abi;
         store.dispatch({
           type: SET_TOKEN_ABI,
-          payload: erc20Abi,
+          payload: abiData,
         });
       }
       // await getAccountBalance(
@@ -456,7 +464,6 @@ const RemoveCard = ({
         );
       }
 
-      console.log("final pair data ", _pairData);
       await getLpBalance(
         selectedToken1,
         selectedToken2,
@@ -498,78 +505,11 @@ const RemoveCard = ({
   //   );
   // }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
-  // const verifySwapStatus = (token1, token2) => {
-  //   if (token1.selected.symbol === token2.selected.symbol) {
-  //     setStatus({ message: "Invalid pair", disabled: true });
-  //   } else if (
-  //     (!token1.value && token1.selected.symbol) ||
-  //     (!token2.value && token2.selected.symbol)
-  //   ) {
-  //     setStatus({ message: "Enter amounts", disabled: true });
-  //   } else if (!token1.selected.symbol || !token2.selected.symbol) {
-  //     setStatus({ message: "Select both tokens", disabled: true });
-  //   } else if (
-  //     token1.value > 0 &&
-  //     token2.value > 0 &&
-  //     token1.selected.symbol &&
-  //     token2.selected.symbol
-  //   ) {
-  //     setStatus({ message: "Add liquidity", disabled: false });
-  //   }
-  // };
-
-  // const onToken1InputChange = (tokens) => {
-  //   setToken1Value(tokens);
-
-  //   //calculate resetpective value of token 2 if selected
-  //   let _token2Value;
-  //   if (selectedToken2.symbol && tokens) {
-  //     const t = token2PerToken1(from_token.price, to_token.price);
-  //     _token2Value = parseFloat(tokens) * t;
-  //     setToken2Value(_token2Value);
-  //   } else if (selectedToken2.symbol && !tokens) {
-  //     setToken2Value("");
-  //   }
-
-  //   verifySwapStatus(
-  //     { value: tokens, selected: selectedToken1 },
-  //     { value: _token2Value, selected: selectedToken2 }
-  //   );
-  // };
-
-  // const onToken2InputChange = (tokens) => {
-  //   setToken2Value(tokens);
-
-  //   //calculate respective value of token1 if selected
-  //   let _token1Value;
-  //   if (selectedToken1.symbol && tokens) {
-  //     const t = token1PerToken2(from_token.price, to_token.price);
-  //     _token1Value = parseFloat(tokens) * t;
-  //     setToken1Value(_token1Value);
-  //   } else if (selectedToken1.symbol && !tokens) {
-  //     setToken1Value("");
-  //   }
-
-  //   verifySwapStatus(
-  //     { value: _token1Value, selected: selectedToken1 },
-  //     { value: tokens, selected: selectedToken2 }
-  //   );
-  // };
-
   const onToken1Select = (token) => {
     setToken1(token);
-
-    // verifySwapStatus(
-    //   { value: token1Value, selected: token },
-    //   { value: token2Value, selected: selectedToken2 }
-    // );
   };
   const onToken2Select = (token) => {
     setToken2(token);
-    // verifySwapStatus(
-    //   { value: token1Value, selected: selectedToken1 },
-    //   { value: token2Value, selected: token }
-    // );
   };
 
   const handleClearState = () => {

@@ -19,6 +19,7 @@ import { ETH, etheriumNetwork, tokens } from "../../../constants";
 import {
   fetchTokenAbi,
   formatCurrency,
+  getPercentage,
   getPriceRatio,
   getTokenOut,
   token1PerToken2,
@@ -271,7 +272,7 @@ const AddCard = (props) => {
     let defaultToken1, defaultToken2;
     if (currentNetwork === etheriumNetwork) {
       defaultToken1 = tokens[0];
-      defaultToken2 = tokens[3];
+      defaultToken2 = tokens[2];
     } else {
       defaultToken1 = {
         icon: tokenThumbnail("PWAR"),
@@ -336,14 +337,14 @@ const AddCard = (props) => {
     }
   };
 
+  const currentTokenApprovalStatus = () => {
+    return selectedToken1.symbol === "ETH"
+      ? true
+      : approvedTokens[selectedToken1.symbol];
+  };
+
   // new use effect
   useEffect(async () => {
-    // if (selectedToken1.symbol && !approvedTokens[selectedToken1.symbol]) {
-    //   //skip approve check for eth
-    //   // return;
-    //   console.log("checking approval in swap");
-    //   await checkAllowance(selectedToken1, currentAccount, currentNetwork);
-    // }
     if (selectedToken1.symbol && selectedToken2.symbol) {
       // load erc20 token abi and balance
       const erc20Token =
@@ -354,10 +355,12 @@ const AddCard = (props) => {
 
       if (!erc20Abi) {
         // load token abi if not loaded
-        erc20Abi = await fetchTokenAbi(erc20Token.address);
+        erc20Abi = await fetchContractAbi(erc20Token.address, currentNetwork);
+        const abiData = {};
+        abiData[`${erc20Token.symbol}`] = erc20Abi;
         store.dispatch({
           type: SET_TOKEN_ABI,
-          payload: erc20Abi,
+          payload: abiData,
         });
       }
       await getAccountBalance(
@@ -410,9 +413,13 @@ const AddCard = (props) => {
       );
 
       //   console.log("checking approval in swap");
-      if (!approvedTokens[selectedToken1.symbol]) {
-        await checkAllowance(selectedToken1, currentAccount, currentNetwork);
-      }
+      // if (!currentTokenApprovalStatus()) {
+      await checkAllowance(
+        { ...selectedToken1, abi: erc20Abi },
+        currentAccount,
+        currentNetwork
+      );
+      // }
     }
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
@@ -440,7 +447,7 @@ const AddCard = (props) => {
     const allowanceAmount = toWei("999999999");
     await confirmAllowance(
       allowanceAmount,
-      selectedToken1,
+      { ...selectedToken1, abi: tokenData[selectedToken1.symbol] },
       currentAccount,
       currentNetwork
     );
@@ -496,13 +503,18 @@ const AddCard = (props) => {
     [] // will be created only once initially
   );
 
+  const getCurrentPairData = () => {
+    const pairData = { abi: currentPairAbi(), address: currentPairAddress() };
+    return pairData;
+  };
+
   const onToken1InputChange = async (tokens) => {
     setToken1Value(tokens);
 
     //calculate resetpective value of token 2 if selected
     let _token2Value = "";
     if (selectedToken2.symbol && tokens) {
-      const pairData = { abi: currentPairAbi(), address: currentPairAddress() };
+      const pairData = getCurrentPairData();
 
       await debouncedGetLpBalance(
         selectedToken1,
@@ -517,14 +529,19 @@ const AddCard = (props) => {
         poolReserves[selectedToken2.symbol],
         poolReserves[selectedToken1.symbol]
       );
-      setToken2Value(_token2Value);
+      if (new BigNumber(_token2Value).gt(0)) {
+        setToken2Value(_token2Value);
+      }
     } else if (selectedToken2.symbol && !tokens) {
       setToken2Value("");
     }
 
     verifySwapStatus(
       { value: tokens, selected: selectedToken1 },
-      { value: _token2Value, selected: selectedToken2 }
+      {
+        value: new BigNumber(_token2Value).gt(0) ? _token2Value : token2Value,
+        selected: selectedToken2,
+      }
     );
   };
 
@@ -533,7 +550,7 @@ const AddCard = (props) => {
 
     let _token1Value = "";
     if (selectedToken1.symbol && tokens) {
-      const pairData = { abi: currentPairAbi(), address: currentPairAddress() };
+      const pairData = getCurrentPairData();
       await debouncedGetLpBalance(
         selectedToken1,
         selectedToken2,
@@ -547,13 +564,18 @@ const AddCard = (props) => {
         poolReserves[selectedToken1.symbol],
         poolReserves[selectedToken2.symbol]
       );
-      setToken1Value(_token1Value);
+      if (new BigNumber(_token1Value).gt(0)) {
+        setToken1Value(_token1Value);
+      }
     } else if (selectedToken1.symbol && !tokens) {
       setToken1Value("");
     }
 
     verifySwapStatus(
-      { value: _token1Value, selected: selectedToken1 },
+      {
+        value: new BigNumber(_token1Value).gt(0) ? _token1Value : token1Value,
+        selected: selectedToken1,
+      },
       { value: tokens, selected: selectedToken2 }
     );
   };
@@ -596,25 +618,21 @@ const AddCard = (props) => {
     let etherToken, erc20Token;
     if (selectedToken1.symbol === ETH) {
       etherToken = {
+        ...selectedToken1,
         amount: token1Value.toString(),
-        min: token1Value,
-        symbol: selectedToken1.symbol,
       };
       erc20Token = {
+        ...selectedToken2,
         amount: toWei(token2Value.toString()),
-        min: toWei(token2Value.toString()),
-        symbol: selectedToken2.symbol,
       };
     } else {
       etherToken = {
+        ...selectedToken2,
         amount: token2Value.toString(),
-        min: token2Value,
-        symbol: "ETH",
       };
       erc20Token = {
+        ...selectedToken1,
         amount: toWei(token1Value.toString()),
-        min: toWei(token1Value.toString()),
-        symbol: selectedToken1.symbol,
       };
     }
 
@@ -625,6 +643,22 @@ const AddCard = (props) => {
       swapSettings.deadline,
       currentNetwork
     );
+  };
+
+  const currentPoolShare = () => {
+    if (
+      !poolReserves[selectedToken1.symbol] ||
+      !poolReserves[selectedToken2.symbol]
+    ) {
+      return "100";
+    }
+    const token1Amount = toWei(token1Value);
+    const token1Reserves = new BigNumber(poolReserves[selectedToken1.symbol]);
+    const share = getPercentage(
+      token1Amount,
+      token1Reserves.plus(token1Amount).toString()
+    );
+    return share;
   };
 
   // const getPriceRatio = (token1, token2) => {
@@ -709,9 +743,17 @@ const AddCard = (props) => {
                   </span>
                 </div>
 
-                <div className={classes.feeSelectContainer}>
-                  <div className={classes.feeSelectHeading}>
-                    {`${poolShare}%`}
+
+                  <div className={classes.feeSelectContainer}>
+                    <div className={classes.feeSelectHeading}>
+                      <p
+                        className={classes.feeSelectHeadingP}
+                      >{`${currentPoolShare()}%`}</p>
+                    </div>
+                    <span className={classes.feeSelectHeadingSpan}>
+                      Share of pool
+                    </span>
+
                   </div>
                   <span className={classes.feeSelectHeadingSpan}>
                     Share of pool

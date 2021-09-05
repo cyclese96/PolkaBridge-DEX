@@ -11,6 +11,7 @@ import {
   LOAD_TOKEN_LIST,
   LOAD_TO_TOKEN,
   PRICE_UPDATE,
+  RESET_POOL_DATA,
   RESET_POOL_SHARE,
   SET_LP_BALANCE,
   SET_PAIR_ABI,
@@ -193,6 +194,12 @@ export default function (state = initalState, action) {
           ...state.pairContractData,
           ...action.payload,
         },
+      };
+    case RESET_POOL_DATA:
+      return {
+        ...state,
+        poolShare: "0",
+        poolReserves: {},
       };
     default:
       return state;

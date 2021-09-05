@@ -184,7 +184,10 @@ export const tokens = [
   {
     name: "1INCH Token",
     symbol: "1INCH",
-    address: "0x111111111117dc0aa78b770fa6a738034120c302",
+    address:
+      currentConnection === "testnet"
+        ? "0xcc521406C8F796169DCe1D10bDe6AaA60847FB63"
+        : "0x111111111117dc0aa78b770fa6a738034120c302",
   },
   {
     name: "Dai Stablecoin",
