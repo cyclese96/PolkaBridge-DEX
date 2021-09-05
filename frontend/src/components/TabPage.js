@@ -11,7 +11,7 @@ import Analytics from "./pages/Analytics";
 
 const useStyles = makeStyles({
   root: {
-    marginBottom: 50,
+    marginBottom: 10,
   },
   default_tabStyle: {
     color: "rgba(255, 255, 255, 0.5)",

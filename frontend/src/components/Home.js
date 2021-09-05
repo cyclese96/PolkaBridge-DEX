@@ -31,7 +31,7 @@ import { loadTokens } from "../actions/dexActions";
 
 const useStyles = makeStyles((theme) => ({
   background: {
-    padding: 80,
+    paddingTop: 80,
     minHeight: "100vh",
     display: "flex",
     flexDirection: "column",
