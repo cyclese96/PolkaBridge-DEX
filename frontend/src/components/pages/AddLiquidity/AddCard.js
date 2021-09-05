@@ -343,16 +343,30 @@ const AddCard = (props) => {
       : approvedTokens[selectedToken1.symbol];
   };
 
+  const getSelectedTokenAbi = (token) => {
+    let abi = getTokenAbi(token.symbol);
+    if (!abi) {
+      abi = tokenData[token.symbol] ? tokenData[token.symbol] : null;
+    }
+    console.log("returing abi ", tokenData[token.symbol]);
+    return abi;
+  };
+
+  const clearInputState = () => {
+    setToken1Value("");
+    setToken2Value("");
+    setStatus({ disabled: true, message: "Enter Amounts" });
+  };
+
   // new use effect
   useEffect(async () => {
     if (selectedToken1.symbol && selectedToken2.symbol) {
+      clearInputState();
       // load erc20 token abi and balance
       const erc20Token =
         selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
-      let erc20Abi = erc20Token.imported
-        ? tokenData[erc20Token.symbol].abi
-        : getTokenAbi(erc20Token.symbol);
-
+      let erc20Abi = getSelectedTokenAbi(erc20Token);
+      console.log("abi received ", erc20Abi);
       if (!erc20Abi) {
         // load token abi if not loaded
         erc20Abi = await fetchContractAbi(erc20Token.address, currentNetwork);
@@ -444,10 +458,14 @@ const AddCard = (props) => {
   // }, [selectedToken1, currentNetwork, currentAccount]);
 
   const handleConfirmAllowance = async () => {
+    // console.log("token", selectedToken1.symbol);
+    // console.log("abi", getSelectedTokenAbi(selectedToken1));
     const allowanceAmount = toWei("999999999");
+    const tokenAbi = getSelectedTokenAbi(selectedToken1);
+    console.log("abi", tokenData[selectedToken1.symbol].abi);
     await confirmAllowance(
       allowanceAmount,
-      { ...selectedToken1, abi: tokenData[selectedToken1.symbol] },
+      { ...selectedToken1, abi: tokenAbi },
       currentAccount,
       currentNetwork
     );
@@ -461,14 +479,14 @@ const AddCard = (props) => {
     if (token1.selected.symbol === token2.selected.symbol) {
       message = "Invalid pair";
       disabled = true;
+    } else if (!token1.selected.symbol || !token2.selected.symbol) {
+      message = "Select both tokens";
+      disabled = true;
     } else if (
       (_token1.eq("0") && token1.selected.symbol) ||
       (_token2.eq("0") && token2.selected.symbol)
     ) {
       message = "Enter amounts";
-      disabled = true;
-    } else if (!token1.selected.symbol || !token2.selected.symbol) {
-      message = "Select both tokens";
       disabled = true;
     } else if (
       _token1.gt("0") &&
@@ -476,7 +494,7 @@ const AddCard = (props) => {
       token1.selected.symbol &&
       token2.selected.symbol
     ) {
-      message = "";
+      message = "Add liquidity ";
       disabled = false;
     }
 
@@ -531,18 +549,17 @@ const AddCard = (props) => {
       );
       if (new BigNumber(_token2Value).gt(0)) {
         setToken2Value(_token2Value);
+        verifySwapStatus(
+          { value: tokens, selected: selectedToken1 },
+          { value: _token2Value, selected: selectedToken2 }
+        );
       }
     } else if (selectedToken2.symbol && !tokens) {
       setToken2Value("");
-    }
-
-    verifySwapStatus(
-      { value: tokens, selected: selectedToken1 },
-      {
-        value: new BigNumber(_token2Value).gt(0) ? _token2Value : token2Value,
-        selected: selectedToken2,
+      if (!addStatus.disabled) {
+        setStatus({ disabled: true, message: "Enter Amounts" });
       }
-    );
+    }
   };
 
   const onToken2InputChange = async (tokens) => {
@@ -566,18 +583,17 @@ const AddCard = (props) => {
       );
       if (new BigNumber(_token1Value).gt(0)) {
         setToken1Value(_token1Value);
+        verifySwapStatus(
+          { value: _token1Value, selected: selectedToken1 },
+          { value: tokens, selected: selectedToken2 }
+        );
       }
     } else if (selectedToken1.symbol && !tokens) {
       setToken1Value("");
+      if (!addStatus.disabled) {
+        setStatus({ disabled: true, message: "Enter Amounts" });
+      }
     }
-
-    verifySwapStatus(
-      {
-        value: new BigNumber(_token1Value).gt(0) ? _token1Value : token1Value,
-        selected: selectedToken1,
-      },
-      { value: tokens, selected: selectedToken2 }
-    );
   };
 
   const resetInput = () => {
@@ -671,6 +687,26 @@ const AddCard = (props) => {
   //   return _ratio;
   // };
 
+  const disableStatus = () => {
+    return addStatus.disabled;
+  };
+
+  const handleAction = () => {
+    if (currentTokenApprovalStatus()) {
+      handleAddLiquidity();
+    } else {
+      handleConfirmAllowance();
+    }
+  };
+  // const handleTokenPriceRatio = () => {};
+  const currentButton = () => {
+    if (addStatus.disabled) {
+      return addStatus.message;
+    } else {
+      return !currentTokenApprovalStatus() ? "Approve" : addStatus.message;
+    }
+  };
+
   return (
     <>
       <SwapSettings open={settingOpen} handleClose={close} />
@@ -743,17 +779,11 @@ const AddCard = (props) => {
                   </span>
                 </div>
 
-
-                  <div className={classes.feeSelectContainer}>
-                    <div className={classes.feeSelectHeading}>
-                      <p
-                        className={classes.feeSelectHeadingP}
-                      >{`${currentPoolShare()}%`}</p>
-                    </div>
-                    <span className={classes.feeSelectHeadingSpan}>
-                      Share of pool
-                    </span>
-
+                <div className={classes.feeSelectContainer}>
+                  <div className={classes.feeSelectHeading}>
+                    <p
+                      className={classes.feeSelectHeadingP}
+                    >{`${currentPoolShare()}%`}</p>
                   </div>
                   <span className={classes.feeSelectHeadingSpan}>
                     Share of pool
@@ -772,7 +802,12 @@ const AddCard = (props) => {
             </span>
           </div>
 
-          <Button variant="contained" className={classes.addLiquidityButton}>
+          <Button
+            variant="contained"
+            disabled={disableStatus()}
+            onClick={handleAction}
+            className={classes.addLiquidityButton}
+          >
             {!addStatus.disabled && loading ? (
               <CircularProgress
                 style={{ color: "black" }}
@@ -780,10 +815,10 @@ const AddCard = (props) => {
                 size={30}
               />
             ) : (
-              "Add liquidity"
+              currentButton()
             )}
           </Button>
-          <div className="d-flex  mt-4">
+          {/* <div className="d-flex  mt-4">
             <CustomButton
               variant="light"
               className={classes.approveBtn}
@@ -824,10 +859,10 @@ const AddCard = (props) => {
                 "Add liquidity"
               )}
             </CustomButton>
-          </div>
-          <div className="d-flex justify-content-center mt-2 mb-1">
+          </div> */}
+          {/* <div className="d-flex justify-content-center mt-2 mb-1">
             <span>{addStatus.message}</span>
-          </div>
+          </div> */}
         </div>
       </Card>
     </>

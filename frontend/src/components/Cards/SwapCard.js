@@ -156,7 +156,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SwapCard = (props) => {
   const {
-    account: { currentNetwork, currentAccount },
+    account: { currentNetwork, currentAccount, loading },
     dex: {
       swapSettings,
       approvedTokens,
@@ -280,19 +280,28 @@ const SwapCard = (props) => {
     }
   };
 
+  const getSelectedTokenAbi = (token) => {
+    let abi = getTokenAbi(token.symbol);
+    if (!abi) {
+      abi = tokenData[token.symbol] ? tokenData[token.symbol] : null;
+    }
+    return abi;
+  };
+
+  const clearInputState = () => {
+    setToken1Value("");
+    setToken2Value("");
+    setStatus({ disabled: true, message: "Enter Amounts" });
+  };
   useEffect(async () => {
     if (selectedToken1.symbol && selectedToken2.symbol) {
       // reset token input on token selection
-
-      setToken1Value("");
-      setToken2Value("");
+      clearInputState();
 
       // load erc20 token abi and balance
       const erc20Token =
         selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
-      let erc20Abi = erc20Token.imported
-        ? tokenData[erc20Token.symbol].abi
-        : getTokenAbi(erc20Token.symbol);
+      let erc20Abi = getSelectedTokenAbi(erc20Token);
 
       if (!erc20Abi) {
         // load token abi if not loaded
@@ -333,6 +342,11 @@ const SwapCard = (props) => {
 
       if (!_pairAddress) {
         setLiquidityStatus(true);
+        setStatus({
+          disabled: true,
+          message: "No Liquidity avialable for this pair",
+        });
+        return;
       } else {
         setLiquidityStatus(false);
       }
@@ -381,14 +395,14 @@ const SwapCard = (props) => {
     if (token1.selected.symbol === token2.selected.symbol) {
       message = "Invalid pair";
       disabled = true;
+    } else if (!token1.selected.symbol || !token2.selected.symbol) {
+      message = "Select both tokens";
+      disabled = true;
     } else if (
       (_token1.eq("0") && token1.selected.symbol) ||
       (_token2.eq("0") && token2.selected.symbol)
     ) {
       message = "Enter amounts";
-      disabled = true;
-    } else if (!token1.selected.symbol || !token2.selected.symbol) {
-      message = "Select both tokens";
       disabled = true;
     } else if (
       _token1.gt("0") &&
@@ -396,7 +410,7 @@ const SwapCard = (props) => {
       token1.selected.symbol &&
       token2.selected.symbol
     ) {
-      message = "";
+      message = "Swap";
       disabled = false;
     }
 
@@ -437,16 +451,18 @@ const SwapCard = (props) => {
       );
       if (new BigNumber(_token2Value).gt(0)) {
         setToken2Value(_token2Value);
+        // verify swap status with current inputs
+        verifySwapStatus(
+          { value: tokens, selected: selectedToken1 },
+          { value: _token2Value, selected: selectedToken2 }
+        );
       }
     } else if (selectedToken2.symbol && !tokens) {
       setToken2Value("");
+      if (!swapStatus.disabled) {
+        setStatus({ disabled: true, message: "Enter Amounts" });
+      }
     }
-
-    // verify swap status with current inputs
-    verifySwapStatus(
-      { value: tokens, selected: selectedToken1 },
-      { value: _token2Value, selected: selectedToken2 }
-    );
   };
 
   const onToken2InputChange = async (tokens) => {
@@ -471,16 +487,18 @@ const SwapCard = (props) => {
       );
       if (new BigNumber(_token1Value).gt(0)) {
         setToken1Value(_token1Value);
+        // verify swap status with current inputs
+        verifySwapStatus(
+          { value: _token1Value, selected: selectedToken1 },
+          { value: tokens, selected: selectedToken2 }
+        );
       }
     } else if (selectedToken1.symbol && !tokens) {
       setToken1Value("");
+      if (!swapStatus.disabled) {
+        setStatus({ disabled: true, message: "Enter Amounts" });
+      }
     }
-
-    // verify swap status with current inputs
-    verifySwapStatus(
-      { value: token1Value, selected: selectedToken1 },
-      { value: tokens, selected: selectedToken2 }
-    );
   };
 
   const onToken1Select = async (token) => {
@@ -512,7 +530,7 @@ const SwapCard = (props) => {
     const allowanceAmount = toWei("9999999999");
     await confirmAllowance(
       allowanceAmount,
-      { ...selectedToken1, abi: tokenData[selectedToken1.symbol] },
+      { ...selectedToken1, abi: getSelectedTokenAbi(selectedToken1) },
       currentAccount,
       currentNetwork
     );
@@ -580,8 +598,25 @@ const SwapCard = (props) => {
     return false;
   };
 
-  // const handleTokenPriceRatio = () => {};
+  const disableStatus = () => {
+    return swapStatus.disabled;
+  };
 
+  const handleAction = () => {
+    if (currentTokenApprovalStatus()) {
+      handleSwapToken();
+    } else {
+      handleConfirmAllowance();
+    }
+  };
+  // const handleTokenPriceRatio = () => {};
+  const currentButton = () => {
+    if (swapStatus.disabled) {
+      return swapStatus.message;
+    } else {
+      return !currentTokenApprovalStatus() ? "Approve" : swapStatus.message;
+    }
+  };
   return (
     <>
       <CustomSnackBar
@@ -648,7 +683,7 @@ const SwapCard = (props) => {
                 fontSize="small"
               />
             </div> */}
-          {!swapStatus.disabled && !liquidityStatus && !dexLoading ? (
+          {/* {!swapStatus.disabled && !liquidityStatus && !dexLoading ? (
             <div className="d-flex justify-content-around w-100 mt-4 mb-1 ">
               <span>Price</span>
               <span>
@@ -664,69 +699,24 @@ const SwapCard = (props) => {
             "No liquidity availabe for this pair"
           ) : (
             ""
-          )}
+          )} */}
 
-          <Button variant="contained" className={classes.swapButton}>
-            Swap
+          <Button
+            variant="contained"
+            disabled={disableStatus()}
+            className={classes.swapButton}
+            onClick={handleAction}
+          >
+            {!swapStatus.disabled && loading ? (
+              <CircularProgress
+                style={{ color: "black" }}
+                color="secondary"
+                size={30}
+              />
+            ) : (
+              currentButton()
+            )}
           </Button>
-
-          {/* <div className="d-flex  mt-4">
-            <CustomButton
-              variant="light"
-              className={classes.approveBtn}
-              disabled={
-                currentTokenApprovalStatus() ||
-                dexLoading ||
-                !isBothTokenSelected() ||
-                liquidityStatus
-              }
-              onClick={handleConfirmAllowance}
-            >
-              {currentTokenApprovalStatus() && isBothTokenSelected() ? (
-                <>
-                  Approved{" "}
-                  <CheckCircleIcon
-                    style={{ color: "#E0077D", marginLeft: 5 }}
-                    fontSize="small"
-                  />{" "}
-                </>
-              ) : dexLoading ? (
-                <CircularProgress
-                  style={{ color: "black" }}
-                  color="secondary"
-                  size={30}
-                />
-              ) : (
-                "Approve"
-              )}
-            </CustomButton>
-
-            <CustomButton
-              variant="primary"
-              // className={classes.addButton}
-              disabled={swapStatus.disabled | dexLoading || liquidityStatus}
-              onClick={handleSwapToken}
-            ></CustomButton>
-          </div> */}
-
-          {/* <CustomButton
-              variant="light"
-              className={classes.addButton}
-              onClick={
-                !approvedTokens[selectedToken1.symbol]
-                  ? handleConfirmAllowance
-                  : handleSwapToken
-              }
-              disabled={
-                !approvedTokens[selectedToken1.symbol]
-                  ? false
-                  : swapStatus.disabled
-              }
-            >
-              {!approvedTokens[selectedToken1.symbol]
-                ? `Approve ${selectedToken1.symbol} tokens`
-                : swapStatus.message}
-            </CustomButton> */}
         </div>
       </Card>
     </>
