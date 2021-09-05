@@ -281,12 +281,6 @@ const SwapCard = (props) => {
   };
 
   useEffect(async () => {
-    // if (selectedToken1.symbol && !approvedTokens[selectedToken1.symbol]) {
-    //   //skip approve check for eth
-    //   // return;
-    //   console.log("checking approval in swap");
-    //   await checkAllowance(selectedToken1, currentAccount, currentNetwork);
-    // }
     if (selectedToken1.symbol && selectedToken2.symbol) {
       // reset token input on token selection
 
@@ -302,7 +296,10 @@ const SwapCard = (props) => {
 
       if (!erc20Abi) {
         // load token abi if not loaded
-        erc20Abi = await fetchTokenAbi(erc20Token.address);
+        console.log("getting token abi", erc20Token);
+        erc20Abi = await fetchContractAbi(erc20Token.address, currentNetwork);
+
+        console.log("erc20 abi", erc20Abi);
         const abiData = {};
         abiData[`${erc20Token.symbol}`] = erc20Abi;
         store.dispatch({
@@ -366,13 +363,13 @@ const SwapCard = (props) => {
       );
 
       //   console.log("checking approval in swap");
-      // if (!currentTokenApprovalStatus()) {
-      await checkAllowance(
-        { ...selectedToken1, abi: erc20Abi },
-        currentAccount,
-        currentNetwork
-      );
-      // }
+      if (!currentTokenApprovalStatus()) {
+        await checkAllowance(
+          { ...selectedToken1, abi: erc20Abi },
+          currentAccount,
+          currentNetwork
+        );
+      }
     }
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
@@ -411,15 +408,22 @@ const SwapCard = (props) => {
     [] // will be created only once initially
   );
 
+  const getCurrentPairData = () => {
+    const pairData = { abi: currentPairAbi(), address: currentPairAddress() };
+    return pairData;
+  };
+
   const onToken1InputChange = async (tokens) => {
     setToken1Value(tokens);
 
     // calculate resetpective value of token 2 if selected
     let _token2Value = "";
-    if (selectedToken2.symbol && tokens) {
+    if (selectedToken2.symbol && new BigNumber(tokens).gt(0)) {
+      const pairData = getCurrentPairData();
       await debouncedGetLpBalance(
         selectedToken1,
         selectedToken2,
+        pairData,
         currentAccount,
         currentNetwork
       );
@@ -450,10 +454,12 @@ const SwapCard = (props) => {
 
     //calculate respective value of token1 if selected
     let _token1Value = "";
-    if (selectedToken1.symbol && tokens) {
+    if (selectedToken1.symbol && new BigNumber(tokens).gt(0)) {
+      const pairData = getCurrentPairData();
       await debouncedGetLpBalance(
         selectedToken1,
         selectedToken2,
+        pairData,
         currentAccount,
         currentNetwork
       );
@@ -506,7 +512,7 @@ const SwapCard = (props) => {
     const allowanceAmount = toWei("9999999999");
     await confirmAllowance(
       allowanceAmount,
-      selectedToken1,
+      { ...selectedToken1, abi: tokenData[selectedToken1.symbol] },
       currentAccount,
       currentNetwork
     );
