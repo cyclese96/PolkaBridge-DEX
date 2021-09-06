@@ -116,16 +116,17 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     width: "95%",
     textTransform: "none",
-    fontSize: 20,
+    fontSize: 19,
     borderRadius: 20,
     willChange: "transform",
     transition: "transform 450ms ease 0s",
     transform: "perspective(1px) translateZ(0px)",
-    padding: "10px 50px 10px 50px",
+    padding: "12px 50px 12px 50px",
     "&:hover": {
       background: "rgba(224, 7, 125, 0.7)",
     },
   },
+
   rotate1: {
     transform: "rotateZ(0deg)",
   },
@@ -344,7 +345,7 @@ const SwapCard = (props) => {
         setLiquidityStatus(true);
         setStatus({
           disabled: true,
-          message: "No Liquidity avialable for this pair",
+          message: "No liquidity available for this pair",
         });
         return;
       } else {
