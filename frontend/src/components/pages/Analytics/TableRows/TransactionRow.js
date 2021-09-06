@@ -62,6 +62,9 @@ const TransactionRow = (props) => {
         <TableCell align="right" className={classes.cellText}>
           {formatCurrency(row.tvl, true)}
         </TableCell>
+        <TableCell align="right" className={classes.cellText}>
+          3 mins ago
+        </TableCell>
       </TableRow>
     </>
   );
