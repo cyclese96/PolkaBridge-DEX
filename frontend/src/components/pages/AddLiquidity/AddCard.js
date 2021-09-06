@@ -206,7 +206,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     width: "95%",
     textTransform: "none",
-    fontSize: 20,
+    fontSize: 19,
     borderRadius: 20,
     willChange: "transform",
     transition: "transform 450ms ease 0s",
@@ -781,9 +781,7 @@ const AddCard = (props) => {
 
                 <div className={classes.feeSelectContainer}>
                   <div className={classes.feeSelectHeading}>
-                    <p
-                      className={classes.feeSelectHeadingP}
-                    >{`${currentPoolShare()}%`}</p>
+                    {`${currentPoolShare()}%`}
                   </div>
                   <span className={classes.feeSelectHeadingSpan}>
                     Share of pool

@@ -72,6 +72,9 @@ const Analytics = () => {
         <TopTokens tableType="TopPools" />
       </div>
       <div className={classes.tokenListHeading}>Transactions</div>
+      <div className={classes.tokenList}>
+        <TopTokens tableType="Transactions" />
+      </div>
     </div>
   );
 };

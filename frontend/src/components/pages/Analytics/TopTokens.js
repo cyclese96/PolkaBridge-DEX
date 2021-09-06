@@ -16,6 +16,8 @@ import TokenIcon from "../../common/TokenIcon";
 import { topPoolsData, topTokensData } from "./tableData";
 import TokenRow from "./TableRows/TokenRow";
 import PoolRow from "./TableRows/PoolRow";
+import TransactionRow from "./TableRows/TransactionRow";
+
 import { Card } from "@material-ui/core";
 
 function descendingComparator(a, b, orderBy) {
@@ -93,7 +95,7 @@ const headCells = {
       id: "type",
       numeric: false,
       disablePadding: true,
-      label: "#",
+      label: "#Token",
     },
     {
       id: "total_value",
@@ -403,6 +405,16 @@ const TopTokens = ({ tableType = "TopTokens" }) => {
     } else if (tableType === "TopPools") {
       return (
         <PoolRow
+          row={row}
+          classes={classes}
+          isItemSelected={isItemSelected}
+          labelId={labelId}
+          handleClick={handleClick}
+        />
+      );
+    } else {
+      return (
+        <TransactionRow
           row={row}
           classes={classes}
           isItemSelected={isItemSelected}
