@@ -22,6 +22,43 @@ export class TokenDefinition {
   static getStaticDefinitions(): Array<TokenDefinition> {
     let staticDefinitions = new Array<TokenDefinition>(6)
 
+    
+    // Add PBR
+    let tokenPBR = new TokenDefinition(
+      Address.fromString('0xf6c9FF0543f932178262DF8C81A12A3132129b51'),
+      'PBR',
+      'Polkabridge',
+      BigInt.fromI32(9)
+    )
+    staticDefinitions.push(tokenPBR)
+
+    // Add USDT
+    let tokenUSDT = new TokenDefinition(
+      Address.fromString('0x117e41ec3ec246873D69BFA5659B8eB209e687d8'),
+      'USDT',
+      'US Tether',
+      BigInt.fromI32(9)
+    )
+    staticDefinitions.push(tokenUSDT)
+
+    // Add USDT
+    let token1INCH = new TokenDefinition(
+      Address.fromString('0xcc521406C8F796169DCe1D10bDe6AaA60847FB63'),
+      '1INCH',
+      '1INCH Token',
+      BigInt.fromI32(9)
+    )
+    staticDefinitions.push(token1INCH)
+
+    // Add USDT
+    let token1ETH = new TokenDefinition(
+      Address.fromString('0xc778417e063141139fce010982780140aa0cd5ab'),
+      'ETH',
+      'Ethereum',
+      BigInt.fromI32(9)
+    )
+    staticDefinitions.push(token1ETH)
+
     // Add DGD
     let tokenDGD = new TokenDefinition(
       Address.fromString('0xe0b7927c4af23765cb51314a0e0521a9645f0e2a'),
