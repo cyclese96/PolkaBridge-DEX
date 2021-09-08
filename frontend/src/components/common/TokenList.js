@@ -18,6 +18,26 @@ const useStyles = makeStyles((theme) => ({
   tokenIcon: {
     height: 30,
     borderRadius: "50%",
+    [theme.breakpoints.down("sm")]: {
+      height: 25,
+    },
+  },
+  tokenTitle: {
+    padding: 0,
+    margin: 0,
+    color: "white",
+    fontSize: 15,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 13,
+    },
+  },
+  tokenSubtitle: {
+    color: "rgba(255, 255, 255, 0.7)",
+    fontWeight: 300,
+    fontSize: 12,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 11,
+    },
   },
 }));
 
@@ -45,23 +65,9 @@ const TokenList = ({
             <TokenIcon symbol={token.symbol} className={classes.tokenIcon} />
           </ListItemAvatar>
           <ListItemText
-            primary={
-              <p
-                style={{ padding: 0, margin: 0, color: "white", fontSize: 15 }}
-              >
-                {token.symbol}
-              </p>
-            }
+            primary={<p className={classes.tokenTitle}>{token.symbol}</p>}
             secondary={
-              <span
-                style={{
-                  color: "rgba(255, 255, 255, 0.7)",
-                  fontWeight: 300,
-                  fontSize: 12,
-                }}
-              >
-                {token.name}
-              </span>
+              <span className={classes.tokenSubtitle}>{token.name}</span>
             }
           />
         </ListItem>

@@ -140,6 +140,10 @@ const useHeadStyles = makeStyles((theme) => ({
     fontSize: 16,
     margin: 0,
     padding: 0,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 12,
+      width: 80,
+    },
   },
   sortIcons: {
     opacity: 1,
@@ -261,7 +265,7 @@ const useStyles = makeStyles((theme) => ({
     background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
     borderRadius: 15,
     [theme.breakpoints.down("sm")]: {
-      width: 370,
+      width: "92vw",
     },
   },
   paper: {
@@ -271,9 +275,9 @@ const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 750,
     background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
-
     [theme.breakpoints.down("sm")]: {
-      minWidth: 370,
+      minWidth: 200,
+      width: "90vw",
     },
   },
   visuallyHidden: {
@@ -294,6 +298,11 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     marginLeft: 6,
     marginRight: 6,
+    fontSize: 12,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 12,
+      width: 100,
+    },
   },
   cellTextSecondary: {
     color: "rgba( 255, 255, 255, 0.4 )",

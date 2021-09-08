@@ -4,13 +4,15 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     alignItems: "center",
-    marginTop: 200,
   },
   item: {
     marginLeft: 10,
     marginRight: 10,
-    [theme.breakpoints.down("xs")]: {
-      fontSize: 10,
+    fontSize: 13,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 9,
+      marginLeft: 5,
+      marginRight: 5,
     },
   },
 }));

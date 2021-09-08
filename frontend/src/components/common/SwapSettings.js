@@ -56,8 +56,10 @@ const useStyles = makeStyles((theme) => ({
     width: 320,
     height: 350,
     [theme.breakpoints.down("sm")]: {
-      width: 320,
-      height: 350,
+      width: 240,
+      height: "100%",
+
+      paddingBottom: 15,
     },
   },
   heading: {
@@ -96,7 +98,6 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     backgroundColor: "transparent",
-
     height: 40,
     width: "auto",
     borderColor: "rgba(255, 255, 255, 0.1)",
@@ -107,6 +108,19 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     outline: "none",
     padding: 10,
+    [theme.breakpoints.down("sm")]: {
+      width: 80,
+      padding: 7,
+      fontSize: 15,
+      height: "100%",
+    },
+  },
+  closeIcon: {
+    color: "#f6f6f6",
+    fontSize: 24,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 18,
+    },
   },
   settingRow: {
     display: "flex",
@@ -130,9 +144,11 @@ const useStyles = makeStyles((theme) => ({
     padding: 10,
     marginLeft: 2,
     marginRight: 5,
-
     "&:hover": {
       background: "rgba(255, 255, 255, 0.1)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      padding: 5,
     },
   },
   cardHeading: {
@@ -156,6 +172,10 @@ const useStyles = makeStyles((theme) => ({
     padding: "8px 50px 8px 50px",
     "&:hover": {
       background: "rgba(224, 7, 125, 0.7)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 14,
+      width: "80%",
     },
   },
 }));
@@ -249,7 +269,7 @@ const SwapSettings = ({
               onClick={() => handleClose()}
               style={{ margin: 0, padding: 0 }}
             >
-              <Close fontSize="default" style={{ color: "#f6f6f6" }} />
+              <Close fontSize="default" className={classes.closeIcon} />
             </IconButton>
           </div>
 

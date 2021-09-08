@@ -42,7 +42,7 @@ const BarChart = () => (
     options={state.options}
     series={state.series}
     type="bar"
-    width="120%"
+    width="100%"
   />
 );
 

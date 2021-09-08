@@ -65,8 +65,8 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 15,
     paddingBottom: 15,
     [theme.breakpoints.down("sm")]: {
-      paddingLeft: 0,
-      paddingRight: 0,
+      paddingLeft: 7,
+      paddingRight: 7,
       width: "100%",
     },
   },
@@ -94,7 +94,13 @@ const useStyles = makeStyles((theme) => ({
   },
   settingIcon: {
     color: "#f6f6f6",
+    color: "#f6f6f6",
+    fontSize: 22,
+    cursor: "pointer",
     transition: "all 0.4s ease",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 17,
+    },
   },
   iconButton: {
     margin: 0,
@@ -124,6 +130,9 @@ const useStyles = makeStyles((theme) => ({
     padding: "12px 50px 12px 50px",
     "&:hover": {
       background: "rgba(224, 7, 125, 0.7)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 14,
     },
   },
 
