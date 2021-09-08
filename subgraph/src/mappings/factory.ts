@@ -14,7 +14,7 @@ import {
   ZERO_BI,
 } from './helpers'
 
-export function handleNewPair(event: PairCreated): void {
+export function handlePairCreated(event: PairCreated): void {
 
   // add test entry on each event
   let test = new Test(event.transaction.hash.toHexString());
