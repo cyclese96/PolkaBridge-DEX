@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 import { log } from '@graphprotocol/graph-ts'
 import { PairCreated } from '../../generated/Factory/Factory'
-import { Bundle, Pair, Token, UniswapFactory, Test } from '../../generated/schema'
+import { Bundle, Pair, Token, PolkabridgeAmmFactory } from '../../generated/schema'
 import { Pair as PairTemplate } from '../../generated/templates'
 import {
   FACTORY_ADDRESS,
@@ -16,14 +16,10 @@ import {
 
 export function handlePairCreated(event: PairCreated): void {
 
-  // add test entry on each event
-  let test = new Test(event.transaction.hash.toHexString());
-  test.name = "pair created";
-  test.save()
   // load factory (create if first exchange)
-  let factory = UniswapFactory.load(FACTORY_ADDRESS)
+  let factory = PolkabridgeAmmFactory.load(FACTORY_ADDRESS)
   if (factory === null) {
-    factory = new UniswapFactory(FACTORY_ADDRESS)
+    factory = new PolkabridgeAmmFactory(FACTORY_ADDRESS)
     factory.pairCount = 0
     factory.totalVolumeETH = ZERO_BD
     factory.totalLiquidityETH = ZERO_BD

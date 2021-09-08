@@ -1,4 +1,4 @@
-type UniswapFactory @entity {
+type PolkabridgeAmmFactory @entity {
   # factory address
   id: ID!
 
@@ -54,10 +54,6 @@ type Token @entity {
   pairQuote: [Pair!]! @derivedFrom(field: "token1")
 }
 
-type Test @entity {
-  id: ID!
-  name: String!
-}
 
 type Pair @entity {
   # pair address
