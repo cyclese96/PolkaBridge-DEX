@@ -51,6 +51,17 @@ const useStyles = makeStyles((theme) => ({
   selectToken: {
     fontSize: 15,
     color: "white",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 12,
+    },
+  },
+  selectedToken: {
+    color: "white",
+    marginLeft: 5,
+    fontSize: 15,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 12,
+    },
   },
   dropIcon: {
     color: "#e5e5e5",
@@ -103,9 +114,7 @@ const SelectToken = ({
         {!selectedToken.symbol ? (
           <span className={classes.selectToken}>Select a token</span>
         ) : (
-          <span style={{ color: "white", marginLeft: 5, fontSize: 15 }}>
-            {selectedToken.symbol}
-          </span>
+          <span className={classes.selectedToken}>{selectedToken.symbol}</span>
         )}
         <ArrowDropDownIcon className={classes.dropIcon} />
       </span>

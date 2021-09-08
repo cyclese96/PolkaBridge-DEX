@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft: 0,
       paddingRight: 0,
       width: 290,
-      height: 100,
+      height: 80,
     },
   },
   cardContents: {
@@ -27,13 +27,18 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "space-evenly",
-    // paddingLeft: 10,
-    // paddingRight: 10,
+
     padding: 10,
+    [theme.breakpoints.down("sm")]: {
+      padding: 5,
+    },
   },
   labelFont: {
     fontSize: 14,
     color: "#e5e5e5",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 13,
+    },
   },
   labelRow: {
     display: "flex",
@@ -41,14 +46,18 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
   },
   inputRow: {
+    padding: 0,
+
     display: "flex",
     width: "95%",
     alignItems: "center",
     justifyContent: "space-between",
+    [theme.breakpoints.down("sm")]: {
+      marginTop: -10,
+    },
   },
   input: {
     backgroundColor: "transparent",
-
     borderColor: "transparent",
     fontSize: 22,
     color: "white",
@@ -56,6 +65,7 @@ const useStyles = makeStyles((theme) => ({
     outline: "none",
     [theme.breakpoints.down("sm")]: {
       maxWidth: 100,
+      fontSize: 18,
     },
   },
   token: {
@@ -83,6 +93,9 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
     marginLeft: 2,
     marginRight: 4,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 13,
+    },
   },
 }));
 

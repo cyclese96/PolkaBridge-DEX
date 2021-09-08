@@ -58,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: 20,
     paddingTop: 15,
     paddingBottom: 15,
+    marginBottom: 20,
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 0,
       paddingRight: 0,
@@ -86,6 +87,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+    [theme.breakpoints.down("sm")]: {
+      paddingTop: 0,
+    },
   },
   cardFeature: {
     marginTop: 10,
@@ -106,6 +110,10 @@ const useStyles = makeStyles((theme) => ({
   },
   settingIcon: {
     color: "#f6f6f6",
+    fontSize: 22,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 17,
+    },
   },
   addIcon: {
     color: "#f6f6f6",
@@ -154,8 +162,9 @@ const useStyles = makeStyles((theme) => ({
       background: "rgba(255, 255, 255, 0.1)",
     },
     [theme.breakpoints.down("sm")]: {
-      width: 100,
+      width: 90,
       padding: 2,
+      paddingLeft: 5,
       marginLeft: 2,
       marginRight: 2,
     },
@@ -168,6 +177,16 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 15,
     fontWeight: 500,
     color: "#e5e5e5",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 13,
+    },
+  },
+  feeSelectHeadingSpan: {
+    color: "#fce4ec",
+    fontSize: 11,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 10,
+    },
   },
   priceRangeCardContainer: {
     display: "flex",
@@ -177,10 +196,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 15,
   },
 
-  feeSelectHeadingSpan: {
-    color: "#fce4ec",
-    fontSize: 11,
-  },
   addButton: {
     height: 45,
     width: "90%",
@@ -190,11 +205,33 @@ const useStyles = makeStyles((theme) => ({
   clearButton: {
     color: "#E0077D",
     cursor: "pointer",
+    fontSize: 16,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 14,
+    },
+  },
+  title: {
+    paddingTop: 5,
+    fontSize: 16,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 14,
+    },
+  },
+  cardTitle: {
+    fontSize: 16,
+    color: "#bdbdbd",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 14,
+    },
   },
   hintStyle: {
     fontSize: 13,
     color: "#e5e5e5",
     marginTop: 20,
+    [theme.breakpoints.down("sm")]: {
+      marginTop: 10,
+      fontSize: 11,
+    },
   },
   iconButton: {
     margin: 0,
@@ -214,6 +251,10 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px 50px 10px 50px",
     "&:hover": {
       background: "rgba(224, 7, 125, 0.7)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      marginTop: 5,
+      fontSize: 13,
     },
   },
 }));
@@ -719,7 +760,7 @@ const AddCard = (props) => {
                 className={classes.settingIcon}
               />
             </IconButton>
-            <h6 style={{ paddingTop: 5 }}>Add Liquidity</h6>
+            <h6 className={classes.title}>Add Liquidity</h6>
             <IconButton
               onClick={handleSettings}
               style={{ margin: 0, padding: 0 }}
@@ -729,7 +770,7 @@ const AddCard = (props) => {
           </div>
 
           <div className={classes.cardFeature}>
-            <span style={{ color: "#bdbdbd" }}>Select pair</span>
+            <span className={classes.cardTitle}>Select pair</span>
             <span className={classes.clearButton} onClick={handleClearState}>
               Clear all
             </span>

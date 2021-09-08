@@ -30,14 +30,25 @@ import TabPage from "./TabPage";
 import { loadTokens } from "../actions/dexActions";
 
 const useStyles = makeStyles((theme) => ({
-  background: {
-    paddingTop: 80,
-    minHeight: "100vh",
+  navbar: {
+    position: "relative",
+    top: 0,
+  },
+  mainContent: {
     display: "flex",
+    justifyContent: "space-around",
     flexDirection: "column",
     alignItems: "center",
-    // backgroundColor: "#121827",
-    background: `linear-gradient(to bottom,#2D252D,#121827)`,
+  },
+  footer: {
+    position: "fixed",
+    bottom: 20,
+    width: "100vw",
+    display: "flex",
+    justifyContent: "center",
+  },
+  background: {
+    height: "90vh",
   },
 
   heading: {
@@ -159,13 +170,14 @@ const Home = ({
   }, []);
 
   return (
-    <div>
-      <section className="appbar-section">
-        <Navbar currentNetwork={currentNetwork} />
-      </section>
-
-      <div className={classes.background}>
+    <div style={{ overflowX: "hidden" }}>
+      <div className={classes.navbar}>
+        <Navbar />
+      </div>
+      <div className={classes.mainContent}>
         <TabPage />
+      </div>
+      <div className={classes.footer}>
         <Footer />
       </div>
     </div>

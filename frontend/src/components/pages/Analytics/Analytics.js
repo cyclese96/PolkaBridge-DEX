@@ -13,28 +13,23 @@ const Analytics = () => {
     <div>
       <p className={classes.heading}>PolkaBridge DEX Overview</p>
 
-      <div className="row">
+      <div className="row g-3">
         <div className="col-md-6">
           <Card elevation={10} className={classes.card}>
-            <div className={classes.cardContainer}>
-              <span className={classes.cardSpan}>Total value locked</span>
-              <p className={classes.cardP}>$1.4B</p>
+            <span className={classes.cardSpan}>Total value locked</span>
+            <p className={classes.cardP}>$1.4B</p>
 
-              <div className={classes.chart}>
-                <AreaChart />
-              </div>
+            <div className={classes.chart}>
+              <AreaChart />
             </div>
           </Card>
         </div>
         <div className="col-md-6">
           <Card elevation={10} className={classes.card}>
-            <div className={classes.cardContainer}>
-              <span className={classes.cardSpan}>Volume 24H</span>
-              <p className={classes.cardP}>$ 992M</p>
-
-              <div className={classes.chart}>
-                <BarChart />
-              </div>
+            <span className={classes.cardSpan}>Volume 24H</span>
+            <p className={classes.cardP}>$ 992M</p>
+            <div className={classes.chart}>
+              <BarChart />
             </div>
           </Card>
         </div>
@@ -75,6 +70,7 @@ const Analytics = () => {
       <div className={classes.tokenList}>
         <TopTokens tableType="Transactions" />
       </div>
+      <div className="mb-5"></div>
     </div>
   );
 };

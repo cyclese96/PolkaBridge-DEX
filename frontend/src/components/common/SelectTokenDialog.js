@@ -9,7 +9,7 @@ import CustomButton from "../Buttons/CustomButton";
 import TokenList from "./TokenList";
 import { importToken } from "../../actions/dexActions";
 import { connect } from "react-redux";
-import { CircularProgress, Divider } from "@material-ui/core";
+import { Button, CircularProgress, Divider } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 
 const styles = (theme) => ({
@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     width: 400,
     height: 600,
     [theme.breakpoints.down("sm")]: {
-      width: 320,
+      width: "75vw",
       height: 500,
     },
   },
@@ -62,14 +62,14 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 400,
     textAlign: "left",
     color: "#e5e5e5",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 16,
+    },
   },
   subheading: {
     fontSize: 12,
     fontWeight: 400,
     color: "#919191",
-  },
-  inputGroup: {
-    marginTop: 40,
   },
 
   notchedOutline: {
@@ -92,13 +92,12 @@ const useStyles = makeStyles((theme) => ({
     padding: 10,
     outline: "none",
     [theme.breakpoints.down("sm")]: {
-      height: 50,
+      height: 35,
+      fontSize: 13,
     },
   },
   buttons: {
     marginBottom: 7,
-    // marginTop: 80,
-    // marginBottom: 20,
   },
 
   numbers: {
@@ -108,6 +107,27 @@ const useStyles = makeStyles((theme) => ({
   },
   icon: {
     color: "#e5e5e5",
+  },
+  closeIcon: {
+    color: "#f6f6f6",
+    fontSize: 24,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 18,
+    },
+  },
+  cancelButton: {
+    backgroundColor: "#2C2F35",
+    color: "white",
+    width: "100%",
+    textTransform: "none",
+    fontSize: 17,
+    borderRadius: 20,
+
+    padding: "8px 50px 8px 50px",
+
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 14,
+    },
   },
 }));
 
@@ -195,7 +215,7 @@ const SelectTokenDialog = ({
           <div className={classes.heading}>Select a token</div>
           <div>
             <IconButton style={{ margin: 0, padding: 0 }}>
-              <Close onClick={onClose} className={classes.icon}></Close>
+              <Close onClick={onClose} className={classes.closeIcon}></Close>
             </IconButton>
           </div>
         </div>
@@ -233,9 +253,13 @@ const SelectTokenDialog = ({
         />
         {/* </FixedSizeList> */}
         <div className={classes.buttons}>
-          <CustomButton variant="light" onClick={onClose}>
+          <Button
+            variant="contained"
+            onClick={onClose}
+            className={classes.cancelButton}
+          >
             Cancel
-          </CustomButton>
+          </Button>
         </div>
       </div>
     </Dialog>

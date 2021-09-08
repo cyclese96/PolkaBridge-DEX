@@ -108,7 +108,11 @@ const useStyles = makeStyles((theme) => ({
   },
   settingIcon: {
     color: "#f6f6f6",
+    fontSize: 22,
     cursor: "pointer",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 17,
+    },
   },
   numbers: {
     color: "#E0077D",
@@ -180,6 +184,10 @@ const useStyles = makeStyles((theme) => ({
   clearButton: {
     color: "#E0077D",
     cursor: "pointer",
+    fontSize: 16,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 14,
+    },
   },
   inputWrapper: {
     marginTop: 10,
@@ -187,11 +195,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "start",
     width: "95%",
-    // background: ` linear-gradient(
-    //   to bottom right,
-    //   rgba(255, 255, 255, 0.1),
-    //   rgba(255, 255, 255, 0.02)
-    // )`,
+
     border: "1px solid #414141",
     borderRadius: 15,
     padding: 7,
@@ -208,7 +212,18 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 5,
     marginBlock: 15,
     [theme.breakpoints.down("sm")]: {
-      maxWidth: 100,
+      maxWidth: 170,
+      height: 45,
+      fontSize: 30,
+    },
+  },
+  percentageSymbol: {
+    fontSize: 20,
+    paddingTop: 20,
+    color: "#fce4ec",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 17,
+      paddingTop: 10,
     },
   },
   percentageBtnGrp: {
@@ -595,9 +610,7 @@ const RemoveCard = ({
                   placeholder="0.0"
                 />
               </div>
-              <div style={{ fontSize: 20, paddingTop: 20, color: "#fce4ec" }}>
-                %
-              </div>
+              <div className={classes.percentageSymbol}>%</div>
             </div>
 
             <div className={classes.percentageBtnGrp}>
@@ -705,7 +718,7 @@ const RemoveCard = ({
               </>
             )}
           </div>
-          <div className="d-flex mt-4">
+          <div className="d-flex ">
             <CustomButton
               variant="light"
               className={classes.approveBtn}
@@ -743,7 +756,7 @@ const RemoveCard = ({
         </div>
       </Card>
 
-      <div className="mt-4">
+      <div className="mt-4 mb-5">
         <Card elevation={20} className={classes.card}>
           <div className={classes.priceContainer}>
             {dexLoading ? (
