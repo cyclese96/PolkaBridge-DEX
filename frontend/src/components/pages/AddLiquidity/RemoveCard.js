@@ -1,34 +1,25 @@
 import {
   Card,
   CircularProgress,
-  Divider,
   IconButton,
   makeStyles,
 } from "@material-ui/core";
 import { connect } from "react-redux";
-import TuneIcon from "@material-ui/icons/Tune";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import { useEffect, useState } from "react";
 import SwapSettings from "../../common/SwapSettings";
 import etherImg from "../../../assets/ether.png";
 import bnbImg from "../../../assets/binance.png";
 import CustomButton from "../../Buttons/CustomButton";
-import SwapCardItem from "../../Cards/SwapCardItem";
-import AddIcon from "@material-ui/icons/Add";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import { ETH, etheriumNetwork, tokens } from "../../../constants";
 import {
-  fetchTokenAbi,
   formatCurrency,
   fromWei,
-  getPercentage,
   getPercentAmountWithFloor,
   getPriceRatio,
-  token1PerToken2,
-  token2PerToken1,
   toWei,
 } from "../../../utils/helper";
-import pbrIcon from "../../../assets/balance.png";
 import {
   checkLpAllowance,
   confirmLPAllowance,
@@ -364,8 +355,14 @@ const RemoveCard = ({
       )
     ) {
       return lpBalance[`${selectedToken1.symbol}_${selectedToken2.symbol}`];
-    } else {
+    } else if (
+      Object.keys(lpBalance).includes(
+        `${selectedToken2.symbol}_${selectedToken1.symbol}`
+      )
+    ) {
       return lpBalance[`${selectedToken2.symbol}_${selectedToken1.symbol}`];
+    } else {
+      return "0";
     }
   };
 
@@ -571,6 +568,20 @@ const RemoveCard = ({
     setLiquidityInputTemp(value);
   };
 
+  const priceRatio1 = () => {
+    return getPriceRatio(
+      poolReserves[selectedToken2.symbol],
+      poolReserves[selectedToken1.symbol]
+    );
+  };
+
+  const priceRatio2 = () => {
+    return getPriceRatio(
+      poolReserves[selectedToken1.symbol],
+      poolReserves[selectedToken2.symbol]
+    );
+  };
+
   return (
     <>
       <SwapSettings open={settingOpen} handleClose={close} />
@@ -690,16 +701,16 @@ const RemoveCard = ({
               <div className="d-flex justify-content-center">
                 <CircularProgress className={classes.spinner} size={30} />
               </div>
+            ) : new BigNumber(priceRatio1()).eq(0) ? (
+              <div className="d-flex justify-content-center">
+                <span>No liquidity avialable for selected pool</span>
+              </div>
             ) : (
               <>
                 <div className="d-flex justify-content-between">
                   <span>Price:</span>
                   <span>
-                    1 {selectedToken1.symbol} ={" "}
-                    {getPriceRatio(
-                      poolReserves[selectedToken2.symbol],
-                      poolReserves[selectedToken1.symbol]
-                    )}{" "}
+                    1 {selectedToken1.symbol} = {priceRatio1}{" "}
                     {selectedToken2.symbol}
                   </span>
                 </div>
@@ -707,11 +718,7 @@ const RemoveCard = ({
                   <span></span>
                   <span>
                     {" "}
-                    1 {selectedToken2.symbol} ={" "}
-                    {getPriceRatio(
-                      poolReserves[selectedToken1.symbol],
-                      poolReserves[selectedToken2.symbol]
-                    )}{" "}
+                    1 {selectedToken2.symbol} = {priceRatio2()}{" "}
                     {selectedToken1.symbol}
                   </span>
                 </div>
@@ -722,7 +729,11 @@ const RemoveCard = ({
             <CustomButton
               variant="light"
               className={classes.approveBtn}
-              disabled={dexLoading || currentLpApproved()}
+              disabled={
+                dexLoading ||
+                currentLpApproved() ||
+                new BigNumber(currentLpBalance()).eq(0)
+              }
               onClick={handleConfirmAllowance}
             >
               {currentLpApproved() ? (

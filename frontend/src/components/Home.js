@@ -1,6 +1,5 @@
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import React, { useEffect } from "react";
-import { Avatar, CircularProgress } from "@material-ui/core";
 
 import Navbar from "./common/Navbar";
 import Footer from "./common/Footer";
@@ -12,8 +11,6 @@ import store from "../store";
 import {
   bscConfig,
   bscNetwork,
-  defaultSlippage,
-  defaultTransactionDeadline,
   etherConfig,
   etheriumNetwork,
   supportedNetworks,
@@ -172,7 +169,7 @@ const Home = ({
   return (
     <div style={{ overflowX: "hidden" }}>
       <div className={classes.navbar}>
-        <Navbar />
+        <Navbar currentNetwork={currentNetwork} />
       </div>
       <div className={classes.mainContent}>
         <TabPage />
