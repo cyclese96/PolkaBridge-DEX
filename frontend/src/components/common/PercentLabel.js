@@ -5,13 +5,22 @@ import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 const useStyles = makeStyles((theme) => ({
   statPercentageGreen: {
     color: "#4caf50",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 14,
+    },
   },
   statPercentageRed: {
     color: "#ff1744",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 14,
+    },
   },
   arrowIcon: {
     margin: 0,
     padding: 0,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 14,
+    },
   },
   label: {
     display: "inline-flex",

@@ -37,6 +37,7 @@ const TokenRow = (props) => {
         tabIndex={-1}
         key={row.id}
         selected={isItemSelected}
+        style={{ borderBottom: "1.5px solid #212121" }}
         className={classes.tableDesktop}
       >
         <TableCell padding="checkbox"></TableCell>
@@ -45,7 +46,7 @@ const TokenRow = (props) => {
           <TokenIcon symbol={row.symbol} className={classes.tokenIcon} />
           <span className={classes.cellText}>{row.name} </span>
           <small className={classes.cellTextSecondary}>
-            {"( " + row.symbol + " )"}
+            {"(" + row.symbol + ")"}
           </small>
         </TableCell>
         <TableCell align="right">

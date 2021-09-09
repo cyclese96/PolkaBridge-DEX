@@ -16,6 +16,9 @@ import TokenIcon from "../../common/TokenIcon";
 import { topPoolsData, topTokensData } from "./tableData";
 import TokenRow from "./TableRows/TokenRow";
 import PoolRow from "./TableRows/PoolRow";
+import TransactionRow from "./TableRows/TransactionRow";
+
+import { Card } from "@material-ui/core";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -92,7 +95,7 @@ const headCells = {
       id: "type",
       numeric: false,
       disablePadding: true,
-      label: "#",
+      label: "#Token",
     },
     {
       id: "total_value",
@@ -133,9 +136,14 @@ const headCellMobile = [
 
 const useHeadStyles = makeStyles((theme) => ({
   headStyle: {
-    color: "rgba(255,255,255,0.5)",
+    color: "#bdbdbd",
+    fontSize: 16,
     margin: 0,
     padding: 0,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 12,
+      width: 80,
+    },
   },
   sortIcons: {
     opacity: 1,
@@ -251,10 +259,13 @@ EnhancedTableHead.propTypes = {
 };
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  card: {
     width: "100%",
+    border: "1px solid #616161",
+    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    borderRadius: 15,
     [theme.breakpoints.down("sm")]: {
-      width: 370,
+      width: "92vw",
     },
   },
   paper: {
@@ -263,8 +274,10 @@ const useStyles = makeStyles((theme) => ({
   },
   table: {
     minWidth: 750,
+    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
     [theme.breakpoints.down("sm")]: {
-      minWidth: 370,
+      minWidth: 200,
+      width: "90vw",
     },
   },
   visuallyHidden: {
@@ -285,6 +298,11 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     marginLeft: 6,
     marginRight: 6,
+    fontSize: 12,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 12,
+      width: 100,
+    },
   },
   cellTextSecondary: {
     color: "rgba( 255, 255, 255, 0.4 )",
@@ -403,65 +421,76 @@ const TopTokens = ({ tableType = "TopTokens" }) => {
           handleClick={handleClick}
         />
       );
+    } else {
+      return (
+        <TransactionRow
+          row={row}
+          classes={classes}
+          isItemSelected={isItemSelected}
+          labelId={labelId}
+          handleClick={handleClick}
+        />
+      );
     }
   };
   return (
-    <div className={classes.root}>
-      <div className="card-theme">
-        {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
-        <TableContainer>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            size="medium"
-            aria-label="enhanced table"
-          >
-            <EnhancedTableHead
-              classes={classes}
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows(tableType).length}
-              tableType={tableType}
-            />
-            <TableBody>
-              {stableSort(rows(tableType), getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+    <Card className={classes.card}>
+      <TableContainer>
+        <Table
+          className={classes.table}
+          aria-labelledby="tableTitle"
+          size="medium"
+          aria-label="enhanced table"
+        >
+          <EnhancedTableHead
+            classes={classes}
+            numSelected={selected.length}
+            order={order}
+            orderBy={orderBy}
+            onSelectAllClick={handleSelectAllClick}
+            onRequestSort={handleRequestSort}
+            rowCount={rows(tableType).length}
+            tableType={tableType}
+          />
+          <TableBody>
+            {stableSort(rows(tableType), getComparator(order, orderBy))
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row, index) => {
+                const isItemSelected = isSelected(row.name);
+                const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return currenTokenRow(
-                    tableType,
-                    row,
-                    classes,
-                    isItemSelected,
-                    labelId,
-                    handleClick
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows(tableType).length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          style={{ color: "#E0077D" }}
-        />
-      </div>
-    </div>
+                return currenTokenRow(
+                  tableType,
+                  row,
+                  classes,
+                  isItemSelected,
+                  labelId,
+                  handleClick
+                );
+              })}
+            {emptyRows > 0 && (
+              <TableRow
+                style={{
+                  height: 53 * emptyRows,
+                }}
+              >
+                <TableCell colSpan={6} />
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={rows(tableType).length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        style={{ color: "#E0077D" }}
+      />
+    </Card>
   );
 };
 

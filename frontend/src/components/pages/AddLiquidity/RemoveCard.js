@@ -1,28 +1,25 @@
-import { CircularProgress, makeStyles } from "@material-ui/core";
+import {
+  Card,
+  CircularProgress,
+  IconButton,
+  makeStyles,
+} from "@material-ui/core";
 import { connect } from "react-redux";
-import TuneIcon from "@material-ui/icons/Tune";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import { useEffect, useState } from "react";
 import SwapSettings from "../../common/SwapSettings";
 import etherImg from "../../../assets/ether.png";
 import bnbImg from "../../../assets/binance.png";
 import CustomButton from "../../Buttons/CustomButton";
-import SwapCardItem from "../../Cards/SwapCardItem";
-import AddIcon from "@material-ui/icons/Add";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import { ETH, etheriumNetwork, tokens } from "../../../constants";
 import {
-  fetchTokenAbi,
   formatCurrency,
   fromWei,
-  getPercentage,
   getPercentAmountWithFloor,
   getPriceRatio,
-  token1PerToken2,
-  token2PerToken1,
   toWei,
 } from "../../../utils/helper";
-import pbrIcon from "../../../assets/balance.png";
 import {
   checkLpAllowance,
   confirmLPAllowance,
@@ -43,10 +40,17 @@ import {
 import { RESET_POOL_DATA, SET_TOKEN_ABI } from "../../../actions/types";
 import store from "../../../store";
 import { fetchContractAbi } from "../../../utils/httpUtils";
+import { Settings } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    width: 450,
+    width: 500,
+    borderRadius: 15,
+    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 15,
+    paddingBottom: 15,
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 0,
       paddingRight: 0,
@@ -57,7 +61,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: 15,
   },
   avatar: {
     zIndex: 2,
@@ -71,12 +74,20 @@ const useStyles = makeStyles((theme) => ({
     height: 160,
   },
   cardHeading: {
+    paddingTop: 5,
     display: "flex",
     width: "95%",
     alignItems: "center",
     justifyContent: "space-between",
-    marginTop: 10,
+
     marginBottom: 2,
+  },
+  cardFeature: {
+    paddingLeft: 10,
+    width: "95%",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   cardSubHeading: {
     display: "flex",
@@ -88,7 +99,11 @@ const useStyles = makeStyles((theme) => ({
   },
   settingIcon: {
     color: "#f6f6f6",
+    fontSize: 22,
     cursor: "pointer",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 17,
+    },
   },
   numbers: {
     color: "#E0077D",
@@ -160,44 +175,61 @@ const useStyles = makeStyles((theme) => ({
   clearButton: {
     color: "#E0077D",
     cursor: "pointer",
+    fontSize: 16,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 14,
+    },
   },
   inputWrapper: {
+    marginTop: 10,
     display: "flex",
     flexDirection: "column",
     alignItems: "start",
-    width: "90%",
-    border: "0.1px solid rgba(255, 255, 255, 0.1)",
-    borderRadius: 10,
+    width: "95%",
+
+    border: "1px solid #414141",
+    borderRadius: 15,
     padding: 7,
-    // padding: 15,
   },
   input: {
     backgroundColor: "transparent",
-    borderRadius: 5,
+    maxWidth: 240,
     height: 50,
+    textAlign: "right",
     borderColor: "transparent",
     fontSize: 50,
     color: "white",
-    maxWidth: 150,
+    outline: "none",
     marginTop: 5,
     marginBlock: 15,
     [theme.breakpoints.down("sm")]: {
-      maxWidth: 100,
+      maxWidth: 170,
+      height: 45,
+      fontSize: 30,
+    },
+  },
+  percentageSymbol: {
+    fontSize: 20,
+    paddingTop: 20,
+    color: "#fce4ec",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 17,
+      paddingTop: 10,
     },
   },
   percentageBtnGrp: {
     display: "flex",
-    justifyContent: "space-between",
-    width: "80%",
+    justifyContent: "space-around",
+    width: "100%",
     marginBottom: 10,
   },
   percentInputBtn: {
     color: "#E0077D",
     cursor: "pointer",
     border: "0.1px solid rgba(255, 255, 255, 0.1)",
-    borderRadius: 10,
-    padding: 7,
-    marginLeft: 2,
+    borderRadius: 15,
+    padding: "5px 15px 5px 15px",
+    marginLeft: 5,
     marginRight: 5,
     "&:hover": {
       background: "rgba(255, 255, 255, 0.1)",
@@ -207,19 +239,22 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "space-between",
-    width: "90%",
+    width: "95%",
     border: "0.1px solid rgba(255, 255, 255, 0.1)",
-    borderRadius: 10,
+    borderRadius: 15,
     padding: 15,
   },
   tokenIcon: {
     width: "auto",
     height: 20,
     marginRight: 2,
+    borderRadius: "50%",
   },
   priceContainer: {
-    width: "90%",
+    width: "95%",
     padding: 15,
+    color: "#bdbdbd",
+    fontSize: 13,
   },
   spinner: {
     color: "#E0077D",
@@ -320,8 +355,14 @@ const RemoveCard = ({
       )
     ) {
       return lpBalance[`${selectedToken1.symbol}_${selectedToken2.symbol}`];
-    } else {
+    } else if (
+      Object.keys(lpBalance).includes(
+        `${selectedToken2.symbol}_${selectedToken1.symbol}`
+      )
+    ) {
       return lpBalance[`${selectedToken2.symbol}_${selectedToken1.symbol}`];
+    } else {
+      return "0";
     }
   };
 
@@ -527,39 +568,50 @@ const RemoveCard = ({
     setLiquidityInputTemp(value);
   };
 
+  const priceRatio1 = () => {
+    return getPriceRatio(
+      poolReserves[selectedToken2.symbol],
+      poolReserves[selectedToken1.symbol]
+    );
+  };
+
+  const priceRatio2 = () => {
+    return getPriceRatio(
+      poolReserves[selectedToken1.symbol],
+      poolReserves[selectedToken2.symbol]
+    );
+  };
+
   return (
     <>
       <SwapSettings open={settingOpen} handleClose={close} />
-      <div className={classes.card}>
-        <div className="card-theme">
-          <div className={classes.cardContents}>
-            <div className={classes.cardHeading}>
+      <Card elevation={20} className={classes.card}>
+        <div className={classes.cardContents}>
+          <div className={classes.cardHeading}>
+            <IconButton onClick={handleBack} style={{ margin: 0, padding: 0 }}>
               <KeyboardBackspaceIcon
                 fontSize="default"
-                onClick={handleBack}
                 className={classes.settingIcon}
               />
-              <p>Remove Liquidity</p>
-              <TuneIcon
-                fontSize="default"
-                onClick={handleSettings}
-                className={classes.settingIcon}
-              />
+            </IconButton>
+            <h6 style={{ paddingTop: 5 }}>Remove Liquidity</h6>
+            <IconButton
+              onClick={handleSettings}
+              style={{ margin: 0, padding: 0 }}
+            >
+              <Settings fontSize="default" className={classes.settingIcon} />
+            </IconButton>
+          </div>
+
+          <div className={classes.inputWrapper}>
+            <div className={classes.cardFeature}>
+              <span style={{ color: "#bdbdbd" }}>Amount</span>
+              <span className={classes.clearButton} onClick={handleClearState}>
+                Clear
+              </span>
             </div>
 
-            <div className={classes.inputWrapper}>
-              <div className={classes.cardHeading}>
-                <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
-                  Amount
-                </span>
-                <span
-                  className={classes.clearButton}
-                  onClick={handleClearState}
-                >
-                  Clear
-                </span>
-              </div>
-
+            <div className="d-flex justify-content-center align-items-center">
               <div>
                 <input
                   type="text"
@@ -568,59 +620,60 @@ const RemoveCard = ({
                   value={liquidityInputTemp}
                   placeholder="0.0"
                 />
-                <span style={{ fontSize: 50 }}>%</span>
               </div>
-
-              <div className={classes.percentageBtnGrp}>
-                <span
-                  className={classes.percentInputBtn}
-                  onClick={() => handleInputChange("25")}
-                >
-                  25%
-                </span>
-                <span
-                  className={classes.percentInputBtn}
-                  onClick={() => handleInputChange("50")}
-                >
-                  50%
-                </span>
-                <span
-                  className={classes.percentInputBtn}
-                  onClick={() => handleInputChange("75")}
-                >
-                  75%
-                </span>
-                <span
-                  className={classes.percentInputBtn}
-                  onClick={() => handleInputChange("100")}
-                >
-                  Max
-                </span>
-              </div>
+              <div className={classes.percentageSymbol}>%</div>
             </div>
 
-            <div className="mt-2 mb-2">
-              <ArrowDownwardIcon />
+            <div className={classes.percentageBtnGrp}>
+              <span
+                className={classes.percentInputBtn}
+                onClick={() => handleInputChange("25")}
+              >
+                25%
+              </span>
+              <span
+                className={classes.percentInputBtn}
+                onClick={() => handleInputChange("50")}
+              >
+                50%
+              </span>
+              <span
+                className={classes.percentInputBtn}
+                onClick={() => handleInputChange("75")}
+              >
+                75%
+              </span>
+              <span
+                className={classes.percentInputBtn}
+                onClick={() => handleInputChange("100")}
+              >
+                Max
+              </span>
             </div>
+          </div>
 
-            <div className={classes.pairDetail}>
-              <div className="d-flex justify-content-between">
-                <div className="d-flex">
-                  <SelectToken
-                    selectedToken={selectedToken1}
-                    disableToken={selectedToken2}
-                    handleTokenSelected={onToken1Select}
-                  />
-                </div>
-                <div className="d-flex">
-                  <SelectToken
-                    selectedToken={selectedToken2}
-                    disableToken={selectedToken1}
-                    handleTokenSelected={onToken2Select}
-                  />
-                </div>
+          <div className="mt-2 mb-2">
+            <ArrowDownwardIcon style={{ color: "#bdbdbd" }} />
+          </div>
+
+          <div className={classes.pairDetail}>
+            <div className="d-flex justify-content-between">
+              <div className="d-flex">
+                <SelectToken
+                  selectedToken={selectedToken1}
+                  disableToken={selectedToken2}
+                  handleTokenSelected={onToken1Select}
+                />
               </div>
-              {/* <div className="d-flex justify-content-between mt-2">
+              <div className="d-flex">
+                <SelectToken
+                  selectedToken={selectedToken2}
+                  disableToken={selectedToken1}
+                  handleTokenSelected={onToken2Select}
+                />
+              </div>
+            </div>
+            {/* <div className="d-flex justify-content-between mt-2">
                 <div>
                   <h5></h5>
                 </div>
@@ -638,125 +691,124 @@ const RemoveCard = ({
                   <h5>{selectedToken2.symbol}</h5>
                 </div>
               </div>  */}
-              <div className="d-flex justify-content-end mb-1">
-                {/* <span className={classes.clearButton}>Receive WETH</span> */}
+            <div className="d-flex justify-content-end mb-1">
+              {/* <span className={classes.clearButton}>Receive WETH</span> */}
+            </div>
+          </div>
+
+          <div className={classes.priceContainer}>
+            {dexLoading ? (
+              <div className="d-flex justify-content-center">
+                <CircularProgress className={classes.spinner} size={30} />
               </div>
-            </div>
+            ) : new BigNumber(priceRatio1()).eq(0) ? (
+              <div className="d-flex justify-content-center">
+                <span>No liquidity avialable for selected pool</span>
+              </div>
+            ) : (
+              <>
+                <div className="d-flex justify-content-between">
+                  <span>Price:</span>
+                  <span>
+                    1 {selectedToken1.symbol} = {priceRatio1}{" "}
+                    {selectedToken2.symbol}
+                  </span>
+                </div>
+                <div className="d-flex justify-content-between">
+                  <span></span>
+                  <span>
+                    {" "}
+                    1 {selectedToken2.symbol} = {priceRatio2()}{" "}
+                    {selectedToken1.symbol}
+                  </span>
+                </div>
+              </>
+            )}
+          </div>
+          <div className="d-flex ">
+            <CustomButton
+              variant="light"
+              className={classes.approveBtn}
+              disabled={
+                dexLoading ||
+                currentLpApproved() ||
+                new BigNumber(currentLpBalance()).eq(0)
+              }
+              onClick={handleConfirmAllowance}
+            >
+              {currentLpApproved() ? (
+                <>
+                  Approved{" "}
+                  <CheckCircleIcon
+                    style={{ color: "#E0077D", marginLeft: 5 }}
+                    fontSize="small"
+                  />{" "}
+                </>
+              ) : dexLoading ? (
+                <CircularProgress className={classes.spinner} size={30} />
+              ) : (
+                "Approve"
+              )}
+            </CustomButton>
+            <CustomButton
+              variant="primary"
+              className={classes.removeBtn}
+              disabled={
+                dexLoading ||
+                !currentLpApproved() ||
+                new BigNumber(currentLpBalance()).eq(0) ||
+                new BigNumber(liquidityPercent).eq(0)
+              }
+              onClick={handleRemoveLiquidity}
+            >
+              Remove
+            </CustomButton>
+          </div>
+        </div>
+      </Card>
 
-            <div className={classes.priceContainer}>
-              {dexLoading ? (
+      <div className="mt-4 mb-5">
+        <Card elevation={20} className={classes.card}>
+          <div className={classes.priceContainer}>
+            {dexLoading ? (
+              <div className="d-flex justify-content-center pt-2 pb-2">
+                <CircularProgress className={classes.spinner} size={30} />
+              </div>
+            ) : (
+              <>
                 <div className="d-flex justify-content-center">
-                  <CircularProgress className={classes.spinner} size={30} />
+                  <div style={{ fontSize: 15, textAlign: "center" }}>
+                    Your Position
+                  </div>
                 </div>
-              ) : (
-                <>
-                  <div className="d-flex justify-content-between">
-                    <span>Price:</span>
-                    <span>
-                      1 {selectedToken1.symbol} ={" "}
-                      {getPriceRatio(
-                        poolReserves[selectedToken2.symbol],
-                        poolReserves[selectedToken1.symbol]
-                      )}{" "}
-                      {selectedToken2.symbol}
-                    </span>
-                  </div>
-                  <div className="d-flex justify-content-between">
-                    <span></span>
-                    <span>
-                      {" "}
-                      1 {selectedToken2.symbol} ={" "}
-                      {getPriceRatio(
-                        poolReserves[selectedToken1.symbol],
-                        poolReserves[selectedToken2.symbol]
-                      )}{" "}
-                      {selectedToken1.symbol}
-                    </span>
-                  </div>
-                </>
-              )}
-            </div>
-            <div className="d-flex mt-4">
-              <CustomButton
-                variant="light"
-                className={classes.approveBtn}
-                disabled={dexLoading || currentLpApproved()}
-                onClick={handleConfirmAllowance}
-              >
-                {currentLpApproved() ? (
-                  <>
-                    Approved{" "}
-                    <CheckCircleIcon
-                      style={{ color: "#E0077D", marginLeft: 5 }}
-                      fontSize="small"
-                    />{" "}
-                  </>
-                ) : dexLoading ? (
-                  <CircularProgress className={classes.spinner} size={30} />
-                ) : (
-                  "Approve"
-                )}
-              </CustomButton>
-              <CustomButton
-                variant="primary"
-                className={classes.removeBtn}
-                disabled={
-                  dexLoading ||
-                  !currentLpApproved() ||
-                  new BigNumber(currentLpBalance()).eq(0) ||
-                  new BigNumber(liquidityPercent).eq(0)
-                }
-                onClick={handleRemoveLiquidity}
-              >
-                Remove
-              </CustomButton>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div className="mt-4">
-        <div className={classes.card}>
-          <div className="card-theme2">
-            <div className={classes.priceContainer}>
-              {dexLoading ? (
-                <div className="d-flex justify-content-center pt-2 pb-2">
-                  <CircularProgress className={classes.spinner} size={30} />
+                <div className="d-flex justify-content-between my-2">
+                  <div>
+                    <img
+                      className={classes.tokenIcon}
+                      src={tokenThumbnail(selectedToken1.symbol)}
+                      alt={""}
+                    />
+                    <img
+                      className={classes.tokenIcon}
+                      src={tokenThumbnail(selectedToken2.symbol)}
+                      alt={""}
+                    />
+                    <span>
+                      {selectedToken1.symbol}/{selectedToken2.symbol}{" "}
+                      {`( LP tokens )`}
+                    </span>
+                  </div>
+                  <span>{formatCurrency(fromWei(currentLpBalance()))}</span>
                 </div>
-              ) : (
-                <>
-                  <div className="d-flex justify-content-between">
-                    <span>Your Position</span>
-                    <span></span>
-                  </div>
-                  <div className="d-flex justify-content-between mt-2 mb-2">
-                    <div>
-                      <img
-                        className={classes.tokenIcon}
-                        src={tokenThumbnail(selectedToken1.symbol)}
-                        alt={""}
-                      />
-                      <img
-                        className={classes.tokenIcon}
-                        src={tokenThumbnail(selectedToken2.symbol)}
-                        alt={""}
-                      />
-                      <span>
-                        {selectedToken1.symbol}/{selectedToken2.symbol}{" "}
-                        {`( LP tokens )`}
-                      </span>
-                    </div>
-                    <span>{formatCurrency(fromWei(currentLpBalance()))}</span>
-                  </div>
-                  <div className="d-flex justify-content-between mt-1 mb-1">
-                    <span>Your pool share:</span>
-                    <span>{poolShare} %</span>
-                  </div>
-                </>
-              )}
-            </div>
+                <div className="d-flex justify-content-between mt-3 mb-3">
+                  <div>Your pool share:</div>
+                  <div>{poolShare}%</div>
+                </div>
+              </>
+            )}
           </div>
-        </div>
+        </Card>
       </div>
     </>
   );

@@ -1,27 +1,25 @@
-import { CircularProgress, makeStyles } from "@material-ui/core";
-import supply from "../../assets/supply.png";
+import { Card, CircularProgress, makeStyles } from "@material-ui/core";
 import { fromWei, formatCurrency } from "../../utils/helper";
-import biteImg from "../../assets/bite.png";
-import corgibImg from "../../assets/corgi.png";
-import pwarImg from "../../assets/pwar.png";
 import { connect } from "react-redux";
-import binanceIcon from "../../assets/binance.png";
-import pbrIcon from "../../assets/balance.png";
-import { useState } from "react";
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import SelectTokenDialog from "../common/SelectTokenDialog";
 import SelectToken from "../common/SelectToken";
-import etherImg from "../../assets/ether.png";
 
 const useStyles = makeStyles((theme) => ({
   card: {
     width: 440,
     height: 100,
+    background: ` linear-gradient(
+      to bottom right,
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.02)
+    )`,
+    border: "1px solid #414141",
+
+    borderRadius: 15,
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 0,
       paddingRight: 0,
       width: 290,
-      height: 100,
+      height: 80,
     },
   },
   cardContents: {
@@ -29,34 +27,45 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "space-evenly",
-    // paddingLeft: 10,
-    // paddingRight: 10,
+
     padding: 10,
+    [theme.breakpoints.down("sm")]: {
+      padding: 5,
+    },
   },
   labelFont: {
     fontSize: 14,
+    color: "#e5e5e5",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 13,
+    },
   },
   labelRow: {
     display: "flex",
-    width: "90%",
+    width: "95%",
     justifyContent: "space-between",
   },
   inputRow: {
+    padding: 0,
+
     display: "flex",
-    width: "90%",
+    width: "95%",
     alignItems: "center",
     justifyContent: "space-between",
+    [theme.breakpoints.down("sm")]: {
+      marginTop: -10,
+    },
   },
   input: {
     backgroundColor: "transparent",
-    borderRadius: 5,
-    height: 33,
     borderColor: "transparent",
-    fontSize: 20,
+    fontSize: 22,
     color: "white",
     maxWidth: 200,
+    outline: "none",
     [theme.breakpoints.down("sm")]: {
       maxWidth: 100,
+      fontSize: 18,
     },
   },
   token: {
@@ -84,6 +93,9 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
     marginLeft: 2,
     marginRight: 4,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 13,
+    },
   },
 }));
 
@@ -110,44 +122,42 @@ const SwapCardItem = (props) => {
 
   return (
     <>
-      <div className={classes.card}>
-        <div className="card-item-theme">
-          <div className={classes.cardContents}>
-            <div className={classes.labelRow}>
-              {inputType ? (
-                <p className={classes.labelFont} hidden={inputType === null}>
-                  {inputType === "from" ? "From:" : "To:"}
-                </p>
-              ) : (
-                ""
-              )}
-              <p className={classes.labelFont}>
-                Balance:
-                {" " + formatCurrency(fromWei(balance[currentToken.symbol]))}
+      <Card elevation={1} className={classes.card}>
+        <div className={classes.cardContents}>
+          <div className={classes.labelRow}>
+            {inputType ? (
+              <p className={classes.labelFont} hidden={inputType === null}>
+                {inputType === "from" ? "From:" : "To:"}
               </p>
-            </div>
-            <div className={classes.inputRow}>
-              <input
-                type="text"
-                className={classes.input}
-                onChange={handleInputChange}
-                value={inputValue}
-                placeholder="0.0"
-              />
+            ) : (
+              ""
+            )}
+            <p className={classes.labelFont}>
+              Balance:
+              {" " + formatCurrency(fromWei(balance[currentToken.symbol]))}
+            </p>
+          </div>
+          <div className={classes.inputRow}>
+            <input
+              type="text"
+              className={classes.input}
+              onChange={handleInputChange}
+              value={inputValue}
+              placeholder="0.0"
+            />
 
-              <span className={classes.maxButton} onClick={handleMax}>
-                Max
-              </span>
+            <span className={classes.maxButton} onClick={handleMax}>
+              Max
+            </span>
 
-              <SelectToken
-                selectedToken={currentToken}
-                disableToken={disableToken}
-                handleTokenSelected={onTokenChange}
-              />
-            </div>
+            <SelectToken
+              selectedToken={currentToken}
+              disableToken={disableToken}
+              handleTokenSelected={onTokenChange}
+            />
           </div>
         </div>
-      </div>
+      </Card>
     </>
   );
 };

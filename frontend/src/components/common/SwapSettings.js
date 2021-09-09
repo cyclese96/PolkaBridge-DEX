@@ -12,6 +12,8 @@ import CustomToolTip from "./CustomToolTip";
 import store from "../../store";
 import { UPDATE_SETTINGS } from "../../actions/types";
 import { defaultSlippage, defaultTransactionDeadline } from "../../constants";
+import { Close } from "@material-ui/icons";
+import { Button } from "@material-ui/core";
 
 const styles = (theme) => ({
   root: {
@@ -54,8 +56,10 @@ const useStyles = makeStyles((theme) => ({
     width: 320,
     height: 350,
     [theme.breakpoints.down("sm")]: {
-      width: 320,
-      height: 350,
+      width: 240,
+      height: "100%",
+
+      paddingBottom: 15,
     },
   },
   heading: {
@@ -94,14 +98,29 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     backgroundColor: "transparent",
-    borderRadius: 5,
-    height: 30,
+    height: 40,
     width: "auto",
     borderColor: "rgba(255, 255, 255, 0.1)",
     borderRadius: 10,
+    borderWidth: "1px",
     fontSize: 18,
     width: 150,
     color: "white",
+    outline: "none",
+    padding: 10,
+    [theme.breakpoints.down("sm")]: {
+      width: 80,
+      padding: 7,
+      fontSize: 15,
+      height: "100%",
+    },
+  },
+  closeIcon: {
+    color: "#f6f6f6",
+    fontSize: 24,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 18,
+    },
   },
   settingRow: {
     display: "flex",
@@ -122,11 +141,41 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
     border: "0.1px solid rgba(255, 255, 255, 0.1)",
     borderRadius: 10,
-    padding: 7,
+    padding: 10,
     marginLeft: 2,
     marginRight: 5,
     "&:hover": {
       background: "rgba(255, 255, 255, 0.1)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      padding: 5,
+    },
+  },
+  cardHeading: {
+    paddingTop: 15,
+    width: "85%",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  applyButton: {
+    marginTop: 20,
+    backgroundColor: "rgba(224, 7, 125, 0.9)",
+    color: "white",
+    width: "90%",
+    textTransform: "none",
+    fontSize: 17,
+    borderRadius: 20,
+    willChange: "transform",
+    transition: "transform 450ms ease 0s",
+    transform: "perspective(1px) translateZ(0px)",
+    padding: "8px 50px 8px 50px",
+    "&:hover": {
+      background: "rgba(224, 7, 125, 0.7)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 14,
+      width: "80%",
     },
   },
 }));
@@ -210,13 +259,20 @@ const SwapSettings = ({
         className={classes.dialog}
         color="transparent"
         PaperProps={{
-          style: { borderRadius: 15 },
+          style: { borderRadius: 20, backgroundColor: "#121827" },
         }}
       >
         <div className={classes.background}>
-          <DialogTitle onClose={() => handleClose()}>
-            <span className={classes.heading}>Settings</span>
-          </DialogTitle>
+          <div className={classes.cardHeading}>
+            <h6 style={{ paddingTop: 5, color: "#bdbdbd" }}>Settings</h6>
+            <IconButton
+              onClick={() => handleClose()}
+              style={{ margin: 0, padding: 0 }}
+            >
+              <Close fontSize="default" className={classes.closeIcon} />
+            </IconButton>
+          </div>
+
           <div className={classes.settingRow}>
             <span className={classes.settingRowLabel}>
               Slippage tolerance
@@ -269,12 +325,13 @@ const SwapSettings = ({
               </span>
             </div>
           </div>
-          <div className={classes.buttons}>
-            <CustomButton variant="light" onClick={handleClose}>
-              Cancel
-            </CustomButton>
-            <CustomButton onClick={onApply}>Apply</CustomButton>
-          </div>
+          <Button
+            variant="contained"
+            onClick={onApply}
+            className={classes.applyButton}
+          >
+            Apply
+          </Button>
         </div>
       </Dialog>
     </div>
