@@ -503,7 +503,7 @@ const AddCard = (props) => {
     // console.log("abi", getSelectedTokenAbi(selectedToken1));
     const allowanceAmount = toWei("999999999");
     const tokenAbi = getSelectedTokenAbi(selectedToken1);
-    console.log("abi", tokenData[selectedToken1.symbol].abi);
+    // console.log("abi", tokenData[selectedToken1.symbol].abi);
     await confirmAllowance(
       allowanceAmount,
       { ...selectedToken1, abi: tokenAbi },
