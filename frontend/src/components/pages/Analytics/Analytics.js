@@ -1,14 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useStyles from "./styles";
 import TopTokens from "./TopTokens";
 import BarChart from "./BarChart";
 import AreaChart from "./AreaChart";
 import PercentLabel from "../../common/PercentLabel";
 import { Card } from "@material-ui/core";
+import { pairDayData, topPools, getTopTokens } from "../../../apollo/queries";
 
 const Analytics = () => {
   const classes = useStyles();
 
+  useEffect(async () => {
+    const tokens = await getTopTokens();
+    console.log('tokens', tokens)
+    const pools = await topPools();
+    console.log('top pools', pools)
+    const pairData = await pairDayData(pools[0].id, 1)
+    console.log('pair 24H ', pairData)
+  }, [])
   return (
     <div>
       <p className={classes.heading}>PolkaBridge DEX Overview</p>
