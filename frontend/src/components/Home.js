@@ -1,6 +1,5 @@
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import React, { useEffect } from "react";
-import { Avatar, CircularProgress } from "@material-ui/core";
 
 import Navbar from "./common/Navbar";
 import Footer from "./common/Footer";
@@ -12,8 +11,6 @@ import store from "../store";
 import {
   bscConfig,
   bscNetwork,
-  defaultSlippage,
-  defaultTransactionDeadline,
   etherConfig,
   etheriumNetwork,
   supportedNetworks,
@@ -30,13 +27,25 @@ import TabPage from "./TabPage";
 import { loadTokens } from "../actions/dexActions";
 
 const useStyles = makeStyles((theme) => ({
-  background: {
-    padding: 80,
-    minHeight: "100vh",
+  navbar: {
+    position: "relative",
+    top: 0,
+  },
+  mainContent: {
     display: "flex",
+    justifyContent: "space-around",
     flexDirection: "column",
     alignItems: "center",
-    backgroundColor: "#121827",
+  },
+  footer: {
+    position: "fixed",
+    bottom: 20,
+    width: "100vw",
+    display: "flex",
+    justifyContent: "center",
+  },
+  background: {
+    height: "90vh",
   },
 
   heading: {
@@ -158,16 +167,14 @@ const Home = ({
   }, []);
 
   return (
-    <div>
-      <section className="appbar-section">
+    <div style={{ overflowX: "hidden" }}>
+      <div className={classes.navbar}>
         <Navbar currentNetwork={currentNetwork} />
-      </section>
-
-      <div className={classes.background}>
-        <p>Polkabridge AMM</p>
-
+      </div>
+      <div className={classes.mainContent}>
         <TabPage />
-
+      </div>
+      <div className={classes.footer}>
         <Footer />
       </div>
     </div>

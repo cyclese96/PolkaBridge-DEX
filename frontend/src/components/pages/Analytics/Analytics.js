@@ -4,68 +4,59 @@ import TopTokens from "./TopTokens";
 import BarChart from "./BarChart";
 import AreaChart from "./AreaChart";
 import PercentLabel from "../../common/PercentLabel";
+import { Card } from "@material-ui/core";
 
 const Analytics = () => {
   const classes = useStyles();
 
   return (
-    <div className={classes.container}>
-      <p>AMM Overview</p>
+    <div>
+      <p className={classes.heading}>PolkaBridge DEX Overview</p>
 
-      <div className={classes.cardsContainer}>
-        <div className={classes.card}>
-          <div className="card-theme">
-            <div className={classes.cardContainer}>
-              <span className={classes.cardSpan}>Total value locked</span>
-              <p className={classes.cardP}>$1.4B</p>
-              <small className={classes.cardSmall}>Jul 7 2021</small>
-              <div className={classes.chart}>
-                <AreaChart />
-              </div>
+      <div className="row g-3">
+        <div className="col-md-6">
+          <Card elevation={10} className={classes.card}>
+            <span className={classes.cardSpan}>Total value locked</span>
+            <p className={classes.cardP}>$1.4B</p>
+
+            <div className={classes.chart}>
+              <AreaChart />
             </div>
-          </div>
+          </Card>
         </div>
-
-        <div className={classes.card}>
-          <div className="card-theme">
-            <div className={classes.cardContainer}>
-              <span className={classes.cardSpan}>Volume 24H</span>
-              <p className={classes.cardP}>$ 992M</p>
-              <small className={classes.cardSmall}>Jul 7 2021</small>
-              <div className={classes.chart}>
-                <BarChart />
-              </div>
+        <div className="col-md-6">
+          <Card elevation={10} className={classes.card}>
+            <span className={classes.cardSpan}>Volume 24H</span>
+            <p className={classes.cardP}>$ 992M</p>
+            <div className={classes.chart}>
+              <BarChart />
             </div>
-          </div>
+          </Card>
         </div>
       </div>
 
-      <div className={classes.priceStatBar}>
-        <div className="card-theme">
-          <div className={classes.priceStatContainer}>
-            <div className={classes.statsGroup}>
-              <span className={classes.statLabel}>Volume 24H:</span>
-              <span className={classes.statAmount}>$992.04M</span>
+      <Card elevetation={10} className={classes.priceStatContainer}>
+        <div className={classes.statsGroup}>
+          <span className={classes.statLabel}>Volume 24H:</span>
+          <span className={classes.statAmount}>$992.04M</span>
 
-              <PercentLabel percentValue={5} braces={true} />
-            </div>
-
-            <div className={classes.statsGroup}>
-              <span className={classes.statLabel}>Fees 24H:</span>
-              <span className={classes.statAmount}>$1.24M</span>
-
-              <PercentLabel percentValue={8} braces={true} />
-            </div>
-
-            <div className={classes.statsGroup}>
-              <span className={classes.statLabel}>Volume 24H:</span>
-              <span className={classes.statAmount}>$1.6B</span>
-
-              <PercentLabel percentValue={-8} braces={true} />
-            </div>
-          </div>
+          <PercentLabel percentValue={5} braces={true} />
         </div>
-      </div>
+
+        <div className={classes.statsGroup}>
+          <span className={classes.statLabel}>Fees 24H:</span>
+          <span className={classes.statAmount}>$1.24M</span>
+
+          <PercentLabel percentValue={8} braces={true} />
+        </div>
+
+        <div className={classes.statsGroup}>
+          <span className={classes.statLabel}>Volume 24H:</span>
+          <span className={classes.statAmount}>$1.6B</span>
+
+          <PercentLabel percentValue={-8} braces={true} />
+        </div>
+      </Card>
 
       <div className={classes.tokenListHeading}>Top Tokens</div>
       <div className={classes.tokenList}>
@@ -76,6 +67,10 @@ const Analytics = () => {
         <TopTokens tableType="TopPools" />
       </div>
       <div className={classes.tokenListHeading}>Transactions</div>
+      <div className={classes.tokenList}>
+        <TopTokens tableType="Transactions" />
+      </div>
+      <div className="mb-5"></div>
     </div>
   );
 };

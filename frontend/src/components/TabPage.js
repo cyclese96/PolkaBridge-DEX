@@ -9,19 +9,27 @@ import SwapCard from "./Cards/SwapCard";
 import AddLiquidity from "./pages/AddLiquidity";
 import Analytics from "./pages/Analytics";
 
-const useStyles = makeStyles({
-  root: {
-    marginBottom: 50,
+const useStyles = makeStyles((theme) => ({
+  tabs: {
+    paddingTop: 10,
   },
   default_tabStyle: {
-    color: "rgba(255, 255, 255, 0.3)",
+    color: "rgba(255, 255, 255, 0.5)",
     fontSize: 14,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 11,
+    },
   },
   active_tabStyle: {
-    fontSize: 14,
+    fontSize: 16,
+    fontWeight: 500,
+    borderRadius: 7,
     color: "white",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 13,
+    },
   },
-});
+}));
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -68,7 +76,7 @@ export default function TabPage() {
           },
         }}
         centered
-        className={classes.root}
+        className={classes.tabs}
       >
         <Tab
           className={
@@ -95,8 +103,8 @@ export default function TabPage() {
       <TabPanel value={value} index={1}>
         <AddLiquidity />
       </TabPanel>
-      <TabPanel value={value} index={2} >
-          <Analytics />
+      <TabPanel value={value} index={2}>
+        <Analytics />
       </TabPanel>
     </>
   );

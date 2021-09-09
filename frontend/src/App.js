@@ -8,6 +8,7 @@ import { Provider } from "react-redux";
 import store from "./store";
 import "./web";
 import { testQuery } from "./apollo/queries";
+import Footer from "./components/common/Footer";
 
 function App() {
   // useEffect(async () => {

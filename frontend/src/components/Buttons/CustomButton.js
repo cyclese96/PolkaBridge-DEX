@@ -16,6 +16,12 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       background: "rgba(224, 7, 125, 0.7)",
     },
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 12,
+      color: "white",
+      width: "100%",
+      padding: "5px 20px 5px 20px",
+    },
   },
   unstakeButton: {
     backgroundColor: "rgba(255, 255, 255, 0.1)",
@@ -32,6 +38,11 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 5,
     "&:hover": {
       background: "rgba(255, 255, 255, 0.3)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 12,
+      padding: "5px 20px 5px 20px",
+      width: "100%",
     },
   },
 }));
