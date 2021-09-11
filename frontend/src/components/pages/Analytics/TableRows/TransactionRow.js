@@ -45,7 +45,13 @@ const TransactionRow = (props) => {
         <TableCell padding="checkbox"></TableCell>
 
         <TableCell component="th" id={labelId} scope="row" padding="none">
-          <span className={classes.cellTextSecondary}>{row.__typename} </span>{" "}
+          <span className={classes.cellTextSecondary}>
+            {row.__typename === "Mint"
+              ? "Add"
+              : row.__typename === "Burn"
+              ? "Remove"
+              : "Swap"}{" "}
+          </span>{" "}
           <span className={classes.cellText}>
             {row.pair.token0.symbol} And {row.pair.token1.symbol}{" "}
           </span>
