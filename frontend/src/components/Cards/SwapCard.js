@@ -59,6 +59,7 @@ const useStyles = makeStyles((theme) => ({
   card: {
     width: 500,
     borderRadius: 15,
+    marginTop: 20,
     background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
     paddingLeft: 20,
     paddingRight: 20,

@@ -138,7 +138,6 @@ const AreaChart = () => (
     options={state.options}
     series={state.series}
     type="area"
-    // width="350"
     width="100%"
   />
 );

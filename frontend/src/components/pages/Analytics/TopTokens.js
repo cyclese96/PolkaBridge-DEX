@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -9,16 +9,12 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
-
-import PercentLabel from "../../common/PercentLabel";
-import { formatCurrency } from "../../../utils/helper";
-import TokenIcon from "../../common/TokenIcon";
 import { topPoolsData, topTokensData } from "./tableData";
 import TokenRow from "./TableRows/TokenRow";
 import PoolRow from "./TableRows/PoolRow";
 import TransactionRow from "./TableRows/TransactionRow";
-
 import { Card } from "@material-ui/core";
+import { topTransactions } from "../../../apollo/queries";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -324,16 +320,6 @@ const useStyles = makeStyles((theme) => ({
 // tableTypes:  "TopTokens" , "TopPools", "Transactions"
 // const rows = topTokensData;
 
-const rows = (tableType) => {
-  switch (tableType) {
-    case "TopTokens":
-      return topTokensData;
-    case "TopPools":
-      return topPoolsData;
-    default:
-      return topTokensData;
-  }
-};
 const TopTokens = ({ tableType = "TopTokens" }) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
@@ -341,6 +327,41 @@ const TopTokens = ({ tableType = "TopTokens" }) => {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const [transactions, setTransactions] = useState([]);
+
+  const rows = (tableType) => {
+    switch (tableType) {
+      case "TopTokens":
+        return topTokensData;
+      case "TopPools":
+        return topPoolsData;
+      case "Transactions":
+        return transactions;
+      default:
+        return topPoolsData;
+    }
+  };
+
+  useEffect(async () => {
+    const page = 1;
+    const order = "desc";
+    const transactions = await topTransactions(page, order);
+    //Format transactions data
+    formatTransactions(transactions);
+  }, []);
+
+  const formatTransactions = (transactions) => {
+    let fotmattedTxs = transactions.map((singleTx) => {
+      return singleTx.burns.length === 0
+        ? singleTx.mints.length === 0
+          ? singleTx.swaps
+          : singleTx.mints
+        : singleTx.burns;
+    });
+    setTransactions(fotmattedTxs);
+    console.log(fotmattedTxs);
+  };
 
   const handleRequestSort = (event, property) => {
     console.log("sort ", property);
@@ -393,6 +414,7 @@ const TopTokens = ({ tableType = "TopTokens" }) => {
   const emptyRows =
     rowsPerPage -
     Math.min(rowsPerPage, rows(tableType).length - page * rowsPerPage);
+
   const currenTokenRow = (
     tableType,
     row,
