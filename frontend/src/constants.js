@@ -317,3 +317,13 @@ export const tokens = [
 ];
 
 export const nullAddress = "0x0000000000000000000000000000000000000000";
+
+
+export const timeframeOptions = {
+  WEEK: '1 week',
+  MONTH: '1 month',
+  // THREE_MONTHS: '3 months',
+  // YEAR: '1 year',
+  HALF_YEAR: '6 months',
+  ALL_TIME: 'All time',
+}

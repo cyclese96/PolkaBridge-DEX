@@ -1,6 +1,9 @@
 import { gql } from "@apollo/client";
+import { currentConnection, facotryAddressTestnet, factoryAddresMainnet } from "../constants";
 import { getUnixTime } from "../utils/helper";
 import client from "./client";
+
+const FACTORY_ADDRESS = currentConnection === 'testnet' ? facotryAddressTestnet : factoryAddresMainnet;
 
 export const testQuery = async () => {
   const queryObj = `
@@ -122,7 +125,7 @@ export const polkabridgeAmmDailyData = async (days = 128) => {
   try {
     const queryObj = `
       query {
-          uniswapDayDatas (first: 7, orderBy: date orderDirection: desc ) {
+        polkabridgeAmmDayDatas (first: 7, orderBy: date orderDirection: desc ) {
             date
             dailyVolumeETH
             dailyVolumeUSD
@@ -135,7 +138,133 @@ export const polkabridgeAmmDailyData = async (days = 128) => {
     
     `
     const res = await client.query({ query: gql(queryObj) });
-    return res.data.uniswapDayDatas;
+    return res.data.polkabridgeAmmDayDatas;
+  } catch (error) {
+    return []
+  }
+}
+
+
+export const GLOBAL_CHART = gql`
+  query polkabridgeAmmDayDatas($startTime: Int!, $skip: Int!) {
+    polkabridgeAmmDayDatas(first: 1000, skip: $skip, where: { date_gt: $startTime }, orderBy: date, orderDirection: asc) {
+      id
+      date
+      totalVolumeUSD
+      dailyVolumeUSD
+      dailyVolumeETH
+      totalLiquidityUSD
+      totalLiquidityETH
+    }
+  }
+`
+
+export const GLOBAL_DATA = (block) => {
+  const queryString = ` query polkabridgeAmmFactories {
+    polkabridgeAmmFactories(
+       ${block ? `block: { number: ${block}}` : ``} 
+       where: { id: "${FACTORY_ADDRESS}" }) {
+        id
+        totalVolumeUSD
+        totalVolumeETH
+        untrackedVolumeUSD
+        totalLiquidityUSD
+        totalLiquidityETH
+        txCount
+        pairCount
+      }
+    }`
+  return gql(queryString)
+}
+
+// export const GLOBAL_TXNS =
+
+export const topTransactions = async (page = 1, order = 'desc') => {
+
+  try {
+
+    const items = 60 * page;
+    const skips = 60 * page - 60;
+
+    const displayOrder = order;
+
+    const queryObj = `
+    query transactions   {
+      transactions(first: ${items}, skip: ${skips},  orderBy: timestamp, orderDirection: ${displayOrder}) {
+        mints(orderBy: timestamp, orderDirection: desc) {
+          transaction {
+            id
+            timestamp
+          }
+          sender
+          pair {
+            token0 {
+              id
+              symbol
+            }
+            token1 {
+              id
+              symbol
+            }
+          }
+          to
+          liquidity
+          amount0
+          amount1
+          amountUSD
+        }
+        burns(orderBy: timestamp, orderDirection: desc) {
+          transaction {
+            id
+            timestamp
+          }
+          sender
+          pair {
+            token0 {
+              id
+              symbol
+            }
+            token1 {
+              id
+              symbol
+            }
+          }
+          sender
+          liquidity
+          amount0
+          amount1
+          amountUSD
+        }
+        swaps(orderBy: timestamp, orderDirection: desc) {
+          transaction {
+            id
+            timestamp
+          }
+          sender
+          pair {
+            token0 {
+              id
+              symbol
+            }
+            token1 {
+              id
+              symbol
+            }
+          }
+          amount0In
+          amount0Out
+          amount1In
+          amount1Out
+          amountUSD
+          to
+        }
+      }
+    }
+  `
+
+    const res = await client.query({ query: gql(queryObj) });
+    console.log('res', res.data)
+    return res.data.transactions;
   } catch (error) {
     return []
   }
