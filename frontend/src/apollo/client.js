@@ -2,7 +2,7 @@ import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
 
 // const APIURL =
 // "https://gateway.thegraph.com/api/584823fe20b487773537ceae7d79941b/subgraphs/id/0x4bb4c1b0745ef7b4642feeccd0740dec417ca0a0-0";
-const APIURL = "https://api.studio.thegraph.com/query/8207/amm/0.8.1";
+const APIURL = "https://api.studio.thegraph.com/query/8207/amm/0.8.2";
 
 // const tokensQuery = `
 //   query {

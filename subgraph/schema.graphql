@@ -98,11 +98,21 @@ type Pair @entity {
   swaps: [Swap!]! @derivedFrom(field: "pair")
 }
 
-# type User @entity {
-#   id: ID!
-#   liquidityPositions: [LiquidityPosition!] @derivedFrom(field: "user")
-#   usdSwapped: BigDecimal!
-# }
+type User @entity {
+  # id: ID!
+  # # liquidityPositions: [LiquidityPosition!] @derivedFrom(field: "user")
+  # usdSwapped: BigDecimal!
+  id: ID! # user address
+  date: Int!
+  user: Bytes!
+
+  dailyVolumeETH: BigDecimal!
+  dailyVolumeUSD: BigDecimal!
+
+  totalVolumeETH: BigDecimal!
+  totalVolumeUSD: BigDecimal! # Accumulate at each trade, not just calculated off whatever totalVolume is. making it more accurate as it is a live conversion
+  txCount: BigInt!
+}
 
 # type LiquidityPosition @entity {
 #   id: ID!

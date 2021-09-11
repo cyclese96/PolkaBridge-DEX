@@ -5,6 +5,7 @@ import { ERC20SymbolBytes } from '../../generated/Factory/ERC20SymbolBytes'
 import { ERC20NameBytes } from '../../generated/Factory/ERC20NameBytes'
 // import { Bundle, Token, Pair } from '../../generated/schema'
 import { Factory as FactoryContract } from '../../generated/templates/Pair/Factory'
+import { User } from '../../generated/schema'
 // import { TokenDefinition } from './tokenDefinition'
 
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000"
@@ -125,11 +126,13 @@ export function fetchTokenDecimals(tokenAddress: Address): BigInt {
 //   return liquidityTokenBalance as LiquidityPosition
 // }
 
-// export function createUser(address: Address): void {
+// export function createUser( address: Address): void {
 //   let user = User.load(address.toHexString())
 //   if (user === null) {
 //     user = new User(address.toHexString())
-//     user.usdSwapped = ZERO_BD
+//     user.dailyVolumeETH = ZERO_BD
+//     user.dailyVolumeUSD = ZERO_BD
+//     user.user = 
 //     user.save()
 //   }
 // }

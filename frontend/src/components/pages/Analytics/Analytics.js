@@ -5,18 +5,16 @@ import BarChart from "./BarChart";
 import AreaChart from "./AreaChart";
 import PercentLabel from "../../common/PercentLabel";
 import { Card } from "@material-ui/core";
-import { pairDayData, topPools, getTopTokens } from "../../../apollo/queries";
+import { topTransactions } from "../../../apollo/queries";
 
 const Analytics = () => {
   const classes = useStyles();
 
   useEffect(async () => {
-    const tokens = await getTopTokens();
-    console.log('tokens', tokens)
-    const pools = await topPools();
-    console.log('top pools', pools)
-    const pairData = await pairDayData(pools[0].id, 1)
-    console.log('pair 24H ', pairData)
+    const page = 1;
+    const order = 'desc';
+    const transactions = await topTransactions(page, order)
+    console.log('transactions ', transactions)
   }, [])
   return (
     <div>
