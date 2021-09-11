@@ -20,14 +20,18 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 15,
 
     [theme.breakpoints.down("sm")]: {
-      width: 280,
+      paddingLeft: 10,
+      paddingRight: 10,
+      paddingTop: 15,
+      paddingBottom: 15,
+      width: "92vw",
       height: "100%",
     },
   },
   chart: {
     width: 440,
     [theme.breakpoints.down("sm")]: {
-      width: "100%",
+      width: "100vw",
     },
   },
   heading: {

@@ -1,13 +1,16 @@
 import { TableCell, TableRow } from "@material-ui/core";
 import { formatCurrency } from "../../../../utils/helper";
-import PercentLabel from "../../../common/PercentLabel";
 import TokenIcon from "../../../common/TokenIcon";
+import Moment from "react-moment";
 
 const TransactionRow = (props) => {
-  const { row, classes, isItemSelected, labelId, handleClick } = props;
-
+  const { classes, isItemSelected, labelId, handleClick } = props;
+  let row = props.row[0];
   return (
     <>
+      {console.log("Transactions Row")}
+      {console.log(row)}
+
       <TableRow
         hover
         onClick={(event) => handleClick(event, row.name)}
@@ -42,28 +45,28 @@ const TransactionRow = (props) => {
         <TableCell padding="checkbox"></TableCell>
 
         <TableCell component="th" id={labelId} scope="row" padding="none">
-          <TokenIcon symbol={row.symbol} className={classes.tokenIcon} />
-          <span className={classes.cellText}>{row.name} </span>
-          <small className={classes.cellTextSecondary}>
-            {"( " + row.symbol + " )"}
-          </small>
+          <span className={classes.cellTextSecondary}>{row.__typename} </span>{" "}
+          <span className={classes.cellText}>
+            {row.pair.token0.symbol} And {row.pair.token1.symbol}{" "}
+          </span>
         </TableCell>
         <TableCell align="right">
           <span className={classes.cellText}>
-            {formatCurrency(row.price, true)}
+            {formatCurrency(row.amountUSD, true)}
           </span>
         </TableCell>
+
         <TableCell align="right" className={classes.cellText}>
-          <PercentLabel percentValue={row.price_change} />
+          {formatCurrency(row.amount0, true)}
         </TableCell>
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.vol_24_h, true)}
+          {formatCurrency(row.amount1, true)}
         </TableCell>
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.tvl, true)}
+          ...{row.sender.split("").splice(0, 10)}
         </TableCell>
         <TableCell align="right" className={classes.cellText}>
-          3 mins ago
+          <Moment fromNow>{Date(row.transaction.timestamp)}</Moment>
         </TableCell>
       </TableRow>
     </>

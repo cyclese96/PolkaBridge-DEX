@@ -10,12 +10,6 @@ import { topTransactions } from "../../../apollo/queries";
 const Analytics = () => {
   const classes = useStyles();
 
-  useEffect(async () => {
-    const page = 1;
-    const order = 'desc';
-    const transactions = await topTransactions(page, order)
-    console.log('transactions ', transactions)
-  }, [])
   return (
     <div>
       <p className={classes.heading}>PolkaBridge DEX Overview</p>
