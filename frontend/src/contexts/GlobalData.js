@@ -12,16 +12,16 @@ import {
 } from '../utils/timeUtils'
 import {
     GLOBAL_DATA,
-    GLOBAL_TXNS,
-    GLOBAL_CHART,
+    // GLOBAL_TXNS,
+    // GLOBAL_CHART,
     ETH_PRICE,
-    // ALL_PAIRS,
-    // ALL_TOKENS,
+    ALL_PAIRS,
+    ALL_TOKENS,
     // TOP_LPS_PER_PAIRS,
 } from '../apollo/queries'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
-import { useAllPairData } from './PairData'
-import { useTokenChartDataCombined } from './TokenData'
+// import { useAllPairData } from './PairData'
+// import { useTokenChartDataCombined } from './TokenData'
 const UPDATE = 'UPDATE'
 const UPDATE_TXNS = 'UPDATE_TXNS'
 const UPDATE_CHART = 'UPDATE_CHART'
@@ -247,32 +247,32 @@ async function getGlobalData(ethPrice, oldEthPrice) {
             query: GLOBAL_DATA(),
             fetchPolicy: 'cache-first',
         })
-        data = result.data.uniswapFactories[0]
+        data = result.data.polkabridgeAmmFactories[0]
 
         // fetch the historical data
         let oneDayResult = await client.query({
             query: GLOBAL_DATA(oneDayBlock?.number),
             fetchPolicy: 'cache-first',
         })
-        oneDayData = oneDayResult.data.uniswapFactories[0]
+        oneDayData = oneDayResult.data.polkabridgeAmmFactories[0]
 
         let twoDayResult = await client.query({
             query: GLOBAL_DATA(twoDayBlock?.number),
             fetchPolicy: 'cache-first',
         })
-        twoDayData = twoDayResult.data.uniswapFactories[0]
+        twoDayData = twoDayResult.data.polkabridgeAmmFactories[0]
 
         let oneWeekResult = await client.query({
             query: GLOBAL_DATA(oneWeekBlock?.number),
             fetchPolicy: 'cache-first',
         })
-        const oneWeekData = oneWeekResult.data.uniswapFactories[0]
+        const oneWeekData = oneWeekResult.data.polkabridgeAmmFactories[0]
 
         let twoWeekResult = await client.query({
             query: GLOBAL_DATA(twoWeekBlock?.number),
             fetchPolicy: 'cache-first',
         })
-        const twoWeekData = twoWeekResult.data.uniswapFactories[0]
+        const twoWeekData = twoWeekResult.data.polkabridgeAmmFactories[0]
 
         if (data && oneDayData && twoDayData && twoWeekData) {
             let [oneDayVolumeUSD, volumeChangeUSD] = get2DayPercentChange(
@@ -310,7 +310,7 @@ async function getGlobalData(ethPrice, oldEthPrice) {
             data.txnChange = txnChange
         }
     } catch (e) {
-        console.log(e)
+        console.log('getGlobalData', e)
     }
 
     return data
@@ -322,147 +322,147 @@ async function getGlobalData(ethPrice, oldEthPrice) {
  * @param {*} oldestDateToFetch // start of window to fetch from
  */
 
-let checked = false
+// let checked = false
 
-const getChartData = async (oldestDateToFetch, offsetData) => {
-    let data = []
-    let weeklyData = []
-    const utcEndTime = dayjs.utc()
-    let skip = 0
-    let allFound = false
+// const getChartData = async (oldestDateToFetch, offsetData) => {
+//     let data = []
+//     let weeklyData = []
+//     const utcEndTime = dayjs.utc()
+//     let skip = 0
+//     let allFound = false
 
-    try {
-        while (!allFound) {
-            let result = await client.query({
-                query: GLOBAL_CHART,
-                variables: {
-                    startTime: oldestDateToFetch,
-                    skip,
-                },
-                fetchPolicy: 'cache-first',
-            })
-            skip += 1000
-            data = data.concat(result.data.uniswapDayDatas)
-            if (result.data.uniswapDayDatas.length < 1000) {
-                allFound = true
-            }
-        }
+//     try {
+//         while (!allFound) {
+//             let result = await client.query({
+//                 query: GLOBAL_CHART,
+//                 variables: {
+//                     startTime: oldestDateToFetch,
+//                     skip,
+//                 },
+//                 fetchPolicy: 'cache-first',
+//             })
+//             skip += 1000
+//             data = data.concat(result.data.uniswapDayDatas)
+//             if (result.data.uniswapDayDatas.length < 1000) {
+//                 allFound = true
+//             }
+//         }
 
-        if (data) {
-            let dayIndexSet = new Set()
-            let dayIndexArray = []
-            const oneDay = 24 * 60 * 60
+//         if (data) {
+//             let dayIndexSet = new Set()
+//             let dayIndexArray = []
+//             const oneDay = 24 * 60 * 60
 
-            // for each day, parse the daily volume and format for chart array
-            data.forEach((dayData, i) => {
-                // add the day index to the set of days
-                dayIndexSet.add((data[i].date / oneDay).toFixed(0))
-                dayIndexArray.push(data[i])
-                dayData.dailyVolumeUSD = parseFloat(dayData.dailyVolumeUSD)
-            })
+//             // for each day, parse the daily volume and format for chart array
+//             data.forEach((dayData, i) => {
+//                 // add the day index to the set of days
+//                 dayIndexSet.add((data[i].date / oneDay).toFixed(0))
+//                 dayIndexArray.push(data[i])
+//                 dayData.dailyVolumeUSD = parseFloat(dayData.dailyVolumeUSD)
+//             })
 
-            // fill in empty days ( there will be no day datas if no trades made that day )
-            let timestamp = data[0].date ? data[0].date : oldestDateToFetch
-            let latestLiquidityUSD = data[0].totalLiquidityUSD
-            let latestDayDats = data[0].mostLiquidTokens
-            let index = 1
-            while (timestamp < utcEndTime.unix() - oneDay) {
-                const nextDay = timestamp + oneDay
-                let currentDayIndex = (nextDay / oneDay).toFixed(0)
+//             // fill in empty days ( there will be no day datas if no trades made that day )
+//             let timestamp = data[0].date ? data[0].date : oldestDateToFetch
+//             let latestLiquidityUSD = data[0].totalLiquidityUSD
+//             let latestDayDats = data[0].mostLiquidTokens
+//             let index = 1
+//             while (timestamp < utcEndTime.unix() - oneDay) {
+//                 const nextDay = timestamp + oneDay
+//                 let currentDayIndex = (nextDay / oneDay).toFixed(0)
 
-                if (!dayIndexSet.has(currentDayIndex)) {
-                    data.push({
-                        date: nextDay,
-                        dailyVolumeUSD: 0,
-                        totalLiquidityUSD: latestLiquidityUSD,
-                        mostLiquidTokens: latestDayDats,
-                    })
-                } else {
-                    latestLiquidityUSD = dayIndexArray[index].totalLiquidityUSD
-                    latestDayDats = dayIndexArray[index].mostLiquidTokens
-                    index = index + 1
-                }
-                timestamp = nextDay
-            }
-        }
+//                 if (!dayIndexSet.has(currentDayIndex)) {
+//                     data.push({
+//                         date: nextDay,
+//                         dailyVolumeUSD: 0,
+//                         totalLiquidityUSD: latestLiquidityUSD,
+//                         mostLiquidTokens: latestDayDats,
+//                     })
+//                 } else {
+//                     latestLiquidityUSD = dayIndexArray[index].totalLiquidityUSD
+//                     latestDayDats = dayIndexArray[index].mostLiquidTokens
+//                     index = index + 1
+//                 }
+//                 timestamp = nextDay
+//             }
+//         }
 
-        // format weekly data for weekly sized chunks
-        data = data.sort((a, b) => (parseInt(a.date) > parseInt(b.date) ? 1 : -1))
-        let startIndexWeekly = -1
-        let currentWeek = -1
+//         // format weekly data for weekly sized chunks
+//         data = data.sort((a, b) => (parseInt(a.date) > parseInt(b.date) ? 1 : -1))
+//         let startIndexWeekly = -1
+//         let currentWeek = -1
 
-        data.forEach((entry, i) => {
-            const date = data[i].date
+//         data.forEach((entry, i) => {
+//             const date = data[i].date
 
-            // hardcoded fix for offset volume
-            offsetData &&
-                !checked &&
-                offsetData.map((dayData) => {
-                    if (dayData[date]) {
-                        data[i].dailyVolumeUSD = parseFloat(data[i].dailyVolumeUSD) - parseFloat(dayData[date].dailyVolumeUSD)
-                    }
-                    return true
-                })
+//             // hardcoded fix for offset volume
+//             offsetData &&
+//                 !checked &&
+//                 offsetData.map((dayData) => {
+//                     if (dayData[date]) {
+//                         data[i].dailyVolumeUSD = parseFloat(data[i].dailyVolumeUSD) - parseFloat(dayData[date].dailyVolumeUSD)
+//                     }
+//                     return true
+//                 })
 
-            const week = dayjs.utc(dayjs.unix(data[i].date)).week()
-            if (week !== currentWeek) {
-                currentWeek = week
-                startIndexWeekly++
-            }
-            weeklyData[startIndexWeekly] = weeklyData[startIndexWeekly] || {}
-            weeklyData[startIndexWeekly].date = data[i].date
-            weeklyData[startIndexWeekly].weeklyVolumeUSD =
-                (weeklyData[startIndexWeekly].weeklyVolumeUSD ?? 0) + data[i].dailyVolumeUSD
-        })
+//             const week = dayjs.utc(dayjs.unix(data[i].date)).week()
+//             if (week !== currentWeek) {
+//                 currentWeek = week
+//                 startIndexWeekly++
+//             }
+//             weeklyData[startIndexWeekly] = weeklyData[startIndexWeekly] || {}
+//             weeklyData[startIndexWeekly].date = data[i].date
+//             weeklyData[startIndexWeekly].weeklyVolumeUSD =
+//                 (weeklyData[startIndexWeekly].weeklyVolumeUSD ?? 0) + data[i].dailyVolumeUSD
+//         })
 
-        if (!checked) {
-            checked = true
-        }
-    } catch (e) {
-        console.log(e)
-    }
-    return [data, weeklyData]
-}
+//         if (!checked) {
+//             checked = true
+//         }
+//     } catch (e) {
+//         console.log(e)
+//     }
+//     return [data, weeklyData]
+// }
 
 /**
  * Get and format transactions for global page
  */
-const getGlobalTransactions = async () => {
-    let transactions = {}
+// const getGlobalTransactions = async () => {
+//     let transactions = {}
 
-    try {
-        let result = await client.query({
-            query: GLOBAL_TXNS,
-            fetchPolicy: 'cache-first',
-        })
-        transactions.mints = []
-        transactions.burns = []
-        transactions.swaps = []
-        result?.data?.transactions &&
-            result.data.transactions.map((transaction) => {
-                if (transaction.mints.length > 0) {
-                    transaction.mints.map((mint) => {
-                        return transactions.mints.push(mint)
-                    })
-                }
-                if (transaction.burns.length > 0) {
-                    transaction.burns.map((burn) => {
-                        return transactions.burns.push(burn)
-                    })
-                }
-                if (transaction.swaps.length > 0) {
-                    transaction.swaps.map((swap) => {
-                        return transactions.swaps.push(swap)
-                    })
-                }
-                return true
-            })
-    } catch (e) {
-        console.log(e)
-    }
+//     try {
+//         let result = await client.query({
+//             query: GLOBAL_TXNS,
+//             fetchPolicy: 'cache-first',
+//         })
+//         transactions.mints = []
+//         transactions.burns = []
+//         transactions.swaps = []
+//         result?.data?.transactions &&
+//             result.data.transactions.map((transaction) => {
+//                 if (transaction.mints.length > 0) {
+//                     transaction.mints.map((mint) => {
+//                         return transactions.mints.push(mint)
+//                     })
+//                 }
+//                 if (transaction.burns.length > 0) {
+//                     transaction.burns.map((burn) => {
+//                         return transactions.burns.push(burn)
+//                     })
+//                 }
+//                 if (transaction.swaps.length > 0) {
+//                     transaction.swaps.map((swap) => {
+//                         return transactions.swaps.push(swap)
+//                     })
+//                 }
+//                 return true
+//             })
+//     } catch (e) {
+//         console.log(e)
+//     }
 
-    return transactions
-}
+//     return transactions
+// }
 
 /**
  * Gets the current price  of ETH, 24 hour price, and % change between them
@@ -491,14 +491,14 @@ const getEthPrice = async () => {
         ethPrice = currentPrice
         ethPriceOneDay = oneDayBackPrice
     } catch (e) {
-        console.log(e)
+        console.log('getEthPrice', e)
     }
 
     return [ethPrice, ethPriceOneDay, priceChangeETH]
 }
 
-const PAIRS_TO_FETCH = 20
-const TOKENS_TO_FETCH = 20
+const PAIRS_TO_FETCH = 500
+const TOKENS_TO_FETCH = 500
 
 /**
  * Loop through every pair on uniswap, used for search
@@ -524,7 +524,7 @@ async function getAllPairsOnUniswap() {
         }
         return pairs
     } catch (e) {
-        console.log(e)
+        console.log('getAllPairsOnUniswap', e)
     }
 }
 
@@ -552,7 +552,7 @@ async function getAllTokensOnUniswap() {
         }
         return tokens
     } catch (e) {
-        console.log(e)
+        console.log('getAllTokensOnUniswap', e)
     }
 }
 
@@ -568,9 +568,11 @@ export function useGlobalData() {
     // const combinedVolume = useTokenDataCombined(offsetVolumes)
 
     useEffect(() => {
+        console.log('loading global data...')
         async function fetchData() {
             let globalData = await getGlobalData(ethPrice, oldEthPrice)
 
+            console.log('fetched global data ', globalData)
             globalData && update(globalData)
 
             let allPairs = await getAllPairsOnUniswap()
@@ -587,63 +589,63 @@ export function useGlobalData() {
     return data || {}
 }
 
-export function useGlobalChartData() {
-    const [state, { updateChart }] = useGlobalDataContext()
-    const [oldestDateFetch, setOldestDateFetched] = useState()
-    const [activeWindow] = useTimeframe()
+// export function useGlobalChartData() {
+//     const [state, { updateChart }] = useGlobalDataContext()
+//     const [oldestDateFetch, setOldestDateFetched] = useState()
+//     const [activeWindow] = useTimeframe()
 
-    const chartDataDaily = state?.chartData?.daily
-    const chartDataWeekly = state?.chartData?.weekly
+//     const chartDataDaily = state?.chartData?.daily
+//     const chartDataWeekly = state?.chartData?.weekly
 
-    /**
-     * Keep track of oldest date fetched. Used to
-     * limit data fetched until its actually needed.
-     * (dont fetch year long stuff unless year option selected)
-     */
-    useEffect(() => {
-        // based on window, get starttime
-        let startTime = getTimeframe(activeWindow)
+//     /**
+//      * Keep track of oldest date fetched. Used to
+//      * limit data fetched until its actually needed.
+//      * (dont fetch year long stuff unless year option selected)
+//      */
+//     useEffect(() => {
+//         // based on window, get starttime
+//         let startTime = getTimeframe(activeWindow)
 
-        if ((activeWindow && startTime < oldestDateFetch) || !oldestDateFetch) {
-            setOldestDateFetched(startTime)
-        }
-    }, [activeWindow, oldestDateFetch])
+//         if ((activeWindow && startTime < oldestDateFetch) || !oldestDateFetch) {
+//             setOldestDateFetched(startTime)
+//         }
+//     }, [activeWindow, oldestDateFetch])
 
-    // fix for rebass tokens
+//     // fix for rebass tokens
 
-    const combinedData = useTokenChartDataCombined(offsetVolumes)
+//     const combinedData = useTokenChartDataCombined(offsetVolumes)
 
-    /**
-     * Fetch data if none fetched or older data is needed
-     */
-    useEffect(() => {
-        async function fetchData() {
-            // historical stuff for chart
-            let [newChartData, newWeeklyData] = await getChartData(oldestDateFetch, combinedData)
-            updateChart(newChartData, newWeeklyData)
-        }
-        if (oldestDateFetch && !(chartDataDaily && chartDataWeekly) && combinedData) {
-            fetchData()
-        }
-    }, [chartDataDaily, chartDataWeekly, combinedData, oldestDateFetch, updateChart])
+//     /**
+//      * Fetch data if none fetched or older data is needed
+//      */
+//     useEffect(() => {
+//         async function fetchData() {
+//             // historical stuff for chart
+//             let [newChartData, newWeeklyData] = await getChartData(oldestDateFetch, combinedData)
+//             updateChart(newChartData, newWeeklyData)
+//         }
+//         if (oldestDateFetch && !(chartDataDaily && chartDataWeekly) && combinedData) {
+//             fetchData()
+//         }
+//     }, [chartDataDaily, chartDataWeekly, combinedData, oldestDateFetch, updateChart])
 
-    return [chartDataDaily, chartDataWeekly]
-}
+//     return [chartDataDaily, chartDataWeekly]
+// }
 
-export function useGlobalTransactions() {
-    const [state, { updateTransactions }] = useGlobalDataContext()
-    const transactions = state?.transactions
-    useEffect(() => {
-        async function fetchData() {
-            if (!transactions) {
-                let txns = await getGlobalTransactions()
-                updateTransactions(txns)
-            }
-        }
-        fetchData()
-    }, [updateTransactions, transactions])
-    return transactions
-}
+// export function useGlobalTransactions() {
+//     const [state, { updateTransactions }] = useGlobalDataContext()
+//     const transactions = state?.transactions
+//     useEffect(() => {
+//         async function fetchData() {
+//             if (!transactions) {
+//                 let txns = await getGlobalTransactions()
+//                 updateTransactions(txns)
+//             }
+//         }
+//         fetchData()
+//     }, [updateTransactions, transactions])
+//     return transactions
+// }
 
 export function useEthPrice() {
     const [state, { updateEthPrice }] = useGlobalDataContext()
@@ -662,85 +664,85 @@ export function useEthPrice() {
     return [ethPrice, ethPriceOld]
 }
 
-export function useAllPairsInUniswap() {
-    const [state] = useGlobalDataContext()
-    let allPairs = state?.allPairs
+// export function useAllPairsInUniswap() {
+//     const [state] = useGlobalDataContext()
+//     let allPairs = state?.allPairs
 
-    return allPairs || []
-}
+//     return allPairs || []
+// }
 
-export function useAllTokensInUniswap() {
-    const [state] = useGlobalDataContext()
-    let allTokens = state?.allTokens
+// export function useAllTokensInUniswap() {
+//     const [state] = useGlobalDataContext()
+//     let allTokens = state?.allTokens
 
-    return allTokens || []
-}
+//     return allTokens || []
+// }
 
-/**
- * Get the top liquidity positions based on USD size
- * @TODO Not a perfect lookup needs improvement
- */
-export function useTopLps() {
-    const [state, { updateTopLps }] = useGlobalDataContext()
-    let topLps = state?.topLps
+// /**
+//  * Get the top liquidity positions based on USD size
+//  * @TODO Not a perfect lookup needs improvement
+//  */
+// export function useTopLps() {
+//     const [state, { updateTopLps }] = useGlobalDataContext()
+//     let topLps = state?.topLps
 
-    const allPairs = useAllPairData()
+//     const allPairs = useAllPairData()
 
-    useEffect(() => {
-        async function fetchData() {
-            // get top 20 by reserves
-            let topPairs = Object.keys(allPairs)
-                ?.sort((a, b) => parseFloat(allPairs[a].reserveUSD > allPairs[b].reserveUSD ? -1 : 1))
-                ?.slice(0, 99)
-                .map((pair) => pair)
+//     useEffect(() => {
+//         async function fetchData() {
+//             // get top 20 by reserves
+//             let topPairs = Object.keys(allPairs)
+//                 ?.sort((a, b) => parseFloat(allPairs[a].reserveUSD > allPairs[b].reserveUSD ? -1 : 1))
+//                 ?.slice(0, 99)
+//                 .map((pair) => pair)
 
-            let topLpLists = await Promise.all(
-                topPairs.map(async (pair) => {
-                    // for each one, fetch top LPs
-                    try {
-                        const { data: results } = await client.query({
-                            query: TOP_LPS_PER_PAIRS,
-                            variables: {
-                                pair: pair.toString(),
-                            },
-                            fetchPolicy: 'cache-first',
-                        })
-                        if (results) {
-                            return results.liquidityPositions
-                        }
-                    } catch (e) { }
-                })
-            )
+//             let topLpLists = await Promise.all(
+//                 topPairs.map(async (pair) => {
+//                     // for each one, fetch top LPs
+//                     try {
+//                         const { data: results } = await client.query({
+//                             query: TOP_LPS_PER_PAIRS,
+//                             variables: {
+//                                 pair: pair.toString(),
+//                             },
+//                             fetchPolicy: 'cache-first',
+//                         })
+//                         if (results) {
+//                             return results.liquidityPositions
+//                         }
+//                     } catch (e) { }
+//                 })
+//             )
 
-            // get the top lps from the results formatted
-            const topLps = []
-            topLpLists
-                .filter((i) => !!i) // check for ones not fetched correctly
-                .map((list) => {
-                    return list.map((entry) => {
-                        const pairData = allPairs[entry.pair.id]
-                        return topLps.push({
-                            user: entry.user,
-                            pairName: pairData.token0.symbol + '-' + pairData.token1.symbol,
-                            pairAddress: entry.pair.id,
-                            token0: pairData.token0.id,
-                            token1: pairData.token1.id,
-                            usd:
-                                (parseFloat(entry.liquidityTokenBalance) / parseFloat(pairData.totalSupply)) *
-                                parseFloat(pairData.reserveUSD),
-                        })
-                    })
-                })
+//             // get the top lps from the results formatted
+//             const topLps = []
+//             topLpLists
+//                 .filter((i) => !!i) // check for ones not fetched correctly
+//                 .map((list) => {
+//                     return list.map((entry) => {
+//                         const pairData = allPairs[entry.pair.id]
+//                         return topLps.push({
+//                             user: entry.user,
+//                             pairName: pairData.token0.symbol + '-' + pairData.token1.symbol,
+//                             pairAddress: entry.pair.id,
+//                             token0: pairData.token0.id,
+//                             token1: pairData.token1.id,
+//                             usd:
+//                                 (parseFloat(entry.liquidityTokenBalance) / parseFloat(pairData.totalSupply)) *
+//                                 parseFloat(pairData.reserveUSD),
+//                         })
+//                     })
+//                 })
 
-            const sorted = topLps.sort((a, b) => (a.usd > b.usd ? -1 : 1))
-            const shorter = sorted.splice(0, 100)
-            updateTopLps(shorter)
-        }
+//             const sorted = topLps.sort((a, b) => (a.usd > b.usd ? -1 : 1))
+//             const shorter = sorted.splice(0, 100)
+//             updateTopLps(shorter)
+//         }
 
-        if (!topLps && allPairs && Object.keys(allPairs).length > 0) {
-            fetchData()
-        }
-    })
+//         if (!topLps && allPairs && Object.keys(allPairs).length > 0) {
+//             fetchData()
+//         }
+//     })
 
-    return topLps
-}
+//     return topLps
+// }
