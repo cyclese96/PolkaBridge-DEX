@@ -10,6 +10,7 @@ import "./web";
 import { testQuery } from "./apollo/queries";
 import Footer from "./components/common/Footer";
 
+
 function App() {
   // useEffect(async () => {
   //   await testQuery();
