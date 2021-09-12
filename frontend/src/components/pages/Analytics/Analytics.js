@@ -6,9 +6,35 @@ import AreaChart from "./AreaChart";
 import PercentLabel from "../../common/PercentLabel";
 import { Card } from "@material-ui/core";
 import { topTransactions } from "../../../apollo/queries";
+import { useGlobalData } from "../../../contexts/GlobalData";
+import { formattedPercent } from "../../../utils/timeUtils";
+// import { useLatestBlocks } from "../../../contexts/Application";
+// import { useGlobalData } from "../../../contexts/GlobalData";
 
+
+// globalData ->
+// {
+//   "id": "0xA1853078D1447C0060c71a672E6D13882f61A0a6",
+//   "totalVolumeUSD": "25990.233499252762817",
+//   "totalVolumeETH": "7.425780999786503662",
+//   "untrackedVolumeUSD": "28387.02699820012448427415396166343",
+//   "totalLiquidityUSD": 113078.18050507178,
+//   "totalLiquidityETH": "32.30805157287764869",
+//   "txCount": "59",
+//   "pairCount": 5,
+//   "__typename": "PolkabridgeAmmFactory",
+//   "oneDayVolumeUSD": 437.8250777427784,
+//   "oneWeekVolume": 2611.150077742779,
+//   "weeklyVolumeChange": -85.87440846623471,
+//   "volumeChangeUSD": 0,
+//   "liquidityChangeUSD": 5.726158284194191,
+//   "oneDayTxns": 2,
+//   "txnChange": 0
+// }
 const Analytics = () => {
   const classes = useStyles();
+
+  const globalData = useGlobalData()
 
   useEffect(async () => {
     const page = 1;
@@ -24,7 +50,7 @@ const Analytics = () => {
         <div className="col-md-6">
           <Card elevation={10} className={classes.card}>
             <span className={classes.cardSpan}>Total value locked</span>
-            <p className={classes.cardP}>$1.4B</p>
+            <p className={classes.cardP}> $ {globalData.totalLiquidityUSD ? globalData.totalLiquidityUSD : '-'} <small>{globalData.liquidityChangeUSD ? formattedPercent(globalData.liquidityChangeUSD) : '-'}</small> </p>
 
             <div className={classes.chart}>
               <AreaChart />
@@ -34,7 +60,7 @@ const Analytics = () => {
         <div className="col-md-6">
           <Card elevation={10} className={classes.card}>
             <span className={classes.cardSpan}>Volume 24H</span>
-            <p className={classes.cardP}>$ 992M</p>
+            <p className={classes.cardP}>$ {globalData.oneDayVolumeUSD ? globalData.oneDayVolumeUSD : '-'} <small>{globalData.volumeChangeUSD ? formattedPercent(globalData.volumeChangeUSD) : '-'}</small> </p>
             <div className={classes.chart}>
               <BarChart />
             </div>

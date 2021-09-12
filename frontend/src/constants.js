@@ -327,3 +327,5 @@ export const timeframeOptions = {
   HALF_YEAR: '6 months',
   ALL_TIME: 'All time',
 }
+
+export const BUNDLE_ID = '1'

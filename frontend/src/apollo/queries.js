@@ -1,7 +1,7 @@
-import { gql } from "@apollo/client";
-import { currentConnection, facotryAddressTestnet, factoryAddresMainnet } from "../constants";
+import gql from 'graphql-tag'
+import { BUNDLE_ID, currentConnection, facotryAddressTestnet, factoryAddresMainnet } from "../constants";
 import { getUnixTime } from "../utils/helper";
-import client from "./client";
+import { client } from "./client";
 
 const FACTORY_ADDRESS = currentConnection === 'testnet' ? facotryAddressTestnet : factoryAddresMainnet;
 
@@ -269,3 +269,102 @@ export const topTransactions = async (page = 1, order = 'desc') => {
     return []
   }
 }
+
+// queries global data context
+
+export const ALL_PAIRS = gql`
+  query pairs($skip: Int!) {
+    pairs(first: 500, skip: $skip, orderBy: trackedReserveETH, orderDirection: desc) {
+      id
+      token0 {
+        id
+        symbol
+        name
+      }
+      token1 {
+        id
+        symbol
+        name
+      }
+    }
+  }
+`
+
+
+export const ALL_TOKENS = gql`
+  query tokens($skip: Int!) {
+    tokens(first: 500, skip: $skip) {
+      id
+      name
+      symbol
+      totalLiquidity
+    }
+  }
+`
+
+export const ETH_PRICE = (block) => {
+  const _block = block//9278400
+  const queryString = block
+    ? `
+    query bundles {
+      bundles(where: { id: ${BUNDLE_ID} } block: {number: ${_block}}) {
+        id
+        ethPrice
+      }
+    }
+  `
+    : ` query bundles {
+      bundles(where: { id: ${BUNDLE_ID} }) {
+        id
+        ethPrice
+      }
+    }
+  `
+  return gql(queryString)
+}
+
+
+
+export const GET_BLOCK = gql`
+  query blocks($timestampFrom: Int!, $timestampTo: Int!) {
+    blocks(
+      first: 1
+      orderBy: timestamp
+      orderDirection: asc
+      where: { timestamp_gt: $timestampFrom, timestamp_lt: $timestampTo }
+    ) {
+      id
+      number
+      timestamp
+    }
+  }
+`
+
+export const GET_BLOCKS = (timestamps) => {
+  let queryString = 'query blocks {'
+  queryString += timestamps.map((timestamp) => {
+    return `t${timestamp}:blocks(first: 1, orderBy: timestamp, orderDirection: desc, where: { timestamp_gt: ${timestamp}, timestamp_lt: ${timestamp + 600
+      } }) {
+      number
+    }`
+  })
+  queryString += '}'
+  return gql(queryString)
+}
+
+export const SUBGRAPH_HEALTH = gql`
+  query health {
+    indexingStatusForCurrentVersion(subgraphName: "uniswap/uniswap-v2") {
+      synced
+      health
+      chains {
+        chainHeadBlock {
+          number
+        }
+        latestBlock {
+          number
+        }
+      }
+    }
+  }
+`
