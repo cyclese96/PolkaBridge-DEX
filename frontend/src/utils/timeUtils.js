@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import { ethers } from 'ethers'
 import utc from 'dayjs/plugin/utc'
 import { client, blockClient } from '../apollo/client'
-import { GET_BLOCK, GET_BLOCKS, SHARE_VALUE } from '../apollo/queries'
+import { GET_BLOCK, GET_BLOCKS } from '../apollo/queries'
 import { Text } from 'rebass'
 import _Decimal from 'decimal.js-light'
 import toFormat from 'toformat'
@@ -215,58 +215,58 @@ export async function getBlocksFromTimestamps(timestamps, skipCount = 500) {
  * @param {String} pairAddress
  * @param {Array} timestamps
  */
-export async function getShareValueOverTime(pairAddress, timestamps) {
-    if (!timestamps) {
-        const utcCurrentTime = dayjs()
-        const utcSevenDaysBack = utcCurrentTime.subtract(8, 'day').unix()
-        timestamps = getTimestampRange(utcSevenDaysBack, 86400, 7)
-    }
+// export async function getShareValueOverTime(pairAddress, timestamps) {
+//     if (!timestamps) {
+//         const utcCurrentTime = dayjs()
+//         const utcSevenDaysBack = utcCurrentTime.subtract(8, 'day').unix()
+//         timestamps = getTimestampRange(utcSevenDaysBack, 86400, 7)
+//     }
 
-    // get blocks based on timestamps
-    const blocks = await getBlocksFromTimestamps(timestamps)
+//     // get blocks based on timestamps
+//     const blocks = await getBlocksFromTimestamps(timestamps)
 
-    // get historical share values with time travel queries
-    let result = await client.query({
-        query: SHARE_VALUE(pairAddress, blocks),
-        fetchPolicy: 'cache-first',
-    })
+//     // get historical share values with time travel queries
+//     let result = await client.query({
+//         query: SHARE_VALUE(pairAddress, blocks),
+//         fetchPolicy: 'cache-first',
+//     })
 
-    let values = []
-    for (var row in result?.data) {
-        let timestamp = row.split('t')[1]
-        let sharePriceUsd = parseFloat(result.data[row]?.reserveUSD) / parseFloat(result.data[row]?.totalSupply)
-        if (timestamp) {
-            values.push({
-                timestamp,
-                sharePriceUsd,
-                totalSupply: result.data[row].totalSupply,
-                reserve0: result.data[row].reserve0,
-                reserve1: result.data[row].reserve1,
-                reserveUSD: result.data[row].reserveUSD,
-                token0DerivedETH: result.data[row].token0.derivedETH,
-                token1DerivedETH: result.data[row].token1.derivedETH,
-                roiUsd: values && values[0] ? sharePriceUsd / values[0]['sharePriceUsd'] : 1,
-                ethPrice: 0,
-                token0PriceUSD: 0,
-                token1PriceUSD: 0,
-            })
-        }
-    }
+//     let values = []
+//     for (var row in result?.data) {
+//         let timestamp = row.split('t')[1]
+//         let sharePriceUsd = parseFloat(result.data[row]?.reserveUSD) / parseFloat(result.data[row]?.totalSupply)
+//         if (timestamp) {
+//             values.push({
+//                 timestamp,
+//                 sharePriceUsd,
+//                 totalSupply: result.data[row].totalSupply,
+//                 reserve0: result.data[row].reserve0,
+//                 reserve1: result.data[row].reserve1,
+//                 reserveUSD: result.data[row].reserveUSD,
+//                 token0DerivedETH: result.data[row].token0.derivedETH,
+//                 token1DerivedETH: result.data[row].token1.derivedETH,
+//                 roiUsd: values && values[0] ? sharePriceUsd / values[0]['sharePriceUsd'] : 1,
+//                 ethPrice: 0,
+//                 token0PriceUSD: 0,
+//                 token1PriceUSD: 0,
+//             })
+//         }
+//     }
 
-    // add eth prices
-    let index = 0
-    for (var brow in result?.data) {
-        let timestamp = brow.split('b')[1]
-        if (timestamp) {
-            values[index].ethPrice = result.data[brow].ethPrice
-            values[index].token0PriceUSD = result.data[brow].ethPrice * values[index].token0DerivedETH
-            values[index].token1PriceUSD = result.data[brow].ethPrice * values[index].token1DerivedETH
-            index += 1
-        }
-    }
+//     // add eth prices
+//     let index = 0
+//     for (var brow in result?.data) {
+//         let timestamp = brow.split('b')[1]
+//         if (timestamp) {
+//             values[index].ethPrice = result.data[brow].ethPrice
+//             values[index].token0PriceUSD = result.data[brow].ethPrice * values[index].token0DerivedETH
+//             values[index].token1PriceUSD = result.data[brow].ethPrice * values[index].token1DerivedETH
+//             index += 1
+//         }
+//     }
 
-    return values
-}
+//     return values
+// }
 
 /**
  * @notice Creates an evenly-spaced array of timestamps

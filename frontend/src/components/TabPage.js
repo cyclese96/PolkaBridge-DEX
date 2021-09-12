@@ -8,6 +8,10 @@ import PropTypes from "prop-types";
 import SwapCard from "./Cards/SwapCard";
 import AddLiquidity from "./pages/AddLiquidity";
 import Analytics from "./pages/Analytics";
+// import { ApolloProvider } from 'react-apollo'
+// import { client } from "../apollo/client";
+import GlobalDataContextProvider from '../contexts/GlobalData'
+
 
 const useStyles = makeStyles((theme) => ({
   tabs: {
@@ -104,7 +108,9 @@ export default function TabPage() {
         <AddLiquidity />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <Analytics />
+        <GlobalDataContextProvider>
+          <Analytics />
+        </GlobalDataContextProvider>
       </TabPanel>
     </>
   );
