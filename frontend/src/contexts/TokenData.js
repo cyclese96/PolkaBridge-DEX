@@ -238,6 +238,7 @@ const getTopTokens = async (ethPrice, ethPriceOld) => {
       variables: { date: currentDate },
     })
 
+    console.log('fetched top tokens', tokenids)
     const ids = tokenids?.data?.tokenDayDatas?.reduce((accum, entry) => {
       accum.push(entry.id.slice(0, 42))
       return accum
@@ -337,16 +338,16 @@ const getTopTokens = async (ethPrice, ethPriceOld) => {
         // })
 
         // HOTFIX for Aave
-        if (data.id === '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9') {
-          const aaveData = await client.query({
-            query: PAIR_DATA('0xdfc14d2af169b0d36c4eff567ada9b2e0cae044f'),
-            fetchPolicy: 'cache-first',
-          })
-          const result = aaveData.data.pairs[0]
-          data.totalLiquidityUSD = parseFloat(result.reserveUSD) / 2
-          data.liquidityChangeUSD = 0
-          data.priceChangeUSD = 0
-        }
+        // if (data.id === '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9') {
+        //   const aaveData = await client.query({
+        //     query: PAIR_DATA('0xdfc14d2af169b0d36c4eff567ada9b2e0cae044f'),
+        //     fetchPolicy: 'cache-first',
+        //   })
+        //   const result = aaveData.data.pairs[0]
+        //   data.totalLiquidityUSD = parseFloat(result.reserveUSD) / 2
+        //   data.liquidityChangeUSD = 0
+        //   data.priceChangeUSD = 0
+        // }
 
         // used for custom adjustments
         data.oneDayData = oneDayHistory
@@ -673,6 +674,7 @@ export function Updater() {
     async function getData() {
       // get top pairs for overview list
       let topTokens = await getTopTokens(ethPrice, ethPriceOld)
+      console.log('fetched top tokens', topTokens)
       topTokens && updateTopTokens(topTokens)
     }
     ethPrice && ethPriceOld && getData()

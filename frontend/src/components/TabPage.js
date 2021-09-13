@@ -13,6 +13,7 @@ import Analytics from "./pages/Analytics";
 import ApplicationContextProvider from '../contexts/Application'
 import GlobalDataContextProvider from '../contexts/GlobalData'
 import TokenDataContextProvider, { Updater as TokenDataContextUpdater } from '../contexts/TokenData'
+import PairDataContextProvider, { Updater as PairDataContextUpdater } from '../contexts/PairData'
 
 
 
@@ -70,7 +71,9 @@ function ContextProviders({ children }) {
     <ApplicationContextProvider>
       <TokenDataContextProvider>
         <GlobalDataContextProvider>
-          {children}
+          <PairDataContextProvider>
+            {children}
+          </PairDataContextProvider>
         </GlobalDataContextProvider>
       </TokenDataContextProvider>
     </ApplicationContextProvider>
@@ -81,6 +84,7 @@ function Updaters() {
   return (
     <>
       <TokenDataContextUpdater />
+      <PairDataContextUpdater />
     </>
   )
 }
