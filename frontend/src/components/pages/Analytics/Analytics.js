@@ -8,9 +8,10 @@ import { Card } from "@material-ui/core";
 import { topTransactions } from "../../../apollo/queries";
 import { useGlobalData } from "../../../contexts/GlobalData";
 import { formattedPercent } from "../../../utils/timeUtils";
+import millify from "millify";
+import { formatCurrency } from "../../../utils/helper";
 // import { useLatestBlocks } from "../../../contexts/Application";
 // import { useGlobalData } from "../../../contexts/GlobalData";
-
 
 // globalData ->
 // {
@@ -34,14 +35,14 @@ import { formattedPercent } from "../../../utils/timeUtils";
 const Analytics = () => {
   const classes = useStyles();
 
-  const globalData = useGlobalData()
+  const globalData = useGlobalData();
 
   useEffect(async () => {
     const page = 1;
-    const order = 'desc';
-    const transactions = await topTransactions(page, order)
-    console.log('transactions ', transactions)
-  }, [])
+    const order = "desc";
+    const transactions = await topTransactions(page, order);
+    console.log("transactions ", transactions);
+  }, []);
   return (
     <div>
       <p className={classes.heading}>PolkaBridge DEX Overview</p>
@@ -50,7 +51,16 @@ const Analytics = () => {
         <div className="col-md-6">
           <Card elevation={10} className={classes.card}>
             <span className={classes.cardSpan}>Total value locked</span>
-            <p className={classes.cardP}> $ {globalData.totalLiquidityUSD ? globalData.totalLiquidityUSD : '-'} <small>{globalData.liquidityChangeUSD ? formattedPercent(globalData.liquidityChangeUSD) : '-'}</small> </p>
+            <p className={classes.cardP}>
+              {globalData.totalLiquidityUSD
+                ? formatCurrency(globalData.totalLiquidityUSD, false, 0, false)
+                : "-"}{" "}
+              <small>
+                {globalData.liquidityChangeUSD
+                  ? formattedPercent(globalData.liquidityChangeUSD)
+                  : "-"}
+              </small>{" "}
+            </p>
 
             <div className={classes.chart}>
               <AreaChart />
@@ -60,7 +70,17 @@ const Analytics = () => {
         <div className="col-md-6">
           <Card elevation={10} className={classes.card}>
             <span className={classes.cardSpan}>Volume 24H</span>
-            <p className={classes.cardP}>$ {globalData.oneDayVolumeUSD ? globalData.oneDayVolumeUSD : '-'} <small>{globalData.volumeChangeUSD ? formattedPercent(globalData.volumeChangeUSD) : '-'}</small> </p>
+            <p className={classes.cardP}>
+              {console.log(globalData)}
+              {globalData.oneDayVolumeUSD
+                ? formatCurrency(globalData.oneDayVolumeUSD, true, 1, true)
+                : "-"}
+              <small>
+                {globalData.volumeChangeUSD !== null
+                  ? formattedPercent(globalData.volumeChangeUSD)
+                  : "-"}
+              </small>{" "}
+            </p>
             <div className={classes.chart}>
               <BarChart />
             </div>
