@@ -69,7 +69,8 @@ const TransactionRow = (props) => {
           {formatCurrency(row.amount1, true)}
         </TableCell>
         <TableCell align="right" className={classes.cellText}>
-          ...{row.sender.split("").splice(0, 10)}
+          {[...row.sender].splice(0, 5)} {"..."}
+          {[...row.sender].splice([...row.sender].length - 5, 5)}
         </TableCell>
         <TableCell align="right" className={classes.cellText}>
           <Moment fromNow>{Date(row.transaction.timestamp)}</Moment>
