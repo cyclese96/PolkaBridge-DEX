@@ -10,9 +10,10 @@ import { useGlobalChartData, useGlobalData } from "../../../contexts/GlobalData"
 import { formattedPercent } from "../../../utils/timeUtils";
 import { useAllTokenData } from "../../../contexts/TokenData";
 import { useAllPairData } from "../../../contexts/PairData";
+import millify from "millify";
+import { formatCurrency } from "../../../utils/helper";
 // import { useLatestBlocks } from "../../../contexts/Application";
 // import { useGlobalData } from "../../../contexts/GlobalData";
-
 
 // globalData ->
 // {
@@ -57,7 +58,16 @@ const Analytics = () => {
         <div className="col-md-6">
           <Card elevation={10} className={classes.card}>
             <span className={classes.cardSpan}>Total value locked</span>
-            <p className={classes.cardP}> $ {globalData.totalLiquidityUSD ? globalData.totalLiquidityUSD : '-'} <small>{globalData.liquidityChangeUSD ? formattedPercent(globalData.liquidityChangeUSD) : '-'}</small> </p>
+            <p className={classes.cardP}>
+              {globalData.totalLiquidityUSD
+                ? formatCurrency(globalData.totalLiquidityUSD, false, 0, false)
+                : "-"}{" "}
+              <small>
+                {globalData.liquidityChangeUSD
+                  ? formattedPercent(globalData.liquidityChangeUSD)
+                  : "-"}
+              </small>{" "}
+            </p>
 
             <div className={classes.chart}>
               <AreaChart chartData={chartData ? chartData[0] : []} />
@@ -67,7 +77,17 @@ const Analytics = () => {
         <div className="col-md-6">
           <Card elevation={10} className={classes.card}>
             <span className={classes.cardSpan}>Volume 24H</span>
-            <p className={classes.cardP}>$ {globalData.oneDayVolumeUSD ? globalData.oneDayVolumeUSD : '-'} <small>{globalData.volumeChangeUSD ? formattedPercent(globalData.volumeChangeUSD) : '-'}</small> </p>
+            <p className={classes.cardP}>
+              {console.log(globalData)}
+              {globalData.oneDayVolumeUSD
+                ? formatCurrency(globalData.oneDayVolumeUSD, true, 1, true)
+                : "-"}
+              <small>
+                {globalData.volumeChangeUSD !== null
+                  ? formattedPercent(globalData.volumeChangeUSD)
+                  : "-"}
+              </small>{" "}
+            </p>
             <div className={classes.chart}>
               <BarChart chartData={chartData ? chartData[0] : []} />
             </div>
