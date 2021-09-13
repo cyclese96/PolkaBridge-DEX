@@ -1,5 +1,8 @@
 // import React from "react";
+import { useEffect } from "react";
 import Chart from "react-apexcharts";
+import { useState } from "react/cjs/react.development";
+import { usePrevious } from 'react-use'
 
 const chartEvent = (
   event,
@@ -73,8 +76,8 @@ const state = {
     },
     xaxis: {
       type: "datetime",
-      min: new Date("01 Mar 2012").getTime(),
-      tickAmount: 4,
+      // min: new Date("01 Mar 2012").getTime(),
+      // tickAmount: 4,
     },
     tooltip: {
       x: {
@@ -96,50 +99,38 @@ const state = {
   selection: "all",
   series: [
     {
-      name: "TVL",
+      name: "TVL USD",
       data: [
-        [1330642800000, 33.73],
-        [1330902000000, 33.22],
-        [1330988400000, 31.99],
-        [1331074800000, 32.41],
-        [1331161200000, 33.05],
-        [1331247600000, 33.64],
-        [1331506800000, 33.56],
-        [1331593200000, 34.22],
-        [1331679600000, 33.77],
-        [1331766000000, 34.17],
-        [1331852400000, 33.82],
-        [1332111600000, 34.51],
-        [1332198000000, 33.16],
-        [1332284400000, 33.56],
-        [1332370800000, 33.71],
-        [1332457200000, 33.81],
-        [1332712800000, 34.4],
-        [1332799200000, 34.63],
-        [1332885600000, 34.46],
-        [1332972000000, 34.48],
-        [1333058400000, 34.31],
-        [1333317600000, 34.7],
-        [1333404000000, 34.31],
-        [1333490400000, 33.46],
-        [1333576800000, 33.59],
-        [1333922400000, 33.22],
-        [1334008800000, 32.61],
-        [1334095200000, 33.01],
-        [1334181600000, 33.55],
-        [1334268000000, 33.18],
       ],
     },
   ],
 };
 
-const AreaChart = () => (
-  <Chart
-    options={state.options}
-    series={state.series}
-    type="area"
-    width="100%"
-  />
-);
+const AreaChart = ({ chartData }) => {
+
+  // pointer to the chart object
+  const [chartCreated, setChartCreated] = useState(false)
+  const dataPrev = usePrevious(chartData)
+  const [currChartData, setChartData] = useState(state.series)
+
+  useEffect(() => {
+
+    if (chartData !== dataPrev && chartData) {
+      const _data = chartData.length > 0 ? chartData.map(item => [item.date * 1000, item.totalLiquidityUSD ? parseInt(item.totalLiquidityUSD) : 0]) : []
+      setChartData([{ name: currChartData[0].name, data: _data }])
+    }
+
+  }, [chartCreated, chartData, dataPrev])
+
+
+  return (
+    < Chart
+      options={state.options}
+      series={currChartData}
+      type="area"
+      width="100%"
+    />
+  )
+}
 
 export default AreaChart;

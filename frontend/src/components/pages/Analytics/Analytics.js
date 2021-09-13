@@ -6,7 +6,7 @@ import AreaChart from "./AreaChart";
 import PercentLabel from "../../common/PercentLabel";
 import { Card } from "@material-ui/core";
 import { topTransactions } from "../../../apollo/queries";
-import { useGlobalData } from "../../../contexts/GlobalData";
+import { useGlobalChartData, useGlobalData } from "../../../contexts/GlobalData";
 import { formattedPercent } from "../../../utils/timeUtils";
 // import { useLatestBlocks } from "../../../contexts/Application";
 // import { useGlobalData } from "../../../contexts/GlobalData";
@@ -36,11 +36,13 @@ const Analytics = () => {
 
   const globalData = useGlobalData()
 
+  const chartData = useGlobalChartData()
+
   useEffect(async () => {
     const page = 1;
     const order = 'desc';
     const transactions = await topTransactions(page, order)
-    console.log('transactions ', transactions)
+    // console.log('transactions ', transactions)
   }, [])
   return (
     <div>
@@ -53,7 +55,7 @@ const Analytics = () => {
             <p className={classes.cardP}> $ {globalData.totalLiquidityUSD ? globalData.totalLiquidityUSD : '-'} <small>{globalData.liquidityChangeUSD ? formattedPercent(globalData.liquidityChangeUSD) : '-'}</small> </p>
 
             <div className={classes.chart}>
-              <AreaChart />
+              <AreaChart chartData={chartData ? chartData[0] : []} />
             </div>
           </Card>
         </div>
@@ -62,7 +64,7 @@ const Analytics = () => {
             <span className={classes.cardSpan}>Volume 24H</span>
             <p className={classes.cardP}>$ {globalData.oneDayVolumeUSD ? globalData.oneDayVolumeUSD : '-'} <small>{globalData.volumeChangeUSD ? formattedPercent(globalData.volumeChangeUSD) : '-'}</small> </p>
             <div className={classes.chart}>
-              <BarChart />
+              <BarChart chartData={chartData ? chartData[0] : []} />
             </div>
           </Card>
         </div>

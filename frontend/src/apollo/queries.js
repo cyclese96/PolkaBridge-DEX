@@ -368,3 +368,223 @@ export const SUBGRAPH_HEALTH = gql`
     }
   }
 `
+
+
+export const FILTERED_TRANSACTIONS = gql`
+  query ($allPairs: [Bytes]!) {
+    mints(first: 20, where: { pair_in: $allPairs }, orderBy: timestamp, orderDirection: desc) {
+      transaction {
+        id
+        timestamp
+      }
+      pair {
+        token0 {
+          id
+          symbol
+        }
+        token1 {
+          id
+          symbol
+        }
+      }
+      to
+      liquidity
+      amount0
+      amount1
+      amountUSD
+    }
+    burns(first: 20, where: { pair_in: $allPairs }, orderBy: timestamp, orderDirection: desc) {
+      transaction {
+        id
+        timestamp
+      }
+      pair {
+        token0 {
+          id
+          symbol
+        }
+        token1 {
+          id
+          symbol
+        }
+      }
+      sender
+      liquidity
+      amount0
+      amount1
+      amountUSD
+    }
+    swaps(first: 30, where: { pair_in: $allPairs }, orderBy: timestamp, orderDirection: desc) {
+      transaction {
+        id
+        timestamp
+      }
+      id
+      pair {
+        token0 {
+          id
+          symbol
+        }
+        token1 {
+          id
+          symbol
+        }
+      }
+      amount0In
+      amount0Out
+      amount1In
+      amount1Out
+      amountUSD
+      to
+    }
+  }
+`
+
+const PairFields = `
+  fragment PairFields on Pair {
+    id
+    txCount
+    token0 {
+      id
+      symbol
+      name
+      totalLiquidity
+      derivedETH
+    }
+    token1 {
+      id
+      symbol
+      name
+      totalLiquidity
+      derivedETH
+    }
+    reserve0
+    reserve1
+    reserveUSD
+    totalSupply
+    trackedReserveETH
+    reserveETH
+    volumeUSD
+    untrackedVolumeUSD
+    token0Price
+    token1Price
+    createdAtTimestamp
+  }
+`
+
+export const PAIR_DATA = (pairAddress, block) => {
+  const queryString = `
+    ${PairFields}
+    query pairs {
+      pairs(${block ? `block: {number: ${block}}` : ``} where: { id: "${pairAddress}"} ) {
+        ...PairFields
+      }
+    }`
+  return gql(queryString)
+}
+
+export const PRICES_BY_BLOCK = (tokenAddress, blocks) => {
+  let queryString = 'query blocks {'
+  queryString += blocks.map(
+    (block) => `
+      t${block.timestamp}:token(id:"${tokenAddress}", block: { number: ${block.number} }) { 
+        derivedETH
+      }
+    `
+  )
+  queryString += ','
+  queryString += blocks.map(
+    (block) => `
+      b${block.timestamp}: bundle(id:"1", block: { number: ${block.number} }) { 
+        ethPrice
+      }
+    `
+  )
+
+  queryString += '}'
+  return gql(queryString)
+}
+
+
+export const TOKENS_HISTORICAL_BULK = (tokens, block) => {
+  let tokenString = `[`
+  tokens.map((token) => {
+    return (tokenString += `"${token}",`)
+  })
+  tokenString += ']'
+  let queryString = `
+  query tokens {
+    tokens(first: 50, where: {id_in: ${tokenString}}, ${block ? 'block: {number: ' + block + '}' : ''}  ) {
+      id
+      name
+      symbol
+      derivedETH
+      tradeVolume
+      tradeVolumeUSD
+      untrackedVolumeUSD
+      totalLiquidity
+      txCount
+    }
+  }
+  `
+  return gql(queryString)
+}
+
+export const TOKEN_CHART = gql`
+  query tokenDayDatas($tokenAddr: String!, $skip: Int!) {
+    tokenDayDatas(first: 1000, skip: $skip, orderBy: date, orderDirection: asc, where: { token: $tokenAddr }) {
+      id
+      date
+      priceUSD
+      totalLiquidityToken
+      totalLiquidityUSD
+      totalLiquidityETH
+      dailyVolumeETH
+      dailyVolumeToken
+      dailyVolumeUSD
+    }
+  }
+`
+const TokenFields = `
+  fragment TokenFields on Token {
+    id
+    name
+    symbol
+    derivedETH
+    tradeVolume
+    tradeVolumeUSD
+    untrackedVolumeUSD
+    totalLiquidity
+    txCount
+  }
+`
+
+
+
+export const TOKEN_DATA = (tokenAddress, block) => {
+  const queryString = `
+    ${TokenFields}
+    query tokens {
+      tokens(${block ? `block : {number: ${block}}` : ``} where: {id:"${tokenAddress}"}) {
+        ...TokenFields
+      }
+      pairs0: pairs(where: {token0: "${tokenAddress}"}, first: 50, orderBy: reserveUSD, orderDirection: desc){
+        id
+      }
+      pairs1: pairs(where: {token1: "${tokenAddress}"}, first: 50, orderBy: reserveUSD, orderDirection: desc){
+        id
+      }
+    }
+  `
+  return gql(queryString)
+}
+
+// used for getting top tokens by daily volume
+export const TOKEN_TOP_DAY_DATAS = gql`
+  query tokenDayDatas($date: Int) {
+    tokenDayDatas(first: 50, orderBy: totalLiquidityUSD, orderDirection: desc, where: { date_gt: $date }) {
+      id
+      date
+    }
+  }
+`

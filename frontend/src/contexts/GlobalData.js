@@ -2,7 +2,7 @@ import React, { createContext, useContext, useReducer, useMemo, useCallback, use
 import { client } from '../apollo/client'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
-// import { useTimeframe } from './Application'
+import { useTimeframe } from './Application'
 import {
     getPercentChange,
     getBlockFromTimestamp,
@@ -13,7 +13,7 @@ import {
 import {
     GLOBAL_DATA,
     // GLOBAL_TXNS,
-    // GLOBAL_CHART,
+    GLOBAL_CHART,
     ETH_PRICE,
     ALL_PAIRS,
     ALL_TOKENS,
@@ -21,7 +21,7 @@ import {
 } from '../apollo/queries'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
 // import { useAllPairData } from './PairData'
-// import { useTokenChartDataCombined } from './TokenData'
+import { useTokenChartDataCombined } from './TokenData'
 const UPDATE = 'UPDATE'
 const UPDATE_TXNS = 'UPDATE_TXNS'
 const UPDATE_CHART = 'UPDATE_CHART'
@@ -322,107 +322,110 @@ async function getGlobalData(ethPrice, oldEthPrice) {
  * @param {*} oldestDateToFetch // start of window to fetch from
  */
 
-// let checked = false
+let checked = false
 
-// const getChartData = async (oldestDateToFetch, offsetData) => {
-//     let data = []
-//     let weeklyData = []
-//     const utcEndTime = dayjs.utc()
-//     let skip = 0
-//     let allFound = false
+const getChartData = async (oldestDateToFetch, offsetData) => {
+    let data = []
+    let weeklyData = []
+    const utcEndTime = dayjs.utc()
+    let skip = 0
+    let allFound = false
 
-//     try {
-//         while (!allFound) {
-//             let result = await client.query({
-//                 query: GLOBAL_CHART,
-//                 variables: {
-//                     startTime: oldestDateToFetch,
-//                     skip,
-//                 },
-//                 fetchPolicy: 'cache-first',
-//             })
-//             skip += 1000
-//             data = data.concat(result.data.uniswapDayDatas)
-//             if (result.data.uniswapDayDatas.length < 1000) {
-//                 allFound = true
-//             }
-//         }
+    try {
+        while (!allFound) {
+            let result = await client.query({
+                query: GLOBAL_CHART,
+                variables: {
+                    startTime: oldestDateToFetch,
+                    skip,
+                },
+                fetchPolicy: 'cache-first',
+            })
+            skip += 1000
+            data = data.concat(result.data.polkabridgeAmmDayDatas)
+            if (result.data.polkabridgeAmmDayDatas.length < 1000) {
+                allFound = true
+            }
+        }
 
-//         if (data) {
-//             let dayIndexSet = new Set()
-//             let dayIndexArray = []
-//             const oneDay = 24 * 60 * 60
+        if (data) {
+            let dayIndexSet = new Set()
+            let dayIndexArray = []
+            const oneDay = 24 * 60 * 60
 
-//             // for each day, parse the daily volume and format for chart array
-//             data.forEach((dayData, i) => {
-//                 // add the day index to the set of days
-//                 dayIndexSet.add((data[i].date / oneDay).toFixed(0))
-//                 dayIndexArray.push(data[i])
-//                 dayData.dailyVolumeUSD = parseFloat(dayData.dailyVolumeUSD)
-//             })
+            // for each day, parse the daily volume and format for chart array
+            data.forEach((dayData, i) => {
+                // add the day index to the set of days
+                dayIndexSet.add((data[i].date / oneDay).toFixed(0))
+                dayIndexArray.push(data[i])
+                dayData.dailyVolumeUSD = parseFloat(dayData.dailyVolumeUSD)
+            })
 
-//             // fill in empty days ( there will be no day datas if no trades made that day )
-//             let timestamp = data[0].date ? data[0].date : oldestDateToFetch
-//             let latestLiquidityUSD = data[0].totalLiquidityUSD
-//             let latestDayDats = data[0].mostLiquidTokens
-//             let index = 1
-//             while (timestamp < utcEndTime.unix() - oneDay) {
-//                 const nextDay = timestamp + oneDay
-//                 let currentDayIndex = (nextDay / oneDay).toFixed(0)
+            // fill in empty days ( there will be no day datas if no trades made that day )
+            let timestamp = data[0].date ? data[0].date : oldestDateToFetch
+            let latestLiquidityUSD = data[0].totalLiquidityUSD
+            let latestDayDats = data[0].mostLiquidTokens
+            let index = 1
+            while (timestamp < utcEndTime.unix() - oneDay) {
+                const nextDay = timestamp + oneDay
+                let currentDayIndex = (nextDay / oneDay).toFixed(0)
 
-//                 if (!dayIndexSet.has(currentDayIndex)) {
-//                     data.push({
-//                         date: nextDay,
-//                         dailyVolumeUSD: 0,
-//                         totalLiquidityUSD: latestLiquidityUSD,
-//                         mostLiquidTokens: latestDayDats,
-//                     })
-//                 } else {
-//                     latestLiquidityUSD = dayIndexArray[index].totalLiquidityUSD
-//                     latestDayDats = dayIndexArray[index].mostLiquidTokens
-//                     index = index + 1
-//                 }
-//                 timestamp = nextDay
-//             }
-//         }
+                if (!dayIndexSet.has(currentDayIndex)) {
+                    data.push({
+                        // id: nextDay.toString(), //: todo fix
+                        date: nextDay,
+                        dailyVolumeUSD: 0,
+                        totalLiquidityUSD: latestLiquidityUSD,
+                        mostLiquidTokens: latestDayDats,
+                    })
+                } else {
+                    latestLiquidityUSD = dayIndexArray[index].totalLiquidityUSD
+                    latestDayDats = dayIndexArray[index].mostLiquidTokens
+                    index = index + 1
+                }
+                timestamp = nextDay
+            }
+        }
 
-//         // format weekly data for weekly sized chunks
-//         data = data.sort((a, b) => (parseInt(a.date) > parseInt(b.date) ? 1 : -1))
-//         let startIndexWeekly = -1
-//         let currentWeek = -1
+        // format weekly data for weekly sized chunks
+        data = data.sort((a, b) => (parseInt(a.date) > parseInt(b.date) ? 1 : -1))
+        let startIndexWeekly = -1
+        let currentWeek = -1
 
-//         data.forEach((entry, i) => {
-//             const date = data[i].date
+        data.forEach((entry, i) => {
+            const date = data[i].date
 
-//             // hardcoded fix for offset volume
-//             offsetData &&
-//                 !checked &&
-//                 offsetData.map((dayData) => {
-//                     if (dayData[date]) {
-//                         data[i].dailyVolumeUSD = parseFloat(data[i].dailyVolumeUSD) - parseFloat(dayData[date].dailyVolumeUSD)
-//                     }
-//                     return true
-//                 })
+            // hardcoded fix for offset volume
+            offsetData &&
+                !checked &&
+                offsetData.map((dayData) => {
+                    if (dayData[date]) {
+                        data[i].dailyVolumeUSD = parseFloat(data[i].dailyVolumeUSD) - parseFloat(dayData[date].dailyVolumeUSD)
+                    }
+                    return true
+                })
 
-//             const week = dayjs.utc(dayjs.unix(data[i].date)).week()
-//             if (week !== currentWeek) {
-//                 currentWeek = week
-//                 startIndexWeekly++
-//             }
-//             weeklyData[startIndexWeekly] = weeklyData[startIndexWeekly] || {}
-//             weeklyData[startIndexWeekly].date = data[i].date
-//             weeklyData[startIndexWeekly].weeklyVolumeUSD =
-//                 (weeklyData[startIndexWeekly].weeklyVolumeUSD ?? 0) + data[i].dailyVolumeUSD
-//         })
+            const week = dayjs.utc(dayjs.unix(data[i].date)).week()
+            if (week !== currentWeek) {
+                currentWeek = week
+                startIndexWeekly++
+            }
+            weeklyData[startIndexWeekly] = weeklyData[startIndexWeekly] || {}
+            weeklyData[startIndexWeekly].date = data[i].date
+            weeklyData[startIndexWeekly].weeklyVolumeUSD =
+                (weeklyData[startIndexWeekly].weeklyVolumeUSD ?? 0) + data[i].dailyVolumeUSD
+        })
 
-//         if (!checked) {
-//             checked = true
-//         }
-//     } catch (e) {
-//         console.log(e)
-//     }
-//     return [data, weeklyData]
-// }
+        if (!checked) {
+            checked = true
+        }
+    } catch (e) {
+        console.log(e)
+    }
+    // console.log('chart daily data', data)
+    // console.log('weekly ', weeklyData)
+    return [data, weeklyData]
+}
 
 /**
  * Get and format transactions for global page
@@ -589,48 +592,48 @@ export function useGlobalData() {
     return data || {}
 }
 
-// export function useGlobalChartData() {
-//     const [state, { updateChart }] = useGlobalDataContext()
-//     const [oldestDateFetch, setOldestDateFetched] = useState()
-//     const [activeWindow] = useTimeframe()
+export function useGlobalChartData() {
+    const [state, { updateChart }] = useGlobalDataContext()
+    const [oldestDateFetch, setOldestDateFetched] = useState()
+    const [activeWindow] = useTimeframe()
 
-//     const chartDataDaily = state?.chartData?.daily
-//     const chartDataWeekly = state?.chartData?.weekly
+    const chartDataDaily = state?.chartData?.daily
+    const chartDataWeekly = state?.chartData?.weekly
 
-//     /**
-//      * Keep track of oldest date fetched. Used to
-//      * limit data fetched until its actually needed.
-//      * (dont fetch year long stuff unless year option selected)
-//      */
-//     useEffect(() => {
-//         // based on window, get starttime
-//         let startTime = getTimeframe(activeWindow)
+    /**
+     * Keep track of oldest date fetched. Used to
+     * limit data fetched until its actually needed.
+     * (dont fetch year long stuff unless year option selected)
+     */
+    useEffect(() => {
+        // based on window, get starttime
+        let startTime = getTimeframe(activeWindow)
 
-//         if ((activeWindow && startTime < oldestDateFetch) || !oldestDateFetch) {
-//             setOldestDateFetched(startTime)
-//         }
-//     }, [activeWindow, oldestDateFetch])
+        if ((activeWindow && startTime < oldestDateFetch) || !oldestDateFetch) {
+            setOldestDateFetched(startTime)
+        }
+    }, [activeWindow, oldestDateFetch])
 
-//     // fix for rebass tokens
+    // fix for rebass tokens
 
-//     const combinedData = useTokenChartDataCombined(offsetVolumes)
+    const combinedData = useTokenChartDataCombined(offsetVolumes)
 
-//     /**
-//      * Fetch data if none fetched or older data is needed
-//      */
-//     useEffect(() => {
-//         async function fetchData() {
-//             // historical stuff for chart
-//             let [newChartData, newWeeklyData] = await getChartData(oldestDateFetch, combinedData)
-//             updateChart(newChartData, newWeeklyData)
-//         }
-//         if (oldestDateFetch && !(chartDataDaily && chartDataWeekly) && combinedData) {
-//             fetchData()
-//         }
-//     }, [chartDataDaily, chartDataWeekly, combinedData, oldestDateFetch, updateChart])
+    /**
+     * Fetch data if none fetched or older data is needed
+     */
+    useEffect(() => {
+        async function fetchData() {
+            // historical stuff for chart
+            let [newChartData, newWeeklyData] = await getChartData(oldestDateFetch, combinedData)
+            updateChart(newChartData, newWeeklyData)
+        }
+        if (oldestDateFetch && !(chartDataDaily && chartDataWeekly) && combinedData) {
+            fetchData()
+        }
+    }, [chartDataDaily, chartDataWeekly, combinedData, oldestDateFetch, updateChart])
 
-//     return [chartDataDaily, chartDataWeekly]
-// }
+    return [chartDataDaily, chartDataWeekly]
+}
 
 // export function useGlobalTransactions() {
 //     const [state, { updateTransactions }] = useGlobalDataContext()
