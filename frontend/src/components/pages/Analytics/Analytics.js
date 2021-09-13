@@ -8,6 +8,8 @@ import { Card } from "@material-ui/core";
 import { topTransactions } from "../../../apollo/queries";
 import { useGlobalChartData, useGlobalData } from "../../../contexts/GlobalData";
 import { formattedPercent } from "../../../utils/timeUtils";
+import { useAllTokenData } from "../../../contexts/TokenData";
+import { useAllPairData } from "../../../contexts/PairData";
 // import { useLatestBlocks } from "../../../contexts/Application";
 // import { useGlobalData } from "../../../contexts/GlobalData";
 
@@ -34,6 +36,9 @@ import { formattedPercent } from "../../../utils/timeUtils";
 const Analytics = () => {
   const classes = useStyles();
 
+
+  const allPairs = useAllPairData()
+  const allTokens = useAllTokenData()
   const globalData = useGlobalData()
 
   const chartData = useGlobalChartData()
@@ -95,11 +100,11 @@ const Analytics = () => {
 
       <div className={classes.tokenListHeading}>Top Tokens</div>
       <div className={classes.tokenList}>
-        <TopTokens tableType="TopTokens" />
+        <TopTokens tableType="TopTokens" allTokens={allTokens} />
       </div>
       <div className={classes.tokenListHeading}>Top Pools</div>
       <div className={classes.tokenList}>
-        <TopTokens tableType="TopPools" />
+        <TopTokens tableType="TopPools" allPairs={allPairs} />
       </div>
       <div className={classes.tokenListHeading}>Transactions</div>
       <div className={classes.tokenList}>

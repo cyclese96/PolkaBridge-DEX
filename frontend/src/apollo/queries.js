@@ -582,9 +582,81 @@ export const TOKEN_DATA = (tokenAddress, block) => {
 // used for getting top tokens by daily volume
 export const TOKEN_TOP_DAY_DATAS = gql`
   query tokenDayDatas($date: Int) {
-    tokenDayDatas(first: 50, orderBy: totalLiquidityUSD, orderDirection: desc, where: { date_gt: $date }) {
+    tokenDayDatas(first: 50, orderBy: totalLiquidityUSD, orderDirection: desc,) {
       id
       date
+    }
+  }
+`
+// / where: { date_gt: $date }
+
+// pair data queries
+
+
+export const PAIRS_BULK = gql`
+  ${PairFields}
+  query pairs($allPairs: [Bytes]!) {
+    pairs(first: 500, where: { id_in: $allPairs }, orderBy: trackedReserveETH, orderDirection: desc) {
+      ...PairFields
+    }
+  }
+`
+
+
+export const PAIRS_HISTORICAL_BULK = (block, pairs) => {
+  let pairsString = `[`
+  pairs.map((pair) => {
+    return (pairsString += `"${pair}"`)
+  })
+  pairsString += ']'
+  let queryString = `
+  query pairs {
+    pairs(first: 200, where: {id_in: ${pairsString}}, block: {number: ${block}}, orderBy: trackedReserveETH, orderDirection: desc) {
+      id
+      reserveUSD
+      trackedReserveETH
+      volumeUSD
+      untrackedVolumeUSD
+    }
+  }
+  `
+  return gql(queryString)
+}
+
+export const HOURLY_PAIR_RATES = (pairAddress, blocks) => {
+  let queryString = 'query blocks {'
+  queryString += blocks.map(
+    (block) => `
+      t${block.timestamp}: pair(id:"${pairAddress}", block: { number: ${block.number} }) { 
+        token0Price
+        token1Price
+      }
+    `
+  )
+
+  queryString += '}'
+  return gql(queryString)
+}
+
+
+export const PAIRS_CURRENT = gql`
+  query pairs {
+    pairs(first: 200, orderBy: reserveUSD, orderDirection: desc) {
+      id
+    }
+  }
+`
+
+
+export const PAIR_CHART = gql`
+  query pairDayDatas($pairAddress: Bytes!, $skip: Int!) {
+    pairDayDatas(first: 1000, skip: $skip, orderBy: date, orderDirection: asc, where: { pairAddress: $pairAddress }) {
+      id
+      date
+      dailyVolumeToken0
+      dailyVolumeToken1
+      dailyVolumeUSD
+      reserveUSD
     }
   }
 `

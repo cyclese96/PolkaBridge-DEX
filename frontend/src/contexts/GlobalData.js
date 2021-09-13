@@ -575,7 +575,7 @@ export function useGlobalData() {
         async function fetchData() {
             let globalData = await getGlobalData(ethPrice, oldEthPrice)
 
-            console.log('fetched global data ', globalData)
+            // console.log('fetched global data ', globalData)
             globalData && update(globalData)
 
             let allPairs = await getAllPairsOnUniswap()

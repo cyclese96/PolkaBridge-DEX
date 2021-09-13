@@ -185,7 +185,7 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            // style={{ color: "#E0077D" }}s
+          // style={{ color: "#E0077D" }}s
           >
             <TableSortLabel
               // active={orderBy === headCell.id}
@@ -217,7 +217,7 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            // style={{ color: "#E0077D" }}s
+          // style={{ color: "#E0077D" }}s
           >
             <TableSortLabel
               // active={orderBy === headCell.id}
@@ -320,7 +320,7 @@ const useStyles = makeStyles((theme) => ({
 // tableTypes:  "TopTokens" , "TopPools", "Transactions"
 // const rows = topTokensData;
 
-const TopTokens = ({ tableType = "TopTokens" }) => {
+const TopTokens = ({ tableType = "TopTokens", allTokens = [], allPairs = [] }) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -351,6 +351,10 @@ const TopTokens = ({ tableType = "TopTokens" }) => {
     formatTransactions(transactions);
   }, []);
 
+  useEffect(() => {
+    console.log('raw pair list ', allPairs)
+  }, [allTokens])
+
   const formatTransactions = (transactions) => {
     let fotmattedTxs = transactions.map((singleTx) => {
       return singleTx.burns.length === 0
@@ -360,11 +364,11 @@ const TopTokens = ({ tableType = "TopTokens" }) => {
         : singleTx.burns;
     });
     setTransactions(fotmattedTxs);
-    console.log(fotmattedTxs);
+    // console.log(fotmattedTxs);
   };
 
   const handleRequestSort = (event, property) => {
-    console.log("sort ", property);
+    // console.log("sort ", property);
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);

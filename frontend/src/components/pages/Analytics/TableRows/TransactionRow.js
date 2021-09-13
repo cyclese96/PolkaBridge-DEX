@@ -8,8 +8,8 @@ const TransactionRow = (props) => {
   let row = props.row[0];
   return (
     <>
-      {console.log("Transactions Row")}
-      {console.log(row)}
+      {/* {console.log("Transactions Row")} */}
+      {/* {console.log(row)} */}
 
       <TableRow
         hover
@@ -49,8 +49,8 @@ const TransactionRow = (props) => {
             {row.__typename === "Mint"
               ? "Add"
               : row.__typename === "Burn"
-              ? "Remove"
-              : "Swap"}{" "}
+                ? "Remove"
+                : "Swap"}{" "}
           </span>{" "}
           <span className={classes.cellText}>
             {row.pair.token0.symbol} And {row.pair.token1.symbol}{" "}
