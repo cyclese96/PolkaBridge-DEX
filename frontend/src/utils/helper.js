@@ -105,7 +105,7 @@ export const formatCurrency = (
     return formatter.format(value ? value : 0).slice(1);
   }
   const netId = window.ethereum.networkVersion;
-  if (["97", "56"].includes(netId) && !currencyFormat) {
+  if (["97", "56", "4", "1"].includes(netId) && !currencyFormat) {
     // for bsc network only
     return convertToInternationalCurrencySystem(value ? value : 0, formatter);
   }

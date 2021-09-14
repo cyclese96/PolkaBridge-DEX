@@ -6,6 +6,7 @@ import { logout } from "../../actions/accountActions";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import SelectTokenDialog from "./SelectTokenDialog";
 import tokenThumbnail from "../../utils/tokenThumbnail";
+import { Card } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   token: {
@@ -36,9 +37,6 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 2,
     height: 35,
     cursor: "pointer",
-    "&:hover": {
-      background: "rgba(255, 255, 255, 0.1)",
-    },
   },
   tokenIcon: {
     width: "auto",
@@ -88,7 +86,13 @@ const SelectToken = ({
   };
 
   return (
-    <>
+    <Card
+      elevation={30}
+      style={{
+        backgroundColor: "transparent",
+        filter: `drop-shadow(0 0 0.5rem #212121)`,
+      }}
+    >
       <SelectTokenDialog
         open={tokensOpen}
         handleClose={tokensClose}
@@ -118,7 +122,7 @@ const SelectToken = ({
         )}
         <ArrowDropDownIcon className={classes.dropIcon} />
       </span>
-    </>
+    </Card>
   );
 };
 

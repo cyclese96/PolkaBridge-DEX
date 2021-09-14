@@ -4,10 +4,18 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import PropTypes from "prop-types";
+import PropTypes, { func } from "prop-types";
 import SwapCard from "./Cards/SwapCard";
 import AddLiquidity from "./pages/AddLiquidity";
 import Analytics from "./pages/Analytics";
+// import { ApolloProvider } from 'react-apollo'
+// import { client } from "../apollo/client";
+import ApplicationContextProvider from '../contexts/Application'
+import GlobalDataContextProvider from '../contexts/GlobalData'
+import TokenDataContextProvider, { Updater as TokenDataContextUpdater } from '../contexts/TokenData'
+import PairDataContextProvider, { Updater as PairDataContextUpdater } from '../contexts/PairData'
+
+
 
 const useStyles = makeStyles((theme) => ({
   tabs: {
@@ -57,6 +65,30 @@ TabPanel.propTypes = {
   value: PropTypes.any.isRequired,
 };
 
+
+function ContextProviders({ children }) {
+  return (
+    <ApplicationContextProvider>
+      <TokenDataContextProvider>
+        <GlobalDataContextProvider>
+          <PairDataContextProvider>
+            {children}
+          </PairDataContextProvider>
+        </GlobalDataContextProvider>
+      </TokenDataContextProvider>
+    </ApplicationContextProvider>
+  )
+}
+
+function Updaters() {
+  return (
+    <>
+      <TokenDataContextUpdater />
+      <PairDataContextUpdater />
+    </>
+  )
+}
+
 export default function TabPage() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
@@ -104,7 +136,15 @@ export default function TabPage() {
         <AddLiquidity />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <Analytics />
+        {/* <TokenDataContextProvider></TokenDataContextProvider>
+        <GlobalDataContextProvider> */}
+        <ContextProviders>
+          <>
+            <Updaters />
+            <Analytics />
+          </>
+        </ContextProviders>
+        {/* </GlobalDataContextProvider> */}
       </TabPanel>
     </>
   );
