@@ -12,7 +12,7 @@ import {
 } from '../utils/timeUtils'
 import {
     GLOBAL_DATA,
-    // GLOBAL_TXNS,
+    GLOBAL_TXNS,
     GLOBAL_CHART,
     ETH_PRICE,
     ALL_PAIRS,
@@ -430,42 +430,42 @@ const getChartData = async (oldestDateToFetch, offsetData) => {
 /**
  * Get and format transactions for global page
  */
-// const getGlobalTransactions = async () => {
-//     let transactions = {}
+const getGlobalTransactions = async () => {
+    let transactions = {}
 
-//     try {
-//         let result = await client.query({
-//             query: GLOBAL_TXNS,
-//             fetchPolicy: 'cache-first',
-//         })
-//         transactions.mints = []
-//         transactions.burns = []
-//         transactions.swaps = []
-//         result?.data?.transactions &&
-//             result.data.transactions.map((transaction) => {
-//                 if (transaction.mints.length > 0) {
-//                     transaction.mints.map((mint) => {
-//                         return transactions.mints.push(mint)
-//                     })
-//                 }
-//                 if (transaction.burns.length > 0) {
-//                     transaction.burns.map((burn) => {
-//                         return transactions.burns.push(burn)
-//                     })
-//                 }
-//                 if (transaction.swaps.length > 0) {
-//                     transaction.swaps.map((swap) => {
-//                         return transactions.swaps.push(swap)
-//                     })
-//                 }
-//                 return true
-//             })
-//     } catch (e) {
-//         console.log(e)
-//     }
+    try {
+        let result = await client.query({
+            query: GLOBAL_TXNS,
+            fetchPolicy: 'cache-first',
+        })
+        transactions.mints = []
+        transactions.burns = []
+        transactions.swaps = []
+        result?.data?.transactions &&
+            result.data.transactions.map((transaction) => {
+                if (transaction.mints.length > 0) {
+                    transaction.mints.map((mint) => {
+                        return transactions.mints.push(mint)
+                    })
+                }
+                if (transaction.burns.length > 0) {
+                    transaction.burns.map((burn) => {
+                        return transactions.burns.push(burn)
+                    })
+                }
+                if (transaction.swaps.length > 0) {
+                    transaction.swaps.map((swap) => {
+                        return transactions.swaps.push(swap)
+                    })
+                }
+                return true
+            })
+    } catch (e) {
+        console.log(e)
+    }
 
-//     return transactions
-// }
+    return transactions
+}
 
 /**
  * Gets the current price  of ETH, 24 hour price, and % change between them
@@ -635,20 +635,20 @@ export function useGlobalChartData() {
     return [chartDataDaily, chartDataWeekly]
 }
 
-// export function useGlobalTransactions() {
-//     const [state, { updateTransactions }] = useGlobalDataContext()
-//     const transactions = state?.transactions
-//     useEffect(() => {
-//         async function fetchData() {
-//             if (!transactions) {
-//                 let txns = await getGlobalTransactions()
-//                 updateTransactions(txns)
-//             }
-//         }
-//         fetchData()
-//     }, [updateTransactions, transactions])
-//     return transactions
-// }
+export function useGlobalTransactions() {
+    const [state, { updateTransactions }] = useGlobalDataContext()
+    const transactions = state?.transactions
+    useEffect(() => {
+        async function fetchData() {
+            if (!transactions) {
+                let txns = await getGlobalTransactions()
+                updateTransactions(txns)
+            }
+        }
+        fetchData()
+    }, [updateTransactions, transactions])
+    return transactions
+}
 
 export function useEthPrice() {
     const [state, { updateEthPrice }] = useGlobalDataContext()

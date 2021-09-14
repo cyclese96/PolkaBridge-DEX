@@ -1,16 +1,11 @@
 import { TableCell, TableRow } from "@material-ui/core";
 import { formatCurrency } from "../../../../utils/helper";
-import TokenIcon from "../../../common/TokenIcon";
-import Moment from "react-moment";
+import { formatTime } from "../../../../utils/timeUtils";
 
 const TransactionRow = (props) => {
-  const { classes, isItemSelected, labelId, handleClick } = props;
-  let row = props.row[0];
+  const { classes, isItemSelected, labelId, handleClick, row } = props;
   return (
     <>
-      {/* {console.log("Transactions Row")} */}
-      {/* {console.log(row)} */}
-
       <TableRow
         hover
         onClick={(event) => handleClick(event, row.name)}
@@ -22,14 +17,21 @@ const TransactionRow = (props) => {
         className={classes.tableMobile}
       >
         <TableCell padding="checkbox"></TableCell>
-
         <TableCell component="th" id={labelId} scope="row" padding="none">
-          <TokenIcon />
-          <span className={classes.cellText}>{row.name}</span>
+          <span className={classes.cellTextSecondary}>
+            {row.__typename === "Mint"
+              ? "Add"
+              : row.__typename === "Burn"
+              ? "Remove"
+              : "Swap"}{" "}
+          </span>{" "}
+          <span className={classes.cellText}>
+            {row.pair.token0.symbol} And {row.pair.token1.symbol}
+          </span>
         </TableCell>
 
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.vol_24_h, true)}
+          {formatCurrency(row.amountUSD, true)}
         </TableCell>
       </TableRow>
       <TableRow
@@ -49,11 +51,11 @@ const TransactionRow = (props) => {
             {row.__typename === "Mint"
               ? "Add"
               : row.__typename === "Burn"
-                ? "Remove"
-                : "Swap"}{" "}
+              ? "Remove"
+              : "Swap"}{" "}
           </span>{" "}
           <span className={classes.cellText}>
-            {row.pair.token0.symbol} And {row.pair.token1.symbol}{" "}
+            {row.pair.token0.symbol} And {row.pair.token1.symbol}
           </span>
         </TableCell>
         <TableCell align="right">
@@ -73,7 +75,7 @@ const TransactionRow = (props) => {
           {[...row.sender].splice([...row.sender].length - 5, 5)}
         </TableCell>
         <TableCell align="right" className={classes.cellText}>
-          <Moment fromNow>{Date(row.transaction.timestamp)}</Moment>
+          <span>{formatTime(row.transaction.timestamp)}</span>
         </TableCell>
       </TableRow>
     </>
