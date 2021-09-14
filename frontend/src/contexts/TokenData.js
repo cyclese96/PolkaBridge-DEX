@@ -27,7 +27,6 @@ import {
 
 import { timeframeOptions } from '../constants'
 import { useLatestBlocks } from './Application'
-// import { updateNameData } from '../utils/data'
 
 const UPDATE = 'UPDATE'
 const UPDATE_TOKEN_TXNS = 'UPDATE_TOKEN_TXNS'
@@ -332,22 +331,6 @@ const getTopTokens = async (ethPrice, ethPriceOld) => {
           data.oneDayTxns = data.txCount
         }
 
-        // update name data for
-        // updateNameData({
-        //   token0: data,
-        // })
-
-        // HOTFIX for Aave
-        // if (data.id === '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9') {
-        //   const aaveData = await client.query({
-        //     query: PAIR_DATA('0xdfc14d2af169b0d36c4eff567ada9b2e0cae044f'),
-        //     fetchPolicy: 'cache-first',
-        //   })
-        //   const result = aaveData.data.pairs[0]
-        //   data.totalLiquidityUSD = parseFloat(result.reserveUSD) / 2
-        //   data.liquidityChangeUSD = 0
-        //   data.priceChangeUSD = 0
-        // }
 
         // used for custom adjustments
         data.oneDayData = oneDayHistory

@@ -5,15 +5,15 @@ import BarChart from "./BarChart";
 import AreaChart from "./AreaChart";
 import PercentLabel from "../../common/PercentLabel";
 import { Card } from "@material-ui/core";
-import { topTransactions } from "../../../apollo/queries";
-import { useGlobalChartData, useGlobalData } from "../../../contexts/GlobalData";
+import {
+  useGlobalChartData,
+  useGlobalData,
+  useGlobalTransactions,
+} from "../../../contexts/GlobalData";
 import { formattedPercent } from "../../../utils/timeUtils";
 import { useAllTokenData } from "../../../contexts/TokenData";
 import { useAllPairData } from "../../../contexts/PairData";
-import millify from "millify";
 import { formatCurrency } from "../../../utils/helper";
-// import { useLatestBlocks } from "../../../contexts/Application";
-// import { useGlobalData } from "../../../contexts/GlobalData";
 
 // globalData ->
 // {
@@ -37,21 +37,16 @@ import { formatCurrency } from "../../../utils/helper";
 const Analytics = () => {
   const classes = useStyles();
 
+  const allPairs = useAllPairData();
+  const allTokens = useAllTokenData();
+  const transactions = useGlobalTransactions();
+  const globalData = useGlobalData();
 
-  const allPairs = useAllPairData()
-  const allTokens = useAllTokenData()
-  const globalData = useGlobalData()
+  const chartData = useGlobalChartData();
 
-  const chartData = useGlobalChartData()
-
-  useEffect(async () => {
-    const page = 1;
-    const order = 'desc';
-    const transactions = await topTransactions(page, order)
-    // console.log('transactions ', transactions)
-  }, [])
   return (
     <div>
+      {/* {console.log("pairdata 2", allPairs)} */}
       <p className={classes.heading}>PolkaBridge DEX Overview</p>
 
       <div className="row g-3">
@@ -60,8 +55,9 @@ const Analytics = () => {
             <span className={classes.cardSpan}>Total value locked</span>
             <p className={classes.cardP}>
               {globalData.totalLiquidityUSD
-                ? formatCurrency(globalData.totalLiquidityUSD, false, 0, false)
-                : "-"}{" "}
+                ? "$" +
+                  formatCurrency(globalData.totalLiquidityUSD, false, 0, false)
+                : "-"}
               <small>
                 {globalData.liquidityChangeUSD
                   ? formattedPercent(globalData.liquidityChangeUSD)
@@ -80,7 +76,8 @@ const Analytics = () => {
             <p className={classes.cardP}>
               {console.log(globalData)}
               {globalData.oneDayVolumeUSD
-                ? formatCurrency(globalData.oneDayVolumeUSD, true, 1, true)
+                ? "$" +
+                  formatCurrency(globalData.oneDayVolumeUSD, false, 1, false)
                 : "-"}
               <small>
                 {globalData.volumeChangeUSD !== null
@@ -98,21 +95,43 @@ const Analytics = () => {
       <Card elevetation={10} className={classes.priceStatContainer}>
         <div className={classes.statsGroup}>
           <span className={classes.statLabel}>Volume 24H:</span>
-          <span className={classes.statAmount}>$992.04M</span>
+          <span className={classes.statAmount}>
+            ${" "}
+            {globalData.oneDayVolumeUSD
+              ? "$" +
+                formatCurrency(globalData.oneDayVolumeUSD, false, 0, false)
+              : "-"}
+          </span>
 
           <PercentLabel percentValue={5} braces={true} />
         </div>
 
         <div className={classes.statsGroup}>
           <span className={classes.statLabel}>Fees 24H:</span>
-          <span className={classes.statAmount}>$1.24M</span>
+          <span className={classes.statAmount}>
+            ${" "}
+            {globalData.oneDayVolumeUSD
+              ? "$" +
+                formatCurrency(
+                  globalData.oneDayVolumeUSD * 0.02,
+                  false,
+                  0,
+                  false
+                )
+              : "-"}
+          </span>
 
           <PercentLabel percentValue={8} braces={true} />
         </div>
 
         <div className={classes.statsGroup}>
-          <span className={classes.statLabel}>Volume 24H:</span>
-          <span className={classes.statAmount}>$1.6B</span>
+          <span className={classes.statLabel}>TVL</span>
+          <span className={classes.statAmount}>
+            {globalData.totalLiquidityUSD
+              ? "$" +
+                formatCurrency(globalData.totalLiquidityUSD, false, 0, false)
+              : "-"}{" "}
+          </span>
 
           <PercentLabel percentValue={-8} braces={true} />
         </div>
@@ -120,15 +139,21 @@ const Analytics = () => {
 
       <div className={classes.tokenListHeading}>Top Tokens</div>
       <div className={classes.tokenList}>
-        <TopTokens tableType="TopTokens" allTokens={allTokens} />
+        <TopTokens
+          tableType="TopTokens"
+          allTokens={allTokens ? allTokens : {}}
+        />
       </div>
       <div className={classes.tokenListHeading}>Top Pools</div>
       <div className={classes.tokenList}>
-        <TopTokens tableType="TopPools" allPairs={allPairs} />
+        <TopTokens tableType="TopPools" allPairs={allPairs ? allPairs : {}} />
       </div>
       <div className={classes.tokenListHeading}>Transactions</div>
       <div className={classes.tokenList}>
-        <TopTokens tableType="Transactions" />
+        <TopTokens
+          tableType="Transactions"
+          allTransactions={transactions ? transactions : {}}
+        />
       </div>
       <div className="mb-5"></div>
     </div>
