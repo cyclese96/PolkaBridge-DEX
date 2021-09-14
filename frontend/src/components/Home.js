@@ -32,17 +32,23 @@ const useStyles = makeStyles((theme) => ({
     top: 0,
   },
   mainContent: {
+    marginTop: 10,
+    minHeight: `calc(100vh - 120px)`,
     display: "flex",
-    justifyContent: "space-around",
     flexDirection: "column",
+    justifyContent: "flex-start",
     alignItems: "center",
   },
   footer: {
-    position: "fixed",
-    bottom: 20,
     width: "100vw",
     display: "flex",
     justifyContent: "center",
+
+    paddingBottom: 20,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 12,
+      width: "100%",
+    },
   },
   background: {
     height: "90vh",

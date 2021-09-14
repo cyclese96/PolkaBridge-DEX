@@ -1,4 +1,4 @@
-type UniswapFactory @entity {
+type PolkabridgeAmmFactory @entity {
   # factory address
   id: ID!
 
@@ -30,7 +30,7 @@ type Token @entity {
   decimals: BigInt!
 
   # used for other stats like marketcap
-  totalSupply: BigInt!
+  # totalSupply: BigInt!
 
   # token specific volume
   tradeVolume: BigDecimal!
@@ -90,43 +90,53 @@ type Pair @entity {
   liquidityProviderCount: BigInt! # used to detect new exchanges
   # derived fields
   pairHourData: [PairHourData!]! @derivedFrom(field: "pair")
-  liquidityPositions: [LiquidityPosition!]! @derivedFrom(field: "pair")
-  liquidityPositionSnapshots: [LiquidityPositionSnapshot!]!
-    @derivedFrom(field: "pair")
+  # liquidityPositions: [LiquidityPosition!]! @derivedFrom(field: "pair")
+  # liquidityPositionSnapshots: [LiquidityPositionSnapshot!]!
+  #   @derivedFrom(field: "pair")
   mints: [Mint!]! @derivedFrom(field: "pair")
   burns: [Burn!]! @derivedFrom(field: "pair")
   swaps: [Swap!]! @derivedFrom(field: "pair")
 }
 
 type User @entity {
-  id: ID!
-  liquidityPositions: [LiquidityPosition!] @derivedFrom(field: "user")
-  usdSwapped: BigDecimal!
+  # id: ID!
+  # # liquidityPositions: [LiquidityPosition!] @derivedFrom(field: "user")
+  # usdSwapped: BigDecimal!
+  id: ID! # user address
+  date: Int!
+  user: Bytes!
+
+  dailyVolumeETH: BigDecimal!
+  dailyVolumeUSD: BigDecimal!
+
+  totalVolumeETH: BigDecimal!
+  totalVolumeUSD: BigDecimal! # Accumulate at each trade, not just calculated off whatever totalVolume is. making it more accurate as it is a live conversion
+  txCount: BigInt!
 }
 
-type LiquidityPosition @entity {
-  id: ID!
-  user: User!
-  pair: Pair!
-  liquidityTokenBalance: BigDecimal!
-}
+# type LiquidityPosition @entity {
+#   id: ID!
+#   user: User!
+#   pair: Pair!
+#   liquidityTokenBalance: BigDecimal!
+# }
 
-# saved over time for return calculations, gets created and never updated
-type LiquidityPositionSnapshot @entity {
-  id: ID!
-  liquidityPosition: LiquidityPosition!
-  timestamp: Int! # saved for fast historical lookups
-  block: Int! # saved for fast historical lookups
-  user: User! # reference to user
-  pair: Pair! # reference to pair
-  token0PriceUSD: BigDecimal! # snapshot of token0 price
-  token1PriceUSD: BigDecimal! # snapshot of token1 price
-  reserve0: BigDecimal! # snapshot of pair token0 reserves
-  reserve1: BigDecimal! # snapshot of pair token1 reserves
-  reserveUSD: BigDecimal! # snapshot of pair reserves in USD
-  liquidityTokenTotalSupply: BigDecimal! # snapshot of pool token supply
-  liquidityTokenBalance: BigDecimal! # snapshot of users pool token balance
-}
+# # saved over time for return calculations, gets created and never updated
+# type LiquidityPositionSnapshot @entity {
+#   id: ID!
+#   liquidityPosition: LiquidityPosition!
+#   timestamp: Int! # saved for fast historical lookups
+#   block: Int! # saved for fast historical lookups
+#   user: User! # reference to user
+#   pair: Pair! # reference to pair
+#   token0PriceUSD: BigDecimal! # snapshot of token0 price
+#   token1PriceUSD: BigDecimal! # snapshot of token1 price
+#   reserve0: BigDecimal! # snapshot of pair token0 reserves
+#   reserve1: BigDecimal! # snapshot of pair token1 reserves
+#   reserveUSD: BigDecimal! # snapshot of pair reserves in USD
+#   liquidityTokenTotalSupply: BigDecimal! # snapshot of pool token supply
+#   liquidityTokenBalance: BigDecimal! # snapshot of users pool token balance
+# }
 
 type Transaction @entity {
   id: ID! # txn hash
@@ -218,7 +228,7 @@ type Bundle @entity {
 }
 
 # Data accumulated and condensed into day stats for all of Uniswap
-type UniswapDayData @entity {
+type PolkabridgeAmmDayData @entity {
   id: ID! # timestamp rounded to current day by dividing by 86400
   date: Int!
 
