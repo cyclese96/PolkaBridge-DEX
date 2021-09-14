@@ -343,13 +343,6 @@ function parseData(
     data.oneWeekVolumeUSD = parseFloat(data.volumeUSD);
   }
 
-  // if (TRACKED_OVERRIDES.includes(pairAddress)) {
-  //   data.oneDayVolumeUSD = oneDayVolumeUntracked
-  //   data.oneWeekVolumeUSD = oneWeekVolumeUntracked
-  //   data.volumeChangeUSD = volumeChangeUntracked
-  //   data.trackedReserveUSD = data.reserveUSD
-  // }
-
   // format incorrect names
   // updateNameData(data)
 
