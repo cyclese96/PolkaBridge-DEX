@@ -15,7 +15,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
     address public immutable override factory;
     address public immutable override WETH;
     address public owner;
-    address public feeWallet;
+    //address public feeWallet;
     address public devWallet;
     modifier ensure(uint deadline) {
         require(deadline >= block.timestamp, 'UniswapV2Router: EXPIRED');
@@ -37,9 +37,9 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
     function transferOwnership(address _new_owner) public onlyOwner {
         owner = _new_owner;
     }
-    function setFeeWallet(address _fee_addr) public onlyOwner {
+    /** function setFeeWallet(address _fee_addr) public onlyOwner {
         feeWallet = _fee_addr;
-    }
+    } */
     function setDevWallet(address _dev_addr) public onlyOwner {
         devWallet = _dev_addr;
     }
@@ -245,15 +245,15 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         amounts = UniswapV2Library.getAmountsOut(factory, amountIn, path);
         require(amounts[amounts.length - 1] >= amountOutMin, 'UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT');
         TransferHelper.safeTransferFrom(
-            path[0], msg.sender, UniswapV2Library.pairFor(factory, path[0], path[1]), amounts[0].mul(998).div(1000)
+            path[0], msg.sender, UniswapV2Library.pairFor(factory, path[0], path[1]), amounts[0]
         );
-        TransferHelper.safeTransferFrom(
+        /** TransferHelper.safeTransferFrom(
             path[0], msg.sender, feeWallet, amounts[0].mul(16).div(10000)
-        );
-        TransferHelper.safeTransferFrom(
-            path[0], msg.sender, devWallet, amounts[0].mul(4).div(10000)
-        );
+        ); */
         _swap(amounts, path, to);
+        TransferHelper.safeTransferFrom(
+            path[0], address(this), devWallet, amounts[0].mul(4).div(10000)
+        );
     }
     function swapTokensForExactTokens(
         uint amountOut,
@@ -265,15 +265,15 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         amounts = UniswapV2Library.getAmountsIn(factory, amountOut, path);
         require(amounts[0] <= amountInMax, 'UniswapV2Router: EXCESSIVE_INPUT_AMOUNT');
         TransferHelper.safeTransferFrom(
-            path[0], msg.sender, UniswapV2Library.pairFor(factory, path[0], path[1]), amounts[0].mul(998).div(1000)
+            path[0], msg.sender, UniswapV2Library.pairFor(factory, path[0], path[1]), amounts[0]
         );
-        TransferHelper.safeTransferFrom(
+        /** TransferHelper.safeTransferFrom(
             path[0], msg.sender, feeWallet, amounts[0].mul(16).div(10000)
-        );
-        TransferHelper.safeTransferFrom(
-            path[0], msg.sender, devWallet, amounts[0].mul(4).div(10000)
-        );
+        ); */
         _swap(amounts, path, to);
+        TransferHelper.safeTransferFrom(
+            path[0], address(this), devWallet, amounts[0].mul(4).div(10000)
+        );
     }
     function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline)
         external
