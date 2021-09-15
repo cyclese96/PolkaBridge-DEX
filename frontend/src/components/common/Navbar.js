@@ -26,6 +26,7 @@ import AccountDialog from "./AccountDialog";
 import etherIcon from "../../assets/ether.png";
 import binanceIcon from "../../assets/binance.png";
 import { etheriumNetwork } from "../../constants";
+import DotCircle from "./DotCircle";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -33,14 +34,16 @@ const useStyles = makeStyles((theme) => ({
   },
   appBarBackground: {
     boxShadow: "none",
-    backgroundColor: "#070F23",
+    backgroundColor: "#100525",
+    display: "flex",
+    alignItems: "center",
   },
   menuButton: {
     textTransform: "none",
   },
   title: {
     fontWeight: 600,
-    fontSize: 24,
+    fontSize: 22,
   },
   iconText: {
     fontSize: 15,
@@ -48,8 +51,8 @@ const useStyles = makeStyles((theme) => ({
   icon: {},
 
   sectionDesktop: {
-    marginLeft: 150,
-    marginRight: 100,
+    marginLeft: 40,
+    marginRight: 40,
     [theme.breakpoints.down("md")]: {
       marginLeft: 5,
       marginRight: 5,
@@ -67,8 +70,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   row1: {
+    width: "90vw",
     display: "flex",
-    width: "100%",
+    justifyContent: "space-between",
     alignItems: "center",
   },
 
@@ -82,9 +86,7 @@ const useStyles = makeStyles((theme) => ({
   nav: {
     marginRight: 15,
   },
-  menuIcon: {
-    color: "#212121",
-  },
+
   list: {
     width: "250px",
     height: "100%",
@@ -96,25 +98,22 @@ const useStyles = makeStyles((theme) => ({
   },
   menuTitleMobile: {
     paddingLeft: 25,
-    fontWeight: 500,
+    fontWeight: 400,
     verticalAlign: "baseline",
-    fontFamily: "New Rocker, cursive",
     textAlign: "left",
     fontSize: 16,
+    color: "#eeeeee",
   },
   navbarItemsDesktop: {
-    paddingTop: 15,
-    height: 35,
-    marginLeft: 18,
-    marginRight: 18,
-    textTransform: "none",
-    fontSize: 16,
-    fontWeight: 600,
-    color: "#f9f9f9",
-    [theme.breakpoints.down("md")]: {
-      marginLeft: 10,
-      marginRight: 10,
-    },
+    paddingRight: 10,
+    fontWeight: 400,
+    lineHeight: "24px",
+    verticalAlign: "baseline",
+    letterSpacing: "-1px",
+    margin: 0,
+    padding: "9px 14px 0px",
+    cursor: "pointer",
+    fontSize: "1.2vw",
   },
   navbarButton: {
     backgroundColor: "#f9f9f9",
@@ -161,24 +160,48 @@ const useStyles = makeStyles((theme) => ({
   },
   network: {
     display: "flex",
-    marginRight: 30,
+    marginLeft: 20,
+    marginRight: 10,
     alignItems: "center",
-    border: "0.5px solid white",
-    borderRadius: 15,
-    padding: 4,
-    paddingLeft: 7,
-    paddingRight: 7,
+    border: "0.5px solid #919191",
+    borderRadius: 20,
+    padding: 6,
+    paddingLeft: 6,
+    paddingRight: 10,
+    letterSpacing: 0.4,
+
     // cursor: "pointer",
     "&:hover": {
       background: "rgba(255, 255, 255, 0.1)",
     },
+    [theme.breakpoints.down("sm")]: {
+      width: 140,
+    },
   },
   networkIcon: {
     width: "auto",
-    height: 30,
+    height: 25,
   },
   menuIcon: {
-    color: "rgba(255, 255, 255, 0.5)",
+    color: "#bdbdbd",
+    fontSize: 26,
+  },
+  logo: {
+    height: 38,
+    width: 150,
+    [theme.breakpoints.down("sm")]: {
+      height: 30,
+      width: "fit-content",
+    },
+  },
+  list: {
+    paddingTop: 20,
+    width: "250px",
+    borderLeft: "5px solid pink",
+    borderColor: "#3A1242",
+    // borderColor: "#220c3d",
+    height: "100%",
+    backgroundColor: "#100525",
   },
 }));
 
@@ -215,7 +238,7 @@ const Navbar = ({ currentNetwork }) => {
       <List>
         {[
           {
-            name: "Staking",
+            name: "Stake",
             link: "https://stake.polkabridge.org/",
             id: "staking",
             icon: <EqualizerOutlined />,
@@ -248,18 +271,13 @@ const Navbar = ({ currentNetwork }) => {
           {},
         ].map((tab, index) => (
           <ListItem button key={tab.name} onClick={toggleDrawer(anchor, false)}>
-            {tab.icon}
             <ListItemText
               primary={tab.name}
               className={classes.menuTitleMobile}
             />
           </ListItem>
         ))}
-      </List>
-      <Divider />
-
-      <List>
-        <ListItem button style={{ marginTop: 15 }}>
+        <ListItem button>
           <div className={classes.network}>
             <img
               className={classes.networkIcon}
@@ -270,6 +288,9 @@ const Navbar = ({ currentNetwork }) => {
               {currentNetwork === etheriumNetwork ? "Ethereum" : "BSC"}
             </span>
           </div>
+        </ListItem>
+        <ListItem button style={{ paddingLeft: 35 }}>
+          <Wallet onWalletClick={() => setAccountDialog(true)} />
         </ListItem>
       </List>
     </div>
@@ -295,49 +316,63 @@ const Navbar = ({ currentNetwork }) => {
           <Avatar
             variant="square"
             src="img/logo-white.png"
-            style={{ height: 38, width: 150 }}
+            className={classes.logo}
           />
 
           <div className={classes.leftMargin} />
 
-          <a href="/" className={classes.navbarItemsDesktop}>
-            Staking
-          </a>
+          <div>
+            <a href="/" className={classes.navbarItemsDesktop}>
+              Stake <DotCircle />
+            </a>
+          </div>
+          <div>
+            <a
+              href="https://farm.polkabridge.org"
+              target="_blank"
+              rel="noreferrer"
+              className={classes.navbarItemsDesktop}
+            >
+              Farm
+              <DotCircle />
+            </a>
+          </div>
+          <div>
+            <a
+              href="https://launchpad.polkabridge.org"
+              target="_blank"
+              className={classes.navbarItemsDesktop}
+            >
+              Launchpad <DotCircle />
+            </a>
+          </div>
+          <div>
+            <a href="#" className={classes.navbarItemsDesktop}>
+              Swap <DotCircle />
+            </a>
+          </div>
 
-          <a
-            href="https://farm.polkabridge.org"
-            target="_blank"
-            rel="noreferrer"
-            className={classes.navbarItemsDesktop}
-          >
-            Farm
-          </a>
+          <div>
+            <a href="#" className={classes.navbarItemsDesktop}>
+              Lending <DotCircle />
+            </a>
+          </div>
 
-          <a
-            href="https://launchpad.polkabridge.org"
-            target="_blank"
-            className={classes.navbarItemsDesktop}
-          >
-            Launchpad
-          </a>
+          <div>
+            <a href="#" className={classes.navbarItemsDesktop}>
+              Prediction <DotCircle />
+            </a>
+          </div>
 
-          <a href="#" className={classes.navbarItemsDesktop}>
-            Swap
-          </a>
+          <div>
+            <a
+              href="https://corgib.polkabridge.org/bet"
+              className={classes.navbarItemsDesktop}
+            >
+              Betting <DotCircle />
+            </a>
+          </div>
 
-          <a href="#" className={classes.navbarItemsDesktop}>
-            Lending
-          </a>
-
-          <a href="#" className={classes.navbarItemsDesktop}>
-            Prediction
-          </a>
-          <a
-            href="https://corgib.polkabridge.org/bet"
-            className={classes.navbarItemsDesktop}
-          >
-            Betting
-          </a>
           <div className={classes.grow} />
           <div className={classes.network}>
             <img
@@ -345,7 +380,7 @@ const Navbar = ({ currentNetwork }) => {
               src={currentNetwork === etheriumNetwork ? etherIcon : binanceIcon}
               alt={currentNetwork}
             />
-            <span style={{ color: "white", marginLeft: 5 }}>
+            <span style={{ color: "#eeeeee", marginLeft: 5 }}>
               {currentNetwork === etheriumNetwork ? "Ethereum" : "BSC"}
             </span>
           </div>
@@ -354,16 +389,15 @@ const Navbar = ({ currentNetwork }) => {
 
         <Toolbar className={classes.sectionMobile}>
           <div className={classes.row1}>
-            <div className={classes.grow} />
+            <div>
+              <Avatar
+                variant="square"
+                src="img/logo-white.png"
+                className={classes.logo}
+              />
+            </div>
 
-            <Avatar
-              variant="square"
-              src="img/logo-white.png"
-              style={{ height: 38, width: 150 }}
-            />
-
-            <div className={classes.grow} />
-            <Wallet onWalletClick={() => setAccountDialog(true)} />
+            {/* <Wallet onWalletClick={() => setAccountDialog(true)} /> */}
             <div>
               {["right"].map((anchor) => (
                 <React.Fragment key={anchor}>
