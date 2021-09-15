@@ -199,6 +199,7 @@ const useStyles = makeStyles((theme) => ({
     width: "250px",
     borderLeft: "5px solid pink",
     borderColor: "#3A1242",
+    // borderColor: "#220c3d",
     height: "100%",
     backgroundColor: "#100525",
   },
