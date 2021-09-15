@@ -1,5 +1,6 @@
 const UniswapV2Factory = artifacts.require("UniswapV2Factory");
 
 module.exports = function (deployer) {
-  deployer.deploy(UniswapV2Factory, '0x453B8D46D3D41d3B3DdC09B20AE53aa1B6aB186E');
+  let owner = "0x57866ed63ca5f9744cef9aa270bd1f1dce935831";
+  deployer.deploy(UniswapV2Factory, owner);
 };

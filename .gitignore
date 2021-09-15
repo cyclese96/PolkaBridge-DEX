@@ -6,3 +6,7 @@ router/node_modules
 router/.secret
 proxy/node_modules
 proxy/.secret
+/factory/truffle-config.js
+/factory/.env
+/router/.env
+/router/truffle-config.js
