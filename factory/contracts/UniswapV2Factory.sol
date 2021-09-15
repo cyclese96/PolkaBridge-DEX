@@ -8,7 +8,8 @@ contract UniswapV2Factory is IUniswapV2Factory {
     address public feeToSetter;
 
     mapping(address => mapping(address => address)) public getPair;
-    address[] public allPairs; // storage of all pairs
+    // address[] public allPairs; // storage of all pairs
+    uint public allPairs;
 
     event PairCreated(address indexed token0, address indexed token1, address pair, uint);
     bytes32 public constant INIT_CODE_PAIR_HASH = keccak256(abi.encodePacked(type(UniswapV2Pair).creationCode));
@@ -18,7 +19,8 @@ contract UniswapV2Factory is IUniswapV2Factory {
 
     function allPairsLength() external view returns (uint) {
         // return pair length
-        return allPairs.length;
+        // return allPairs.length;
+        return allPairs;
     }
 
     function createPair(address tokenA, address tokenB) external returns (address pair) {
@@ -34,8 +36,10 @@ contract UniswapV2Factory is IUniswapV2Factory {
         IUniswapV2Pair(pair).initialize(token0, token1);
         getPair[token0][token1] = pair;
         getPair[token1][token0] = pair; // populate mapping in the reverse direction
-        allPairs.push(pair);
-        emit PairCreated(token0, token1, pair, allPairs.length);
+        // allPairs.push(pair);
+        allPairs++;
+        // emit PairCreated(token0, token1, pair, allPairs.length);
+        emit PairCreated(token0, token1, pair, allPairs);
     }
 
     function setFeeTo(address _feeTo) external {

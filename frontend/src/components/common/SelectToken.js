@@ -6,31 +6,63 @@ import { logout } from "../../actions/accountActions";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import SelectTokenDialog from "./SelectTokenDialog";
 import tokenThumbnail from "../../utils/tokenThumbnail";
+import { Card } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   token: {
     display: "flex",
     alignItems: "center",
-    border: "0.5px solid white",
+    backgroundColor: "black",
+    border: "0.5px solid #616161",
     borderRadius: 12,
     paddingLeft: 8,
-    paddingRight: 8,
+    paddingRight: 0,
     paddingTop: 2,
     paddingBottom: 2,
     height: 35,
-    width: 110,
     cursor: "pointer",
     "&:hover": {
       background: "rgba(255, 255, 255, 0.1)",
     },
   },
+  noToken: {
+    display: "flex",
+    alignItems: "center",
+    backgroundColor: "rgba(224, 7, 125, 0.9)",
+
+    borderRadius: 12,
+    paddingLeft: 13,
+    paddingRight: 0,
+    paddingTop: 2,
+    paddingBottom: 2,
+    height: 35,
+    cursor: "pointer",
+  },
   tokenIcon: {
     width: "auto",
     height: 22,
     marginRight: 2,
+    borderRadius: "50%",
+    color: "#e5e5e5",
   },
+
   selectToken: {
-    fontSize: 12,
+    fontSize: 15,
+    color: "white",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 12,
+    },
+  },
+  selectedToken: {
+    color: "white",
+    marginLeft: 5,
+    fontSize: 15,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 12,
+    },
+  },
+  dropIcon: {
+    color: "#e5e5e5",
   },
 }));
 
@@ -54,7 +86,13 @@ const SelectToken = ({
   };
 
   return (
-    <>
+    <Card
+      elevation={30}
+      style={{
+        backgroundColor: "transparent",
+        filter: `drop-shadow(0 0 0.5rem #212121)`,
+      }}
+    >
       <SelectTokenDialog
         open={tokensOpen}
         handleClose={tokensClose}
@@ -62,24 +100,29 @@ const SelectToken = ({
         disableToken={disableToken}
       />
       <span
-        className={[classes.token, className].join(" ")}
+        className={
+          selectedToken.symbol
+            ? [classes.token, className].join(" ")
+            : [classes.noToken, className].join(" ")
+        }
         onClick={handleTokensOpen}
       >
-        <img
-          className={classes.tokenIcon}
-          src={tokenThumbnail(selectedToken.symbol)}
-          alt={""}
-        />
-        {!selectedToken.symbol ? (
-          <span className={classes.selectToken}>Select Token</span>
-        ) : (
-          <span style={{ color: "white", marginLeft: 5 }}>
-            {selectedToken.symbol}
-          </span>
+        {selectedToken.symbol && (
+          <img
+            className={classes.tokenIcon}
+            src={tokenThumbnail(selectedToken.symbol)}
+            alt={""}
+          />
         )}
-        <ArrowDropDownIcon />
+
+        {!selectedToken.symbol ? (
+          <span className={classes.selectToken}>Select a token</span>
+        ) : (
+          <span className={classes.selectedToken}>{selectedToken.symbol}</span>
+        )}
+        <ArrowDropDownIcon className={classes.dropIcon} />
       </span>
-    </>
+    </Card>
   );
 };
 

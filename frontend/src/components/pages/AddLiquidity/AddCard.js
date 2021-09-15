@@ -1,4 +1,11 @@
-import { CircularProgress, makeStyles } from "@material-ui/core";
+import {
+  Button,
+  Card,
+  CircularProgress,
+  Divider,
+  IconButton,
+  makeStyles,
+} from "@material-ui/core";
 import { connect } from "react-redux";
 import TuneIcon from "@material-ui/icons/Tune";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
@@ -40,10 +47,18 @@ import {
   getTokenAbi,
 } from "../../../utils/connectionUtils";
 import { fetchContractAbi } from "../../../utils/httpUtils";
+import { Settings } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    width: 450,
+    width: 500,
+    borderRadius: 15,
+    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 15,
+    paddingBottom: 15,
+    marginBottom: 20,
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 0,
       paddingRight: 0,
@@ -54,7 +69,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: 15,
   },
   avatar: {
     zIndex: 2,
@@ -68,14 +82,25 @@ const useStyles = makeStyles((theme) => ({
     height: 160,
   },
   cardHeading: {
-    display: "flex",
+    paddingTop: 5,
     width: "95%",
-    alignItems: "center",
+    display: "flex",
     justifyContent: "space-between",
+    alignItems: "center",
+    [theme.breakpoints.down("sm")]: {
+      paddingTop: 0,
+    },
+  },
+  cardFeature: {
     marginTop: 10,
-    marginBottom: 2,
+    marginBottom: 10,
+    width: "95%",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   cardSubHeading: {
+    color: "#ffffff",
     display: "flex",
     width: "95%",
     alignItems: "center",
@@ -85,8 +110,22 @@ const useStyles = makeStyles((theme) => ({
   },
   settingIcon: {
     color: "#f6f6f6",
-    cursor: "pointer",
+    fontSize: 22,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 17,
+    },
   },
+  addIcon: {
+    color: "#f6f6f6",
+    marginTop: -12,
+    marginBottom: -12,
+    borderRadius: "36%",
+    border: "3px solid #212121",
+    transition: "all 0.4s ease",
+    fontSize: 28,
+    backgroundColor: "#191B1E",
+  },
+
   numbers: {
     color: "#E0077D",
     fontSize: 26,
@@ -123,8 +162,9 @@ const useStyles = makeStyles((theme) => ({
       background: "rgba(255, 255, 255, 0.1)",
     },
     [theme.breakpoints.down("sm")]: {
-      width: 100,
+      width: 90,
       padding: 2,
+      paddingLeft: 5,
       marginLeft: 2,
       marginRight: 2,
     },
@@ -134,6 +174,19 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "space-between",
     width: "100%",
+    fontSize: 15,
+    fontWeight: 500,
+    color: "#e5e5e5",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 13,
+    },
+  },
+  feeSelectHeadingSpan: {
+    color: "#fce4ec",
+    fontSize: 11,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 10,
+    },
   },
   priceRangeCardContainer: {
     display: "flex",
@@ -142,12 +195,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 2,
     marginBottom: 15,
   },
-  feeSelectHeadingP: {
-    fontSize: 14,
-  },
-  feeSelectHeadingSpan: {
-    fontSize: 12,
-  },
+
   addButton: {
     height: 45,
     width: "90%",
@@ -157,11 +205,57 @@ const useStyles = makeStyles((theme) => ({
   clearButton: {
     color: "#E0077D",
     cursor: "pointer",
+    fontSize: 16,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 14,
+    },
+  },
+  title: {
+    paddingTop: 5,
+    fontSize: 16,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 14,
+    },
+  },
+  cardTitle: {
+    fontSize: 16,
+    color: "#bdbdbd",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 14,
+    },
   },
   hintStyle: {
-    fontSize: 12,
-    color: "rgba(255, 255, 255, 0.7)",
+    fontSize: 13,
+    color: "#e5e5e5",
     marginTop: 20,
+    [theme.breakpoints.down("sm")]: {
+      marginTop: 10,
+      fontSize: 11,
+    },
+  },
+  iconButton: {
+    margin: 0,
+    padding: 2,
+  },
+  addLiquidityButton: {
+    marginTop: 20,
+    backgroundColor: "rgba(224, 7, 125, 0.9)",
+    color: "white",
+    width: "95%",
+    textTransform: "none",
+    fontSize: 19,
+    borderRadius: 20,
+    willChange: "transform",
+    transition: "transform 450ms ease 0s",
+    transform: "perspective(1px) translateZ(0px)",
+    padding: "10px 50px 10px 50px",
+    "&:hover": {
+      background: "rgba(224, 7, 125, 0.7)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      marginTop: 5,
+      fontSize: 13,
+    },
   },
 }));
 
@@ -290,16 +384,30 @@ const AddCard = (props) => {
       : approvedTokens[selectedToken1.symbol];
   };
 
+  const getSelectedTokenAbi = (token) => {
+    let abi = getTokenAbi(token.symbol);
+    if (!abi) {
+      abi = tokenData[token.symbol] ? tokenData[token.symbol] : null;
+    }
+    console.log("returing abi ", tokenData[token.symbol]);
+    return abi;
+  };
+
+  const clearInputState = () => {
+    setToken1Value("");
+    setToken2Value("");
+    setStatus({ disabled: true, message: "Enter Amounts" });
+  };
+
   // new use effect
   useEffect(async () => {
     if (selectedToken1.symbol && selectedToken2.symbol) {
+      clearInputState();
       // load erc20 token abi and balance
       const erc20Token =
         selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
-      let erc20Abi = erc20Token.imported
-        ? tokenData[erc20Token.symbol].abi
-        : getTokenAbi(erc20Token.symbol);
-
+      let erc20Abi = getSelectedTokenAbi(erc20Token);
+      console.log("abi received ", erc20Abi);
       if (!erc20Abi) {
         // load token abi if not loaded
         erc20Abi = await fetchContractAbi(erc20Token.address, currentNetwork);
@@ -391,10 +499,14 @@ const AddCard = (props) => {
   // }, [selectedToken1, currentNetwork, currentAccount]);
 
   const handleConfirmAllowance = async () => {
+    // console.log("token", selectedToken1.symbol);
+    // console.log("abi", getSelectedTokenAbi(selectedToken1));
     const allowanceAmount = toWei("999999999");
+    const tokenAbi = getSelectedTokenAbi(selectedToken1);
+    // console.log("abi", tokenData[selectedToken1.symbol].abi);
     await confirmAllowance(
       allowanceAmount,
-      { ...selectedToken1, abi: tokenData[selectedToken1.symbol] },
+      { ...selectedToken1, abi: tokenAbi },
       currentAccount,
       currentNetwork
     );
@@ -408,14 +520,14 @@ const AddCard = (props) => {
     if (token1.selected.symbol === token2.selected.symbol) {
       message = "Invalid pair";
       disabled = true;
+    } else if (!token1.selected.symbol || !token2.selected.symbol) {
+      message = "Select both tokens";
+      disabled = true;
     } else if (
       (_token1.eq("0") && token1.selected.symbol) ||
       (_token2.eq("0") && token2.selected.symbol)
     ) {
       message = "Enter amounts";
-      disabled = true;
-    } else if (!token1.selected.symbol || !token2.selected.symbol) {
-      message = "Select both tokens";
       disabled = true;
     } else if (
       _token1.gt("0") &&
@@ -423,7 +535,7 @@ const AddCard = (props) => {
       token1.selected.symbol &&
       token2.selected.symbol
     ) {
-      message = "";
+      message = "Add liquidity ";
       disabled = false;
     }
 
@@ -478,18 +590,17 @@ const AddCard = (props) => {
       );
       if (new BigNumber(_token2Value).gt(0)) {
         setToken2Value(_token2Value);
+        verifySwapStatus(
+          { value: tokens, selected: selectedToken1 },
+          { value: _token2Value, selected: selectedToken2 }
+        );
       }
     } else if (selectedToken2.symbol && !tokens) {
       setToken2Value("");
-    }
-
-    verifySwapStatus(
-      { value: tokens, selected: selectedToken1 },
-      {
-        value: new BigNumber(_token2Value).gt(0) ? _token2Value : token2Value,
-        selected: selectedToken2,
+      if (!addStatus.disabled) {
+        setStatus({ disabled: true, message: "Enter Amounts" });
       }
-    );
+    }
   };
 
   const onToken2InputChange = async (tokens) => {
@@ -513,18 +624,17 @@ const AddCard = (props) => {
       );
       if (new BigNumber(_token1Value).gt(0)) {
         setToken1Value(_token1Value);
+        verifySwapStatus(
+          { value: _token1Value, selected: selectedToken1 },
+          { value: tokens, selected: selectedToken2 }
+        );
       }
     } else if (selectedToken1.symbol && !tokens) {
       setToken1Value("");
+      if (!addStatus.disabled) {
+        setStatus({ disabled: true, message: "Enter Amounts" });
+      }
     }
-
-    verifySwapStatus(
-      {
-        value: new BigNumber(_token1Value).gt(0) ? _token1Value : token1Value,
-        selected: selectedToken1,
-      },
-      { value: tokens, selected: selectedToken2 }
-    );
   };
 
   const resetInput = () => {
@@ -618,162 +728,182 @@ const AddCard = (props) => {
   //   return _ratio;
   // };
 
+  const disableStatus = () => {
+    return addStatus.disabled;
+  };
+
+  const handleAction = () => {
+    if (currentTokenApprovalStatus()) {
+      handleAddLiquidity();
+    } else {
+      handleConfirmAllowance();
+    }
+  };
+  // const handleTokenPriceRatio = () => {};
+  const currentButton = () => {
+    if (addStatus.disabled) {
+      return addStatus.message;
+    } else {
+      return !currentTokenApprovalStatus() ? "Approve" : addStatus.message;
+    }
+  };
+
   return (
     <>
       <SwapSettings open={settingOpen} handleClose={close} />
-      <div className={classes.card}>
-        <div className="card-theme">
-          <div className={classes.cardContents}>
-            <div className={classes.cardHeading}>
+      <Card elevation={20} className={classes.card}>
+        <div className={classes.cardContents}>
+          <div className={classes.cardHeading}>
+            <IconButton onClick={handleBack} style={{ margin: 0, padding: 0 }}>
               <KeyboardBackspaceIcon
                 fontSize="default"
-                onClick={handleBack}
                 className={classes.settingIcon}
               />
-              <p>Add Liquidity</p>
-              <TuneIcon
-                fontSize="default"
-                onClick={handleSettings}
-                className={classes.settingIcon}
-              />
-            </div>
+            </IconButton>
+            <h6 className={classes.title}>Add Liquidity</h6>
+            <IconButton
+              onClick={handleSettings}
+              style={{ margin: 0, padding: 0 }}
+            >
+              <Settings fontSize="default" className={classes.settingIcon} />
+            </IconButton>
+          </div>
 
-            <div className={classes.cardHeading}>
-              <span style={{ color: "rgba(255, 255, 255, 0.7)" }}>
-                Select pair
-              </span>
-              <span className={classes.clearButton} onClick={handleClearState}>
-                Clear all
-              </span>
-            </div>
+          <div className={classes.cardFeature}>
+            <span className={classes.cardTitle}>Select pair</span>
+            <span className={classes.clearButton} onClick={handleClearState}>
+              Clear all
+            </span>
+          </div>
 
-            <SwapCardItem
-              onInputChange={onToken1InputChange}
-              onTokenChange={onToken1Select}
-              currentToken={selectedToken1}
-              disableToken={selectedToken2}
-              inputValue={token1Value}
-            />
-            <AddIcon fontSize="default" className={classes.settingIcon} />
-            <SwapCardItem
-              onInputChange={onToken2InputChange}
-              onTokenChange={onToken2Select}
-              currentToken={selectedToken2}
-              disableToken={selectedToken1}
-              inputValue={token2Value}
-            />
+          <SwapCardItem
+            onInputChange={onToken1InputChange}
+            onTokenChange={onToken1Select}
+            currentToken={selectedToken1}
+            disableToken={selectedToken2}
+            inputValue={token1Value}
+          />
+          <IconButton className={classes.iconButton}>
+            <AddIcon fontSize="default" className={classes.addIcon} />
+          </IconButton>
 
-            {selectedToken1.symbol && selectedToken2.symbol ? (
-              <>
-                <div className={classes.cardSubHeading}>
-                  <span className={classes.hintStyle}>
-                    Prices and Pool share
+          <SwapCardItem
+            onInputChange={onToken2InputChange}
+            onTokenChange={onToken2Select}
+            currentToken={selectedToken2}
+            disableToken={selectedToken1}
+            inputValue={token2Value}
+          />
+
+          {selectedToken1.symbol && selectedToken2.symbol ? (
+            <div style={{ width: "95%" }}>
+              <div className={classes.cardSubHeading}>
+                <span className={classes.hintStyle}>Prices and Pool share</span>
+              </div>
+
+              <div className={classes.selectPoolContainer}>
+                <div className={classes.feeSelectContainer}>
+                  <div className={classes.feeSelectHeading}>
+                    {getPriceRatio(token1Value, token2Value)}
+                  </div>
+                  <span className={classes.feeSelectHeadingSpan}>
+                    {`${selectedToken1.symbol} per ${selectedToken2.symbol}`}
                   </span>
                 </div>
 
-                <div className={classes.selectPoolContainer}>
-                  <div className={classes.feeSelectContainer}>
-                    <div className={classes.feeSelectHeading}>
-                      <p className={classes.feeSelectHeadingP}>
-                        {/* {formatCurrency(
-                          parseFloat(token1Value) / parseFloat(token2Value),
-                          false,
-                          2,
-                          false
-                        )} */}
-                        {getPriceRatio(token1Value, token2Value)}
-                      </p>
-                    </div>
-                    <span className={classes.feeSelectHeadingSpan}>
-                      {`${selectedToken1.symbol} per ${selectedToken2.symbol}`}
-                    </span>
+                <div className={classes.feeSelectContainer}>
+                  <div className={classes.feeSelectHeading}>
+                    {getPriceRatio(token2Value, token1Value)}
                   </div>
-
-                  <div className={classes.feeSelectContainer}>
-                    <div className={classes.feeSelectHeading}>
-                      <p className={classes.feeSelectHeadingP}>
-                        {/* {formatCurrency(
-                          parseFloat(token2Value) / parseFloat(token1Value)
-                        )} */}
-                        {getPriceRatio(token2Value, token1Value)}
-                      </p>
-                    </div>
-                    <span className={classes.feeSelectHeadingSpan}>
-                      {`${selectedToken2.symbol} per ${selectedToken1.symbol}`}
-                    </span>
-                  </div>
-
-                  <div className={classes.feeSelectContainer}>
-                    <div className={classes.feeSelectHeading}>
-                      <p
-                        className={classes.feeSelectHeadingP}
-                      >{`${currentPoolShare()}%`}</p>
-                    </div>
-                    <span className={classes.feeSelectHeadingSpan}>
-                      Share of pool
-                    </span>
-                  </div>
+                  <span className={classes.feeSelectHeadingSpan}>
+                    {`${selectedToken2.symbol} per ${selectedToken1.symbol}`}
+                  </span>
                 </div>
-              </>
-            ) : (
-              ""
-            )}
 
-            <div style={{ marginBottom: 10 }}>
-              <span className={classes.hintStyle}>
-                By adding liquidity you'll earn 0.2% of all trades on this pair
-                proportional to your share of the pool.
-              </span>
+                <div className={classes.feeSelectContainer}>
+                  <div className={classes.feeSelectHeading}>
+                    {`${currentPoolShare()}%`}
+                  </div>
+                  <span className={classes.feeSelectHeadingSpan}>
+                    Share of pool
+                  </span>
+                </div>
+              </div>
             </div>
+          ) : (
+            ""
+          )}
 
-            <div className="d-flex justify-content-center mt-2 mb-1">
-              <span>{addStatus.message}</span>
-            </div>
-            <div className="d-flex  mt-4">
-              <CustomButton
-                variant="light"
-                className={classes.approveBtn}
-                disabled={approvedTokens[selectedToken1.symbol]}
-                onClick={handleConfirmAllowance}
-              >
-                {approvedTokens[selectedToken1.symbol] ? (
-                  <>
-                    Approved{" "}
-                    <CheckCircleIcon
-                      style={{ color: "#E0077D", marginLeft: 5 }}
-                      fontSize="small"
-                    />{" "}
-                  </>
-                ) : loading ? (
-                  <CircularProgress
-                    style={{ color: "black" }}
-                    color="secondary"
-                    size={30}
-                  />
-                ) : (
-                  "Approve"
-                )}
-              </CustomButton>
-              <CustomButton
-                variant="primary"
-                // className={classes.addButton}
-                disabled={addStatus.disabled | loading}
-                onClick={handleAddLiquidity}
-              >
-                {!addStatus.disabled && loading ? (
-                  <CircularProgress
-                    style={{ color: "black" }}
-                    color="secondary"
-                    size={30}
-                  />
-                ) : (
-                  "Add liquidity"
-                )}
-              </CustomButton>
-            </div>
+          <div style={{ marginBottom: 10, width: "95%" }}>
+            <span className={classes.hintStyle}>
+              By adding liquidity you'll earn 0.2% of all trades on this pair
+              proportional to your share of the pool.
+            </span>
           </div>
+
+          <Button
+            variant="contained"
+            disabled={disableStatus()}
+            onClick={handleAction}
+            className={classes.addLiquidityButton}
+          >
+            {!addStatus.disabled && loading ? (
+              <CircularProgress
+                style={{ color: "black" }}
+                color="secondary"
+                size={30}
+              />
+            ) : (
+              currentButton()
+            )}
+          </Button>
+          {/* <div className="d-flex  mt-4">
+            <CustomButton
+              variant="light"
+              className={classes.approveBtn}
+              disabled={approvedTokens[selectedToken1.symbol]}
+              onClick={handleConfirmAllowance}
+            >
+              {approvedTokens[selectedToken1.symbol] ? (
+                <>
+                  Approved{" "}
+                  <CheckCircleIcon
+                    style={{ color: "#E0077D", marginLeft: 5 }}
+                    fontSize="small"
+                  />{" "}
+                </>
+              ) : loading ? (
+                <CircularProgress
+                  style={{ color: "black" }}
+                  color="secondary"
+                  size={30}
+                />
+              ) : (
+                "Approve"
+              )}
+            </CustomButton>
+            <CustomButton
+              variant="primary"
+              // className={classes.addButton}
+              disabled={addStatus.disabled | loading}
+              onClick={handleAddLiquidity}
+            >
+              {!addStatus.disabled && loading ? (
+                <CircularProgress
+                  style={{ color: "black" }}
+                  color="secondary"
+                  size={30}
+                />
+              ) : (
+                "Add liquidity"
+              )}
+            </CustomButton>
+          </div> */}
+          {/* <div className="d-flex justify-content-center mt-2 mb-1">
+            <span>{addStatus.message}</span>
+          </div> */}
         </div>
-      </div>
+      </Card>
     </>
   );
 };

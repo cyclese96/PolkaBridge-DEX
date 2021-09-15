@@ -1,11 +1,9 @@
 import { TableCell, TableRow } from "@material-ui/core";
 import { formatCurrency } from "../../../../utils/helper";
-import PercentLabel from "../../../common/PercentLabel";
-import TokenIcon from "../../../common/TokenIcon";
+import { formatTime } from "../../../../utils/timeUtils";
 
 const TransactionRow = (props) => {
-  const { row, classes, isItemSelected, labelId, handleClick } = props;
-
+  const { classes, isItemSelected, labelId, handleClick, row } = props;
   return (
     <>
       <TableRow
@@ -19,14 +17,21 @@ const TransactionRow = (props) => {
         className={classes.tableMobile}
       >
         <TableCell padding="checkbox"></TableCell>
-
         <TableCell component="th" id={labelId} scope="row" padding="none">
-          <TokenIcon />
-          <span className={classes.cellText}>{row.name}</span>
+          <span className={classes.cellTextSecondary}>
+            {row.__typename === "Mint"
+              ? "Add"
+              : row.__typename === "Burn"
+              ? "Remove"
+              : "Swap"}{" "}
+          </span>{" "}
+          <span className={classes.cellText}>
+            {row.pair.token0.symbol} And {row.pair.token1.symbol}
+          </span>
         </TableCell>
 
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.vol_24_h, true)}
+          {formatCurrency(row.amountUSD, true)}
         </TableCell>
       </TableRow>
       <TableRow
@@ -42,25 +47,35 @@ const TransactionRow = (props) => {
         <TableCell padding="checkbox"></TableCell>
 
         <TableCell component="th" id={labelId} scope="row" padding="none">
-          <TokenIcon symbol={row.symbol} className={classes.tokenIcon} />
-          <span className={classes.cellText}>{row.name} </span>
-          <small className={classes.cellTextSecondary}>
-            {"( " + row.symbol + " )"}
-          </small>
+          <span className={classes.cellTextSecondary}>
+            {row.__typename === "Mint"
+              ? "Add"
+              : row.__typename === "Burn"
+              ? "Remove"
+              : "Swap"}{" "}
+          </span>{" "}
+          <span className={classes.cellText}>
+            {row.pair.token0.symbol} And {row.pair.token1.symbol}
+          </span>
         </TableCell>
         <TableCell align="right">
           <span className={classes.cellText}>
-            {formatCurrency(row.price, true)}
+            {formatCurrency(row.amountUSD, true)}
           </span>
         </TableCell>
+
         <TableCell align="right" className={classes.cellText}>
-          <PercentLabel percentValue={row.price_change} />
+          {formatCurrency(row.amount0, true)}
         </TableCell>
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.vol_24_h, true)}
+          {formatCurrency(row.amount1, true)}
         </TableCell>
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.tvl, true)}
+          {[...row.sender].splice(0, 5)} {"..."}
+          {[...row.sender].splice([...row.sender].length - 5, 5)}
+        </TableCell>
+        <TableCell align="right" className={classes.cellText}>
+          <span>{formatTime(row.transaction.timestamp)}</span>
         </TableCell>
       </TableRow>
     </>

@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "auto",
     height: 22,
+    borderRadius: "50%",
   },
 }));
 

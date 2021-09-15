@@ -26,7 +26,7 @@ const TokenRow = (props) => {
         </TableCell>
 
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.vol_24_h, true)}
+          {formatCurrency(row.oneDayData.tradeVolumeUSD, true)}
         </TableCell>
       </TableRow>
       <TableRow
@@ -37,6 +37,7 @@ const TokenRow = (props) => {
         tabIndex={-1}
         key={row.id}
         selected={isItemSelected}
+        style={{ borderBottom: "1.5px solid #212121" }}
         className={classes.tableDesktop}
       >
         <TableCell padding="checkbox"></TableCell>
@@ -45,22 +46,22 @@ const TokenRow = (props) => {
           <TokenIcon symbol={row.symbol} className={classes.tokenIcon} />
           <span className={classes.cellText}>{row.name} </span>
           <small className={classes.cellTextSecondary}>
-            {"( " + row.symbol + " )"}
+            {"(" + row.symbol + ")"}
           </small>
         </TableCell>
         <TableCell align="right">
           <span className={classes.cellText}>
-            {formatCurrency(row.price, true)}
+            {formatCurrency(row.priceUSD, true)}
           </span>
         </TableCell>
         <TableCell align="right" className={classes.cellText}>
-          <PercentLabel percentValue={row.price_change} />
+          <PercentLabel percentValue={row.priceChangeUSD} />
         </TableCell>
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.vol_24_h, true)}
+          {formatCurrency(row.oneDayData.tradeVolumeUSD, true)}
         </TableCell>
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.tvl, true)}
+          {formatCurrency(row.totalLiquidtyUSD, true)}
         </TableCell>
       </TableRow>
     </>

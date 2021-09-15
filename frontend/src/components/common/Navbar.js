@@ -392,6 +392,7 @@ const Navbar = ({ currentNetwork }) => {
           </div>
         </Toolbar>
       </AppBar>
+      <Toolbar />{" "}
     </div>
   );
 };

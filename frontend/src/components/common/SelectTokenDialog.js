@@ -9,7 +9,8 @@ import CustomButton from "../Buttons/CustomButton";
 import TokenList from "./TokenList";
 import { importToken } from "../../actions/dexActions";
 import { connect } from "react-redux";
-import { CircularProgress } from "@material-ui/core";
+import { Button, CircularProgress, Divider } from "@material-ui/core";
+import { Close } from "@material-ui/icons";
 
 const styles = (theme) => ({
   root: {
@@ -52,22 +53,23 @@ const useStyles = makeStyles((theme) => ({
     width: 400,
     height: 600,
     [theme.breakpoints.down("sm")]: {
-      width: 320,
+      width: "75vw",
       height: 500,
     },
   },
   heading: {
     fontSize: 18,
     fontWeight: 400,
-    color: "#919191",
+    textAlign: "left",
+    color: "#e5e5e5",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 16,
+    },
   },
   subheading: {
     fontSize: 12,
     fontWeight: 400,
     color: "#919191",
-  },
-  inputGroup: {
-    marginTop: 40,
   },
 
   notchedOutline: {
@@ -83,27 +85,49 @@ const useStyles = makeStyles((theme) => ({
     height: 50,
     width: "auto",
     borderColor: "rgba(255, 255, 255, 0.1)",
-    borderRadius: 10,
+    borderRadius: 15,
     fontSize: 18,
     width: "90%",
     color: "white",
     padding: 10,
+    outline: "none",
     [theme.breakpoints.down("sm")]: {
-      height: 50,
+      height: 35,
+      fontSize: 13,
     },
   },
   buttons: {
-    // marginTop: 80,
-    // marginBottom: 20,
+    marginBottom: 7,
   },
+
   numbers: {
     color: "#E0077D",
     fontSize: 20,
     marginLeft: 15,
   },
   icon: {
-    marginRight: 5,
-    color: "#919191",
+    color: "#e5e5e5",
+  },
+  closeIcon: {
+    color: "#f6f6f6",
+    fontSize: 24,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 18,
+    },
+  },
+  cancelButton: {
+    backgroundColor: "#2C2F35",
+    color: "white",
+    width: "100%",
+    textTransform: "none",
+    fontSize: 17,
+    borderRadius: 20,
+
+    padding: "8px 50px 8px 50px",
+
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 14,
+    },
   },
 }));
 
@@ -172,49 +196,73 @@ const SelectTokenDialog = ({
   };
 
   return (
-    <div>
-      <Dialog
-        onClose={onClose}
-        open={open}
-        // onLoad={() => filterTokens("")}
-        disableBackdropClick
-        className={classes.dialog}
-        color="transparent"
-        PaperProps={{
-          style: { borderRadius: 15 },
-        }}
-      >
-        <div className={classes.background}>
-          <DialogTitle onClose={onClose}>
-            <span className={classes.heading}>Select a token</span>
-          </DialogTitle>
-
-          <input
-            type="text"
-            className={classes.input}
-            placeholder="Search name or paste address"
-            onChange={({ target: { value } }) => handleTokenFilter(value)}
-          />
-          {/* <FixedSizeList> */}
-          {dexLoading ? (
-            <CircularProgress />
-          ) : (
-            <TokenList
-              handleItemSelected={onTokenSelect}
-              tokens={filteredTokens}
-              disableToken={disableToken}
-            />
-          )}
-
-          {/* </FixedSizeList> */}
-          <div className={classes.buttons}>
-            <CustomButton variant="light" onClick={onClose}>
-              Cancel
-            </CustomButton>
+    <Dialog
+      onClose={onClose}
+      open={open}
+      // onLoad={() => filterTokens("")}
+      disableBackdropClick
+      className={classes.dialog}
+      color="transparent"
+      PaperProps={{
+        style: { borderRadius: 20, backgroundColor: "#121827" },
+      }}
+    >
+      <div className={classes.background}>
+        <div
+          className="d-flex justify-content-between"
+          style={{ width: "90%", paddingTop: 20, paddingBottom: 15 }}
+        >
+          <div className={classes.heading}>Select a token</div>
+          <div>
+            <IconButton style={{ margin: 0, padding: 0 }}>
+              <Close onClick={onClose} className={classes.closeIcon}></Close>
+            </IconButton>
           </div>
         </div>
-      </Dialog>
-    </div>
+
+        <input
+          type="text"
+          className={classes.input}
+          placeholder="Search name or paste address"
+          onChange={({ target: { value } }) => handleTokenFilter(value)}
+        />
+        {/* <FixedSizeList> */}
+        <Divider
+          style={{
+            width: "100%",
+            borderTop: "1px solid #616161",
+            marginTop: 15,
+          }}
+        />
+        {dexLoading ? (
+          <CircularProgress />
+        ) : (
+          <TokenList
+            handleItemSelected={onTokenSelect}
+            tokens={filteredTokens}
+            disableToken={disableToken}
+          />
+        )}
+        <Divider
+          style={{
+            width: "100%",
+            borderTop: "1px solid #616161",
+            marginTop: 15,
+            marginBottom: 10,
+          }}
+        />
+        {/* </FixedSizeList> */}
+        <div className={classes.buttons}>
+          <Button
+            variant="contained"
+            onClick={onClose}
+            className={classes.cancelButton}
+          >
+            Cancel
+          </Button>
+        </div>
+      </div>
+    </Dialog>
   );
 };
 
