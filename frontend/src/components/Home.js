@@ -1,6 +1,5 @@
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import React, { useEffect } from "react";
-import { Avatar, CircularProgress } from "@material-ui/core";
 
 import Navbar from "./common/Navbar";
 import Footer from "./common/Footer";
@@ -12,8 +11,6 @@ import store from "../store";
 import {
   bscConfig,
   bscNetwork,
-  defaultSlippage,
-  defaultTransactionDeadline,
   etherConfig,
   etheriumNetwork,
   supportedNetworks,
@@ -30,13 +27,31 @@ import TabPage from "./TabPage";
 import { loadTokens } from "../actions/dexActions";
 
 const useStyles = makeStyles((theme) => ({
-  background: {
-    padding: 80,
-    minHeight: "100vh",
+  navbar: {
+    position: "relative",
+    top: 0,
+  },
+  mainContent: {
+    marginTop: 10,
+    minHeight: `calc(100vh - 120px)`,
     display: "flex",
     flexDirection: "column",
+    justifyContent: "flex-start",
     alignItems: "center",
-    backgroundColor: "#121827",
+  },
+  footer: {
+    width: "100vw",
+    display: "flex",
+    justifyContent: "center",
+
+    paddingBottom: 20,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 12,
+      width: "100%",
+    },
+  },
+  background: {
+    height: "90vh",
   },
 
   heading: {
@@ -158,16 +173,14 @@ const Home = ({
   }, []);
 
   return (
-    <div>
-      <section className="appbar-section">
+    <div style={{ overflowX: "hidden" }}>
+      <div className={classes.navbar}>
         <Navbar currentNetwork={currentNetwork} />
-      </section>
-
-      <div className={classes.background}>
-        <p>Polkabridge AMM</p>
-
+      </div>
+      <div className={classes.mainContent}>
         <TabPage />
-
+      </div>
+      <div className={classes.footer}>
         <Footer />
       </div>
     </div>

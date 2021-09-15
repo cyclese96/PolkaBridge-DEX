@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -9,13 +9,13 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
-
-import PercentLabel from "../../common/PercentLabel";
-import { formatCurrency } from "../../../utils/helper";
-import TokenIcon from "../../common/TokenIcon";
 import { topPoolsData, topTokensData } from "./tableData";
 import TokenRow from "./TableRows/TokenRow";
 import PoolRow from "./TableRows/PoolRow";
+import TransactionRow from "./TableRows/TransactionRow";
+import { Card } from "@material-ui/core";
+import { useMemo } from "react";
+// import { topTransactions } from "../../../apollo/queries";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -34,7 +34,12 @@ function getComparator(order, orderBy) {
 }
 
 function stableSort(array, comparator) {
+  // console.log("stableSort", array);
+  if (!array || array.length === 0 || Object.keys(array).length === 0) {
+    return;
+  }
   const stabilizedThis = array.map((el, index) => [el, index]);
+  // console.log("stabilizedThis", stabilizedThis);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -92,7 +97,7 @@ const headCells = {
       id: "type",
       numeric: false,
       disablePadding: true,
-      label: "#",
+      label: "#Token",
     },
     {
       id: "total_value",
@@ -133,9 +138,14 @@ const headCellMobile = [
 
 const useHeadStyles = makeStyles((theme) => ({
   headStyle: {
-    color: "rgba(255,255,255,0.5)",
+    color: "#bdbdbd",
+    fontSize: 16,
     margin: 0,
     padding: 0,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 12,
+      width: 80,
+    },
   },
   sortIcons: {
     opacity: 1,
@@ -251,10 +261,13 @@ EnhancedTableHead.propTypes = {
 };
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  card: {
     width: "100%",
+    border: "1px solid #616161",
+    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    borderRadius: 15,
     [theme.breakpoints.down("sm")]: {
-      width: 370,
+      width: "92vw",
     },
   },
   paper: {
@@ -263,8 +276,10 @@ const useStyles = makeStyles((theme) => ({
   },
   table: {
     minWidth: 750,
+    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
     [theme.breakpoints.down("sm")]: {
-      minWidth: 370,
+      minWidth: 200,
+      width: "90vw",
     },
   },
   visuallyHidden: {
@@ -285,6 +300,11 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     marginLeft: 6,
     marginRight: 6,
+    fontSize: 12,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 12,
+      width: 100,
+    },
   },
   cellTextSecondary: {
     color: "rgba( 255, 255, 255, 0.4 )",
@@ -306,17 +326,12 @@ const useStyles = makeStyles((theme) => ({
 // tableTypes:  "TopTokens" , "TopPools", "Transactions"
 // const rows = topTokensData;
 
-const rows = (tableType) => {
-  switch (tableType) {
-    case "TopTokens":
-      return topTokensData;
-    case "TopPools":
-      return topPoolsData;
-    default:
-      return topTokensData;
-  }
-};
-const TopTokens = ({ tableType = "TopTokens" }) => {
+const TopTokens = ({
+  tableType = "TopTokens",
+  allTokens,
+  allPairs,
+  allTransactions,
+}) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
@@ -324,8 +339,74 @@ const TopTokens = ({ tableType = "TopTokens" }) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  // const [transactions, setTransactions] = useState([]);
+  // const [pairs, setPairs] = useState([]);
+  // const [tokens, setTokens] = useState([]);
+
+  // useEffect( () => {
+  //   if ( !allTransactions && Object.keys(allTransactions).length === 0) {
+  //     return
+  //   }
+  //   // const page = 1;
+  //   // const order = "desc";
+  //   // const transactions = await topTransactions(page, order);
+  //   //Format transactions data
+  //   formatTransactions(allTransactions);
+  //   // setPairs(allPairs);
+  //   // setTokens(allTokens);
+  //   console.log("transactions", {
+  //     allTransactions
+  //   });
+
+  // }, [Object.key( !allTransactions ? {} : allTransactions)]);
+
+  useEffect(() => {
+    if (!allTransactions) {
+      return;
+    }
+    console.log("raw transactions list ", allTransactions);
+  }, [Object.keys(!allTransactions ? {} : allTransactions)]);
+
+  const formattedPairs = useMemo(() => {
+    return allPairs && Object.keys(allPairs).map((key) => allPairs[key]);
+  }, [allPairs]);
+
+  const formattedTokens = useMemo(() => {
+    return allTokens && Object.keys(allTokens).map((key) => allTokens[key]);
+  }, [allTokens]);
+
+  const formattedTransactions = useMemo(() => {
+    const _mints = !allTransactions ? [] : allTransactions.mints;
+    const _swaps = allTransactions ? allTransactions.swaps : [];
+    const _burns = allTransactions ? allTransactions.burns : [];
+    const _all = _mints; //[..._mints, ..._swaps, ..._burns];
+    return !_all ? [] : _all;
+  }, [allTransactions]);
+
+  // useEffect(() => {
+  //   if ( !allPairs && Object.keys(allPairs) === 0 ) {
+  //     return
+  //   }
+  //   console.log("raw pair list ", allPairs);
+  // }, [Object.keys( !allPairs ? {} : allPairs )]);
+
+  // const formatTransactions = (transactions) => {
+  //   // let fotmattedTxs = transactions.map((singleTx) => {
+  //   //   return singleTx.burns.length === 0
+  //   //     ? singleTx.mints.length === 0
+  //   //       ? singleTx.swaps
+  //   //       : singleTx.mints
+  //   //     : singleTx.burns;
+  //   // });
+  //   // console.log("fetched", fotmattedTxs);
+  //   const allTrx = [];
+
+  //   setTransactions(transactions.burns);
+  //   // console.log(fotmattedTxs);
+  // };
+
   const handleRequestSort = (event, property) => {
-    console.log("sort ", property);
+    // console.log("sort ", property);
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
@@ -372,96 +453,159 @@ const TopTokens = ({ tableType = "TopTokens" }) => {
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  const emptyRows =
-    rowsPerPage -
-    Math.min(rowsPerPage, rows(tableType).length - page * rowsPerPage);
-  const currenTokenRow = (
-    tableType,
-    row,
-    classes,
-    isItemSelected,
-    labelId,
-    handleClick
-  ) => {
-    if (tableType === "TopTokens") {
-      return (
-        <TokenRow
-          row={row}
-          classes={classes}
-          isItemSelected={isItemSelected}
-          labelId={labelId}
-          handleClick={handleClick}
-        />
-      );
-    } else if (tableType === "TopPools") {
-      return (
-        <PoolRow
-          row={row}
-          classes={classes}
-          isItemSelected={isItemSelected}
-          labelId={labelId}
-          handleClick={handleClick}
-        />
-      );
+  const emptyRows = 0;
+  // rowsPerPage -
+  // Math.min(rowsPerPage, rows(tableType).length - page * rowsPerPage);
+
+  const rows = (tableType) => {
+    switch (tableType) {
+      case "TopTokens":
+        return formattedTokens;
+      case "TopPools":
+        return formattedPairs;
+      case "Transactions":
+        return formattedTransactions;
+      default:
+        return formattedTokens;
     }
   };
-  return (
-    <div className={classes.root}>
-      <div className="card-theme">
-        {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
-        <TableContainer>
-          <Table
-            className={classes.table}
-            aria-labelledby="tableTitle"
-            size="medium"
-            aria-label="enhanced table"
-          >
-            <EnhancedTableHead
-              classes={classes}
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows(tableType).length}
-              tableType={tableType}
-            />
-            <TableBody>
-              {stableSort(rows(tableType), getComparator(order, orderBy))
+
+  const CurrenTokenRow = ({ tableType, classes, handleClick }) => {
+    if (tableType === "TopTokens") {
+      return (
+        <>
+          {formattedTokens.length > 0
+            ? stableSort(formattedTokens, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.name);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return currenTokenRow(
-                    tableType,
-                    row,
-                    classes,
-                    isItemSelected,
-                    labelId,
-                    handleClick
+                  return (
+                    <TokenRow
+                      row={row}
+                      classes={classes}
+                      isItemSelected={isItemSelected}
+                      labelId={labelId}
+                      handleClick={handleClick}
+                    />
                   );
-                })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows(tableType).length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-          style={{ color: "#E0077D" }}
-        />
-      </div>
-    </div>
+                })
+            : ""}
+          {emptyRows > 0 && (
+            <TableRow
+              style={{
+                height: 53 * emptyRows,
+              }}
+            >
+              <TableCell colSpan={6} />
+            </TableRow>
+          )}
+        </>
+      );
+    } else if (tableType === "TopPools") {
+      return (
+        <>
+          {formattedPairs.length > 0 &&
+            stableSort(formattedPairs, getComparator(order, orderBy))
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row, index) => {
+                const isItemSelected = isSelected(row.name);
+                const labelId = `enhanced-table-checkbox-${index}`;
+
+                return (
+                  <PoolRow
+                    row={row}
+                    classes={classes}
+                    isItemSelected={isItemSelected}
+                    labelId={labelId}
+                    handleClick={handleClick}
+                  />
+                );
+              })}
+          {emptyRows > 0 && (
+            <TableRow
+              style={{
+                height: 53 * emptyRows,
+              }}
+            >
+              <TableCell colSpan={6} />
+            </TableRow>
+          )}
+        </>
+      );
+    } else {
+      return (
+        <>
+          {formattedTransactions.length > 0 &&
+            stableSort(formattedTransactions, getComparator(order, orderBy))
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row, index) => {
+                const isItemSelected = isSelected(row.name);
+                const labelId = `enhanced-table-checkbox-${index}`;
+
+                return (
+                  <TransactionRow
+                    row={row}
+                    classes={classes}
+                    isItemSelected={isItemSelected}
+                    labelId={labelId}
+                    handleClick={handleClick}
+                  />
+                );
+              })}
+          {emptyRows > 0 && (
+            <TableRow
+              style={{
+                height: 53 * emptyRows,
+              }}
+            >
+              <TableCell colSpan={6} />
+            </TableRow>
+          )}
+        </>
+      );
+    }
+  };
+  return (
+    <Card className={classes.card}>
+      <TableContainer>
+        <Table
+          className={classes.table}
+          aria-labelledby="tableTitle"
+          size="medium"
+          aria-label="enhanced table"
+        >
+          <EnhancedTableHead
+            classes={classes}
+            numSelected={selected.length}
+            order={order}
+            orderBy={orderBy}
+            onSelectAllClick={handleSelectAllClick}
+            onRequestSort={handleRequestSort}
+            rowCount={rows(tableType).length}
+            tableType={tableType}
+          />
+          <TableBody>
+            <CurrenTokenRow
+              tableType={tableType}
+              classes={classes}
+              handleClick={handleClick}
+            />
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[5]}
+        component="div"
+        count={rows(tableType).length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        style={{ color: "#E0077D" }}
+      />
+    </Card>
   );
 };
 
