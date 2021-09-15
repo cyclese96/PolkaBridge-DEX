@@ -22,5 +22,8 @@
   "dependencies": {
     "@truffle/hdwallet-provider": "^1.4.3",
     "fs": "0.0.1-security"
+  },
+  "devDependencies": {
+    "truffle-plugin-verify": "^0.5.15"
   }
 }
