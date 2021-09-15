@@ -21,6 +21,9 @@ a {
   text-decoration: none;
   color: white;
 }
+a:hover {
+  color: #c80c81;
+}
 
 h6 {
   color: white;
