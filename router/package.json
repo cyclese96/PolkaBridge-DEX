@@ -23,6 +23,6 @@
     "@truffle/hdwallet-provider": "^1.4.3",
     "@uniswap/lib": "^4.0.1-alpha",
     "@uniswap/v2-core": "^1.0.1",
-    "fs": "0.0.1-security"
+    "truffle-plugin-verify": "^0.5.15"
   }
 }
