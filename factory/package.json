@@ -21,7 +21,6 @@
   "homepage": "https://github.com/Uniswap/uniswap-v2-core#readme",
   "dependencies": {
     "@truffle/hdwallet-provider": "^1.4.3",
-    "dotenv": "^10.0.0",
     "fs": "0.0.1-security"
   }
 }
