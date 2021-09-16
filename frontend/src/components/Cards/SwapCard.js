@@ -195,6 +195,7 @@ const SwapCard = (props) => {
 
   const [priceImpact, setPriceImpact] = useState(null);
   const [liquidityStatus, setLiquidityStatus] = useState(false);
+  const [localStateLoading, setLocalStateLoading] = useState(false);
 
   const updateTokenPrices = async () => {
     console.log("updating...");
@@ -287,6 +288,8 @@ const SwapCard = (props) => {
   };
   useEffect(async () => {
     if (selectedToken1.symbol && selectedToken2.symbol) {
+      setLocalStateLoading(true);
+
       // reset token input on token selection
       clearInputState();
 
@@ -332,7 +335,6 @@ const SwapCard = (props) => {
           disabled: true,
           message: "No liquidity available for this pair",
         });
-        return;
       } else {
         setLiquidityStatus(false);
 
@@ -370,6 +372,8 @@ const SwapCard = (props) => {
         currentAccount,
         currentNetwork
       );
+
+      setLocalStateLoading(false);
     }
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
@@ -597,7 +601,7 @@ const SwapCard = (props) => {
   };
 
   const disableStatus = () => {
-    return swapStatus.disabled;
+    return swapStatus.disabled || loading || localStateLoading;
   };
 
   const handleAction = () => {
@@ -609,7 +613,9 @@ const SwapCard = (props) => {
   };
   // const handleTokenPriceRatio = () => {};
   const currentButton = () => {
-    if (swapStatus.disabled) {
+    if (localStateLoading) {
+      return "Please wait...";
+    } else if (swapStatus.disabled) {
       return swapStatus.message;
     } else {
       return !currentTokenApprovalStatus() ? "Approve" : swapStatus.message;
