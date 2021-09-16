@@ -1,8 +1,6 @@
-//mainnet contracts
+//tokens contract addresses
 export const pbrAddressMainnet = "0x298d492e8c1d909D3F63Bc4A36C66c64ACB3d695";
 export const biteAddressMainnet = "0x4eed0fa8de12d5a86517f214c2f11586ba2ed88d";
-export const stakingAddressMainnet =
-  "0x1b46b72c5280f30Fbe8A958B4f3c348FD0fD2E55";
 
 //testnet contracts/
 export const pbrAddressTestnet = "0xf6c9FF0543f932178262DF8C81A12A3132129b51";
@@ -24,29 +22,30 @@ export const corgibMemeCoinMainnet =
 
 // factory ethereum
 export const facotryAddressTestnet =
-  "0xA1853078D1447C0060c71a672E6D13882f61A0a6";
+  "0x1771F427a1020884ED8f69D7d4E58B84dd7E3EC6";
 export const factoryAddresMainnet =
   "0xA1853078D1447C0060c71a672E6D13882f61A0a6";
-// factory bsc
+
+// factory bsc address
 export const facotryAddressBscTestnet =
   "0xA1853078D1447C0060c71a672E6D13882f61A0a6";
 export const factoryAddresBscMainnet =
   "0xA1853078D1447C0060c71a672E6D13882f61A0a6";
 
-// router ethereum
+// router ethereum addresses
 export const routerAddressTestnet =
-  "0x050aAC21096e027142E3f5d089a9251FcCf191b9";
+  "0x5ab57C8Ec88E78449Fd3139b82805C4BB5F268ac";
 export const routerAddressMainnet =
   "0x050aAC21096e027142E3f5d089a9251FcCf191b9";
 
-// router bsc
+// router bsc addresses
 export const routerAddressBscTestnet =
   "0x050aAC21096e027142E3f5d089a9251FcCf191b9";
 export const routerAddressBscMainnet =
   "0x050aAC21096e027142E3f5d089a9251FcCf191b9";
 
 //pbr-eth-pair
-//ethereum
+// ethereum
 export const pbrEthPairAddressTestnet =
   "0x493845349992318411Db0c472C7e7da345f1cDA4";
 export const pbrEthPairAddressMainnet =
@@ -318,14 +317,13 @@ export const tokens = [
 
 export const nullAddress = "0x0000000000000000000000000000000000000000";
 
-
 export const timeframeOptions = {
-  WEEK: '1 week',
-  MONTH: '1 month',
-  // THREE_MONTHS: '3 months',
-  // YEAR: '1 year',
-  HALF_YEAR: '6 months',
-  ALL_TIME: 'All time',
-}
+  WEEK: "1 week",
+  MONTH: "1 month",
+  THREE_MONTHS: "3 months",
+  YEAR: "1 year",
+  HALF_YEAR: "6 months",
+  ALL_TIME: "All time",
+};
 
-export const BUNDLE_ID = '1'
+export const BUNDLE_ID = "1";

@@ -2,28 +2,21 @@ import {
   Button,
   Card,
   CircularProgress,
-  Divider,
   IconButton,
   makeStyles,
 } from "@material-ui/core";
 import { connect } from "react-redux";
-import TuneIcon from "@material-ui/icons/Tune";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import { useCallback, useEffect, useState } from "react";
 import SwapSettings from "../../common/SwapSettings";
 import etherImg from "../../../assets/ether.png";
-import CustomButton from "../../Buttons/CustomButton";
 import SwapCardItem from "../../Cards/SwapCardItem";
 import AddIcon from "@material-ui/icons/Add";
 import { ETH, etheriumNetwork, tokens } from "../../../constants";
 import {
-  fetchTokenAbi,
-  formatCurrency,
   getPercentage,
   getPriceRatio,
   getTokenOut,
-  token1PerToken2,
-  token2PerToken1,
   toWei,
 } from "../../../utils/helper";
 import {
@@ -35,17 +28,12 @@ import {
   loadPairContractAbi,
 } from "../../../actions/dexActions";
 import { getAccountBalance } from "../../../actions/accountActions";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import tokenThumbnail from "../../../utils/tokenThumbnail";
 import BigNumber from "bignumber.js";
 import store from "../../../store";
 import { RESET_POOL_SHARE, SET_TOKEN_ABI } from "../../../actions/types";
 import debounce from "lodash.debounce";
-import {
-  getPairAbi,
-  getPairAddress,
-  getTokenAbi,
-} from "../../../utils/connectionUtils";
+import { getPairAddress, getTokenAbi } from "../../../utils/connectionUtils";
 import { fetchContractAbi } from "../../../utils/httpUtils";
 import { Settings } from "@material-ui/icons";
 
@@ -291,10 +279,7 @@ const AddCard = (props) => {
   const [selectedToken2, setToken2] = useState({});
   const [token1Value, setToken1Value] = useState(""); // token1 for eth only
   const [token2Value, setToken2Value] = useState(""); // token2 for pbr
-
-  // const [token1PerToken2, setPerToken1] = useState("1.4545");
-  // const [token2PerToken1, setPerToken2] = useState("0.66891");
-  // const [shareOfPool, setShare] = useState("0.04"); // to be calculated
+  const [localStateLoading, setLocalStateLoading] = useState(false);
 
   const [addStatus, setStatus] = useState({
     message: "Please select tokens",
@@ -402,6 +387,7 @@ const AddCard = (props) => {
   // new use effect
   useEffect(async () => {
     if (selectedToken1.symbol && selectedToken2.symbol) {
+      setLocalStateLoading(true);
       clearInputState();
       // load erc20 token abi and balance
       const erc20Token =
@@ -425,12 +411,6 @@ const AddCard = (props) => {
         },
         currentNetwork
       );
-      // load current pair ABI
-      let _pairAbi = currentPairAbi();
-
-      if (!_pairAbi) {
-        _pairAbi = getPairAbi(selectedToken1.symbol, selectedToken2.symbol);
-      }
 
       let _pairAddress = currentPairAddress();
       console.log("current pair address ", _pairAddress);
@@ -440,63 +420,54 @@ const AddCard = (props) => {
           selectedToken2.address,
           currentNetwork
         );
+        console.log(
+          "pair address not found fetched from factory ",
+          _pairAddress
+        );
       }
 
-      if (!_pairAbi) {
-        _pairAbi = await fetchContractAbi(_pairAddress, currentNetwork);
-      }
-      // laod current pair reserves
-      let _pairData = { abi: _pairAbi, address: _pairAddress };
+      if (!_pairAddress) {
+        //pair not yet created in the factory
+      } else {
+        // load current pair ABI
+        let _pairAbi = currentPairAbi();
 
-      // update pair data into reducer if not available
-      if (!currentPairAddress()) {
-        loadPairContractAbi(
-          selectedToken1.symbol,
-          selectedToken2.symbol,
+        if (!_pairAbi) {
+          _pairAbi = await fetchContractAbi(_pairAddress, currentNetwork);
+        }
+
+        // laod current pair reserves
+        let _pairData = { abi: _pairAbi, address: _pairAddress };
+
+        // update pair data into reducer if not available
+        if (!currentPairAddress()) {
+          loadPairContractAbi(
+            selectedToken1.symbol,
+            selectedToken2.symbol,
+            _pairData,
+            currentNetwork
+          );
+        }
+
+        console.log("final pair data ", _pairData);
+        await getLpBalance(
+          selectedToken1,
+          selectedToken2,
           _pairData,
+          currentAccount,
           currentNetwork
         );
       }
 
-      console.log("final pair data ", _pairData);
-      await getLpBalance(
-        selectedToken1,
-        selectedToken2,
-        _pairData,
-        currentAccount,
-        currentNetwork
-      );
-
-      //   console.log("checking approval in swap");
-      // if (!currentTokenApprovalStatus()) {
       await checkAllowance(
         { ...selectedToken1, abi: erc20Abi },
         currentAccount,
         currentNetwork
       );
-      // }
+
+      setLocalStateLoading(false);
     }
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
-
-  // old use effect
-  // useEffect(async () => {
-  //   if (
-  //     !selectedToken1.symbol ||
-  //     selectedToken1.symbol === ETH ||
-  //     approvedTokens[selectedToken1.symbol]
-  //   ) {
-  //     //skip approve check for eth
-  //     return;
-  //   }
-  //   // console.log("checking approval");
-  //   await checkAllowance(selectedToken1, currentAccount, currentNetwork);
-  //   await debouncedGetLpBalance(
-  //     selectedToken1,
-  //     selectedToken2,
-  //     currentAccount,
-  //     currentNetwork
-  //   );
-  // }, [selectedToken1, currentNetwork, currentAccount]);
 
   const handleConfirmAllowance = async () => {
     // console.log("token", selectedToken1.symbol);
@@ -572,9 +543,9 @@ const AddCard = (props) => {
 
     //calculate resetpective value of token 2 if selected
     let _token2Value = "";
-    if (selectedToken2.symbol && tokens) {
-      const pairData = getCurrentPairData();
+    const pairData = getCurrentPairData();
 
+    if (selectedToken2.symbol && tokens && pairData.abi && pairData.address) {
       await debouncedGetLpBalance(
         selectedToken1,
         selectedToken2,
@@ -600,6 +571,12 @@ const AddCard = (props) => {
       if (!addStatus.disabled) {
         setStatus({ disabled: true, message: "Enter Amounts" });
       }
+    } else if (selectedToken2.symbol && tokens) {
+      // setStatus({ disabled: false, message: "Add Liquidity" });
+      verifySwapStatus(
+        { value: tokens, selected: selectedToken1 },
+        { value: token2Value, selected: selectedToken2 }
+      );
     }
   };
 
@@ -607,8 +584,9 @@ const AddCard = (props) => {
     setToken2Value(tokens);
 
     let _token1Value = "";
-    if (selectedToken1.symbol && tokens) {
-      const pairData = getCurrentPairData();
+    const pairData = getCurrentPairData();
+
+    if (selectedToken1.symbol && tokens && pairData.abi && pairData.address) {
       await debouncedGetLpBalance(
         selectedToken1,
         selectedToken2,
@@ -634,6 +612,12 @@ const AddCard = (props) => {
       if (!addStatus.disabled) {
         setStatus({ disabled: true, message: "Enter Amounts" });
       }
+    } else if (selectedToken1.symbol && tokens) {
+      // setStatus({ disabled: false, message: "Add Liquidity" });
+      verifySwapStatus(
+        { value: token1Value, selected: selectedToken1 },
+        { value: tokens, selected: selectedToken2 }
+      );
     }
   };
 
@@ -718,18 +702,8 @@ const AddCard = (props) => {
     return share;
   };
 
-  // const getPriceRatio = (token1, token2) => {
-  //   const _token1 = new BigNumber(token1);
-  //   const _token2 = new BigNumber(token2);
-  //   if (_token1.eq("0") || _token2.eq("0")) {
-  //     return new BigNumber("0").toFixed(4).toString();
-  //   }
-  //   const _ratio = _token1.div(_token2).toFixed(4).toString();
-  //   return _ratio;
-  // };
-
   const disableStatus = () => {
-    return addStatus.disabled;
+    return addStatus.disabled || loading || localStateLoading;
   };
 
   const handleAction = () => {
@@ -741,7 +715,9 @@ const AddCard = (props) => {
   };
   // const handleTokenPriceRatio = () => {};
   const currentButton = () => {
-    if (addStatus.disabled) {
+    if (localStateLoading) {
+      return "Please wait...";
+    } else if (addStatus.disabled) {
       return addStatus.message;
     } else {
       return !currentTokenApprovalStatus() ? "Approve" : addStatus.message;
@@ -857,51 +833,6 @@ const AddCard = (props) => {
               currentButton()
             )}
           </Button>
-          {/* <div className="d-flex  mt-4">
-            <CustomButton
-              variant="light"
-              className={classes.approveBtn}
-              disabled={approvedTokens[selectedToken1.symbol]}
-              onClick={handleConfirmAllowance}
-            >
-              {approvedTokens[selectedToken1.symbol] ? (
-                <>
-                  Approved{" "}
-                  <CheckCircleIcon
-                    style={{ color: "#E0077D", marginLeft: 5 }}
-                    fontSize="small"
-                  />{" "}
-                </>
-              ) : loading ? (
-                <CircularProgress
-                  style={{ color: "black" }}
-                  color="secondary"
-                  size={30}
-                />
-              ) : (
-                "Approve"
-              )}
-            </CustomButton>
-            <CustomButton
-              variant="primary"
-              // className={classes.addButton}
-              disabled={addStatus.disabled | loading}
-              onClick={handleAddLiquidity}
-            >
-              {!addStatus.disabled && loading ? (
-                <CircularProgress
-                  style={{ color: "black" }}
-                  color="secondary"
-                  size={30}
-                />
-              ) : (
-                "Add liquidity"
-              )}
-            </CustomButton>
-          </div> */}
-          {/* <div className="d-flex justify-content-center mt-2 mb-1">
-            <span>{addStatus.message}</span>
-          </div> */}
         </div>
       </Card>
     </>

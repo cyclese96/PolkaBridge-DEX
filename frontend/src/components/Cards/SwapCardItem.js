@@ -1,5 +1,5 @@
 import { Card, CircularProgress, makeStyles } from "@material-ui/core";
-import { fromWei, formatCurrency } from "../../utils/helper";
+import { fromWei, formatCurrency, isNumber } from "../../utils/helper";
 import { connect } from "react-redux";
 import SelectToken from "../common/SelectToken";
 
@@ -112,6 +112,13 @@ const SwapCardItem = (props) => {
   const classes = useStyles();
 
   const handleInputChange = (event) => {
+    if (
+      !isNumber(event.nativeEvent.data) &&
+      event.nativeEvent.inputType !== "deleteContentBackward"
+    ) {
+      return;
+    }
+
     const value = event.target.value;
     onInputChange(value);
   };
