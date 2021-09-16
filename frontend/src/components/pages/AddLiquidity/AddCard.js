@@ -279,6 +279,7 @@ const AddCard = (props) => {
   const [selectedToken2, setToken2] = useState({});
   const [token1Value, setToken1Value] = useState(""); // token1 for eth only
   const [token2Value, setToken2Value] = useState(""); // token2 for pbr
+  const [localStateLoading, setLocalStateLoading] = useState(false);
 
   const [addStatus, setStatus] = useState({
     message: "Please select tokens",
@@ -386,6 +387,7 @@ const AddCard = (props) => {
   // new use effect
   useEffect(async () => {
     if (selectedToken1.symbol && selectedToken2.symbol) {
+      setLocalStateLoading(true);
       clearInputState();
       // load erc20 token abi and balance
       const erc20Token =
@@ -457,13 +459,13 @@ const AddCard = (props) => {
         );
       }
 
-      // if (!currentTokenApprovalStatus()) {
       await checkAllowance(
         { ...selectedToken1, abi: erc20Abi },
         currentAccount,
         currentNetwork
       );
-      // }
+
+      setLocalStateLoading(false);
     }
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
@@ -701,7 +703,7 @@ const AddCard = (props) => {
   };
 
   const disableStatus = () => {
-    return addStatus.disabled;
+    return addStatus.disabled || loading || localStateLoading;
   };
 
   const handleAction = () => {
@@ -713,7 +715,9 @@ const AddCard = (props) => {
   };
   // const handleTokenPriceRatio = () => {};
   const currentButton = () => {
-    if (addStatus.disabled) {
+    if (localStateLoading) {
+      return "Please wait...";
+    } else if (addStatus.disabled) {
       return addStatus.message;
     } else {
       return !currentTokenApprovalStatus() ? "Approve" : addStatus.message;
