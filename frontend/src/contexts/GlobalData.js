@@ -35,9 +35,8 @@ const UPDATE_TXNS = "UPDATE_TXNS";
 const UPDATE_CHART = "UPDATE_CHART";
 const UPDATE_ETH_PRICE = "UPDATE_ETH_PRICE";
 const ETH_PRICE_KEY = "ETH_PRICE_KEY";
-const UPDATE_ALL_PAIRS_IN_UNISWAP =
-  "UPDAUPDATE_ALL_PAIRS_IN_UNISWAPTE_TOP_PAIRS";
-const UPDATE_ALL_TOKENS_IN_UNISWAP = "UPDATE_ALL_TOKENS_IN_UNISWAP";
+const UPDATE_ALL_PAIRS_IN_AMM = "UPDATE_ALL_PAIRS_IN_AMMTE_TOP_PAIRS";
+const UPDATE_ALL_TOKENS_IN_AMM = "UPDATE_ALL_TOKENS_IN_AMM";
 const UPDATE_TOP_LPS = "UPDATE_TOP_LPS";
 
 const offsetVolumes = [];
@@ -87,7 +86,7 @@ function reducer(state, { type, payload }) {
       };
     }
 
-    case UPDATE_ALL_PAIRS_IN_UNISWAP: {
+    case UPDATE_ALL_PAIRS_IN_AMM: {
       const { allPairs } = payload;
       return {
         ...state,
@@ -95,7 +94,7 @@ function reducer(state, { type, payload }) {
       };
     }
 
-    case UPDATE_ALL_TOKENS_IN_UNISWAP: {
+    case UPDATE_ALL_TOKENS_IN_AMM: {
       const { allTokens } = payload;
       return {
         ...state,
@@ -160,18 +159,18 @@ export default function Provider({ children }) {
     []
   );
 
-  const updateAllPairsInUniswap = useCallback((allPairs) => {
+  const updateAllPairsInAmm = useCallback((allPairs) => {
     dispatch({
-      type: UPDATE_ALL_PAIRS_IN_UNISWAP,
+      type: UPDATE_ALL_PAIRS_IN_AMM,
       payload: {
         allPairs,
       },
     });
   }, []);
 
-  const updateAllTokensInUniswap = useCallback((allTokens) => {
+  const updateAllTokensInAmm = useCallback((allTokens) => {
     dispatch({
-      type: UPDATE_ALL_TOKENS_IN_UNISWAP,
+      type: UPDATE_ALL_TOKENS_IN_AMM,
       payload: {
         allTokens,
       },
@@ -197,8 +196,8 @@ export default function Provider({ children }) {
             updateChart,
             updateEthPrice,
             updateTopLps,
-            updateAllPairsInUniswap,
-            updateAllTokensInUniswap,
+            updateAllPairsInAmm,
+            updateAllTokensInAmm,
           },
         ],
         [
@@ -208,8 +207,8 @@ export default function Provider({ children }) {
           updateTopLps,
           updateChart,
           updateEthPrice,
-          updateAllPairsInUniswap,
-          updateAllTokensInUniswap,
+          updateAllPairsInAmm,
+          updateAllTokensInAmm,
         ]
       )}
     >
@@ -517,9 +516,9 @@ const PAIRS_TO_FETCH = 500;
 const TOKENS_TO_FETCH = 500;
 
 /**
- * Loop through every pair on uniswap, used for search
+ * Loop through every pair on Amm, used for search
  */
-async function getAllPairsOnUniswap() {
+async function getAllPairsOnAmm() {
   try {
     let allFound = false;
     let pairs = [];
@@ -543,14 +542,14 @@ async function getAllPairsOnUniswap() {
     }
     return pairs;
   } catch (e) {
-    console.log("getAllPairsOnUniswap", e);
+    console.log("getAllPairsOnAmm", e);
   }
 }
 
 /**
- * Loop through every token on uniswap, used for search
+ * Loop through every token on Amm, used for search
  */
-async function getAllTokensOnUniswap() {
+async function getAllTokensOnAmm() {
   try {
     let allFound = false;
     let skipCount = 0;
@@ -574,7 +573,7 @@ async function getAllTokensOnUniswap() {
     }
     return tokens;
   } catch (e) {
-    console.log("getAllTokensOnUniswap", e);
+    console.log("getAllTokensOnAmm", e);
   }
 }
 
@@ -582,7 +581,7 @@ async function getAllTokensOnUniswap() {
  * Hook that fetches overview data, plus all tokens and pairs for search
  */
 export function useGlobalData() {
-  const [state, { update, updateAllPairsInUniswap, updateAllTokensInUniswap }] =
+  const [state, { update, updateAllPairsInAmm, updateAllTokensInAmm }] =
     useGlobalDataContext();
   const [ethPrice, oldEthPrice] = useEthPrice();
 
@@ -598,11 +597,11 @@ export function useGlobalData() {
       // console.log('fetched global data ', globalData)
       globalData && update(globalData);
 
-      let allPairs = await getAllPairsOnUniswap();
-      updateAllPairsInUniswap(allPairs);
+      let allPairs = await getAllPairsOnAmm();
+      updateAllPairsInAmm(allPairs);
 
-      let allTokens = await getAllTokensOnUniswap();
-      updateAllTokensInUniswap(allTokens);
+      let allTokens = await getAllTokensOnAmm();
+      updateAllTokensInAmm(allTokens);
     }
     if (!data && ethPrice && oldEthPrice) {
       fetchData();
@@ -612,8 +611,8 @@ export function useGlobalData() {
     oldEthPrice,
     update,
     data,
-    updateAllPairsInUniswap,
-    updateAllTokensInUniswap,
+    updateAllPairsInAmm,
+    updateAllTokensInAmm,
   ]);
 
   return data || {};
