@@ -1,4 +1,7 @@
 const UniswapV2Router02 = artifacts.require("UniswapV2Router02");
+const Erc20 = artifacts.require("test/ERC20")
+const Weth = artifacts.require("test/WETH9")
+// const Factory = artifacts.require("@uniswap/v2-core/UniswapV2Factory")
 
 module.exports = function (deployer) {
   let owner = "0x57866ed63ca5f9744cef9aa270bd1f1dce935831";

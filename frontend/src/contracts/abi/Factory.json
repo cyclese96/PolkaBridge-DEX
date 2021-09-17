@@ -59,19 +59,13 @@
     },
     {
         "constant": true,
-        "inputs": [
+        "inputs": [],
+        "name": "allPairs",
+        "outputs": [
             {
                 "internalType": "uint256",
                 "name": "",
                 "type": "uint256"
-            }
-        ],
-        "name": "allPairs",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
             }
         ],
         "payable": false,
