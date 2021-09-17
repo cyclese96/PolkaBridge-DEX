@@ -1,7 +1,7 @@
-const Tend = artifacts.require("test/Tend")
-const Spac = artifacts.require("test/Spac")
+// const Tend = artifacts.require("test/Tend")
+// const Spac = artifacts.require("test/Spac")
 
-const Treasury = artifacts.require("PolkaTreasury")
+//const Treasury = artifacts.require("PolkaTreasury")
 
 module.exports = function (deployer, network, accounts) {
     // deployer.deploy(Tend)
