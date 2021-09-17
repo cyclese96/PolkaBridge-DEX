@@ -188,11 +188,11 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
         {
             if(amount0In > 0) {
                 _safeTransfer(token0, polkaTreasury, amount0In.div(5000).mul(2));
-                balance0 = balance0 - balance0.div(5000).mul(2);
+                balance0 = balance0 - amount0In.div(5000).mul(2);
             }
             if(amount1In > 0) {
                 _safeTransfer(token1, polkaTreasury, amount1In.div(5000).mul(2));
-                balance1 = balance1 - balance1.div(5000).mul(2);
+                balance1 = balance1 - amount1In.div(5000).mul(2);
             }
         }
         
