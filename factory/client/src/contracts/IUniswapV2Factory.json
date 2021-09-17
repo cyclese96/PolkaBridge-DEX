@@ -1,0 +1,2282 @@
+{
+  "contractName": "IUniswapV2Factory",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "token0",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "token1",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "pair",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "PairCreated",
+      "type": "event"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "feeTo",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "feeToSetter",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "tokenA",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "tokenB",
+          "type": "address"
+        }
+      ],
+      "name": "getPair",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "pair",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "allPairs",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "allPairsLength",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "tokenA",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "tokenB",
+          "type": "address"
+        }
+      ],
+      "name": "createPair",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "pair",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "setFeeTo",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "setFeeToSetter",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"token0\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"token1\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"pair\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"PairCreated\",\"type\":\"event\"},{\"constant\":true,\"inputs\":[],\"name\":\"allPairs\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"allPairsLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"tokenA\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"tokenB\",\"type\":\"address\"}],\"name\":\"createPair\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"pair\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"feeTo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"feeToSetter\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"tokenA\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"tokenB\",\"type\":\"address\"}],\"name\":\"getPair\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"pair\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"setFeeTo\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"setFeeToSetter\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/oncemore/BlockchainWork/Polka/deploy_1/factory/contracts/interfaces/IUniswapV2Factory.sol\":\"IUniswapV2Factory\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/oncemore/BlockchainWork/Polka/deploy_1/factory/contracts/interfaces/IUniswapV2Factory.sol\":{\"keccak256\":\"0xa66db1efb6ce3bb6238b0b4a885e6a9cd054b877f783eeba9992e2ba2499babf\",\"urls\":[\"bzz-raw://76a307d33429ea94fc5f2b53cd05f95c92b7587246cbbace7cca7bb4e30d8ca1\",\"dweb:/ipfs/QmeCdZ94BUCRPufsvQ6zobynq8UCr16G4CJaBCdKfZnRTo\"]}},\"version\":1}",
+=======
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"token0\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"token1\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"pair\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"PairCreated\",\"type\":\"event\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"allPairs\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"pair\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"allPairsLength\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"tokenA\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"tokenB\",\"type\":\"address\"}],\"name\":\"createPair\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"pair\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"feeTo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"feeToSetter\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"tokenA\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"tokenB\",\"type\":\"address\"}],\"name\":\"getPair\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"pair\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"setFeeTo\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"setFeeToSetter\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/Thanh Phi/Desktop/PolkaBridgeSolution/PolkaBridge-DEX/factory/contracts/interfaces/IUniswapV2Factory.sol\":\"IUniswapV2Factory\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/Thanh Phi/Desktop/PolkaBridgeSolution/PolkaBridge-DEX/factory/contracts/interfaces/IUniswapV2Factory.sol\":{\"keccak256\":\"0xbb02a490e88409dec5dd348332da3209c143899810f7b09c6daacd5c0e94da87\",\"urls\":[\"bzz-raw://29423a8d67eb9fafdacc511cef6465f1251d1b60b522a1fd9bdce70fab08ee0a\",\"dweb:/ipfs/QmfBVeA6RwP7tQdWoFHMHNrpS169cyuM28qDznG6LZ4Aig\"]}},\"version\":1}",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+  "source": "pragma solidity >=0.5.0;\n\ninterface IUniswapV2Factory {\n    event PairCreated(address indexed token0, address indexed token1, address pair, uint);\n\n    function feeTo() external view returns (address);\n    function feeToSetter() external view returns (address);\n\n    function getPair(address tokenA, address tokenB) external view returns (address pair);\n    function allPairs() external view returns (uint);\n    function allPairsLength() external view returns (uint);\n\n    function createPair(address tokenA, address tokenB) external returns (address pair);\n\n    function setFeeTo(address) external;\n    function setFeeToSetter(address) external;\n}\n",
+  "sourcePath": "/home/oncemore/BlockchainWork/Polka/deploy_1/factory/contracts/interfaces/IUniswapV2Factory.sol",
+=======
+  "source": "pragma solidity >=0.5.0;\r\n\r\ninterface IUniswapV2Factory {\r\n    event PairCreated(address indexed token0, address indexed token1, address pair, uint);\r\n\r\n    function feeTo() external view returns (address);\r\n    function feeToSetter() external view returns (address);\r\n\r\n    function getPair(address tokenA, address tokenB) external view returns (address pair);\r\n    function allPairs(uint) external view returns (address pair);\r\n    function allPairsLength() external view returns (uint);\r\n\r\n    function createPair(address tokenA, address tokenB) external returns (address pair);\r\n\r\n    function setFeeTo(address) external;\r\n    function setFeeToSetter(address) external;\r\n}\r\n",
+  "sourcePath": "C:/Users/Thanh Phi/Desktop/PolkaBridgeSolution/PolkaBridge-DEX/factory/contracts/interfaces/IUniswapV2Factory.sol",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+  "ast": {
+    "absolutePath": "/C/Users/Thanh Phi/Desktop/PolkaBridgeSolution/PolkaBridge-DEX/factory/contracts/interfaces/IUniswapV2Factory.sol",
+    "exportedSymbols": {
+      "IUniswapV2Factory": [
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+        1902
+      ]
+    },
+    "id": 1903,
+=======
+        700
+      ]
+    },
+    "id": 701,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 639,
+        "literals": [
+          "solidity",
+          ">=",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:5"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": null,
+        "fullyImplemented": false,
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+        "id": 1902,
+        "linearizedBaseContracts": [
+          1902
+=======
+        "id": 700,
+        "linearizedBaseContracts": [
+          700
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+        ],
+        "name": "IUniswapV2Factory",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "anonymous": false,
+            "documentation": null,
+            "id": 649,
+            "name": "PairCreated",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 648,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 641,
+                  "indexed": true,
+                  "name": "token0",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 649,
+                  "src": "81:22:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 640,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "81:7:5",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 643,
+                  "indexed": true,
+                  "name": "token1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 649,
+                  "src": "105:22:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 642,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "105:7:5",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 645,
+                  "indexed": false,
+                  "name": "pair",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 649,
+                  "src": "129:12:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 644,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "129:7:5",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 647,
+                  "indexed": false,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 649,
+                  "src": "143:4:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 646,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "143:4:5",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "80:68:5"
+            },
+            "src": "63:86:5"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 654,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "feeTo",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 650,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "171:2:5"
+            },
+            "returnParameters": {
+              "id": 653,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 652,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 654,
+                  "src": "197:7:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 651,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "197:7:5",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "196:9:5"
+            },
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+            "scope": 1902,
+            "src": "152:49:6",
+=======
+            "scope": 700,
+            "src": "157:49:5",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 659,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "feeToSetter",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 655,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "232:2:5"
+            },
+            "returnParameters": {
+              "id": 658,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 657,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 659,
+                  "src": "258:7:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 656,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "258:7:5",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "257:9:5"
+            },
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+            "scope": 1902,
+            "src": "206:55:6",
+=======
+            "scope": 700,
+            "src": "212:55:5",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 668,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getPair",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 664,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 661,
+                  "name": "tokenA",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 668,
+                  "src": "292:14:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 660,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "292:7:5",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 663,
+                  "name": "tokenB",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 668,
+                  "src": "308:14:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 662,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "308:7:5",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "291:32:5"
+            },
+            "returnParameters": {
+              "id": 667,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 666,
+                  "name": "pair",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 668,
+                  "src": "347:12:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 665,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "347:7:5",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "346:14:5"
+            },
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+            "scope": 1902,
+            "src": "267:86:6",
+=======
+            "scope": 700,
+            "src": "275:86:5",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+            "id": 1877,
+=======
+            "id": 675,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "allPairs",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+              "id": 1873,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "375:2:6"
+            },
+            "returnParameters": {
+              "id": 1876,
+=======
+              "id": 671,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                  "id": 1875,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1877,
+                  "src": "401:4:6",
+=======
+                  "id": 670,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 675,
+                  "src": "385:4:5",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                    "id": 1874,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "401:4:6",
+=======
+                    "id": 669,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "385:4:5",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+              "src": "400:6:6"
+            },
+            "scope": 1902,
+            "src": "358:49:6",
+=======
+              "src": "384:6:5"
+            },
+            "returnParameters": {
+              "id": 674,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 673,
+                  "name": "pair",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 675,
+                  "src": "414:12:5",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 672,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "414:7:5",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "413:14:5"
+            },
+            "scope": 700,
+            "src": "367:61:5",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+            "id": 1882,
+=======
+            "id": 680,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "allPairsLength",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+              "id": 1878,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "435:2:6"
+            },
+            "returnParameters": {
+              "id": 1881,
+=======
+              "id": 676,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "457:2:5"
+            },
+            "returnParameters": {
+              "id": 679,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                  "id": 1880,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1882,
+                  "src": "461:4:6",
+=======
+                  "id": 678,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 680,
+                  "src": "483:4:5",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                    "id": 1879,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "461:4:6",
+=======
+                    "id": 677,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "483:4:5",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+              "src": "460:6:6"
+            },
+            "scope": 1902,
+            "src": "412:55:6",
+=======
+              "src": "482:6:5"
+            },
+            "scope": 700,
+            "src": "434:55:5",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+            "id": 1891,
+=======
+            "id": 689,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "createPair",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+              "id": 1887,
+=======
+              "id": 685,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                  "id": 1884,
+                  "name": "tokenA",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1891,
+                  "src": "493:14:6",
+=======
+                  "id": 682,
+                  "name": "tokenA",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 689,
+                  "src": "517:14:5",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                    "id": 1883,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "493:7:6",
+=======
+                    "id": 681,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "517:7:5",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                  "id": 1886,
+                  "name": "tokenB",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1891,
+                  "src": "509:14:6",
+=======
+                  "id": 684,
+                  "name": "tokenB",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 689,
+                  "src": "533:14:5",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                    "id": 1885,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "509:7:6",
+=======
+                    "id": 683,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "533:7:5",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+              "src": "492:32:6"
+            },
+            "returnParameters": {
+              "id": 1890,
+=======
+              "src": "516:32:5"
+            },
+            "returnParameters": {
+              "id": 688,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                  "id": 1889,
+                  "name": "pair",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1891,
+                  "src": "543:12:6",
+=======
+                  "id": 687,
+                  "name": "pair",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 689,
+                  "src": "567:12:5",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                    "id": 1888,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "543:7:6",
+=======
+                    "id": 686,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "567:7:5",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+              "src": "542:14:6"
+            },
+            "scope": 1902,
+            "src": "473:84:6",
+=======
+              "src": "566:14:5"
+            },
+            "scope": 700,
+            "src": "497:84:5",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+            "id": 1896,
+=======
+            "id": 694,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setFeeTo",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+              "id": 1894,
+=======
+              "id": 692,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                  "id": 1893,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1896,
+                  "src": "581:7:6",
+=======
+                  "id": 691,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 694,
+                  "src": "607:7:5",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                    "id": 1892,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "581:7:6",
+=======
+                    "id": 690,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "607:7:5",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+              "src": "580:9:6"
+            },
+            "returnParameters": {
+              "id": 1895,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "598:0:6"
+            },
+            "scope": 1902,
+            "src": "563:36:6",
+=======
+              "src": "606:9:5"
+            },
+            "returnParameters": {
+              "id": 693,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "624:0:5"
+            },
+            "scope": 700,
+            "src": "589:36:5",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+            "id": 1901,
+=======
+            "id": 699,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setFeeToSetter",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+              "id": 1899,
+=======
+              "id": 697,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                  "id": 1898,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1901,
+                  "src": "628:7:6",
+=======
+                  "id": 696,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 699,
+                  "src": "655:7:5",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                    "id": 1897,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "628:7:6",
+=======
+                    "id": 695,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "655:7:5",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+              "src": "627:9:6"
+            },
+            "returnParameters": {
+              "id": 1900,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "645:0:6"
+            },
+            "scope": 1902,
+            "src": "604:42:6",
+=======
+              "src": "654:9:5"
+            },
+            "returnParameters": {
+              "id": 698,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "672:0:5"
+            },
+            "scope": 700,
+            "src": "631:42:5",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          }
+        ],
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+        "scope": 1903,
+        "src": "26:622:6"
+      }
+    ],
+    "src": "0:649:6"
+=======
+        "scope": 701,
+        "src": "28:648:5"
+      }
+    ],
+    "src": "0:678:5"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+  },
+  "legacyAST": {
+    "attributes": {
+      "absolutePath": "/C/Users/Thanh Phi/Desktop/PolkaBridgeSolution/PolkaBridge-DEX/factory/contracts/interfaces/IUniswapV2Factory.sol",
+      "exportedSymbols": {
+        "IUniswapV2Factory": [
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+          1902
+=======
+          700
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            ">=",
+            "0.5",
+            ".0"
+          ]
+        },
+        "id": 639,
+        "name": "PragmaDirective",
+        "src": "0:24:5"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "interface",
+          "documentation": null,
+          "fullyImplemented": false,
+          "linearizedBaseContracts": [
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+            1902
+          ],
+          "name": "IUniswapV2Factory",
+          "scope": 1903
+=======
+            700
+          ],
+          "name": "IUniswapV2Factory",
+          "scope": 701
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+        },
+        "children": [
+          {
+            "attributes": {
+              "anonymous": false,
+              "documentation": null,
+              "name": "PairCreated"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "token0",
+                      "scope": 649,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 640,
+                        "name": "ElementaryTypeName",
+                        "src": "81:7:5"
+                      }
+                    ],
+                    "id": 641,
+                    "name": "VariableDeclaration",
+                    "src": "81:22:5"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "token1",
+                      "scope": 649,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 642,
+                        "name": "ElementaryTypeName",
+                        "src": "105:7:5"
+                      }
+                    ],
+                    "id": 643,
+                    "name": "VariableDeclaration",
+                    "src": "105:22:5"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "pair",
+                      "scope": 649,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 644,
+                        "name": "ElementaryTypeName",
+                        "src": "129:7:5"
+                      }
+                    ],
+                    "id": 645,
+                    "name": "VariableDeclaration",
+                    "src": "129:12:5"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": false,
+                      "name": "",
+                      "scope": 649,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 646,
+                        "name": "ElementaryTypeName",
+                        "src": "143:4:5"
+                      }
+                    ],
+                    "id": 647,
+                    "name": "VariableDeclaration",
+                    "src": "143:4:5"
+                  }
+                ],
+                "id": 648,
+                "name": "ParameterList",
+                "src": "80:68:5"
+              }
+            ],
+            "id": 649,
+            "name": "EventDefinition",
+            "src": "63:86:5"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "feeTo",
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+              "scope": 1902,
+=======
+              "scope": 700,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 650,
+                "name": "ParameterList",
+                "src": "171:2:5"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 654,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 651,
+                        "name": "ElementaryTypeName",
+                        "src": "197:7:5"
+                      }
+                    ],
+                    "id": 652,
+                    "name": "VariableDeclaration",
+                    "src": "197:7:5"
+                  }
+                ],
+                "id": 653,
+                "name": "ParameterList",
+                "src": "196:9:5"
+              }
+            ],
+            "id": 654,
+            "name": "FunctionDefinition",
+            "src": "157:49:5"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "feeToSetter",
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+              "scope": 1902,
+=======
+              "scope": 700,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 655,
+                "name": "ParameterList",
+                "src": "232:2:5"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 659,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 656,
+                        "name": "ElementaryTypeName",
+                        "src": "258:7:5"
+                      }
+                    ],
+                    "id": 657,
+                    "name": "VariableDeclaration",
+                    "src": "258:7:5"
+                  }
+                ],
+                "id": 658,
+                "name": "ParameterList",
+                "src": "257:9:5"
+              }
+            ],
+            "id": 659,
+            "name": "FunctionDefinition",
+            "src": "212:55:5"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "getPair",
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+              "scope": 1902,
+=======
+              "scope": 700,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "tokenA",
+                      "scope": 668,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 660,
+                        "name": "ElementaryTypeName",
+                        "src": "292:7:5"
+                      }
+                    ],
+                    "id": 661,
+                    "name": "VariableDeclaration",
+                    "src": "292:14:5"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "tokenB",
+                      "scope": 668,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 662,
+                        "name": "ElementaryTypeName",
+                        "src": "308:7:5"
+                      }
+                    ],
+                    "id": 663,
+                    "name": "VariableDeclaration",
+                    "src": "308:14:5"
+                  }
+                ],
+                "id": 664,
+                "name": "ParameterList",
+                "src": "291:32:5"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "pair",
+                      "scope": 668,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 665,
+                        "name": "ElementaryTypeName",
+                        "src": "347:7:5"
+                      }
+                    ],
+                    "id": 666,
+                    "name": "VariableDeclaration",
+                    "src": "347:12:5"
+                  }
+                ],
+                "id": 667,
+                "name": "ParameterList",
+                "src": "346:14:5"
+              }
+            ],
+            "id": 668,
+            "name": "FunctionDefinition",
+            "src": "275:86:5"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "allPairs",
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+              "scope": 1902,
+=======
+              "scope": 700,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 1873,
+                "name": "ParameterList",
+                "src": "375:2:6"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                      "scope": 1877,
+=======
+                      "scope": 675,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                        "id": 1874,
+                        "name": "ElementaryTypeName",
+                        "src": "401:4:6"
+                      }
+                    ],
+                    "id": 1875,
+                    "name": "VariableDeclaration",
+                    "src": "401:4:6"
+                  }
+                ],
+                "id": 1876,
+                "name": "ParameterList",
+                "src": "400:6:6"
+              }
+            ],
+            "id": 1877,
+            "name": "FunctionDefinition",
+            "src": "358:49:6"
+=======
+                        "id": 669,
+                        "name": "ElementaryTypeName",
+                        "src": "385:4:5"
+                      }
+                    ],
+                    "id": 670,
+                    "name": "VariableDeclaration",
+                    "src": "385:4:5"
+                  }
+                ],
+                "id": 671,
+                "name": "ParameterList",
+                "src": "384:6:5"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "pair",
+                      "scope": 675,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 672,
+                        "name": "ElementaryTypeName",
+                        "src": "414:7:5"
+                      }
+                    ],
+                    "id": 673,
+                    "name": "VariableDeclaration",
+                    "src": "414:12:5"
+                  }
+                ],
+                "id": 674,
+                "name": "ParameterList",
+                "src": "413:14:5"
+              }
+            ],
+            "id": 675,
+            "name": "FunctionDefinition",
+            "src": "367:61:5"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+          },
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "allPairsLength",
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+              "scope": 1902,
+=======
+              "scope": 700,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                "id": 1878,
+                "name": "ParameterList",
+                "src": "435:2:6"
+=======
+                "id": 676,
+                "name": "ParameterList",
+                "src": "457:2:5"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                      "scope": 1882,
+=======
+                      "scope": 680,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                        "id": 1879,
+                        "name": "ElementaryTypeName",
+                        "src": "461:4:6"
+                      }
+                    ],
+                    "id": 1880,
+                    "name": "VariableDeclaration",
+                    "src": "461:4:6"
+                  }
+                ],
+                "id": 1881,
+                "name": "ParameterList",
+                "src": "460:6:6"
+              }
+            ],
+            "id": 1882,
+            "name": "FunctionDefinition",
+            "src": "412:55:6"
+=======
+                        "id": 677,
+                        "name": "ElementaryTypeName",
+                        "src": "483:4:5"
+                      }
+                    ],
+                    "id": 678,
+                    "name": "VariableDeclaration",
+                    "src": "483:4:5"
+                  }
+                ],
+                "id": 679,
+                "name": "ParameterList",
+                "src": "482:6:5"
+              }
+            ],
+            "id": 680,
+            "name": "FunctionDefinition",
+            "src": "434:55:5"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+          },
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "createPair",
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+              "scope": 1902,
+=======
+              "scope": 700,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "tokenA",
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                      "scope": 1891,
+=======
+                      "scope": 689,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                        "id": 1883,
+                        "name": "ElementaryTypeName",
+                        "src": "493:7:6"
+                      }
+                    ],
+                    "id": 1884,
+                    "name": "VariableDeclaration",
+                    "src": "493:14:6"
+=======
+                        "id": 681,
+                        "name": "ElementaryTypeName",
+                        "src": "517:7:5"
+                      }
+                    ],
+                    "id": 682,
+                    "name": "VariableDeclaration",
+                    "src": "517:14:5"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "tokenB",
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                      "scope": 1891,
+=======
+                      "scope": 689,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                        "id": 1885,
+                        "name": "ElementaryTypeName",
+                        "src": "509:7:6"
+                      }
+                    ],
+                    "id": 1886,
+                    "name": "VariableDeclaration",
+                    "src": "509:14:6"
+                  }
+                ],
+                "id": 1887,
+                "name": "ParameterList",
+                "src": "492:32:6"
+=======
+                        "id": 683,
+                        "name": "ElementaryTypeName",
+                        "src": "533:7:5"
+                      }
+                    ],
+                    "id": 684,
+                    "name": "VariableDeclaration",
+                    "src": "533:14:5"
+                  }
+                ],
+                "id": 685,
+                "name": "ParameterList",
+                "src": "516:32:5"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "pair",
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                      "scope": 1891,
+=======
+                      "scope": 689,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                        "id": 1888,
+                        "name": "ElementaryTypeName",
+                        "src": "543:7:6"
+                      }
+                    ],
+                    "id": 1889,
+                    "name": "VariableDeclaration",
+                    "src": "543:12:6"
+                  }
+                ],
+                "id": 1890,
+                "name": "ParameterList",
+                "src": "542:14:6"
+              }
+            ],
+            "id": 1891,
+            "name": "FunctionDefinition",
+            "src": "473:84:6"
+=======
+                        "id": 686,
+                        "name": "ElementaryTypeName",
+                        "src": "567:7:5"
+                      }
+                    ],
+                    "id": 687,
+                    "name": "VariableDeclaration",
+                    "src": "567:12:5"
+                  }
+                ],
+                "id": 688,
+                "name": "ParameterList",
+                "src": "566:14:5"
+              }
+            ],
+            "id": 689,
+            "name": "FunctionDefinition",
+            "src": "497:84:5"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+          },
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "setFeeTo",
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+              "scope": 1902,
+=======
+              "scope": 700,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                      "scope": 1896,
+=======
+                      "scope": 694,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                        "id": 1892,
+                        "name": "ElementaryTypeName",
+                        "src": "581:7:6"
+                      }
+                    ],
+                    "id": 1893,
+                    "name": "VariableDeclaration",
+                    "src": "581:7:6"
+                  }
+                ],
+                "id": 1894,
+                "name": "ParameterList",
+                "src": "580:9:6"
+=======
+                        "id": 690,
+                        "name": "ElementaryTypeName",
+                        "src": "607:7:5"
+                      }
+                    ],
+                    "id": 691,
+                    "name": "VariableDeclaration",
+                    "src": "607:7:5"
+                  }
+                ],
+                "id": 692,
+                "name": "ParameterList",
+                "src": "606:9:5"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                "id": 1895,
+                "name": "ParameterList",
+                "src": "598:0:6"
+              }
+            ],
+            "id": 1896,
+            "name": "FunctionDefinition",
+            "src": "563:36:6"
+=======
+                "id": 693,
+                "name": "ParameterList",
+                "src": "624:0:5"
+              }
+            ],
+            "id": 694,
+            "name": "FunctionDefinition",
+            "src": "589:36:5"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+          },
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "setFeeToSetter",
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+              "scope": 1902,
+=======
+              "scope": 700,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                      "scope": 1901,
+=======
+                      "scope": 699,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                        "id": 1897,
+                        "name": "ElementaryTypeName",
+                        "src": "628:7:6"
+                      }
+                    ],
+                    "id": 1898,
+                    "name": "VariableDeclaration",
+                    "src": "628:7:6"
+                  }
+                ],
+                "id": 1899,
+                "name": "ParameterList",
+                "src": "627:9:6"
+=======
+                        "id": 695,
+                        "name": "ElementaryTypeName",
+                        "src": "655:7:5"
+                      }
+                    ],
+                    "id": 696,
+                    "name": "VariableDeclaration",
+                    "src": "655:7:5"
+                  }
+                ],
+                "id": 697,
+                "name": "ParameterList",
+                "src": "654:9:5"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+                "id": 1900,
+                "name": "ParameterList",
+                "src": "645:0:6"
+              }
+            ],
+            "id": 1901,
+            "name": "FunctionDefinition",
+            "src": "604:42:6"
+          }
+        ],
+        "id": 1902,
+        "name": "ContractDefinition",
+        "src": "26:622:6"
+      }
+    ],
+    "id": 1903,
+    "name": "SourceUnit",
+    "src": "0:649:6"
+=======
+                "id": 698,
+                "name": "ParameterList",
+                "src": "672:0:5"
+              }
+            ],
+            "id": 699,
+            "name": "FunctionDefinition",
+            "src": "631:42:5"
+          }
+        ],
+        "id": 700,
+        "name": "ContractDefinition",
+        "src": "28:648:5"
+      }
+    ],
+    "id": 701,
+    "name": "SourceUnit",
+    "src": "0:678:5"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
+  },
+  "networks": {},
+<<<<<<< HEAD:factory/build/contracts/IUniswapV2Factory.json
+  "schemaVersion": "3.3.4",
+  "updatedAt": "2021-09-15T10:20:44.322Z",
+=======
+  "schemaVersion": "3.4.1",
+  "updatedAt": "2021-09-15T10:43:34.160Z",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/IUniswapV2Factory.json
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

@@ -1,0 +1,3663 @@
+{
+  "contractName": "SafeMath",
+  "abi": [],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/oncemore/BlockchainWork/Polka/deploy_1/factory/contracts/libraries/SafeMath.sol\":\"SafeMath\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/oncemore/BlockchainWork/Polka/deploy_1/factory/contracts/libraries/SafeMath.sol\":{\"keccak256\":\"0x067a8562fd017c3f1a00b1a89fca346f3f4da780b02626c52bf86a207b6806eb\",\"urls\":[\"bzz-raw://03acb74dce70268a22e0a2d47db03523c6b2141cb4376f68152da8028d010c88\",\"dweb:/ipfs/QmWKQ9Ek4yYmXPpysgXuuEM76Gz8qdyJfAQdjoudUXQEDv\"]}},\"version\":1}",
+  "bytecode": "0x60556023600b82828239805160001a607314601657fe5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea265627a7a72315820369fd31042ea82a399c3e901b8e57ef3342bfbabe860cdaa18468b76199bc7de64736f6c63430005100032",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea265627a7a72315820369fd31042ea82a399c3e901b8e57ef3342bfbabe860cdaa18468b76199bc7de64736f6c63430005100032",
+  "sourceMap": "132:587:9:-;;:2:-1;166:7;155:9;146:7;137:37;255:7;249:14;246:1;241:23;235:4;232:33;222:2;;269:9;222:2;293:9;290:1;283:20;323:4;314:7;306:22;347:7;338;331:24",
+  "deployedSourceMap": "132:587:9:-;;;;;;;;",
+  "source": "pragma solidity =0.5.16;\n\n// a library for performing overflow-safe math, courtesy of DappHub (https://github.com/dapphub/ds-math)\n\nlibrary SafeMath {\n    function add(uint x, uint y) internal pure returns (uint z) {\n        require((z = x + y) >= x, 'ds-math-add-overflow');\n    }\n\n    function sub(uint x, uint y) internal pure returns (uint z) {\n        require((z = x - y) <= x, 'ds-math-sub-underflow');\n    }\n\n    function mul(uint x, uint y) internal pure returns (uint z) {\n        require(y == 0 || (z = x * y) / y == x, 'ds-math-mul-overflow');\n    }\n\n    function div(uint x, uint y) internal pure returns (uint) {\n        require (y > 0, 'SafeMath: denominator can not be zero');\n        return x/y;\n    }\n}\n",
+  "sourcePath": "/home/oncemore/BlockchainWork/Polka/deploy_1/factory/contracts/libraries/SafeMath.sol",
+=======
+  "metadata": "{\"compiler\":{\"version\":\"0.5.16+commit.9c3226ce\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/Thanh Phi/Desktop/PolkaBridgeSolution/PolkaBridge-DEX/factory/contracts/libraries/SafeMath.sol\":\"SafeMath\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/Thanh Phi/Desktop/PolkaBridgeSolution/PolkaBridge-DEX/factory/contracts/libraries/SafeMath.sol\":{\"keccak256\":\"0xb35283807a3600a1df7abff9d82a7f8b563711333cb769bb473ed7c9c5b80cb3\",\"urls\":[\"bzz-raw://76578c35c07b8447d0ab87d34b71a2c2ca6995b5888ab9f6127e822e3d3e6e8e\",\"dweb:/ipfs/QmVPaXWUbsXtVZoGaFg1DtcrRP9axX8XWJFy5jfJ9Mknkb\"]}},\"version\":1}",
+  "bytecode": "0x60556023600b82828239805160001a607314601657fe5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea265627a7a723158202ffb99883fb3967265eddecc6bc8bc94c7a540bca0f326161e63c9d837eeafbf64736f6c63430005100032",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea265627a7a723158202ffb99883fb3967265eddecc6bc8bc94c7a540bca0f326161e63c9d837eeafbf64736f6c63430005100032",
+  "sourceMap": "136:442:8:-;;132:2:-1;166:7;155:9;146:7;137:37;255:7;249:14;246:1;241:23;235:4;232:33;222:2;;269:9;222:2;293:9;290:1;283:20;323:4;314:7;306:22;347:7;338;331:24",
+  "deployedSourceMap": "136:442:8:-;;;;;;;;",
+  "source": "pragma solidity =0.5.16;\r\n\r\n// a library for performing overflow-safe math, courtesy of DappHub (https://github.com/dapphub/ds-math)\r\n\r\nlibrary SafeMath {\r\n    function add(uint x, uint y) internal pure returns (uint z) {\r\n        require((z = x + y) >= x, 'ds-math-add-overflow');\r\n    }\r\n\r\n    function sub(uint x, uint y) internal pure returns (uint z) {\r\n        require((z = x - y) <= x, 'ds-math-sub-underflow');\r\n    }\r\n\r\n    function mul(uint x, uint y) internal pure returns (uint z) {\r\n        require(y == 0 || (z = x * y) / y == x, 'ds-math-mul-overflow');\r\n    }\r\n}\r\n",
+  "sourcePath": "C:\\Users\\Thanh Phi\\Desktop\\PolkaBridgeSolution\\PolkaBridge-DEX\\factory\\contracts\\libraries\\SafeMath.sol",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+  "ast": {
+    "absolutePath": "/C/Users/Thanh Phi/Desktop/PolkaBridgeSolution/PolkaBridge-DEX/factory/contracts/libraries/SafeMath.sol",
+    "exportedSymbols": {
+      "SafeMath": [
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+        2316
+      ]
+    },
+    "id": 2317,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 2222,
+=======
+        1093
+      ]
+    },
+    "id": 1094,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1020,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+        "literals": [
+          "solidity",
+          "=",
+          "0.5",
+          ".16"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:8"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "library",
+        "documentation": null,
+        "fullyImplemented": true,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+        "id": 2316,
+        "linearizedBaseContracts": [
+          2316
+=======
+        "id": 1093,
+        "linearizedBaseContracts": [
+          1093
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+        ],
+        "name": "SafeMath",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+              "id": 2243,
+=======
+              "id": 1041,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+              "nodeType": "Block",
+              "src": "220:68:8",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                        "id": 2239,
+=======
+                        "id": 1037,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "components": [
+                            {
+                              "argumentTypes": null,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                              "id": 2236,
+=======
+                              "id": 1034,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "leftHandSide": {
+                                "argumentTypes": null,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                "id": 2232,
+                                "name": "z",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 2229,
+                                "src": "234:1:9",
+=======
+                                "id": 1030,
+                                "name": "z",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 1027,
+                                "src": "240:1:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              },
+                              "nodeType": "Assignment",
+                              "operator": "=",
+                              "rightHandSide": {
+                                "argumentTypes": null,
+                                "commonType": {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                "id": 2235,
+=======
+                                "id": 1033,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": false,
+                                "lValueRequested": false,
+                                "leftExpression": {
+                                  "argumentTypes": null,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                  "id": 2233,
+                                  "name": "x",
+                                  "nodeType": "Identifier",
+                                  "overloadedDeclarations": [],
+                                  "referencedDeclaration": 2224,
+                                  "src": "238:1:9",
+=======
+                                  "id": 1031,
+                                  "name": "x",
+                                  "nodeType": "Identifier",
+                                  "overloadedDeclarations": [],
+                                  "referencedDeclaration": 1022,
+                                  "src": "244:1:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_uint256",
+                                    "typeString": "uint256"
+                                  }
+                                },
+                                "nodeType": "BinaryOperation",
+                                "operator": "+",
+                                "rightExpression": {
+                                  "argumentTypes": null,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                  "id": 2234,
+                                  "name": "y",
+                                  "nodeType": "Identifier",
+                                  "overloadedDeclarations": [],
+                                  "referencedDeclaration": 2226,
+                                  "src": "242:1:9",
+=======
+                                  "id": 1032,
+                                  "name": "y",
+                                  "nodeType": "Identifier",
+                                  "overloadedDeclarations": [],
+                                  "referencedDeclaration": 1024,
+                                  "src": "248:1:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_uint256",
+                                    "typeString": "uint256"
+                                  }
+                                },
+                                "src": "244:5:8",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              },
+                              "src": "240:9:8",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              }
+                            }
+                          ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                          "id": 2237,
+=======
+                          "id": 1035,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                          "isConstant": false,
+                          "isInlineArray": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "nodeType": "TupleExpression",
+                          "src": "239:11:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": ">=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                          "id": 2238,
+                          "name": "x",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 2224,
+                          "src": "248:1:9",
+=======
+                          "id": 1036,
+                          "name": "x",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1022,
+                          "src": "254:1:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "src": "239:16:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "64732d6d6174682d6164642d6f766572666c6f77",
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                        "id": 2240,
+=======
+                        "id": 1038,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "257:22:8",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_3903056b84ed2aba2be78662dc6c5c99b160cebe9af9bd9493d0fc28ff16f6db",
+                          "typeString": "literal_string \"ds-math-add-overflow\""
+                        },
+                        "value": "ds-math-add-overflow"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_3903056b84ed2aba2be78662dc6c5c99b160cebe9af9bd9493d0fc28ff16f6db",
+                          "typeString": "literal_string \"ds-math-add-overflow\""
+                        }
+                      ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                      "id": 2231,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        2430,
+                        2431
+                      ],
+                      "referencedDeclaration": 2431,
+                      "src": "225:7:9",
+=======
+                      "id": 1029,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        1153,
+                        1154
+                      ],
+                      "referencedDeclaration": 1154,
+                      "src": "231:7:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2241,
+=======
+                    "id": 1039,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "231:49:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                  "id": 2242,
+=======
+                  "id": 1040,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                  "nodeType": "ExpressionStatement",
+                  "src": "231:49:8"
+                }
+              ]
+            },
+            "documentation": null,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+            "id": 2244,
+=======
+            "id": 1042,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "add",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+              "id": 2227,
+=======
+              "id": 1025,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                  "id": 2224,
+                  "name": "x",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2244,
+                  "src": "168:6:9",
+=======
+                  "id": 1022,
+                  "name": "x",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1042,
+                  "src": "173:6:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2223,
+=======
+                    "id": 1021,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "173:4:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                  "id": 2226,
+                  "name": "y",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2244,
+                  "src": "176:6:9",
+=======
+                  "id": 1024,
+                  "name": "y",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1042,
+                  "src": "181:6:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2225,
+=======
+                    "id": 1023,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "181:4:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "172:16:8"
+            },
+            "returnParameters": {
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+              "id": 2230,
+=======
+              "id": 1028,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                  "id": 2229,
+                  "name": "z",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2244,
+                  "src": "207:6:9",
+=======
+                  "id": 1027,
+                  "name": "z",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1042,
+                  "src": "212:6:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2228,
+=======
+                    "id": 1026,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "212:4:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "211:8:8"
+            },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+            "scope": 2316,
+            "src": "155:126:9",
+=======
+            "scope": 1093,
+            "src": "160:128:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+              "id": 2265,
+=======
+              "id": 1063,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+              "nodeType": "Block",
+              "src": "356:69:8",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                        "id": 2261,
+=======
+                        "id": 1059,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "components": [
+                            {
+                              "argumentTypes": null,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                              "id": 2258,
+=======
+                              "id": 1056,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "leftHandSide": {
+                                "argumentTypes": null,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                "id": 2254,
+                                "name": "z",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 2251,
+                                "src": "366:1:9",
+=======
+                                "id": 1052,
+                                "name": "z",
+                                "nodeType": "Identifier",
+                                "overloadedDeclarations": [],
+                                "referencedDeclaration": 1049,
+                                "src": "376:1:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              },
+                              "nodeType": "Assignment",
+                              "operator": "=",
+                              "rightHandSide": {
+                                "argumentTypes": null,
+                                "commonType": {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                "id": 2257,
+=======
+                                "id": 1055,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                "isConstant": false,
+                                "isLValue": false,
+                                "isPure": false,
+                                "lValueRequested": false,
+                                "leftExpression": {
+                                  "argumentTypes": null,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                  "id": 2255,
+                                  "name": "x",
+                                  "nodeType": "Identifier",
+                                  "overloadedDeclarations": [],
+                                  "referencedDeclaration": 2246,
+                                  "src": "370:1:9",
+=======
+                                  "id": 1053,
+                                  "name": "x",
+                                  "nodeType": "Identifier",
+                                  "overloadedDeclarations": [],
+                                  "referencedDeclaration": 1044,
+                                  "src": "380:1:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_uint256",
+                                    "typeString": "uint256"
+                                  }
+                                },
+                                "nodeType": "BinaryOperation",
+                                "operator": "-",
+                                "rightExpression": {
+                                  "argumentTypes": null,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                  "id": 2256,
+                                  "name": "y",
+                                  "nodeType": "Identifier",
+                                  "overloadedDeclarations": [],
+                                  "referencedDeclaration": 2248,
+                                  "src": "374:1:9",
+=======
+                                  "id": 1054,
+                                  "name": "y",
+                                  "nodeType": "Identifier",
+                                  "overloadedDeclarations": [],
+                                  "referencedDeclaration": 1046,
+                                  "src": "384:1:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_uint256",
+                                    "typeString": "uint256"
+                                  }
+                                },
+                                "src": "380:5:8",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_uint256",
+                                  "typeString": "uint256"
+                                }
+                              },
+                              "src": "376:9:8",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              }
+                            }
+                          ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                          "id": 2259,
+=======
+                          "id": 1057,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                          "isConstant": false,
+                          "isInlineArray": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "nodeType": "TupleExpression",
+                          "src": "375:11:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "<=",
+                        "rightExpression": {
+                          "argumentTypes": null,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                          "id": 2260,
+                          "name": "x",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 2246,
+                          "src": "380:1:9",
+=======
+                          "id": 1058,
+                          "name": "x",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 1044,
+                          "src": "390:1:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "src": "375:16:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "64732d6d6174682d7375622d756e646572666c6f77",
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                        "id": 2262,
+=======
+                        "id": 1060,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "393:23:8",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_03b20b9f6e6e7905f077509fd420fb44afc685f254bcefe49147296e1ba25590",
+                          "typeString": "literal_string \"ds-math-sub-underflow\""
+                        },
+                        "value": "ds-math-sub-underflow"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_03b20b9f6e6e7905f077509fd420fb44afc685f254bcefe49147296e1ba25590",
+                          "typeString": "literal_string \"ds-math-sub-underflow\""
+                        }
+                      ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                      "id": 2253,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        2430,
+                        2431
+                      ],
+                      "referencedDeclaration": 2431,
+                      "src": "357:7:9",
+=======
+                      "id": 1051,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        1153,
+                        1154
+                      ],
+                      "referencedDeclaration": 1154,
+                      "src": "367:7:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2263,
+=======
+                    "id": 1061,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "367:50:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                  "id": 2264,
+=======
+                  "id": 1062,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                  "nodeType": "ExpressionStatement",
+                  "src": "367:50:8"
+                }
+              ]
+            },
+            "documentation": null,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+            "id": 2266,
+=======
+            "id": 1064,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "sub",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+              "id": 2249,
+=======
+              "id": 1047,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                  "id": 2246,
+                  "name": "x",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2266,
+                  "src": "300:6:9",
+=======
+                  "id": 1044,
+                  "name": "x",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1064,
+                  "src": "309:6:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2245,
+=======
+                    "id": 1043,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "309:4:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                  "id": 2248,
+                  "name": "y",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2266,
+                  "src": "308:6:9",
+=======
+                  "id": 1046,
+                  "name": "y",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1064,
+                  "src": "317:6:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2247,
+=======
+                    "id": 1045,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "317:4:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "308:16:8"
+            },
+            "returnParameters": {
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+              "id": 2252,
+=======
+              "id": 1050,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                  "id": 2251,
+                  "name": "z",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2266,
+                  "src": "339:6:9",
+=======
+                  "id": 1049,
+                  "name": "z",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1064,
+                  "src": "348:6:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2250,
+=======
+                    "id": 1048,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "348:4:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "347:8:8"
+            },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+            "scope": 2316,
+            "src": "287:127:9",
+=======
+            "scope": 1093,
+            "src": "296:129:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+              "id": 2293,
+=======
+              "id": 1091,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+              "nodeType": "Block",
+              "src": "493:82:8",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                        "id": 2289,
+=======
+                        "id": 1087,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "commonType": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                          "id": 2278,
+=======
+                          "id": 1076,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "leftExpression": {
+                            "argumentTypes": null,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                            "id": 2276,
+                            "name": "y",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 2270,
+                            "src": "498:1:9",
+=======
+                            "id": 1074,
+                            "name": "y",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 1068,
+                            "src": "512:1:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          },
+                          "nodeType": "BinaryOperation",
+                          "operator": "==",
+                          "rightExpression": {
+                            "argumentTypes": null,
+                            "hexValue": "30",
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                            "id": 2277,
+=======
+                            "id": 1075,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": true,
+                            "kind": "number",
+                            "lValueRequested": false,
+                            "nodeType": "Literal",
+                            "src": "517:1:8",
+                            "subdenomination": null,
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_rational_0_by_1",
+                              "typeString": "int_const 0"
+                            },
+                            "value": "0"
+                          },
+                          "src": "512:6:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bool",
+                            "typeString": "bool"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": "||",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "commonType": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                          "id": 2288,
+=======
+                          "id": 1086,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "leftExpression": {
+                            "argumentTypes": null,
+                            "commonType": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                            "id": 2286,
+=======
+                            "id": 1084,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                            "isConstant": false,
+                            "isLValue": false,
+                            "isPure": false,
+                            "lValueRequested": false,
+                            "leftExpression": {
+                              "argumentTypes": null,
+                              "components": [
+                                {
+                                  "argumentTypes": null,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                  "id": 2283,
+=======
+                                  "id": 1081,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "leftHandSide": {
+                                    "argumentTypes": null,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                    "id": 2279,
+                                    "name": "z",
+                                    "nodeType": "Identifier",
+                                    "overloadedDeclarations": [],
+                                    "referencedDeclaration": 2273,
+                                    "src": "509:1:9",
+=======
+                                    "id": 1077,
+                                    "name": "z",
+                                    "nodeType": "Identifier",
+                                    "overloadedDeclarations": [],
+                                    "referencedDeclaration": 1071,
+                                    "src": "523:1:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                    "typeDescriptions": {
+                                      "typeIdentifier": "t_uint256",
+                                      "typeString": "uint256"
+                                    }
+                                  },
+                                  "nodeType": "Assignment",
+                                  "operator": "=",
+                                  "rightHandSide": {
+                                    "argumentTypes": null,
+                                    "commonType": {
+                                      "typeIdentifier": "t_uint256",
+                                      "typeString": "uint256"
+                                    },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                    "id": 2282,
+=======
+                                    "id": 1080,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                    "isConstant": false,
+                                    "isLValue": false,
+                                    "isPure": false,
+                                    "lValueRequested": false,
+                                    "leftExpression": {
+                                      "argumentTypes": null,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                      "id": 2280,
+                                      "name": "x",
+                                      "nodeType": "Identifier",
+                                      "overloadedDeclarations": [],
+                                      "referencedDeclaration": 2268,
+                                      "src": "513:1:9",
+=======
+                                      "id": 1078,
+                                      "name": "x",
+                                      "nodeType": "Identifier",
+                                      "overloadedDeclarations": [],
+                                      "referencedDeclaration": 1066,
+                                      "src": "527:1:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                      "typeDescriptions": {
+                                        "typeIdentifier": "t_uint256",
+                                        "typeString": "uint256"
+                                      }
+                                    },
+                                    "nodeType": "BinaryOperation",
+                                    "operator": "*",
+                                    "rightExpression": {
+                                      "argumentTypes": null,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                      "id": 2281,
+                                      "name": "y",
+                                      "nodeType": "Identifier",
+                                      "overloadedDeclarations": [],
+                                      "referencedDeclaration": 2270,
+                                      "src": "517:1:9",
+=======
+                                      "id": 1079,
+                                      "name": "y",
+                                      "nodeType": "Identifier",
+                                      "overloadedDeclarations": [],
+                                      "referencedDeclaration": 1068,
+                                      "src": "531:1:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                      "typeDescriptions": {
+                                        "typeIdentifier": "t_uint256",
+                                        "typeString": "uint256"
+                                      }
+                                    },
+                                    "src": "527:5:8",
+                                    "typeDescriptions": {
+                                      "typeIdentifier": "t_uint256",
+                                      "typeString": "uint256"
+                                    }
+                                  },
+                                  "src": "523:9:8",
+                                  "typeDescriptions": {
+                                    "typeIdentifier": "t_uint256",
+                                    "typeString": "uint256"
+                                  }
+                                }
+                              ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                              "id": 2284,
+=======
+                              "id": 1082,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                              "isConstant": false,
+                              "isInlineArray": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "nodeType": "TupleExpression",
+                              "src": "522:11:8",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              }
+                            },
+                            "nodeType": "BinaryOperation",
+                            "operator": "/",
+                            "rightExpression": {
+                              "argumentTypes": null,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                              "id": 2285,
+                              "name": "y",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 2270,
+                              "src": "522:1:9",
+=======
+                              "id": 1083,
+                              "name": "y",
+                              "nodeType": "Identifier",
+                              "overloadedDeclarations": [],
+                              "referencedDeclaration": 1068,
+                              "src": "536:1:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              }
+                            },
+                            "src": "522:15:8",
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          },
+                          "nodeType": "BinaryOperation",
+                          "operator": "==",
+                          "rightExpression": {
+                            "argumentTypes": null,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                            "id": 2287,
+                            "name": "x",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 2268,
+                            "src": "527:1:9",
+=======
+                            "id": 1085,
+                            "name": "x",
+                            "nodeType": "Identifier",
+                            "overloadedDeclarations": [],
+                            "referencedDeclaration": 1066,
+                            "src": "541:1:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                            "typeDescriptions": {
+                              "typeIdentifier": "t_uint256",
+                              "typeString": "uint256"
+                            }
+                          },
+                          "src": "522:20:8",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_bool",
+                            "typeString": "bool"
+                          }
+                        },
+                        "src": "512:30:8",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "64732d6d6174682d6d756c2d6f766572666c6f77",
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                        "id": 2290,
+=======
+                        "id": 1088,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "544:22:8",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_25a0ef6406c6af6852555433653ce478274cd9f03a5dec44d001868a76b3bfdd",
+                          "typeString": "literal_string \"ds-math-mul-overflow\""
+                        },
+                        "value": "ds-math-mul-overflow"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_25a0ef6406c6af6852555433653ce478274cd9f03a5dec44d001868a76b3bfdd",
+                          "typeString": "literal_string \"ds-math-mul-overflow\""
+                        }
+                      ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                      "id": 2275,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        2430,
+                        2431
+                      ],
+                      "referencedDeclaration": 2431,
+                      "src": "490:7:9",
+=======
+                      "id": 1073,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        1153,
+                        1154
+                      ],
+                      "referencedDeclaration": 1154,
+                      "src": "504:7:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2291,
+=======
+                    "id": 1089,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "504:63:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                  "id": 2292,
+=======
+                  "id": 1090,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                  "nodeType": "ExpressionStatement",
+                  "src": "504:63:8"
+                }
+              ]
+            },
+            "documentation": null,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+            "id": 2294,
+=======
+            "id": 1092,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "mul",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+              "id": 2271,
+=======
+              "id": 1069,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                  "id": 2268,
+                  "name": "x",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2294,
+                  "src": "433:6:9",
+=======
+                  "id": 1066,
+                  "name": "x",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1092,
+                  "src": "446:6:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2267,
+=======
+                    "id": 1065,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "446:4:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                  "id": 2270,
+                  "name": "y",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2294,
+                  "src": "441:6:9",
+=======
+                  "id": 1068,
+                  "name": "y",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1092,
+                  "src": "454:6:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2269,
+=======
+                    "id": 1067,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "454:4:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "445:16:8"
+            },
+            "returnParameters": {
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+              "id": 2274,
+=======
+              "id": 1072,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                  "id": 2273,
+                  "name": "z",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2294,
+                  "src": "472:6:9",
+=======
+                  "id": 1071,
+                  "name": "z",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 1092,
+                  "src": "485:6:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2272,
+=======
+                    "id": 1070,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "485:4:8",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "484:8:8"
+            },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+            "scope": 2316,
+            "src": "420:140:9",
+=======
+            "scope": 1093,
+            "src": "433:142:8",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "internal"
+          },
+          {
+            "body": {
+              "id": 2314,
+              "nodeType": "Block",
+              "src": "624:93:9",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "arguments": [
+                      {
+                        "argumentTypes": null,
+                        "commonType": {
+                          "typeIdentifier": "t_uint256",
+                          "typeString": "uint256"
+                        },
+                        "id": 2306,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": false,
+                        "lValueRequested": false,
+                        "leftExpression": {
+                          "argumentTypes": null,
+                          "id": 2304,
+                          "name": "y",
+                          "nodeType": "Identifier",
+                          "overloadedDeclarations": [],
+                          "referencedDeclaration": 2298,
+                          "src": "643:1:9",
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          }
+                        },
+                        "nodeType": "BinaryOperation",
+                        "operator": ">",
+                        "rightExpression": {
+                          "argumentTypes": null,
+                          "hexValue": "30",
+                          "id": 2305,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": true,
+                          "kind": "number",
+                          "lValueRequested": false,
+                          "nodeType": "Literal",
+                          "src": "647:1:9",
+                          "subdenomination": null,
+                          "typeDescriptions": {
+                            "typeIdentifier": "t_rational_0_by_1",
+                            "typeString": "int_const 0"
+                          },
+                          "value": "0"
+                        },
+                        "src": "643:5:9",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        }
+                      },
+                      {
+                        "argumentTypes": null,
+                        "hexValue": "536166654d6174683a2064656e6f6d696e61746f722063616e206e6f74206265207a65726f",
+                        "id": 2307,
+                        "isConstant": false,
+                        "isLValue": false,
+                        "isPure": true,
+                        "kind": "string",
+                        "lValueRequested": false,
+                        "nodeType": "Literal",
+                        "src": "650:39:9",
+                        "subdenomination": null,
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_stringliteral_e6ec2164c18f1e21ce56c776102daa0df85a621953459d2e947622f805c940bb",
+                          "typeString": "literal_string \"SafeMath: denominator can not be zero\""
+                        },
+                        "value": "SafeMath: denominator can not be zero"
+                      }
+                    ],
+                    "expression": {
+                      "argumentTypes": [
+                        {
+                          "typeIdentifier": "t_bool",
+                          "typeString": "bool"
+                        },
+                        {
+                          "typeIdentifier": "t_stringliteral_e6ec2164c18f1e21ce56c776102daa0df85a621953459d2e947622f805c940bb",
+                          "typeString": "literal_string \"SafeMath: denominator can not be zero\""
+                        }
+                      ],
+                      "id": 2303,
+                      "name": "require",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [
+                        2430,
+                        2431
+                      ],
+                      "referencedDeclaration": 2431,
+                      "src": "634:7:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
+                        "typeString": "function (bool,string memory) pure"
+                      }
+                    },
+                    "id": 2308,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "kind": "functionCall",
+                    "lValueRequested": false,
+                    "names": [],
+                    "nodeType": "FunctionCall",
+                    "src": "634:56:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_tuple$__$",
+                      "typeString": "tuple()"
+                    }
+                  },
+                  "id": 2309,
+                  "nodeType": "ExpressionStatement",
+                  "src": "634:56:9"
+                },
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "commonType": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    },
+                    "id": 2312,
+                    "isConstant": false,
+                    "isLValue": false,
+                    "isPure": false,
+                    "lValueRequested": false,
+                    "leftExpression": {
+                      "argumentTypes": null,
+                      "id": 2310,
+                      "name": "x",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 2296,
+                      "src": "707:1:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "nodeType": "BinaryOperation",
+                    "operator": "/",
+                    "rightExpression": {
+                      "argumentTypes": null,
+                      "id": 2311,
+                      "name": "y",
+                      "nodeType": "Identifier",
+                      "overloadedDeclarations": [],
+                      "referencedDeclaration": 2298,
+                      "src": "709:1:9",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "src": "707:3:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "functionReturnParameters": 2302,
+                  "id": 2313,
+                  "nodeType": "Return",
+                  "src": "700:10:9"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 2315,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "div",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 2299,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2296,
+                  "name": "x",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2315,
+                  "src": "579:6:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2295,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "579:4:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 2298,
+                  "name": "y",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2315,
+                  "src": "587:6:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2297,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "587:4:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "578:16:9"
+            },
+            "returnParameters": {
+              "id": 2302,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 2301,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 2315,
+                  "src": "618:4:9",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 2300,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "618:4:9",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "617:6:9"
+            },
+            "scope": 2316,
+            "src": "566:151:9",
+            "stateMutability": "pure",
+            "superFunction": null,
+            "visibility": "internal"
+          }
+        ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+        "scope": 2317,
+        "src": "132:587:9"
+      }
+    ],
+    "src": "0:720:9"
+=======
+        "scope": 1094,
+        "src": "136:442:8"
+      }
+    ],
+    "src": "0:580:8"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+  },
+  "legacyAST": {
+    "attributes": {
+      "absolutePath": "/C/Users/Thanh Phi/Desktop/PolkaBridgeSolution/PolkaBridge-DEX/factory/contracts/libraries/SafeMath.sol",
+      "exportedSymbols": {
+        "SafeMath": [
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+          2316
+=======
+          1093
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "=",
+            "0.5",
+            ".16"
+          ]
+        },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+        "id": 2222,
+=======
+        "id": 1020,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+        "name": "PragmaDirective",
+        "src": "0:24:8"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "library",
+          "documentation": null,
+          "fullyImplemented": true,
+          "linearizedBaseContracts": [
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+            2316
+          ],
+          "name": "SafeMath",
+          "scope": 2317
+=======
+            1093
+          ],
+          "name": "SafeMath",
+          "scope": 1094
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+        },
+        "children": [
+          {
+            "attributes": {
+              "documentation": null,
+              "implemented": true,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "add",
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+              "scope": 2316,
+=======
+              "scope": 1093,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+              "stateMutability": "pure",
+              "superFunction": null,
+              "visibility": "internal"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "x",
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                      "scope": 2244,
+=======
+                      "scope": 1042,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                        "id": 2223,
+=======
+                        "id": 1021,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                        "name": "ElementaryTypeName",
+                        "src": "173:4:8"
+                      }
+                    ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2224,
+=======
+                    "id": 1022,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "name": "VariableDeclaration",
+                    "src": "173:6:8"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "y",
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                      "scope": 2244,
+=======
+                      "scope": 1042,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                        "id": 2225,
+=======
+                        "id": 1023,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                        "name": "ElementaryTypeName",
+                        "src": "181:4:8"
+                      }
+                    ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2226,
+=======
+                    "id": 1024,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "name": "VariableDeclaration",
+                    "src": "181:6:8"
+                  }
+                ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                "id": 2227,
+=======
+                "id": 1025,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                "name": "ParameterList",
+                "src": "172:16:8"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "z",
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                      "scope": 2244,
+=======
+                      "scope": 1042,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                        "id": 2228,
+=======
+                        "id": 1026,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                        "name": "ElementaryTypeName",
+                        "src": "212:4:8"
+                      }
+                    ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2229,
+=======
+                    "id": 1027,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "name": "VariableDeclaration",
+                    "src": "212:6:8"
+                  }
+                ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                "id": 2230,
+=======
+                "id": 1028,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                "name": "ParameterList",
+                "src": "211:8:8"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_bool",
+                                  "typeString": "bool"
+                                },
+                                {
+                                  "typeIdentifier": "t_stringliteral_3903056b84ed2aba2be78662dc6c5c99b160cebe9af9bd9493d0fc28ff16f6db",
+                                  "typeString": "literal_string \"ds-math-add-overflow\""
+                                }
+                              ],
+                              "overloadedDeclarations": [
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                2430,
+                                2431
+                              ],
+                              "referencedDeclaration": 2431,
+                              "type": "function (bool,string memory) pure",
+                              "value": "require"
+                            },
+                            "id": 2231,
+=======
+                                1153,
+                                1154
+                              ],
+                              "referencedDeclaration": 1154,
+                              "type": "function (bool,string memory) pure",
+                              "value": "require"
+                            },
+                            "id": 1029,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                            "name": "Identifier",
+                            "src": "231:7:8"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "commonType": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "operator": ">=",
+                              "type": "bool"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isInlineArray": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "type": "uint256"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "isConstant": false,
+                                      "isLValue": false,
+                                      "isPure": false,
+                                      "lValueRequested": false,
+                                      "operator": "=",
+                                      "type": "uint256"
+                                    },
+                                    "children": [
+                                      {
+                                        "attributes": {
+                                          "argumentTypes": null,
+                                          "overloadedDeclarations": [
+                                            null
+                                          ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                          "referencedDeclaration": 2229,
+                                          "type": "uint256",
+                                          "value": "z"
+                                        },
+                                        "id": 2232,
+=======
+                                          "referencedDeclaration": 1027,
+                                          "type": "uint256",
+                                          "value": "z"
+                                        },
+                                        "id": 1030,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                        "name": "Identifier",
+                                        "src": "240:1:8"
+                                      },
+                                      {
+                                        "attributes": {
+                                          "argumentTypes": null,
+                                          "commonType": {
+                                            "typeIdentifier": "t_uint256",
+                                            "typeString": "uint256"
+                                          },
+                                          "isConstant": false,
+                                          "isLValue": false,
+                                          "isPure": false,
+                                          "lValueRequested": false,
+                                          "operator": "+",
+                                          "type": "uint256"
+                                        },
+                                        "children": [
+                                          {
+                                            "attributes": {
+                                              "argumentTypes": null,
+                                              "overloadedDeclarations": [
+                                                null
+                                              ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                              "referencedDeclaration": 2224,
+                                              "type": "uint256",
+                                              "value": "x"
+                                            },
+                                            "id": 2233,
+=======
+                                              "referencedDeclaration": 1022,
+                                              "type": "uint256",
+                                              "value": "x"
+                                            },
+                                            "id": 1031,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                            "name": "Identifier",
+                                            "src": "244:1:8"
+                                          },
+                                          {
+                                            "attributes": {
+                                              "argumentTypes": null,
+                                              "overloadedDeclarations": [
+                                                null
+                                              ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                              "referencedDeclaration": 2226,
+                                              "type": "uint256",
+                                              "value": "y"
+                                            },
+                                            "id": 2234,
+=======
+                                              "referencedDeclaration": 1024,
+                                              "type": "uint256",
+                                              "value": "y"
+                                            },
+                                            "id": 1032,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                            "name": "Identifier",
+                                            "src": "248:1:8"
+                                          }
+                                        ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                        "id": 2235,
+=======
+                                        "id": 1033,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                        "name": "BinaryOperation",
+                                        "src": "244:5:8"
+                                      }
+                                    ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                    "id": 2236,
+=======
+                                    "id": 1034,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                    "name": "Assignment",
+                                    "src": "240:9:8"
+                                  }
+                                ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                "id": 2237,
+=======
+                                "id": 1035,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                "name": "TupleExpression",
+                                "src": "239:11:8"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                  "referencedDeclaration": 2224,
+                                  "type": "uint256",
+                                  "value": "x"
+                                },
+                                "id": 2238,
+=======
+                                  "referencedDeclaration": 1022,
+                                  "type": "uint256",
+                                  "value": "x"
+                                },
+                                "id": 1036,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                "name": "Identifier",
+                                "src": "254:1:8"
+                              }
+                            ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                            "id": 2239,
+=======
+                            "id": 1037,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                            "name": "BinaryOperation",
+                            "src": "239:16:8"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "hexvalue": "64732d6d6174682d6164642d6f766572666c6f77",
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "subdenomination": null,
+                              "token": "string",
+                              "type": "literal_string \"ds-math-add-overflow\"",
+                              "value": "ds-math-add-overflow"
+                            },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                            "id": 2240,
+=======
+                            "id": 1038,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                            "name": "Literal",
+                            "src": "257:22:8"
+                          }
+                        ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                        "id": 2241,
+=======
+                        "id": 1039,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                        "name": "FunctionCall",
+                        "src": "231:49:8"
+                      }
+                    ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2242,
+=======
+                    "id": 1040,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "name": "ExpressionStatement",
+                    "src": "231:49:8"
+                  }
+                ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                "id": 2243,
+=======
+                "id": 1041,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                "name": "Block",
+                "src": "220:68:8"
+              }
+            ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+            "id": 2244,
+=======
+            "id": 1042,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+            "name": "FunctionDefinition",
+            "src": "160:128:8"
+          },
+          {
+            "attributes": {
+              "documentation": null,
+              "implemented": true,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "sub",
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+              "scope": 2316,
+=======
+              "scope": 1093,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+              "stateMutability": "pure",
+              "superFunction": null,
+              "visibility": "internal"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "x",
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                      "scope": 2266,
+=======
+                      "scope": 1064,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                        "id": 2245,
+=======
+                        "id": 1043,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                        "name": "ElementaryTypeName",
+                        "src": "309:4:8"
+                      }
+                    ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2246,
+=======
+                    "id": 1044,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "name": "VariableDeclaration",
+                    "src": "309:6:8"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "y",
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                      "scope": 2266,
+=======
+                      "scope": 1064,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                        "id": 2247,
+=======
+                        "id": 1045,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                        "name": "ElementaryTypeName",
+                        "src": "317:4:8"
+                      }
+                    ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2248,
+=======
+                    "id": 1046,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "name": "VariableDeclaration",
+                    "src": "317:6:8"
+                  }
+                ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                "id": 2249,
+=======
+                "id": 1047,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                "name": "ParameterList",
+                "src": "308:16:8"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "z",
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                      "scope": 2266,
+=======
+                      "scope": 1064,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                        "id": 2250,
+=======
+                        "id": 1048,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                        "name": "ElementaryTypeName",
+                        "src": "348:4:8"
+                      }
+                    ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2251,
+=======
+                    "id": 1049,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "name": "VariableDeclaration",
+                    "src": "348:6:8"
+                  }
+                ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                "id": 2252,
+=======
+                "id": 1050,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                "name": "ParameterList",
+                "src": "347:8:8"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_bool",
+                                  "typeString": "bool"
+                                },
+                                {
+                                  "typeIdentifier": "t_stringliteral_03b20b9f6e6e7905f077509fd420fb44afc685f254bcefe49147296e1ba25590",
+                                  "typeString": "literal_string \"ds-math-sub-underflow\""
+                                }
+                              ],
+                              "overloadedDeclarations": [
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                2430,
+                                2431
+                              ],
+                              "referencedDeclaration": 2431,
+                              "type": "function (bool,string memory) pure",
+                              "value": "require"
+                            },
+                            "id": 2253,
+=======
+                                1153,
+                                1154
+                              ],
+                              "referencedDeclaration": 1154,
+                              "type": "function (bool,string memory) pure",
+                              "value": "require"
+                            },
+                            "id": 1051,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                            "name": "Identifier",
+                            "src": "367:7:8"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "commonType": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "operator": "<=",
+                              "type": "bool"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "isConstant": false,
+                                  "isInlineArray": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "type": "uint256"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "isConstant": false,
+                                      "isLValue": false,
+                                      "isPure": false,
+                                      "lValueRequested": false,
+                                      "operator": "=",
+                                      "type": "uint256"
+                                    },
+                                    "children": [
+                                      {
+                                        "attributes": {
+                                          "argumentTypes": null,
+                                          "overloadedDeclarations": [
+                                            null
+                                          ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                          "referencedDeclaration": 2251,
+                                          "type": "uint256",
+                                          "value": "z"
+                                        },
+                                        "id": 2254,
+=======
+                                          "referencedDeclaration": 1049,
+                                          "type": "uint256",
+                                          "value": "z"
+                                        },
+                                        "id": 1052,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                        "name": "Identifier",
+                                        "src": "376:1:8"
+                                      },
+                                      {
+                                        "attributes": {
+                                          "argumentTypes": null,
+                                          "commonType": {
+                                            "typeIdentifier": "t_uint256",
+                                            "typeString": "uint256"
+                                          },
+                                          "isConstant": false,
+                                          "isLValue": false,
+                                          "isPure": false,
+                                          "lValueRequested": false,
+                                          "operator": "-",
+                                          "type": "uint256"
+                                        },
+                                        "children": [
+                                          {
+                                            "attributes": {
+                                              "argumentTypes": null,
+                                              "overloadedDeclarations": [
+                                                null
+                                              ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                              "referencedDeclaration": 2246,
+                                              "type": "uint256",
+                                              "value": "x"
+                                            },
+                                            "id": 2255,
+=======
+                                              "referencedDeclaration": 1044,
+                                              "type": "uint256",
+                                              "value": "x"
+                                            },
+                                            "id": 1053,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                            "name": "Identifier",
+                                            "src": "380:1:8"
+                                          },
+                                          {
+                                            "attributes": {
+                                              "argumentTypes": null,
+                                              "overloadedDeclarations": [
+                                                null
+                                              ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                              "referencedDeclaration": 2248,
+                                              "type": "uint256",
+                                              "value": "y"
+                                            },
+                                            "id": 2256,
+=======
+                                              "referencedDeclaration": 1046,
+                                              "type": "uint256",
+                                              "value": "y"
+                                            },
+                                            "id": 1054,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                            "name": "Identifier",
+                                            "src": "384:1:8"
+                                          }
+                                        ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                        "id": 2257,
+=======
+                                        "id": 1055,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                        "name": "BinaryOperation",
+                                        "src": "380:5:8"
+                                      }
+                                    ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                    "id": 2258,
+=======
+                                    "id": 1056,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                    "name": "Assignment",
+                                    "src": "376:9:8"
+                                  }
+                                ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                "id": 2259,
+=======
+                                "id": 1057,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                "name": "TupleExpression",
+                                "src": "375:11:8"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                  "referencedDeclaration": 2246,
+                                  "type": "uint256",
+                                  "value": "x"
+                                },
+                                "id": 2260,
+=======
+                                  "referencedDeclaration": 1044,
+                                  "type": "uint256",
+                                  "value": "x"
+                                },
+                                "id": 1058,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                "name": "Identifier",
+                                "src": "390:1:8"
+                              }
+                            ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                            "id": 2261,
+=======
+                            "id": 1059,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                            "name": "BinaryOperation",
+                            "src": "375:16:8"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "hexvalue": "64732d6d6174682d7375622d756e646572666c6f77",
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "subdenomination": null,
+                              "token": "string",
+                              "type": "literal_string \"ds-math-sub-underflow\"",
+                              "value": "ds-math-sub-underflow"
+                            },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                            "id": 2262,
+=======
+                            "id": 1060,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                            "name": "Literal",
+                            "src": "393:23:8"
+                          }
+                        ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                        "id": 2263,
+=======
+                        "id": 1061,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                        "name": "FunctionCall",
+                        "src": "367:50:8"
+                      }
+                    ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2264,
+=======
+                    "id": 1062,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "name": "ExpressionStatement",
+                    "src": "367:50:8"
+                  }
+                ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                "id": 2265,
+=======
+                "id": 1063,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                "name": "Block",
+                "src": "356:69:8"
+              }
+            ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+            "id": 2266,
+=======
+            "id": 1064,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+            "name": "FunctionDefinition",
+            "src": "296:129:8"
+          },
+          {
+            "attributes": {
+              "documentation": null,
+              "implemented": true,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "mul",
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+              "scope": 2316,
+=======
+              "scope": 1093,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+              "stateMutability": "pure",
+              "superFunction": null,
+              "visibility": "internal"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "x",
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                      "scope": 2294,
+=======
+                      "scope": 1092,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                        "id": 2267,
+=======
+                        "id": 1065,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                        "name": "ElementaryTypeName",
+                        "src": "446:4:8"
+                      }
+                    ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2268,
+=======
+                    "id": 1066,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "name": "VariableDeclaration",
+                    "src": "446:6:8"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "y",
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                      "scope": 2294,
+=======
+                      "scope": 1092,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                        "id": 2269,
+=======
+                        "id": 1067,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                        "name": "ElementaryTypeName",
+                        "src": "454:4:8"
+                      }
+                    ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2270,
+=======
+                    "id": 1068,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "name": "VariableDeclaration",
+                    "src": "454:6:8"
+                  }
+                ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                "id": 2271,
+=======
+                "id": 1069,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                "name": "ParameterList",
+                "src": "445:16:8"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "z",
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                      "scope": 2294,
+=======
+                      "scope": 1092,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                        "id": 2272,
+=======
+                        "id": 1070,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                        "name": "ElementaryTypeName",
+                        "src": "485:4:8"
+                      }
+                    ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2273,
+=======
+                    "id": 1071,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "name": "VariableDeclaration",
+                    "src": "485:6:8"
+                  }
+                ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                "id": 2274,
+=======
+                "id": 1072,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                "name": "ParameterList",
+                "src": "484:8:8"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_bool",
+                                  "typeString": "bool"
+                                },
+                                {
+                                  "typeIdentifier": "t_stringliteral_25a0ef6406c6af6852555433653ce478274cd9f03a5dec44d001868a76b3bfdd",
+                                  "typeString": "literal_string \"ds-math-mul-overflow\""
+                                }
+                              ],
+                              "overloadedDeclarations": [
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                2430,
+                                2431
+                              ],
+                              "referencedDeclaration": 2431,
+                              "type": "function (bool,string memory) pure",
+                              "value": "require"
+                            },
+                            "id": 2275,
+=======
+                                1153,
+                                1154
+                              ],
+                              "referencedDeclaration": 1154,
+                              "type": "function (bool,string memory) pure",
+                              "value": "require"
+                            },
+                            "id": 1073,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                            "name": "Identifier",
+                            "src": "504:7:8"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "commonType": {
+                                "typeIdentifier": "t_bool",
+                                "typeString": "bool"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "operator": "||",
+                              "type": "bool"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "commonType": {
+                                    "typeIdentifier": "t_uint256",
+                                    "typeString": "uint256"
+                                  },
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "operator": "==",
+                                  "type": "bool"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                      "referencedDeclaration": 2270,
+                                      "type": "uint256",
+                                      "value": "y"
+                                    },
+                                    "id": 2276,
+=======
+                                      "referencedDeclaration": 1068,
+                                      "type": "uint256",
+                                      "value": "y"
+                                    },
+                                    "id": 1074,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                    "name": "Identifier",
+                                    "src": "512:1:8"
+                                  },
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "hexvalue": "30",
+                                      "isConstant": false,
+                                      "isLValue": false,
+                                      "isPure": true,
+                                      "lValueRequested": false,
+                                      "subdenomination": null,
+                                      "token": "number",
+                                      "type": "int_const 0",
+                                      "value": "0"
+                                    },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                    "id": 2277,
+=======
+                                    "id": 1075,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                    "name": "Literal",
+                                    "src": "517:1:8"
+                                  }
+                                ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                "id": 2278,
+=======
+                                "id": 1076,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                "name": "BinaryOperation",
+                                "src": "512:6:8"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "commonType": {
+                                    "typeIdentifier": "t_uint256",
+                                    "typeString": "uint256"
+                                  },
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": false,
+                                  "lValueRequested": false,
+                                  "operator": "==",
+                                  "type": "bool"
+                                },
+                                "children": [
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "commonType": {
+                                        "typeIdentifier": "t_uint256",
+                                        "typeString": "uint256"
+                                      },
+                                      "isConstant": false,
+                                      "isLValue": false,
+                                      "isPure": false,
+                                      "lValueRequested": false,
+                                      "operator": "/",
+                                      "type": "uint256"
+                                    },
+                                    "children": [
+                                      {
+                                        "attributes": {
+                                          "argumentTypes": null,
+                                          "isConstant": false,
+                                          "isInlineArray": false,
+                                          "isLValue": false,
+                                          "isPure": false,
+                                          "lValueRequested": false,
+                                          "type": "uint256"
+                                        },
+                                        "children": [
+                                          {
+                                            "attributes": {
+                                              "argumentTypes": null,
+                                              "isConstant": false,
+                                              "isLValue": false,
+                                              "isPure": false,
+                                              "lValueRequested": false,
+                                              "operator": "=",
+                                              "type": "uint256"
+                                            },
+                                            "children": [
+                                              {
+                                                "attributes": {
+                                                  "argumentTypes": null,
+                                                  "overloadedDeclarations": [
+                                                    null
+                                                  ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                                  "referencedDeclaration": 2273,
+                                                  "type": "uint256",
+                                                  "value": "z"
+                                                },
+                                                "id": 2279,
+=======
+                                                  "referencedDeclaration": 1071,
+                                                  "type": "uint256",
+                                                  "value": "z"
+                                                },
+                                                "id": 1077,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                                "name": "Identifier",
+                                                "src": "523:1:8"
+                                              },
+                                              {
+                                                "attributes": {
+                                                  "argumentTypes": null,
+                                                  "commonType": {
+                                                    "typeIdentifier": "t_uint256",
+                                                    "typeString": "uint256"
+                                                  },
+                                                  "isConstant": false,
+                                                  "isLValue": false,
+                                                  "isPure": false,
+                                                  "lValueRequested": false,
+                                                  "operator": "*",
+                                                  "type": "uint256"
+                                                },
+                                                "children": [
+                                                  {
+                                                    "attributes": {
+                                                      "argumentTypes": null,
+                                                      "overloadedDeclarations": [
+                                                        null
+                                                      ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                                      "referencedDeclaration": 2268,
+                                                      "type": "uint256",
+                                                      "value": "x"
+                                                    },
+                                                    "id": 2280,
+=======
+                                                      "referencedDeclaration": 1066,
+                                                      "type": "uint256",
+                                                      "value": "x"
+                                                    },
+                                                    "id": 1078,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                                    "name": "Identifier",
+                                                    "src": "527:1:8"
+                                                  },
+                                                  {
+                                                    "attributes": {
+                                                      "argumentTypes": null,
+                                                      "overloadedDeclarations": [
+                                                        null
+                                                      ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                                      "referencedDeclaration": 2270,
+                                                      "type": "uint256",
+                                                      "value": "y"
+                                                    },
+                                                    "id": 2281,
+=======
+                                                      "referencedDeclaration": 1068,
+                                                      "type": "uint256",
+                                                      "value": "y"
+                                                    },
+                                                    "id": 1079,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                                    "name": "Identifier",
+                                                    "src": "531:1:8"
+                                                  }
+                                                ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                                "id": 2282,
+=======
+                                                "id": 1080,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                                "name": "BinaryOperation",
+                                                "src": "527:5:8"
+                                              }
+                                            ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                            "id": 2283,
+=======
+                                            "id": 1081,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                            "name": "Assignment",
+                                            "src": "523:9:8"
+                                          }
+                                        ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                        "id": 2284,
+=======
+                                        "id": 1082,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                        "name": "TupleExpression",
+                                        "src": "522:11:8"
+                                      },
+                                      {
+                                        "attributes": {
+                                          "argumentTypes": null,
+                                          "overloadedDeclarations": [
+                                            null
+                                          ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                          "referencedDeclaration": 2270,
+                                          "type": "uint256",
+                                          "value": "y"
+                                        },
+                                        "id": 2285,
+=======
+                                          "referencedDeclaration": 1068,
+                                          "type": "uint256",
+                                          "value": "y"
+                                        },
+                                        "id": 1083,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                        "name": "Identifier",
+                                        "src": "536:1:8"
+                                      }
+                                    ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                    "id": 2286,
+=======
+                                    "id": 1084,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                    "name": "BinaryOperation",
+                                    "src": "522:15:8"
+                                  },
+                                  {
+                                    "attributes": {
+                                      "argumentTypes": null,
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                      "referencedDeclaration": 2268,
+                                      "type": "uint256",
+                                      "value": "x"
+                                    },
+                                    "id": 2287,
+=======
+                                      "referencedDeclaration": 1066,
+                                      "type": "uint256",
+                                      "value": "x"
+                                    },
+                                    "id": 1085,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                    "name": "Identifier",
+                                    "src": "541:1:8"
+                                  }
+                                ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                                "id": 2288,
+=======
+                                "id": 1086,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                                "name": "BinaryOperation",
+                                "src": "522:20:8"
+                              }
+                            ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                            "id": 2289,
+=======
+                            "id": 1087,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                            "name": "BinaryOperation",
+                            "src": "512:30:8"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "hexvalue": "64732d6d6174682d6d756c2d6f766572666c6f77",
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "subdenomination": null,
+                              "token": "string",
+                              "type": "literal_string \"ds-math-mul-overflow\"",
+                              "value": "ds-math-mul-overflow"
+                            },
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                            "id": 2290,
+=======
+                            "id": 1088,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                            "name": "Literal",
+                            "src": "544:22:8"
+                          }
+                        ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                        "id": 2291,
+=======
+                        "id": 1089,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                        "name": "FunctionCall",
+                        "src": "504:63:8"
+                      }
+                    ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                    "id": 2292,
+=======
+                    "id": 1090,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                    "name": "ExpressionStatement",
+                    "src": "504:63:8"
+                  }
+                ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+                "id": 2293,
+=======
+                "id": 1091,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+                "name": "Block",
+                "src": "493:82:8"
+              }
+            ],
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+            "id": 2294,
+            "name": "FunctionDefinition",
+            "src": "420:140:9"
+          },
+          {
+            "attributes": {
+              "documentation": null,
+              "implemented": true,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "div",
+              "scope": 2316,
+              "stateMutability": "pure",
+              "superFunction": null,
+              "visibility": "internal"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "x",
+                      "scope": 2315,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 2295,
+                        "name": "ElementaryTypeName",
+                        "src": "579:4:9"
+                      }
+                    ],
+                    "id": 2296,
+                    "name": "VariableDeclaration",
+                    "src": "579:6:9"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "y",
+                      "scope": 2315,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 2297,
+                        "name": "ElementaryTypeName",
+                        "src": "587:4:9"
+                      }
+                    ],
+                    "id": 2298,
+                    "name": "VariableDeclaration",
+                    "src": "587:6:9"
+                  }
+                ],
+                "id": 2299,
+                "name": "ParameterList",
+                "src": "578:16:9"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 2315,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint",
+                          "type": "uint256"
+                        },
+                        "id": 2300,
+                        "name": "ElementaryTypeName",
+                        "src": "618:4:9"
+                      }
+                    ],
+                    "id": 2301,
+                    "name": "VariableDeclaration",
+                    "src": "618:4:9"
+                  }
+                ],
+                "id": 2302,
+                "name": "ParameterList",
+                "src": "617:6:9"
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "isStructConstructorCall": false,
+                          "lValueRequested": false,
+                          "names": [
+                            null
+                          ],
+                          "type": "tuple()",
+                          "type_conversion": false
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": [
+                                {
+                                  "typeIdentifier": "t_bool",
+                                  "typeString": "bool"
+                                },
+                                {
+                                  "typeIdentifier": "t_stringliteral_e6ec2164c18f1e21ce56c776102daa0df85a621953459d2e947622f805c940bb",
+                                  "typeString": "literal_string \"SafeMath: denominator can not be zero\""
+                                }
+                              ],
+                              "overloadedDeclarations": [
+                                2430,
+                                2431
+                              ],
+                              "referencedDeclaration": 2431,
+                              "type": "function (bool,string memory) pure",
+                              "value": "require"
+                            },
+                            "id": 2303,
+                            "name": "Identifier",
+                            "src": "634:7:9"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "commonType": {
+                                "typeIdentifier": "t_uint256",
+                                "typeString": "uint256"
+                              },
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": false,
+                              "lValueRequested": false,
+                              "operator": ">",
+                              "type": "bool"
+                            },
+                            "children": [
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
+                                  "referencedDeclaration": 2298,
+                                  "type": "uint256",
+                                  "value": "y"
+                                },
+                                "id": 2304,
+                                "name": "Identifier",
+                                "src": "643:1:9"
+                              },
+                              {
+                                "attributes": {
+                                  "argumentTypes": null,
+                                  "hexvalue": "30",
+                                  "isConstant": false,
+                                  "isLValue": false,
+                                  "isPure": true,
+                                  "lValueRequested": false,
+                                  "subdenomination": null,
+                                  "token": "number",
+                                  "type": "int_const 0",
+                                  "value": "0"
+                                },
+                                "id": 2305,
+                                "name": "Literal",
+                                "src": "647:1:9"
+                              }
+                            ],
+                            "id": 2306,
+                            "name": "BinaryOperation",
+                            "src": "643:5:9"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "hexvalue": "536166654d6174683a2064656e6f6d696e61746f722063616e206e6f74206265207a65726f",
+                              "isConstant": false,
+                              "isLValue": false,
+                              "isPure": true,
+                              "lValueRequested": false,
+                              "subdenomination": null,
+                              "token": "string",
+                              "type": "literal_string \"SafeMath: denominator can not be zero\"",
+                              "value": "SafeMath: denominator can not be zero"
+                            },
+                            "id": 2307,
+                            "name": "Literal",
+                            "src": "650:39:9"
+                          }
+                        ],
+                        "id": 2308,
+                        "name": "FunctionCall",
+                        "src": "634:56:9"
+                      }
+                    ],
+                    "id": 2309,
+                    "name": "ExpressionStatement",
+                    "src": "634:56:9"
+                  },
+                  {
+                    "attributes": {
+                      "functionReturnParameters": 2302
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "argumentTypes": null,
+                          "commonType": {
+                            "typeIdentifier": "t_uint256",
+                            "typeString": "uint256"
+                          },
+                          "isConstant": false,
+                          "isLValue": false,
+                          "isPure": false,
+                          "lValueRequested": false,
+                          "operator": "/",
+                          "type": "uint256"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 2296,
+                              "type": "uint256",
+                              "value": "x"
+                            },
+                            "id": 2310,
+                            "name": "Identifier",
+                            "src": "707:1:9"
+                          },
+                          {
+                            "attributes": {
+                              "argumentTypes": null,
+                              "overloadedDeclarations": [
+                                null
+                              ],
+                              "referencedDeclaration": 2298,
+                              "type": "uint256",
+                              "value": "y"
+                            },
+                            "id": 2311,
+                            "name": "Identifier",
+                            "src": "709:1:9"
+                          }
+                        ],
+                        "id": 2312,
+                        "name": "BinaryOperation",
+                        "src": "707:3:9"
+                      }
+                    ],
+                    "id": 2313,
+                    "name": "Return",
+                    "src": "700:10:9"
+                  }
+                ],
+                "id": 2314,
+                "name": "Block",
+                "src": "624:93:9"
+              }
+            ],
+            "id": 2315,
+            "name": "FunctionDefinition",
+            "src": "566:151:9"
+          }
+        ],
+        "id": 2316,
+        "name": "ContractDefinition",
+        "src": "132:587:9"
+      }
+    ],
+    "id": 2317,
+    "name": "SourceUnit",
+    "src": "0:720:9"
+=======
+            "id": 1092,
+            "name": "FunctionDefinition",
+            "src": "433:142:8"
+          }
+        ],
+        "id": 1093,
+        "name": "ContractDefinition",
+        "src": "136:442:8"
+      }
+    ],
+    "id": 1094,
+    "name": "SourceUnit",
+    "src": "0:580:8"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
+  },
+  "networks": {},
+<<<<<<< HEAD:factory/build/contracts/SafeMath.json
+  "schemaVersion": "3.3.4",
+  "updatedAt": "2021-09-15T19:28:10.757Z",
+=======
+  "schemaVersion": "3.4.1",
+  "updatedAt": "2021-09-15T10:43:34.167Z",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:factory/client/src/contracts/SafeMath.json
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

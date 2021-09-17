@@ -1,4 +1,5 @@
 factory/node_modules
+factory/build
 factory/.secret
 Oracle/node_modules
 Oracle/.secret
@@ -6,3 +7,8 @@ router/node_modules
 router/.secret
 proxy/node_modules
 proxy/.secret
+/factory/truffle-config.js
+/factory/.env
+/router/.env
+/router/truffle-config.js
+/router/build
