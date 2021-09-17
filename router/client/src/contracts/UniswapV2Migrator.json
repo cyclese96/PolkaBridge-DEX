@@ -80,10 +80,17 @@
       }
     ]
   },
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+  "sourceMap": "312:1900:0:-:0;;;452:160;5:9:-1;2:2;;;27:1;24;17:12;2:2;452:160:0;;;;;;;;;;;;;;;15:2:-1;10:3;7:11;4:2;;;31:1;28;21:12;4:2;-1:-1;452:160:0;;;;;;;-1:-1:-1;;;;;;518:41:0;;;;;;;;569:36;;;;;312:1900;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "312:1900:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;12:1:-1;9;2:12;867:1343:0;;5:9:-1;2:2;;;27:1;24;17:12;2:2;867:1343:0;;;;;;15:3:-1;10;7:12;4:2;;;32:1;29;22:12;4:2;-1:-1;;;;;;867:1343:0;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;1014:29;1065:9;-1:-1:-1;;;;;1065:21:0;;1087:5;1065:28;;;;;;;;;;;;;-1:-1:-1;;;;;1065:28:0;-1:-1:-1;;;;;1065:28:0;;;;;;;;;;;;;;;;;;;5:9:-1;2:2;;;27:1;24;17:12;2:2;1065:28:0;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1065:28:0;;;;;;;15:2:-1;10:3;7:11;4:2;;;31:1;28;21:12;4:2;-1:-1;1065:28:0;1123:32;;;-1:-1:-1;;;1123:32:0;;1144:10;1123:32;;;;;;1065:28;;-1:-1:-1;1104:16:0;;-1:-1:-1;;;;;1123:20:0;;;;;:32;;;;;1065:28;;1123:32;;;;;;;:20;:32;;;2:2:-1;;;;27:1;24;17:12;2:2;1123:32:0;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1123:32:0;;;;;;;15:2:-1;10:3;7:11;4:2;;;31:1;28;21:12;4:2;-1:-1;1123:32:0;1173:63;;;-1:-1:-1;;;1173:63:0;;1197:10;1173:63;;;;1217:4;1173:63;;;;;;;;;;;;1123:32;;-1:-1:-1;;;;;;1173:23:0;;;;;:63;;;;;1123:32;;1173:63;;;;;;;;-1:-1:-1;1173:23:0;:63;;;2:2:-1;;;;27:1;24;17:12;2:2;1173:63:0;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1173:63:0;;;;;;;15:2:-1;10:3;7:11;4:2;;;31:1;28;21:12;4:2;-1:-1;1173:63:0;1165:96;;;;;-1:-1:-1;;;1165:96:0;;;;;;;;;;;;-1:-1:-1;;;1165:96:0;;;;;;;;;;;;;;;1312:55;;;-1:-1:-1;;;1312:55:0;;;;;;;;1352:1;1312:55;;;;;;;;;;-1:-1:-1;;1312:55:0;;;;;;1272:16;;;;-1:-1:-1;;;;;1312:26:0;;;;;:55;;;;;;;;;;;;;1272:16;1312:26;:55;;;2:2:-1;;;;27:1;24;17:12;2:2;1312:55:0;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1312:55:0;;;;;;;15:2:-1;10:3;7:11;4:2;;;31:1;28;21:12;4:2;-1:-1;1312:55:0;;;;;;;;;-1:-1:-1;1312:55:0;-1:-1:-1;1377:65:0;1404:5;1419:6;1312:55;1377:26;:65::i;:::-;1494:190;;;-1:-1:-1;;;1494:190:0;;-1:-1:-1;;;;;1494:190:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;1494:6:0;:22;;;;;;1524:11;;1494:190;;;;;;;;;;;;;;1524:11;1494:22;:190;;;2:2:-1;;;;27:1;24;17:12;2:2;1494:190:0;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1494:190:0;;;;;;;;15:2:-1;10:3;7:11;4:2;;;31:1;28;21:12;4:2;-1:-1;1494:190:0;;;;;;;;;-1:-1:-1;1494:190:0;-1:-1:-1;1698:29:0;;;1694:510;;;1743:53;1770:5;1785:6;1794:1;1743:26;:53::i;:::-;1864:77;1892:5;1899:10;1927:13;1911;:29;1864:27;:77::i;:::-;1694:510;;;1976:11;1962;:25;1958:246;;;2124:69;2155:10;2181:11;2167;:25;2124:30;:69::i;:::-;867:1343;;;;;;;;;;;:::o;212:434:25:-;436:45;;;-1:-1:-1;;;;;436:45:25;;;;;;;;;;;;;;;;26:21:-1;;;22:32;;;6:49;;436:45:25;;;;;;;25:18:-1;;61:17;;-1:-1;;;;;182:15;-1:-1;;;179:29;160:49;;425:57:25;;;;390:12;;404:17;;425:10;;;;436:45;425:57;;;25:18:-1;425:57:25;;25:18:-1;36:153;66:2;61:3;58:11;36:153;;176:10;;164:23;;-1:-1;;139:12;;;;98:2;89:12;;;;114;36:153;;;274:1;267:3;263:2;259:12;254:3;250:22;246:30;315:4;311:9;305:3;299:10;295:26;356:4;350:3;344:10;340:21;389:7;380;377:20;372:3;365:33;3:399;;;425:57:25;;;;;;;;;;;;;;;;;;;;;;;;12:1:-1;19;14:27;;;;67:4;61:11;56:16;;134:4;130:9;123:4;105:16;101:27;97:43;94:1;90:51;84:4;77:65;157:16;154:1;147:27;211:16;208:1;201:4;198:1;194:12;179:49;5:228;;14:27;32:4;27:9;;5:228;;389:93:25;;;;513:7;:57;;;;-1:-1:-1;525:11:25;;:16;;:44;;;556:4;545:24;;;;;15:2:-1;10:3;7:11;4:2;;;31:1;28;21:12;4:2;-1:-1;545:24:25;525:44;492:147;;;;-1:-1:-1;;;492:147:25;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;212:434;;;;;:::o;652:438::-;878:45;;;-1:-1:-1;;;;;878:45:25;;;;;;;;;;;;;;;;26:21:-1;;;22:32;;;6:49;;878:45:25;;;;;;;25:18:-1;;61:17;;-1:-1;;;;;182:15;-1:-1;;;179:29;160:49;;867:57:25;;;;832:12;;846:17;;867:10;;;;878:45;867:57;;;25:18:-1;867:57:25;;25:18:-1;36:153;66:2;61:3;58:11;36:153;;176:10;;164:23;;-1:-1;;139:12;;;;98:2;89:12;;;;114;36:153;;;274:1;267:3;263:2;259:12;254:3;250:22;246:30;315:4;311:9;305:3;299:10;295:26;356:4;350:3;344:10;340:21;389:7;380;377:20;372:3;365:33;3:399;;;867:57:25;;;;;;;;;;;;;;;;;;;;;;;;12:1:-1;19;14:27;;;;67:4;61:11;56:16;;134:4;130:9;123:4;105:16;101:27;97:43;94:1;90:51;84:4;77:65;157:16;154:1;147:27;211:16;208:1;201:4;198:1;194:12;179:49;5:228;;14:27;32:4;27:9;;5:228;;831:93:25;;;;955:7;:57;;;;-1:-1:-1;967:11:25;;:16;;:44;;;998:4;987:24;;;;;15:2:-1;10:3;7:11;4:2;;;31:1;28;21:12;4:2;-1:-1;987:24:25;967:44;934:149;;;;-1:-1:-1;;;934:149:25;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1588:214;1700:12;;;1660;1700;;;;;;;;;-1:-1:-1;;;;;1678:7:25;;;1693:5;;1678:35;;;;;;;;;;;;;36:153:-1;66:2;61:3;58:11;36:153;;176:10;;164:23;;-1:-1;;139:12;;;;98:2;89:12;;;;114;36:153;;;274:1;267:3;263:2;259:12;254:3;250:22;246:30;315:4;311:9;305:3;299:10;295:26;356:4;350:3;344:10;340:21;389:7;380;377:20;372:3;365:33;3:399;;;1678:35:25;;;;;;;;;;;;;;;;;;;;;;;;;12:1:-1;19;14:27;;;;67:4;61:11;56:16;;134:4;130:9;123:4;105:16;101:27;97:43;94:1;90:51;84:4;77:65;157:16;154:1;147:27;211:16;208:1;201:4;198:1;194:12;179:49;5:228;;14:27;32:4;27:9;;5:228;;1659:54:25;;;1731:7;1723:72;;;;-1:-1:-1;;;1723:72:25;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1588:214;;;:::o",
+  "source": "pragma solidity =0.6.6;\n\nimport '@uniswap/lib/contracts/libraries/TransferHelper.sol';\n\nimport './interfaces/IUniswapV2Migrator.sol';\nimport './interfaces/V1/IUniswapV1Factory.sol';\nimport './interfaces/V1/IUniswapV1Exchange.sol';\nimport './interfaces/IUniswapV2Router01.sol';\nimport './interfaces/IERC20.sol';\n\ncontract UniswapV2Migrator is IUniswapV2Migrator {\n    IUniswapV1Factory immutable factoryV1;\n    IUniswapV2Router01 immutable router;\n\n    constructor(address _factoryV1, address _router) public {\n        factoryV1 = IUniswapV1Factory(_factoryV1);\n        router = IUniswapV2Router01(_router);\n    }\n\n    // needs to accept ETH from any v1 exchange and the router. ideally this could be enforced, as in the router,\n    // but it's not possible because it requires a call to the v1 factory, which takes too much gas\n    receive() external payable {}\n\n    function migrate(address token, uint amountTokenMin, uint amountETHMin, address to, uint deadline)\n        external\n        override\n    {\n        IUniswapV1Exchange exchangeV1 = IUniswapV1Exchange(factoryV1.getExchange(token));\n        uint liquidityV1 = exchangeV1.balanceOf(msg.sender);\n        require(exchangeV1.transferFrom(msg.sender, address(this), liquidityV1), 'TRANSFER_FROM_FAILED');\n        (uint amountETHV1, uint amountTokenV1) = exchangeV1.removeLiquidity(liquidityV1, 1, 1, uint(-1));\n        TransferHelper.safeApprove(token, address(router), amountTokenV1);\n        (uint amountTokenV2, uint amountETHV2,) = router.addLiquidityETH{value: amountETHV1}(\n            token,\n            amountTokenV1,\n            amountTokenMin,\n            amountETHMin,\n            to,\n            deadline\n        );\n        if (amountTokenV1 > amountTokenV2) {\n            TransferHelper.safeApprove(token, address(router), 0); // be a good blockchain citizen, reset allowance to 0\n            TransferHelper.safeTransfer(token, msg.sender, amountTokenV1 - amountTokenV2);\n        } else if (amountETHV1 > amountETHV2) {\n            // addLiquidityETH guarantees that all of amountETHV1 or amountTokenV1 will be used, hence this else is safe\n            TransferHelper.safeTransferETH(msg.sender, amountETHV1 - amountETHV2);\n        }\n    }\n}\n",
+  "sourcePath": "/home/oncemore/BlockchainWork/Polka/deploy_1/router/contracts/UniswapV2Migrator.sol",
+=======
   "sourceMap": "322:1938:1:-:0;;;466:163;5:9:-1;2:2;;;27:1;24;17:12;2:2;466:163:1;;;;;;;;;;;;;;;15:2:-1;10:3;7:11;4:2;;;31:1;28;21:12;4:2;466:163:1;;;;;;;;;;;;;;;;;;;;;;;;;563:10;533:41;;;;;;;;;;;;613:7;585:36;;;;;;;;;;;;466:163;;322:1938;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "322:1938:1:-:0;;;;;;;;;;;;;;;;;;;;;;;;;12:1:-1;9;2:12;890:1367:1;;5:9:-1;2:2;;;27:1;24;17:12;2:2;890:1367:1;;;;;;15:3:-1;10;7:12;4:2;;;32:1;29;22:12;4:2;890:1367:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;1041:29;1092:9;:21;;;1114:5;1092:28;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;5:9:-1;2:2;;;27:1;24;17:12;2:2;1092:28:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1092:28:1;;;;;;;15:2:-1;10:3;7:11;4:2;;;31:1;28;21:12;4:2;1092:28:1;;;;;;;;;;;;;;;;1041:80;;1132:16;1151:10;:20;;;1172:10;1151:32;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;5:9:-1;2:2;;;27:1;24;17:12;2:2;1151:32:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1151:32:1;;;;;;;15:2:-1;10:3;7:11;4:2;;;31:1;28;21:12;4:2;1151:32:1;;;;;;;;;;;;;;;;1132:51;;1202:10;:23;;;1226:10;1246:4;1253:11;1202:63;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;5:9:-1;2:2;;;27:1;24;17:12;2:2;1202:63:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1202:63:1;;;;;;;15:2:-1;10:3;7:11;4:2;;;31:1;28;21:12;4:2;1202:63:1;;;;;;;;;;;;;;;;1194:96;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1302:16;1320:18;1342:10;:26;;;1369:11;1382:1;1385;1393:2;1342:55;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;5:9:-1;2:2;;;27:1;24;17:12;2:2;1342:55:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1342:55:1;;;;;;;15:2:-1;10:3;7:11;4:2;;;31:1;28;21:12;4:2;1342:55:1;;;;;;;;;;;;;;;;;;;;;;;;;1301:96;;;;1408:65;1435:5;1450:6;1459:13;1408:26;:65::i;:::-;1485:18;1505:16;1526:6;:22;;;1556:11;1583:5;1603:13;1631:14;1660:12;1687:2;1704:8;1526:197;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;5:9:-1;2:2;;;27:1;24;17:12;2:2;1526:197:1;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1526:197:1;;;;;;;;15:2:-1;10:3;7:11;4:2;;;31:1;28;21:12;4:2;1526:197:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1484:239;;;;;1754:13;1738;:29;1734:516;;;1784:53;1811:5;1826:6;1835:1;1784:26;:53::i;:::-;1906:77;1934:5;1941:10;1969:13;1953;:29;1906:27;:77::i;:::-;1734:516;;;2019:11;2005;:25;2001:249;;;2169:69;2200:10;2226:11;2212;:25;2169:30;:69::i;:::-;2001:249;1734:516;890:1367;;;;;;;;;;;:::o;212:434:27:-;390:12;404:17;425:5;:10;;459;471:2;475:5;436:45;;;;;;;;;;;;;;;;;;;;;;;;;49:4:-1;39:7;30;26:21;22:32;13:7;6:49;436:45:27;;;;;;38:4:-1;29:7;25:18;67:10;61:17;96:58;199:8;192:4;186;182:15;179:29;167:10;160:49;0:215;;;436:45:27;425:57;;;;;;;;;;;;;36:153:-1;66:2;61:3;58:11;36:153;;182:3;176:10;171:3;164:23;98:2;93:3;89:12;82:19;;123:2;118:3;114:12;107:19;;148:2;143:3;139:12;132:19;;36:153;;;274:1;267:3;263:2;259:12;254:3;250:22;246:30;315:4;311:9;305:3;299:10;295:26;356:4;350:3;344:10;340:21;389:7;380;377:20;372:3;365:33;3:399;;;425:57:27;;;;;;;;;;;;;;;;;;;;;;;;12:1:-1;19;14:27;;;;67:4;61:11;56:16;;134:4;130:9;123:4;105:16;101:27;97:43;94:1;90:51;84:4;77:65;157:16;154:1;147:27;211:16;208:1;201:4;198:1;194:12;179:49;5:228;;14:27;32:4;27:9;;5:228;;389:93:27;;;;513:7;:57;;;;;540:1;525:4;:11;:16;:44;;;;556:4;545:24;;;;;15:2:-1;10:3;7:11;4:2;;;31:1;28;21:12;4:2;545:24:27;;;;;;;;;;;;;;;;525:44;513:57;492:147;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;212:434;;;;;:::o;652:438::-;832:12;846:17;867:5;:10;;901;913:2;917:5;878:45;;;;;;;;;;;;;;;;;;;;;;;;;49:4:-1;39:7;30;26:21;22:32;13:7;6:49;878:45:27;;;;;;38:4:-1;29:7;25:18;67:10;61:17;96:58;199:8;192:4;186;182:15;179:29;167:10;160:49;0:215;;;878:45:27;867:57;;;;;;;;;;;;;36:153:-1;66:2;61:3;58:11;36:153;;182:3;176:10;171:3;164:23;98:2;93:3;89:12;82:19;;123:2;118:3;114:12;107:19;;148:2;143:3;139:12;132:19;;36:153;;;274:1;267:3;263:2;259:12;254:3;250:22;246:30;315:4;311:9;305:3;299:10;295:26;356:4;350:3;344:10;340:21;389:7;380;377:20;372:3;365:33;3:399;;;867:57:27;;;;;;;;;;;;;;;;;;;;;;;;12:1:-1;19;14:27;;;;67:4;61:11;56:16;;134:4;130:9;123:4;105:16;101:27;97:43;94:1;90:51;84:4;77:65;157:16;154:1;147:27;211:16;208:1;201:4;198:1;194:12;179:49;5:228;;14:27;32:4;27:9;;5:228;;831:93:27;;;;955:7;:57;;;;;982:1;967:4;:11;:16;:44;;;;998:4;987:24;;;;;15:2:-1;10:3;7:11;4:2;;;31:1;28;21:12;4:2;987:24:27;;;;;;;;;;;;;;;;967:44;955:57;934:149;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;652:438;;;;;:::o;1588:214::-;1660:12;1678:2;:7;;1693:5;1710:1;1700:12;;;5:9:-1;2:2;;;27:1;24;17:12;2:2;1700:12:27;;;;;;;;;;;;;;;;;;;;;;;;;;29:1:-1;21:6;17:14;124:4;108:14;100:6;87:42;155:4;147:6;143:17;133:27;;0:164;1700:12:27;;;;1678:35;;;;;;;;;;;;;36:153:-1;66:2;61:3;58:11;36:153;;182:3;176:10;171:3;164:23;98:2;93:3;89:12;82:19;;123:2;118:3;114:12;107:19;;148:2;143:3;139:12;132:19;;36:153;;;274:1;267:3;263:2;259:12;254:3;250:22;246:30;315:4;311:9;305:3;299:10;295:26;356:4;350:3;344:10;340:21;389:7;380;377:20;372:3;365:33;3:399;;;1678:35:27;;;;;;;;;;;;;;;;;;;;;;;;;12:1:-1;19;14:27;;;;67:4;61:11;56:16;;134:4;130:9;123:4;105:16;101:27;97:43;94:1;90:51;84:4;77:65;157:16;154:1;147:27;211:16;208:1;201:4;198:1;194:12;179:49;5:228;;14:27;32:4;27:9;;5:228;;1659:54:27;;;1731:7;1723:72;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1588:214;;;:::o",
   "source": "pragma solidity =0.6.6;\r\n\r\nimport '@uniswap/lib/contracts/libraries/TransferHelper.sol';\r\n\r\nimport './interfaces/IUniswapV2Migrator.sol';\r\nimport './interfaces/V1/IUniswapV1Factory.sol';\r\nimport './interfaces/V1/IUniswapV1Exchange.sol';\r\nimport './interfaces/IUniswapV2Router01.sol';\r\nimport './interfaces/IERC20.sol';\r\n\r\ncontract UniswapV2Migrator is IUniswapV2Migrator {\r\n    IUniswapV1Factory immutable factoryV1;\r\n    IUniswapV2Router01 immutable router;\r\n\r\n    constructor(address _factoryV1, address _router) public {\r\n        factoryV1 = IUniswapV1Factory(_factoryV1);\r\n        router = IUniswapV2Router01(_router);\r\n    }\r\n\r\n    // needs to accept ETH from any v1 exchange and the router. ideally this could be enforced, as in the router,\r\n    // but it's not possible because it requires a call to the v1 factory, which takes too much gas\r\n    receive() external payable {}\r\n\r\n    function migrate(address token, uint amountTokenMin, uint amountETHMin, address to, uint deadline)\r\n        external\r\n        override\r\n    {\r\n        IUniswapV1Exchange exchangeV1 = IUniswapV1Exchange(factoryV1.getExchange(token));\r\n        uint liquidityV1 = exchangeV1.balanceOf(msg.sender);\r\n        require(exchangeV1.transferFrom(msg.sender, address(this), liquidityV1), 'TRANSFER_FROM_FAILED');\r\n        (uint amountETHV1, uint amountTokenV1) = exchangeV1.removeLiquidity(liquidityV1, 1, 1, uint(-1));\r\n        TransferHelper.safeApprove(token, address(router), amountTokenV1);\r\n        (uint amountTokenV2, uint amountETHV2,) = router.addLiquidityETH{value: amountETHV1}(\r\n            token,\r\n            amountTokenV1,\r\n            amountTokenMin,\r\n            amountETHMin,\r\n            to,\r\n            deadline\r\n        );\r\n        if (amountTokenV1 > amountTokenV2) {\r\n            TransferHelper.safeApprove(token, address(router), 0); // be a good blockchain citizen, reset allowance to 0\r\n            TransferHelper.safeTransfer(token, msg.sender, amountTokenV1 - amountTokenV2);\r\n        } else if (amountETHV1 > amountETHV2) {\r\n            // addLiquidityETH guarantees that all of amountETHV1 or amountTokenV1 will be used, hence this else is safe\r\n            TransferHelper.safeTransferETH(msg.sender, amountETHV1 - amountETHV2);\r\n        }\r\n    }\r\n}\r\n",
   "sourcePath": "C:/Users/Thanh Phi/Desktop/PolkaBridgeSolution/PolkaBridge-DEX/router/contracts/UniswapV2Migrator.sol",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
   "ast": {
     "absolutePath": "/C/Users/Thanh Phi/Desktop/PolkaBridgeSolution/PolkaBridge-DEX/router/contracts/UniswapV2Migrator.sol",
     "exportedSymbols": {
@@ -110,9 +117,15 @@
         "file": "@uniswap/lib/contracts/libraries/TransferHelper.sol",
         "id": 3700,
         "nodeType": "ImportDirective",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+        "scope": 170,
+        "sourceUnit": 7905,
+        "src": "25:61:0",
+=======
         "scope": 3868,
         "sourceUnit": 11933,
         "src": "27:61:1",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -121,9 +134,15 @@
         "file": "./interfaces/IUniswapV2Migrator.sol",
         "id": 3701,
         "nodeType": "ImportDirective",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+        "scope": 170,
+        "sourceUnit": 3659,
+        "src": "88:45:0",
+=======
         "scope": 3868,
         "sourceUnit": 7443,
         "src": "92:45:1",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -132,9 +151,15 @@
         "file": "./interfaces/V1/IUniswapV1Factory.sol",
         "id": 3702,
         "nodeType": "ImportDirective",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+        "scope": 170,
+        "sourceUnit": 4141,
+        "src": "134:47:0",
+=======
         "scope": 3868,
         "sourceUnit": 7925,
         "src": "139:47:1",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -143,9 +168,15 @@
         "file": "./interfaces/V1/IUniswapV1Exchange.sol",
         "id": 3703,
         "nodeType": "ImportDirective",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+        "scope": 170,
+        "sourceUnit": 4131,
+        "src": "182:48:0",
+=======
         "scope": 3868,
         "sourceUnit": 7915,
         "src": "188:48:1",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -154,9 +185,15 @@
         "file": "./interfaces/IUniswapV2Router01.sol",
         "id": 3704,
         "nodeType": "ImportDirective",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+        "scope": 170,
+        "sourceUnit": 3967,
+        "src": "231:45:0",
+=======
         "scope": 3868,
         "sourceUnit": 7751,
         "src": "238:45:1",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -165,9 +202,15 @@
         "file": "./interfaces/IERC20.sol",
         "id": 3705,
         "nodeType": "ImportDirective",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+        "scope": 170,
+        "sourceUnit": 3643,
+        "src": "277:33:0",
+=======
         "scope": 3868,
         "sourceUnit": 7427,
         "src": "285:33:1",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -181,10 +224,17 @@
               "id": 3706,
               "name": "IUniswapV2Migrator",
               "nodeType": "UserDefinedTypeName",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+              "referencedDeclaration": 3658,
+              "src": "342:18:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_IUniswapV2Migrator_$3658",
+=======
               "referencedDeclaration": 7442,
               "src": "352:18:1",
               "typeDescriptions": {
                 "typeIdentifier": "t_contract$_IUniswapV2Migrator_$7442",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                 "typeString": "contract IUniswapV2Migrator"
               }
             },
@@ -194,15 +244,24 @@
           }
         ],
         "contractDependencies": [
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+          3658
+=======
           7442
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
         "id": 3867,
         "linearizedBaseContracts": [
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+          169,
+          3658
+=======
           3867,
           7442
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
         ],
         "name": "UniswapV2Migrator",
         "nodeType": "ContractDefinition",
@@ -219,7 +278,11 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+              "typeIdentifier": "t_contract$_IUniswapV1Factory_$4140",
+=======
               "typeIdentifier": "t_contract$_IUniswapV1Factory_$7924",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
               "typeString": "contract IUniswapV1Factory"
             },
             "typeName": {
@@ -227,10 +290,17 @@
               "id": 3708,
               "name": "IUniswapV1Factory",
               "nodeType": "UserDefinedTypeName",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+              "referencedDeclaration": 4140,
+              "src": "367:17:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_IUniswapV1Factory_$4140",
+=======
               "referencedDeclaration": 7924,
               "src": "378:17:1",
               "typeDescriptions": {
                 "typeIdentifier": "t_contract$_IUniswapV1Factory_$7924",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                 "typeString": "contract IUniswapV1Factory"
               }
             },
@@ -249,7 +319,11 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+              "typeIdentifier": "t_contract$_IUniswapV2Router01_$3966",
+=======
               "typeIdentifier": "t_contract$_IUniswapV2Router01_$7750",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
               "typeString": "contract IUniswapV2Router01"
             },
             "typeName": {
@@ -257,10 +331,17 @@
               "id": 3710,
               "name": "IUniswapV2Router01",
               "nodeType": "UserDefinedTypeName",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+              "referencedDeclaration": 3966,
+              "src": "410:18:0",
+              "typeDescriptions": {
+                "typeIdentifier": "t_contract$_IUniswapV2Router01_$3966",
+=======
               "referencedDeclaration": 7750,
               "src": "422:18:1",
               "typeDescriptions": {
                 "typeIdentifier": "t_contract$_IUniswapV2Router01_$7750",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                 "typeString": "contract IUniswapV2Router01"
               }
             },
@@ -290,7 +371,11 @@
                       "referencedDeclaration": 3709,
                       "src": "533:9:1",
                       "typeDescriptions": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                        "typeIdentifier": "t_contract$_IUniswapV1Factory_$4140",
+=======
                         "typeIdentifier": "t_contract$_IUniswapV1Factory_$7924",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                         "typeString": "contract IUniswapV1Factory"
                       }
                     },
@@ -324,10 +409,17 @@
                         "name": "IUniswapV1Factory",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                        "referencedDeclaration": 4140,
+                        "src": "530:17:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_type$_t_contract$_IUniswapV1Factory_$4140_$",
+=======
                         "referencedDeclaration": 7924,
                         "src": "545:17:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_type$_t_contract$_IUniswapV1Factory_$7924_$",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                           "typeString": "type(contract IUniswapV1Factory)"
                         }
                       },
@@ -342,13 +434,21 @@
                       "src": "545:29:1",
                       "tryCall": false,
                       "typeDescriptions": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                        "typeIdentifier": "t_contract$_IUniswapV1Factory_$4140",
+=======
                         "typeIdentifier": "t_contract$_IUniswapV1Factory_$7924",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                         "typeString": "contract IUniswapV1Factory"
                       }
                     },
                     "src": "533:41:1",
                     "typeDescriptions": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                      "typeIdentifier": "t_contract$_IUniswapV1Factory_$4140",
+=======
                       "typeIdentifier": "t_contract$_IUniswapV1Factory_$7924",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                       "typeString": "contract IUniswapV1Factory"
                     }
                   },
@@ -373,7 +473,11 @@
                       "referencedDeclaration": 3711,
                       "src": "585:6:1",
                       "typeDescriptions": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                        "typeIdentifier": "t_contract$_IUniswapV2Router01_$3966",
+=======
                         "typeIdentifier": "t_contract$_IUniswapV2Router01_$7750",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                         "typeString": "contract IUniswapV2Router01"
                       }
                     },
@@ -407,10 +511,17 @@
                         "name": "IUniswapV2Router01",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                        "referencedDeclaration": 3966,
+                        "src": "578:18:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_type$_t_contract$_IUniswapV2Router01_$3966_$",
+=======
                         "referencedDeclaration": 7750,
                         "src": "594:18:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_type$_t_contract$_IUniswapV2Router01_$7750_$",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                           "typeString": "type(contract IUniswapV2Router01)"
                         }
                       },
@@ -425,13 +536,21 @@
                       "src": "594:27:1",
                       "tryCall": false,
                       "typeDescriptions": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                        "typeIdentifier": "t_contract$_IUniswapV2Router01_$3966",
+=======
                         "typeIdentifier": "t_contract$_IUniswapV2Router01_$7750",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                         "typeString": "contract IUniswapV2Router01"
                       }
                     },
                     "src": "585:36:1",
                     "typeDescriptions": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                      "typeIdentifier": "t_contract$_IUniswapV2Router01_$3966",
+=======
                       "typeIdentifier": "t_contract$_IUniswapV2Router01_$7750",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                       "typeString": "contract IUniswapV2Router01"
                     }
                   },
@@ -561,7 +680,11 @@
           },
           {
             "baseFunctions": [
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+              3657
+=======
               7441
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
             ],
             "body": {
               "id": 3865,
@@ -585,7 +708,11 @@
                       "stateVariable": false,
                       "storageLocation": "default",
                       "typeDescriptions": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                        "typeIdentifier": "t_contract$_IUniswapV1Exchange_$4130",
+=======
                         "typeIdentifier": "t_contract$_IUniswapV1Exchange_$7914",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                         "typeString": "contract IUniswapV1Exchange"
                       },
                       "typeName": {
@@ -593,10 +720,17 @@
                         "id": 3749,
                         "name": "IUniswapV1Exchange",
                         "nodeType": "UserDefinedTypeName",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                        "referencedDeclaration": 4130,
+                        "src": "1014:18:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_contract$_IUniswapV1Exchange_$4130",
+=======
                         "referencedDeclaration": 7914,
                         "src": "1041:18:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_contract$_IUniswapV1Exchange_$7914",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                           "typeString": "contract IUniswapV1Exchange"
                         }
                       },
@@ -641,7 +775,11 @@
                             "referencedDeclaration": 3709,
                             "src": "1092:9:1",
                             "typeDescriptions": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                              "typeIdentifier": "t_contract$_IUniswapV1Factory_$4140",
+=======
                               "typeIdentifier": "t_contract$_IUniswapV1Factory_$7924",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                               "typeString": "contract IUniswapV1Factory"
                             }
                           },
@@ -652,8 +790,13 @@
                           "lValueRequested": false,
                           "memberName": "getExchange",
                           "nodeType": "MemberAccess",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                          "referencedDeclaration": 4139,
+                          "src": "1065:21:0",
+=======
                           "referencedDeclaration": 7923,
                           "src": "1092:21:1",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_address_$",
                             "typeString": "function (address) view external returns (address)"
@@ -686,10 +829,17 @@
                       "name": "IUniswapV1Exchange",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                      "referencedDeclaration": 4130,
+                      "src": "1046:18:0",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_type$_t_contract$_IUniswapV1Exchange_$4130_$",
+=======
                       "referencedDeclaration": 7914,
                       "src": "1073:18:1",
                       "typeDescriptions": {
                         "typeIdentifier": "t_type$_t_contract$_IUniswapV1Exchange_$7914_$",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                         "typeString": "type(contract IUniswapV1Exchange)"
                       }
                     },
@@ -704,7 +854,11 @@
                     "src": "1073:48:1",
                     "tryCall": false,
                     "typeDescriptions": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                      "typeIdentifier": "t_contract$_IUniswapV1Exchange_$4130",
+=======
                       "typeIdentifier": "t_contract$_IUniswapV1Exchange_$7914",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                       "typeString": "contract IUniswapV1Exchange"
                     }
                   },
@@ -795,7 +949,11 @@
                         "referencedDeclaration": 3750,
                         "src": "1151:10:1",
                         "typeDescriptions": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                          "typeIdentifier": "t_contract$_IUniswapV1Exchange_$4130",
+=======
                           "typeIdentifier": "t_contract$_IUniswapV1Exchange_$7914",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                           "typeString": "contract IUniswapV1Exchange"
                         }
                       },
@@ -806,8 +964,13 @@
                       "lValueRequested": false,
                       "memberName": "balanceOf",
                       "nodeType": "MemberAccess",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                      "referencedDeclaration": 4083,
+                      "src": "1123:20:0",
+=======
                       "referencedDeclaration": 7867,
                       "src": "1151:20:1",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_uint256_$",
                         "typeString": "function (address) view external returns (uint256)"
@@ -966,7 +1129,11 @@
                             "referencedDeclaration": 3750,
                             "src": "1202:10:1",
                             "typeDescriptions": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                              "typeIdentifier": "t_contract$_IUniswapV1Exchange_$4130",
+=======
                               "typeIdentifier": "t_contract$_IUniswapV1Exchange_$7914",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                               "typeString": "contract IUniswapV1Exchange"
                             }
                           },
@@ -977,8 +1144,13 @@
                           "lValueRequested": false,
                           "memberName": "transferFrom",
                           "nodeType": "MemberAccess",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                          "referencedDeclaration": 4094,
+                          "src": "1173:23:0",
+=======
                           "referencedDeclaration": 7878,
                           "src": "1202:23:1",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$_t_bool_$",
                             "typeString": "function (address,address,uint256) external returns (bool)"
@@ -1289,7 +1461,11 @@
                         "referencedDeclaration": 3750,
                         "src": "1342:10:1",
                         "typeDescriptions": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                          "typeIdentifier": "t_contract$_IUniswapV1Exchange_$4130",
+=======
                           "typeIdentifier": "t_contract$_IUniswapV1Exchange_$7914",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                           "typeString": "contract IUniswapV1Exchange"
                         }
                       },
@@ -1300,8 +1476,13 @@
                       "lValueRequested": false,
                       "memberName": "removeLiquidity",
                       "nodeType": "MemberAccess",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                      "referencedDeclaration": 4109,
+                      "src": "1312:26:0",
+=======
                       "referencedDeclaration": 7893,
                       "src": "1342:26:1",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_uint256_$_t_uint256_$_t_uint256_$_t_uint256_$returns$_t_uint256_$_t_uint256_$",
                         "typeString": "function (uint256,uint256,uint256,uint256) external returns (uint256,uint256)"
@@ -1354,7 +1535,11 @@
                             "referencedDeclaration": 3711,
                             "src": "1450:6:1",
                             "typeDescriptions": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                              "typeIdentifier": "t_contract$_IUniswapV2Router01_$3966",
+=======
                               "typeIdentifier": "t_contract$_IUniswapV2Router01_$7750",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                               "typeString": "contract IUniswapV2Router01"
                             }
                           }
@@ -1362,7 +1547,11 @@
                         "expression": {
                           "argumentTypes": [
                             {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                              "typeIdentifier": "t_contract$_IUniswapV2Router01_$3966",
+=======
                               "typeIdentifier": "t_contract$_IUniswapV2Router01_$7750",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                               "typeString": "contract IUniswapV2Router01"
                             }
                           ],
@@ -1438,10 +1627,17 @@
                         "name": "TransferHelper",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                        "referencedDeclaration": 7904,
+                        "src": "1377:14:0",
+                        "typeDescriptions": {
+                          "typeIdentifier": "t_type$_t_contract$_TransferHelper_$7904_$",
+=======
                         "referencedDeclaration": 11932,
                         "src": "1408:14:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_type$_t_contract$_TransferHelper_$11932_$",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                           "typeString": "type(library TransferHelper)"
                         }
                       },
@@ -1452,8 +1648,13 @@
                       "lValueRequested": false,
                       "memberName": "safeApprove",
                       "nodeType": "MemberAccess",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                      "referencedDeclaration": 7789,
+                      "src": "1377:26:0",
+=======
                       "referencedDeclaration": 11817,
                       "src": "1408:26:1",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$__$",
                         "typeString": "function (address,address,uint256)"
@@ -1664,7 +1865,11 @@
                           "referencedDeclaration": 3711,
                           "src": "1526:6:1",
                           "typeDescriptions": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                            "typeIdentifier": "t_contract$_IUniswapV2Router01_$3966",
+=======
                             "typeIdentifier": "t_contract$_IUniswapV2Router01_$7750",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                             "typeString": "contract IUniswapV2Router01"
                           }
                         },
@@ -1675,8 +1880,13 @@
                         "lValueRequested": false,
                         "memberName": "addLiquidityETH",
                         "nodeType": "MemberAccess",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                        "referencedDeclaration": 3716,
+                        "src": "1494:22:0",
+=======
                         "referencedDeclaration": 7500,
                         "src": "1526:22:1",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_external_payable$_t_address_$_t_uint256_$_t_uint256_$_t_uint256_$_t_address_$_t_uint256_$returns$_t_uint256_$_t_uint256_$_t_uint256_$",
                           "typeString": "function (address,uint256,uint256,uint256,address,uint256) payable external returns (uint256,uint256,uint256)"
@@ -1927,10 +2137,17 @@
                                 "name": "TransferHelper",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                                "referencedDeclaration": 7904,
+                                "src": "2124:14:0",
+                                "typeDescriptions": {
+                                  "typeIdentifier": "t_type$_t_contract$_TransferHelper_$7904_$",
+=======
                                 "referencedDeclaration": 11932,
                                 "src": "2169:14:1",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_type$_t_contract$_TransferHelper_$11932_$",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                                   "typeString": "type(library TransferHelper)"
                                 }
                               },
@@ -1941,8 +2158,13 @@
                               "lValueRequested": false,
                               "memberName": "safeTransferETH",
                               "nodeType": "MemberAccess",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                              "referencedDeclaration": 7903,
+                              "src": "2124:30:0",
+=======
                               "referencedDeclaration": 11931,
                               "src": "2169:30:1",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                               "typeDescriptions": {
                                 "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_uint256_$returns$__$",
                                 "typeString": "function (address,uint256)"
@@ -2007,7 +2229,11 @@
                                   "referencedDeclaration": 3711,
                                   "src": "1826:6:1",
                                   "typeDescriptions": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                                    "typeIdentifier": "t_contract$_IUniswapV2Router01_$3966",
+=======
                                     "typeIdentifier": "t_contract$_IUniswapV2Router01_$7750",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                                     "typeString": "contract IUniswapV2Router01"
                                   }
                                 }
@@ -2015,7 +2241,11 @@
                               "expression": {
                                 "argumentTypes": [
                                   {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                                    "typeIdentifier": "t_contract$_IUniswapV2Router01_$3966",
+=======
                                     "typeIdentifier": "t_contract$_IUniswapV2Router01_$7750",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                                     "typeString": "contract IUniswapV2Router01"
                                   }
                                 ],
@@ -2096,10 +2326,17 @@
                               "name": "TransferHelper",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                              "referencedDeclaration": 7904,
+                              "src": "1743:14:0",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_type$_t_contract$_TransferHelper_$7904_$",
+=======
                               "referencedDeclaration": 11932,
                               "src": "1784:14:1",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_type$_t_contract$_TransferHelper_$11932_$",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                                 "typeString": "type(library TransferHelper)"
                               }
                             },
@@ -2110,8 +2347,13 @@
                             "lValueRequested": false,
                             "memberName": "safeApprove",
                             "nodeType": "MemberAccess",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                            "referencedDeclaration": 7789,
+                            "src": "1743:26:0",
+=======
                             "referencedDeclaration": 11817,
                             "src": "1784:26:1",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$__$",
                               "typeString": "function (address,address,uint256)"
@@ -2249,10 +2491,17 @@
                               "name": "TransferHelper",
                               "nodeType": "Identifier",
                               "overloadedDeclarations": [],
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                              "referencedDeclaration": 7904,
+                              "src": "1864:14:0",
+                              "typeDescriptions": {
+                                "typeIdentifier": "t_type$_t_contract$_TransferHelper_$7904_$",
+=======
                               "referencedDeclaration": 11932,
                               "src": "1906:14:1",
                               "typeDescriptions": {
                                 "typeIdentifier": "t_type$_t_contract$_TransferHelper_$11932_$",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                                 "typeString": "type(library TransferHelper)"
                               }
                             },
@@ -2263,8 +2512,13 @@
                             "lValueRequested": false,
                             "memberName": "safeTransfer",
                             "nodeType": "MemberAccess",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                            "referencedDeclaration": 7832,
+                            "src": "1864:27:0",
+=======
                             "referencedDeclaration": 11860,
                             "src": "1906:27:1",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_internal_nonpayable$_t_address_$_t_address_$_t_uint256_$returns$__$",
                               "typeString": "function (address,address,uint256)"
@@ -2501,7 +2755,11 @@
       },
       {
         "attributes": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+          "SourceUnit": 7905,
+=======
           "SourceUnit": 11933,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
           "absolutePath": "@uniswap/lib/contracts/libraries/TransferHelper.sol",
           "file": "@uniswap/lib/contracts/libraries/TransferHelper.sol",
           "scope": 3868,
@@ -2516,8 +2774,13 @@
       },
       {
         "attributes": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+          "SourceUnit": 3659,
+          "absolutePath": "/home/oncemore/BlockchainWork/Polka/deploy_1/router/contracts/interfaces/IUniswapV2Migrator.sol",
+=======
           "SourceUnit": 7443,
           "absolutePath": "/C/Users/Thanh Phi/Desktop/PolkaBridgeSolution/PolkaBridge-DEX/router/contracts/interfaces/IUniswapV2Migrator.sol",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
           "file": "./interfaces/IUniswapV2Migrator.sol",
           "scope": 3868,
           "symbolAliases": [
@@ -2531,8 +2794,13 @@
       },
       {
         "attributes": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+          "SourceUnit": 4141,
+          "absolutePath": "/home/oncemore/BlockchainWork/Polka/deploy_1/router/contracts/interfaces/V1/IUniswapV1Factory.sol",
+=======
           "SourceUnit": 7925,
           "absolutePath": "/C/Users/Thanh Phi/Desktop/PolkaBridgeSolution/PolkaBridge-DEX/router/contracts/interfaces/V1/IUniswapV1Factory.sol",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
           "file": "./interfaces/V1/IUniswapV1Factory.sol",
           "scope": 3868,
           "symbolAliases": [
@@ -2546,8 +2814,13 @@
       },
       {
         "attributes": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+          "SourceUnit": 4131,
+          "absolutePath": "/home/oncemore/BlockchainWork/Polka/deploy_1/router/contracts/interfaces/V1/IUniswapV1Exchange.sol",
+=======
           "SourceUnit": 7915,
           "absolutePath": "/C/Users/Thanh Phi/Desktop/PolkaBridgeSolution/PolkaBridge-DEX/router/contracts/interfaces/V1/IUniswapV1Exchange.sol",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
           "file": "./interfaces/V1/IUniswapV1Exchange.sol",
           "scope": 3868,
           "symbolAliases": [
@@ -2561,8 +2834,13 @@
       },
       {
         "attributes": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+          "SourceUnit": 3967,
+          "absolutePath": "/home/oncemore/BlockchainWork/Polka/deploy_1/router/contracts/interfaces/IUniswapV2Router01.sol",
+=======
           "SourceUnit": 7751,
           "absolutePath": "/C/Users/Thanh Phi/Desktop/PolkaBridgeSolution/PolkaBridge-DEX/router/contracts/interfaces/IUniswapV2Router01.sol",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
           "file": "./interfaces/IUniswapV2Router01.sol",
           "scope": 3868,
           "symbolAliases": [
@@ -2576,8 +2854,13 @@
       },
       {
         "attributes": {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+          "SourceUnit": 3643,
+          "absolutePath": "/home/oncemore/BlockchainWork/Polka/deploy_1/router/contracts/interfaces/IERC20.sol",
+=======
           "SourceUnit": 7427,
           "absolutePath": "/C/Users/Thanh Phi/Desktop/PolkaBridgeSolution/PolkaBridge-DEX/router/contracts/interfaces/IERC20.sol",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
           "file": "./interfaces/IERC20.sol",
           "scope": 3868,
           "symbolAliases": [
@@ -2593,14 +2876,23 @@
         "attributes": {
           "abstract": false,
           "contractDependencies": [
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+            3658
+=======
             7442
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
           ],
           "contractKind": "contract",
           "documentation": null,
           "fullyImplemented": true,
           "linearizedBaseContracts": [
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+            169,
+            3658
+=======
             3867,
             7442
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
           ],
           "name": "UniswapV2Migrator",
           "scope": 3868
@@ -2615,7 +2907,11 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "IUniswapV2Migrator",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                  "referencedDeclaration": 3658,
+=======
                   "referencedDeclaration": 7442,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                   "type": "contract IUniswapV2Migrator"
                 },
                 "id": 3706,
@@ -2645,7 +2941,11 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "IUniswapV1Factory",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                  "referencedDeclaration": 4140,
+=======
                   "referencedDeclaration": 7924,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                   "type": "contract IUniswapV1Factory"
                 },
                 "id": 3708,
@@ -2675,7 +2975,11 @@
                 "attributes": {
                   "contractScope": null,
                   "name": "IUniswapV2Router01",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                  "referencedDeclaration": 3966,
+=======
                   "referencedDeclaration": 7750,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                   "type": "contract IUniswapV2Router01"
                 },
                 "id": 3710,
@@ -2836,7 +3140,11 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                                  "referencedDeclaration": 4140,
+=======
                                   "referencedDeclaration": 7924,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                                   "type": "type(contract IUniswapV1Factory)",
                                   "value": "IUniswapV1Factory"
                                 },
@@ -2927,7 +3235,11 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                                  "referencedDeclaration": 3966,
+=======
                                   "referencedDeclaration": 7750,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                                   "type": "type(contract IUniswapV2Router01)",
                                   "value": "IUniswapV2Router01"
                                 },
@@ -3032,7 +3344,11 @@
           {
             "attributes": {
               "baseFunctions": [
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                3657
+=======
                 7441
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
               ],
               "documentation": null,
               "functionSelector": "b7df1d25",
@@ -3246,7 +3562,11 @@
                             "attributes": {
                               "contractScope": null,
                               "name": "IUniswapV1Exchange",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                              "referencedDeclaration": 4130,
+=======
                               "referencedDeclaration": 7914,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                               "type": "contract IUniswapV1Exchange"
                             },
                             "id": 3749,
@@ -3285,7 +3605,11 @@
                               "overloadedDeclarations": [
                                 null
                               ],
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                              "referencedDeclaration": 4130,
+=======
                               "referencedDeclaration": 7914,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                               "type": "type(contract IUniswapV1Exchange)",
                               "value": "IUniswapV1Exchange"
                             },
@@ -3322,7 +3646,11 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "getExchange",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                                  "referencedDeclaration": 4139,
+=======
                                   "referencedDeclaration": 7923,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                                   "type": "function (address) view external returns (address)"
                                 },
                                 "children": [
@@ -3438,7 +3766,11 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "balanceOf",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                              "referencedDeclaration": 4083,
+=======
                               "referencedDeclaration": 7867,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                               "type": "function (address) view external returns (uint256)"
                             },
                             "children": [
@@ -3581,7 +3913,11 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "transferFrom",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                                  "referencedDeclaration": 4094,
+=======
                                   "referencedDeclaration": 7878,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                                   "type": "function (address,address,uint256) external returns (bool)"
                                 },
                                 "children": [
@@ -3850,7 +4186,11 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "removeLiquidity",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                              "referencedDeclaration": 4109,
+=======
                               "referencedDeclaration": 7893,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                               "type": "function (uint256,uint256,uint256,uint256) external returns (uint256,uint256)"
                             },
                             "children": [
@@ -4054,7 +4394,11 @@
                               "isPure": false,
                               "lValueRequested": false,
                               "member_name": "safeApprove",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                              "referencedDeclaration": 7789,
+=======
                               "referencedDeclaration": 11817,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                               "type": "function (address,address,uint256)"
                             },
                             "children": [
@@ -4064,7 +4408,11 @@
                                   "overloadedDeclarations": [
                                     null
                                   ],
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                                  "referencedDeclaration": 7904,
+=======
                                   "referencedDeclaration": 11932,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                                   "type": "type(library TransferHelper)",
                                   "value": "TransferHelper"
                                 },
@@ -4111,7 +4459,11 @@
                                 "attributes": {
                                   "argumentTypes": [
                                     {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                                      "typeIdentifier": "t_contract$_IUniswapV2Router01_$3966",
+=======
                                       "typeIdentifier": "t_contract$_IUniswapV2Router01_$7750",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                                       "typeString": "contract IUniswapV2Router01"
                                     }
                                   ],
@@ -4306,7 +4658,11 @@
                                   "isPure": false,
                                   "lValueRequested": false,
                                   "member_name": "addLiquidityETH",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                                  "referencedDeclaration": 3716,
+=======
                                   "referencedDeclaration": 7500,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                                   "type": "function (address,uint256,uint256,uint256,address,uint256) payable external returns (uint256,uint256,uint256)"
                                 },
                                 "children": [
@@ -4533,7 +4889,11 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "member_name": "safeApprove",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                                      "referencedDeclaration": 7789,
+=======
                                       "referencedDeclaration": 11817,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                                       "type": "function (address,address,uint256)"
                                     },
                                     "children": [
@@ -4543,7 +4903,11 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                                          "referencedDeclaration": 7904,
+=======
                                           "referencedDeclaration": 11932,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                                           "type": "type(library TransferHelper)",
                                           "value": "TransferHelper"
                                         },
@@ -4590,7 +4954,11 @@
                                         "attributes": {
                                           "argumentTypes": [
                                             {
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                                              "typeIdentifier": "t_contract$_IUniswapV2Router01_$3966",
+=======
                                               "typeIdentifier": "t_contract$_IUniswapV2Router01_$7750",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                                               "typeString": "contract IUniswapV2Router01"
                                             }
                                           ],
@@ -4700,7 +5068,11 @@
                                       "isPure": false,
                                       "lValueRequested": false,
                                       "member_name": "safeTransfer",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                                      "referencedDeclaration": 7832,
+=======
                                       "referencedDeclaration": 11860,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                                       "type": "function (address,address,uint256)"
                                     },
                                     "children": [
@@ -4710,7 +5082,11 @@
                                           "overloadedDeclarations": [
                                             null
                                           ],
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                                          "referencedDeclaration": 7904,
+=======
                                           "referencedDeclaration": 11932,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                                           "type": "type(library TransferHelper)",
                                           "value": "TransferHelper"
                                         },
@@ -4921,7 +5297,11 @@
                                           "isPure": false,
                                           "lValueRequested": false,
                                           "member_name": "safeTransferETH",
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                                          "referencedDeclaration": 7903,
+=======
                                           "referencedDeclaration": 11931,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                                           "type": "function (address,uint256)"
                                         },
                                         "children": [
@@ -4931,7 +5311,11 @@
                                               "overloadedDeclarations": [
                                                 null
                                               ],
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+                                              "referencedDeclaration": 7904,
+=======
                                               "referencedDeclaration": 11932,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
                                               "type": "type(library TransferHelper)",
                                               "value": "TransferHelper"
                                             },
@@ -5073,8 +5457,13 @@
     "version": "0.6.6+commit.6c089d02.Emscripten.clang"
   },
   "networks": {},
+<<<<<<< HEAD:router/build/contracts/UniswapV2Migrator.json
+  "schemaVersion": "3.3.4",
+  "updatedAt": "2021-09-16T01:21:08.943Z",
+=======
   "schemaVersion": "3.4.1",
   "updatedAt": "2021-09-15T10:27:32.480Z",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/UniswapV2Migrator.json
   "devdoc": {
     "methods": {}
   },

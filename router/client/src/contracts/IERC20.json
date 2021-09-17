@@ -236,6 +236,16 @@
     "absolutePath": "/C/Users/Thanh Phi/Desktop/PolkaBridgeSolution/PolkaBridge-DEX/router/contracts/interfaces/IERC20.sol",
     "exportedSymbols": {
       "IERC20": [
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+        3642
+      ]
+    },
+    "id": 3643,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 3560,
+=======
         5970
       ]
     },
@@ -244,6 +254,7 @@
     "nodes": [
       {
         "id": 5888,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
         "literals": [
           "solidity",
           ">=",
@@ -251,7 +262,11 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+        "src": "0:24:7"
+=======
         "src": "0:24:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
       },
       {
         "abstract": false,
@@ -260,9 +275,15 @@
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+        "id": 3642,
+        "linearizedBaseContracts": [
+          3642
+=======
         "id": 5970,
         "linearizedBaseContracts": [
           5970
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
         ],
         "name": "IERC20",
         "nodeType": "ContractDefinition",
@@ -270,23 +291,40 @@
           {
             "anonymous": false,
             "documentation": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+            "id": 3568,
+            "name": "Approval",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 3567,
+=======
             "id": 5896,
             "name": "Approval",
             "nodeType": "EventDefinition",
             "parameters": {
               "id": 5895,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3562,
+=======
                   "id": 5890,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "indexed": true,
                   "mutability": "mutable",
                   "name": "owner",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3568,
+                  "src": "64:21:7",
+=======
                   "scope": 5896,
                   "src": "67:21:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -294,10 +332,17 @@
                     "typeString": "address"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3561,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "64:7:7",
+=======
                     "id": 5889,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "67:7:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -309,14 +354,23 @@
                 },
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3564,
+=======
                   "id": 5892,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "indexed": true,
                   "mutability": "mutable",
                   "name": "spender",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3568,
+                  "src": "87:23:7",
+=======
                   "scope": 5896,
                   "src": "90:23:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -324,10 +378,17 @@
                     "typeString": "address"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3563,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "87:7:7",
+=======
                     "id": 5891,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "90:7:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -339,14 +400,23 @@
                 },
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3566,
+=======
                   "id": 5894,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "value",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3568,
+                  "src": "112:10:7",
+=======
                   "scope": 5896,
                   "src": "115:10:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -354,10 +424,17 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3565,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "112:4:7",
+=======
                     "id": 5893,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "115:4:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -367,30 +444,53 @@
                   "visibility": "internal"
                 }
               ],
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "src": "63:60:7"
+            },
+            "src": "49:75:7"
+=======
               "src": "66:60:2"
             },
             "src": "52:75:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
           },
           {
             "anonymous": false,
             "documentation": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+            "id": 3576,
+            "name": "Transfer",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 3575,
+=======
             "id": 5904,
             "name": "Transfer",
             "nodeType": "EventDefinition",
             "parameters": {
               "id": 5903,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3570,
+=======
                   "id": 5898,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "indexed": true,
                   "mutability": "mutable",
                   "name": "from",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3576,
+                  "src": "144:20:7",
+=======
                   "scope": 5904,
                   "src": "148:20:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -398,10 +498,17 @@
                     "typeString": "address"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3569,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "144:7:7",
+=======
                     "id": 5897,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "148:7:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -413,14 +520,23 @@
                 },
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3572,
+=======
                   "id": 5900,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "indexed": true,
                   "mutability": "mutable",
                   "name": "to",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3576,
+                  "src": "166:18:7",
+=======
                   "scope": 5904,
                   "src": "170:18:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -428,10 +544,17 @@
                     "typeString": "address"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3571,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "166:7:7",
+=======
                     "id": 5899,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "170:7:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -443,14 +566,23 @@
                 },
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3574,
+=======
                   "id": 5902,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "indexed": false,
                   "mutability": "mutable",
                   "name": "value",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3576,
+                  "src": "186:10:7",
+=======
                   "scope": 5904,
                   "src": "190:10:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -458,10 +590,17 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3573,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "186:4:7",
+=======
                     "id": 5901,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "190:4:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -471,15 +610,25 @@
                   "visibility": "internal"
                 }
               ],
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "src": "143:54:7"
+            },
+            "src": "129:69:7"
+=======
               "src": "147:54:2"
             },
             "src": "133:69:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
           },
           {
             "body": null,
             "documentation": null,
             "functionSelector": "06fdde03",
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+            "id": 3581,
+=======
             "id": 5909,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -487,6 +636,15 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "id": 3577,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "217:2:7"
+            },
+            "returnParameters": {
+              "id": 3580,
+=======
               "id": 5905,
               "nodeType": "ParameterList",
               "parameters": [],
@@ -494,17 +652,27 @@
             },
             "returnParameters": {
               "id": 5908,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3579,
+=======
                   "id": 5907,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3581,
+                  "src": "243:13:7",
+=======
                   "scope": 5909,
                   "src": "249:13:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
@@ -512,10 +680,17 @@
                     "typeString": "string"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3578,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "243:6:7",
+=======
                     "id": 5906,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "249:6:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -525,10 +700,17 @@
                   "visibility": "internal"
                 }
               ],
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "src": "242:15:7"
+            },
+            "scope": 3642,
+            "src": "204:54:7",
+=======
               "src": "248:15:2"
             },
             "scope": 5970,
             "src": "210:54:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
@@ -537,7 +719,11 @@
             "body": null,
             "documentation": null,
             "functionSelector": "95d89b41",
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+            "id": 3586,
+=======
             "id": 5914,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -545,6 +731,15 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "id": 3582,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "278:2:7"
+            },
+            "returnParameters": {
+              "id": 3585,
+=======
               "id": 5910,
               "nodeType": "ParameterList",
               "parameters": [],
@@ -552,17 +747,27 @@
             },
             "returnParameters": {
               "id": 5913,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3584,
+=======
                   "id": 5912,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3586,
+                  "src": "304:13:7",
+=======
                   "scope": 5914,
                   "src": "311:13:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "memory",
                   "typeDescriptions": {
@@ -570,10 +775,17 @@
                     "typeString": "string"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3583,
+                    "name": "string",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "304:6:7",
+=======
                     "id": 5911,
                     "name": "string",
                     "nodeType": "ElementaryTypeName",
                     "src": "311:6:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
                       "typeString": "string"
@@ -583,10 +795,17 @@
                   "visibility": "internal"
                 }
               ],
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "src": "303:15:7"
+            },
+            "scope": 3642,
+            "src": "263:56:7",
+=======
               "src": "310:15:2"
             },
             "scope": 5970,
             "src": "270:56:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
@@ -595,7 +814,11 @@
             "body": null,
             "documentation": null,
             "functionSelector": "313ce567",
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+            "id": 3591,
+=======
             "id": 5919,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -603,6 +826,15 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "id": 3587,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "341:2:7"
+            },
+            "returnParameters": {
+              "id": 3590,
+=======
               "id": 5915,
               "nodeType": "ParameterList",
               "parameters": [],
@@ -610,17 +842,27 @@
             },
             "returnParameters": {
               "id": 5918,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3589,
+=======
                   "id": 5917,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3591,
+                  "src": "367:5:7",
+=======
                   "scope": 5919,
                   "src": "375:5:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -628,10 +870,17 @@
                     "typeString": "uint8"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3588,
+                    "name": "uint8",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "367:5:7",
+=======
                     "id": 5916,
                     "name": "uint8",
                     "nodeType": "ElementaryTypeName",
                     "src": "375:5:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint8",
                       "typeString": "uint8"
@@ -641,10 +890,17 @@
                   "visibility": "internal"
                 }
               ],
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "src": "366:7:7"
+            },
+            "scope": 3642,
+            "src": "324:50:7",
+=======
               "src": "374:7:2"
             },
             "scope": 5970,
             "src": "332:50:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
@@ -653,7 +909,11 @@
             "body": null,
             "documentation": null,
             "functionSelector": "18160ddd",
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+            "id": 3596,
+=======
             "id": 5924,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -661,6 +921,15 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "id": 3592,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "399:2:7"
+            },
+            "returnParameters": {
+              "id": 3595,
+=======
               "id": 5920,
               "nodeType": "ParameterList",
               "parameters": [],
@@ -668,17 +937,27 @@
             },
             "returnParameters": {
               "id": 5923,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3594,
+=======
                   "id": 5922,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3596,
+                  "src": "425:4:7",
+=======
                   "scope": 5924,
                   "src": "434:4:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -686,10 +965,17 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3593,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "425:4:7",
+=======
                     "id": 5921,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "434:4:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -699,10 +985,17 @@
                   "visibility": "internal"
                 }
               ],
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "src": "424:6:7"
+            },
+            "scope": 3642,
+            "src": "379:52:7",
+=======
               "src": "433:6:2"
             },
             "scope": 5970,
             "src": "388:52:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
@@ -711,7 +1004,11 @@
             "body": null,
             "documentation": null,
             "functionSelector": "70a08231",
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+            "id": 3603,
+=======
             "id": 5931,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -719,18 +1016,31 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "id": 3599,
+=======
               "id": 5927,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3598,
+=======
                   "id": 5926,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "mutability": "mutable",
                   "name": "owner",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3603,
+                  "src": "455:13:7",
+=======
                   "scope": 5931,
                   "src": "465:13:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -738,10 +1048,17 @@
                     "typeString": "address"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3597,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "455:7:7",
+=======
                     "id": 5925,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "465:7:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -752,21 +1069,37 @@
                   "visibility": "internal"
                 }
               ],
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "src": "454:15:7"
+            },
+            "returnParameters": {
+              "id": 3602,
+=======
               "src": "464:15:2"
             },
             "returnParameters": {
               "id": 5930,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3601,
+=======
                   "id": 5929,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3603,
+                  "src": "493:4:7",
+=======
                   "scope": 5931,
                   "src": "503:4:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -774,10 +1107,17 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3600,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "493:4:7",
+=======
                     "id": 5928,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "503:4:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -787,10 +1127,17 @@
                   "visibility": "internal"
                 }
               ],
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "src": "492:6:7"
+            },
+            "scope": 3642,
+            "src": "436:63:7",
+=======
               "src": "502:6:2"
             },
             "scope": 5970,
             "src": "446:63:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
@@ -799,7 +1146,11 @@
             "body": null,
             "documentation": null,
             "functionSelector": "dd62ed3e",
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+            "id": 3612,
+=======
             "id": 5940,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -807,18 +1158,31 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "id": 3608,
+=======
               "id": 5936,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3605,
+=======
                   "id": 5933,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "mutability": "mutable",
                   "name": "owner",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3612,
+                  "src": "523:13:7",
+=======
                   "scope": 5940,
                   "src": "534:13:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -826,10 +1190,17 @@
                     "typeString": "address"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3604,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "523:7:7",
+=======
                     "id": 5932,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "534:7:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -841,13 +1212,22 @@
                 },
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3607,
+=======
                   "id": 5935,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "mutability": "mutable",
                   "name": "spender",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3612,
+                  "src": "538:15:7",
+=======
                   "scope": 5940,
                   "src": "549:15:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -855,10 +1235,17 @@
                     "typeString": "address"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3606,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "538:7:7",
+=======
                     "id": 5934,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "549:7:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -869,21 +1256,37 @@
                   "visibility": "internal"
                 }
               ],
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "src": "522:32:7"
+            },
+            "returnParameters": {
+              "id": 3611,
+=======
               "src": "533:32:2"
             },
             "returnParameters": {
               "id": 5939,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3610,
+=======
                   "id": 5938,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3612,
+                  "src": "578:4:7",
+=======
                   "scope": 5940,
                   "src": "589:4:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -891,10 +1294,17 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3609,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "578:4:7",
+=======
                     "id": 5937,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "589:4:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -904,10 +1314,17 @@
                   "visibility": "internal"
                 }
               ],
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "src": "577:6:7"
+            },
+            "scope": 3642,
+            "src": "504:80:7",
+=======
               "src": "588:6:2"
             },
             "scope": 5970,
             "src": "515:80:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
             "stateMutability": "view",
             "virtual": false,
             "visibility": "external"
@@ -916,7 +1333,11 @@
             "body": null,
             "documentation": null,
             "functionSelector": "095ea7b3",
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+            "id": 3621,
+=======
             "id": 5949,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -924,18 +1345,31 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "id": 3617,
+=======
               "id": 5945,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3614,
+=======
                   "id": 5942,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "mutability": "mutable",
                   "name": "spender",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3621,
+                  "src": "607:15:7",
+=======
                   "scope": 5949,
                   "src": "620:15:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -943,10 +1377,17 @@
                     "typeString": "address"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3613,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "607:7:7",
+=======
                     "id": 5941,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "620:7:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -958,13 +1399,22 @@
                 },
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3616,
+=======
                   "id": 5944,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "mutability": "mutable",
                   "name": "value",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3621,
+                  "src": "624:10:7",
+=======
                   "scope": 5949,
                   "src": "637:10:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -972,10 +1422,17 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3615,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "624:4:7",
+=======
                     "id": 5943,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "637:4:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -985,21 +1442,37 @@
                   "visibility": "internal"
                 }
               ],
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "src": "606:29:7"
+            },
+            "returnParameters": {
+              "id": 3620,
+=======
               "src": "619:29:2"
             },
             "returnParameters": {
               "id": 5948,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3619,
+=======
                   "id": 5947,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3621,
+                  "src": "654:4:7",
+=======
                   "scope": 5949,
                   "src": "667:4:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1007,10 +1480,17 @@
                     "typeString": "bool"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3618,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "654:4:7",
+=======
                     "id": 5946,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "667:4:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -1020,10 +1500,17 @@
                   "visibility": "internal"
                 }
               ],
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "src": "653:6:7"
+            },
+            "scope": 3642,
+            "src": "590:70:7",
+=======
               "src": "666:6:2"
             },
             "scope": 5970,
             "src": "603:70:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
@@ -1032,7 +1519,11 @@
             "body": null,
             "documentation": null,
             "functionSelector": "a9059cbb",
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+            "id": 3630,
+=======
             "id": 5958,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -1040,18 +1531,31 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "id": 3626,
+=======
               "id": 5954,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3623,
+=======
                   "id": 5951,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "mutability": "mutable",
                   "name": "to",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3630,
+                  "src": "683:10:7",
+=======
                   "scope": 5958,
                   "src": "697:10:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1059,10 +1563,17 @@
                     "typeString": "address"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3622,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "683:7:7",
+=======
                     "id": 5950,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "697:7:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1074,13 +1585,22 @@
                 },
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3625,
+=======
                   "id": 5953,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "mutability": "mutable",
                   "name": "value",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3630,
+                  "src": "695:10:7",
+=======
                   "scope": 5958,
                   "src": "709:10:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1088,10 +1608,17 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3624,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "695:4:7",
+=======
                     "id": 5952,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "709:4:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1101,21 +1628,37 @@
                   "visibility": "internal"
                 }
               ],
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "src": "682:24:7"
+            },
+            "returnParameters": {
+              "id": 3629,
+=======
               "src": "696:24:2"
             },
             "returnParameters": {
               "id": 5957,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3628,
+=======
                   "id": 5956,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3630,
+                  "src": "725:4:7",
+=======
                   "scope": 5958,
                   "src": "739:4:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1123,10 +1666,17 @@
                     "typeString": "bool"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3627,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "725:4:7",
+=======
                     "id": 5955,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "739:4:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -1136,10 +1686,17 @@
                   "visibility": "internal"
                 }
               ],
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "src": "724:6:7"
+            },
+            "scope": 3642,
+            "src": "665:66:7",
+=======
               "src": "738:6:2"
             },
             "scope": 5970,
             "src": "679:66:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
@@ -1148,7 +1705,11 @@
             "body": null,
             "documentation": null,
             "functionSelector": "23b872dd",
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+            "id": 3641,
+=======
             "id": 5969,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -1156,18 +1717,31 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "id": 3637,
+=======
               "id": 5965,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3632,
+=======
                   "id": 5960,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "mutability": "mutable",
                   "name": "from",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3641,
+                  "src": "758:12:7",
+=======
                   "scope": 5969,
                   "src": "773:12:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1175,10 +1749,17 @@
                     "typeString": "address"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3631,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "758:7:7",
+=======
                     "id": 5959,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "773:7:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1190,13 +1771,22 @@
                 },
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3634,
+=======
                   "id": 5962,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "mutability": "mutable",
                   "name": "to",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3641,
+                  "src": "772:10:7",
+=======
                   "scope": 5969,
                   "src": "787:10:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1204,10 +1794,17 @@
                     "typeString": "address"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3633,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "772:7:7",
+=======
                     "id": 5961,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "787:7:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "stateMutability": "nonpayable",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
@@ -1219,13 +1816,22 @@
                 },
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3636,
+=======
                   "id": 5964,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "mutability": "mutable",
                   "name": "value",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3641,
+                  "src": "784:10:7",
+=======
                   "scope": 5969,
                   "src": "799:10:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1233,10 +1839,17 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3635,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "784:4:7",
+=======
                     "id": 5963,
                     "name": "uint",
                     "nodeType": "ElementaryTypeName",
                     "src": "799:4:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -1246,21 +1859,37 @@
                   "visibility": "internal"
                 }
               ],
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "src": "757:38:7"
+            },
+            "returnParameters": {
+              "id": 3640,
+=======
               "src": "772:38:2"
             },
             "returnParameters": {
               "id": 5968,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "id": 3639,
+=======
                   "id": 5967,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "mutability": "mutable",
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                  "scope": 3641,
+                  "src": "814:4:7",
+=======
                   "scope": 5969,
                   "src": "829:4:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1268,10 +1897,17 @@
                     "typeString": "bool"
                   },
                   "typeName": {
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                    "id": 3638,
+                    "name": "bool",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "814:4:7",
+=======
                     "id": 5966,
                     "name": "bool",
                     "nodeType": "ElementaryTypeName",
                     "src": "829:4:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                     "typeDescriptions": {
                       "typeIdentifier": "t_bool",
                       "typeString": "bool"
@@ -1281,27 +1917,46 @@
                   "visibility": "internal"
                 }
               ],
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "src": "813:6:7"
+            },
+            "scope": 3642,
+            "src": "736:84:7",
+=======
               "src": "828:6:2"
             },
             "scope": 5970,
             "src": "751:84:2",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+        "scope": 3643,
+        "src": "26:796:7"
+      }
+    ],
+    "src": "0:823:7"
+=======
         "scope": 5971,
         "src": "28:810:2"
       }
     ],
     "src": "0:840:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
   },
   "legacyAST": {
     "attributes": {
       "absolutePath": "/C/Users/Thanh Phi/Desktop/PolkaBridgeSolution/PolkaBridge-DEX/router/contracts/interfaces/IERC20.sol",
       "exportedSymbols": {
         "IERC20": [
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+          3642
+=======
           5970
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
         ]
       }
     },
@@ -1315,9 +1970,15 @@
             ".0"
           ]
         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+        "id": 3560,
+        "name": "PragmaDirective",
+        "src": "0:24:7"
+=======
         "id": 5888,
         "name": "PragmaDirective",
         "src": "0:24:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
       },
       {
         "attributes": {
@@ -1332,10 +1993,17 @@
           "documentation": null,
           "fullyImplemented": false,
           "linearizedBaseContracts": [
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+            3642
+          ],
+          "name": "IERC20",
+          "scope": 3643
+=======
             5970
           ],
           "name": "IERC20",
           "scope": 5971
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
         },
         "children": [
           {
@@ -1354,7 +2022,11 @@
                       "mutability": "mutable",
                       "name": "owner",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3568,
+=======
                       "scope": 5896,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -1368,6 +2040,16 @@
                           "stateMutability": "nonpayable",
                           "type": "address"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3561,
+                        "name": "ElementaryTypeName",
+                        "src": "64:7:7"
+                      }
+                    ],
+                    "id": 3562,
+                    "name": "VariableDeclaration",
+                    "src": "64:21:7"
+=======
                         "id": 5889,
                         "name": "ElementaryTypeName",
                         "src": "67:7:2"
@@ -1376,6 +2058,7 @@
                     "id": 5890,
                     "name": "VariableDeclaration",
                     "src": "67:21:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   },
                   {
                     "attributes": {
@@ -1384,7 +2067,11 @@
                       "mutability": "mutable",
                       "name": "spender",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3568,
+=======
                       "scope": 5896,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -1398,6 +2085,16 @@
                           "stateMutability": "nonpayable",
                           "type": "address"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3563,
+                        "name": "ElementaryTypeName",
+                        "src": "87:7:7"
+                      }
+                    ],
+                    "id": 3564,
+                    "name": "VariableDeclaration",
+                    "src": "87:23:7"
+=======
                         "id": 5891,
                         "name": "ElementaryTypeName",
                         "src": "90:7:2"
@@ -1406,6 +2103,7 @@
                     "id": 5892,
                     "name": "VariableDeclaration",
                     "src": "90:23:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   },
                   {
                     "attributes": {
@@ -1414,7 +2112,11 @@
                       "mutability": "mutable",
                       "name": "value",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3568,
+=======
                       "scope": 5896,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -1427,6 +2129,26 @@
                           "name": "uint",
                           "type": "uint256"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3565,
+                        "name": "ElementaryTypeName",
+                        "src": "112:4:7"
+                      }
+                    ],
+                    "id": 3566,
+                    "name": "VariableDeclaration",
+                    "src": "112:10:7"
+                  }
+                ],
+                "id": 3567,
+                "name": "ParameterList",
+                "src": "63:60:7"
+              }
+            ],
+            "id": 3568,
+            "name": "EventDefinition",
+            "src": "49:75:7"
+=======
                         "id": 5893,
                         "name": "ElementaryTypeName",
                         "src": "115:4:2"
@@ -1445,6 +2167,7 @@
             "id": 5896,
             "name": "EventDefinition",
             "src": "52:75:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
           },
           {
             "attributes": {
@@ -1462,7 +2185,11 @@
                       "mutability": "mutable",
                       "name": "from",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3576,
+=======
                       "scope": 5904,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -1476,6 +2203,16 @@
                           "stateMutability": "nonpayable",
                           "type": "address"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3569,
+                        "name": "ElementaryTypeName",
+                        "src": "144:7:7"
+                      }
+                    ],
+                    "id": 3570,
+                    "name": "VariableDeclaration",
+                    "src": "144:20:7"
+=======
                         "id": 5897,
                         "name": "ElementaryTypeName",
                         "src": "148:7:2"
@@ -1484,6 +2221,7 @@
                     "id": 5898,
                     "name": "VariableDeclaration",
                     "src": "148:20:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   },
                   {
                     "attributes": {
@@ -1492,7 +2230,11 @@
                       "mutability": "mutable",
                       "name": "to",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3576,
+=======
                       "scope": 5904,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -1506,6 +2248,16 @@
                           "stateMutability": "nonpayable",
                           "type": "address"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3571,
+                        "name": "ElementaryTypeName",
+                        "src": "166:7:7"
+                      }
+                    ],
+                    "id": 3572,
+                    "name": "VariableDeclaration",
+                    "src": "166:18:7"
+=======
                         "id": 5899,
                         "name": "ElementaryTypeName",
                         "src": "170:7:2"
@@ -1514,6 +2266,7 @@
                     "id": 5900,
                     "name": "VariableDeclaration",
                     "src": "170:18:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   },
                   {
                     "attributes": {
@@ -1522,7 +2275,11 @@
                       "mutability": "mutable",
                       "name": "value",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3576,
+=======
                       "scope": 5904,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -1535,6 +2292,26 @@
                           "name": "uint",
                           "type": "uint256"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3573,
+                        "name": "ElementaryTypeName",
+                        "src": "186:4:7"
+                      }
+                    ],
+                    "id": 3574,
+                    "name": "VariableDeclaration",
+                    "src": "186:10:7"
+                  }
+                ],
+                "id": 3575,
+                "name": "ParameterList",
+                "src": "143:54:7"
+              }
+            ],
+            "id": 3576,
+            "name": "EventDefinition",
+            "src": "129:69:7"
+=======
                         "id": 5901,
                         "name": "ElementaryTypeName",
                         "src": "190:4:2"
@@ -1553,6 +2330,7 @@
             "id": 5904,
             "name": "EventDefinition",
             "src": "133:69:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
           },
           {
             "attributes": {
@@ -1567,7 +2345,11 @@
               ],
               "name": "name",
               "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "scope": 3642,
+=======
               "scope": 5970,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "stateMutability": "view",
               "virtual": false,
               "visibility": "external"
@@ -1580,9 +2362,15 @@
                   ]
                 },
                 "children": [],
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                "id": 3577,
+                "name": "ParameterList",
+                "src": "217:2:7"
+=======
                 "id": 5905,
                 "name": "ParameterList",
                 "src": "223:2:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               },
               {
                 "children": [
@@ -1592,7 +2380,11 @@
                       "mutability": "mutable",
                       "name": "",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3581,
+=======
                       "scope": 5909,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "memory",
                       "type": "string",
@@ -1605,6 +2397,26 @@
                           "name": "string",
                           "type": "string"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3578,
+                        "name": "ElementaryTypeName",
+                        "src": "243:6:7"
+                      }
+                    ],
+                    "id": 3579,
+                    "name": "VariableDeclaration",
+                    "src": "243:13:7"
+                  }
+                ],
+                "id": 3580,
+                "name": "ParameterList",
+                "src": "242:15:7"
+              }
+            ],
+            "id": 3581,
+            "name": "FunctionDefinition",
+            "src": "204:54:7"
+=======
                         "id": 5906,
                         "name": "ElementaryTypeName",
                         "src": "249:6:2"
@@ -1623,6 +2435,7 @@
             "id": 5909,
             "name": "FunctionDefinition",
             "src": "210:54:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
           },
           {
             "attributes": {
@@ -1637,7 +2450,11 @@
               ],
               "name": "symbol",
               "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "scope": 3642,
+=======
               "scope": 5970,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "stateMutability": "view",
               "virtual": false,
               "visibility": "external"
@@ -1650,9 +2467,15 @@
                   ]
                 },
                 "children": [],
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                "id": 3582,
+                "name": "ParameterList",
+                "src": "278:2:7"
+=======
                 "id": 5910,
                 "name": "ParameterList",
                 "src": "285:2:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               },
               {
                 "children": [
@@ -1662,7 +2485,11 @@
                       "mutability": "mutable",
                       "name": "",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3586,
+=======
                       "scope": 5914,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "memory",
                       "type": "string",
@@ -1675,6 +2502,26 @@
                           "name": "string",
                           "type": "string"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3583,
+                        "name": "ElementaryTypeName",
+                        "src": "304:6:7"
+                      }
+                    ],
+                    "id": 3584,
+                    "name": "VariableDeclaration",
+                    "src": "304:13:7"
+                  }
+                ],
+                "id": 3585,
+                "name": "ParameterList",
+                "src": "303:15:7"
+              }
+            ],
+            "id": 3586,
+            "name": "FunctionDefinition",
+            "src": "263:56:7"
+=======
                         "id": 5911,
                         "name": "ElementaryTypeName",
                         "src": "311:6:2"
@@ -1693,6 +2540,7 @@
             "id": 5914,
             "name": "FunctionDefinition",
             "src": "270:56:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
           },
           {
             "attributes": {
@@ -1707,7 +2555,11 @@
               ],
               "name": "decimals",
               "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "scope": 3642,
+=======
               "scope": 5970,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "stateMutability": "view",
               "virtual": false,
               "visibility": "external"
@@ -1720,9 +2572,15 @@
                   ]
                 },
                 "children": [],
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                "id": 3587,
+                "name": "ParameterList",
+                "src": "341:2:7"
+=======
                 "id": 5915,
                 "name": "ParameterList",
                 "src": "349:2:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               },
               {
                 "children": [
@@ -1732,7 +2590,11 @@
                       "mutability": "mutable",
                       "name": "",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3591,
+=======
                       "scope": 5919,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint8",
@@ -1745,6 +2607,26 @@
                           "name": "uint8",
                           "type": "uint8"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3588,
+                        "name": "ElementaryTypeName",
+                        "src": "367:5:7"
+                      }
+                    ],
+                    "id": 3589,
+                    "name": "VariableDeclaration",
+                    "src": "367:5:7"
+                  }
+                ],
+                "id": 3590,
+                "name": "ParameterList",
+                "src": "366:7:7"
+              }
+            ],
+            "id": 3591,
+            "name": "FunctionDefinition",
+            "src": "324:50:7"
+=======
                         "id": 5916,
                         "name": "ElementaryTypeName",
                         "src": "375:5:2"
@@ -1763,6 +2645,7 @@
             "id": 5919,
             "name": "FunctionDefinition",
             "src": "332:50:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
           },
           {
             "attributes": {
@@ -1777,7 +2660,11 @@
               ],
               "name": "totalSupply",
               "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "scope": 3642,
+=======
               "scope": 5970,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "stateMutability": "view",
               "virtual": false,
               "visibility": "external"
@@ -1790,9 +2677,15 @@
                   ]
                 },
                 "children": [],
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                "id": 3592,
+                "name": "ParameterList",
+                "src": "399:2:7"
+=======
                 "id": 5920,
                 "name": "ParameterList",
                 "src": "408:2:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               },
               {
                 "children": [
@@ -1802,7 +2695,11 @@
                       "mutability": "mutable",
                       "name": "",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3596,
+=======
                       "scope": 5924,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -1815,6 +2712,26 @@
                           "name": "uint",
                           "type": "uint256"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3593,
+                        "name": "ElementaryTypeName",
+                        "src": "425:4:7"
+                      }
+                    ],
+                    "id": 3594,
+                    "name": "VariableDeclaration",
+                    "src": "425:4:7"
+                  }
+                ],
+                "id": 3595,
+                "name": "ParameterList",
+                "src": "424:6:7"
+              }
+            ],
+            "id": 3596,
+            "name": "FunctionDefinition",
+            "src": "379:52:7"
+=======
                         "id": 5921,
                         "name": "ElementaryTypeName",
                         "src": "434:4:2"
@@ -1833,6 +2750,7 @@
             "id": 5924,
             "name": "FunctionDefinition",
             "src": "388:52:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
           },
           {
             "attributes": {
@@ -1847,7 +2765,11 @@
               ],
               "name": "balanceOf",
               "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "scope": 3642,
+=======
               "scope": 5970,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "stateMutability": "view",
               "virtual": false,
               "visibility": "external"
@@ -1861,7 +2783,11 @@
                       "mutability": "mutable",
                       "name": "owner",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3603,
+=======
                       "scope": 5931,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -1875,6 +2801,21 @@
                           "stateMutability": "nonpayable",
                           "type": "address"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3597,
+                        "name": "ElementaryTypeName",
+                        "src": "455:7:7"
+                      }
+                    ],
+                    "id": 3598,
+                    "name": "VariableDeclaration",
+                    "src": "455:13:7"
+                  }
+                ],
+                "id": 3599,
+                "name": "ParameterList",
+                "src": "454:15:7"
+=======
                         "id": 5925,
                         "name": "ElementaryTypeName",
                         "src": "465:7:2"
@@ -1888,6 +2829,7 @@
                 "id": 5927,
                 "name": "ParameterList",
                 "src": "464:15:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               },
               {
                 "children": [
@@ -1897,7 +2839,11 @@
                       "mutability": "mutable",
                       "name": "",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3603,
+=======
                       "scope": 5931,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -1910,6 +2856,26 @@
                           "name": "uint",
                           "type": "uint256"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3600,
+                        "name": "ElementaryTypeName",
+                        "src": "493:4:7"
+                      }
+                    ],
+                    "id": 3601,
+                    "name": "VariableDeclaration",
+                    "src": "493:4:7"
+                  }
+                ],
+                "id": 3602,
+                "name": "ParameterList",
+                "src": "492:6:7"
+              }
+            ],
+            "id": 3603,
+            "name": "FunctionDefinition",
+            "src": "436:63:7"
+=======
                         "id": 5928,
                         "name": "ElementaryTypeName",
                         "src": "503:4:2"
@@ -1928,6 +2894,7 @@
             "id": 5931,
             "name": "FunctionDefinition",
             "src": "446:63:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
           },
           {
             "attributes": {
@@ -1942,7 +2909,11 @@
               ],
               "name": "allowance",
               "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "scope": 3642,
+=======
               "scope": 5970,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "stateMutability": "view",
               "virtual": false,
               "visibility": "external"
@@ -1956,7 +2927,11 @@
                       "mutability": "mutable",
                       "name": "owner",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3612,
+=======
                       "scope": 5940,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -1970,6 +2945,16 @@
                           "stateMutability": "nonpayable",
                           "type": "address"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3604,
+                        "name": "ElementaryTypeName",
+                        "src": "523:7:7"
+                      }
+                    ],
+                    "id": 3605,
+                    "name": "VariableDeclaration",
+                    "src": "523:13:7"
+=======
                         "id": 5932,
                         "name": "ElementaryTypeName",
                         "src": "534:7:2"
@@ -1978,6 +2963,7 @@
                     "id": 5933,
                     "name": "VariableDeclaration",
                     "src": "534:13:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   },
                   {
                     "attributes": {
@@ -1985,7 +2971,11 @@
                       "mutability": "mutable",
                       "name": "spender",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3612,
+=======
                       "scope": 5940,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -1999,6 +2989,21 @@
                           "stateMutability": "nonpayable",
                           "type": "address"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3606,
+                        "name": "ElementaryTypeName",
+                        "src": "538:7:7"
+                      }
+                    ],
+                    "id": 3607,
+                    "name": "VariableDeclaration",
+                    "src": "538:15:7"
+                  }
+                ],
+                "id": 3608,
+                "name": "ParameterList",
+                "src": "522:32:7"
+=======
                         "id": 5934,
                         "name": "ElementaryTypeName",
                         "src": "549:7:2"
@@ -2012,6 +3017,7 @@
                 "id": 5936,
                 "name": "ParameterList",
                 "src": "533:32:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               },
               {
                 "children": [
@@ -2021,7 +3027,11 @@
                       "mutability": "mutable",
                       "name": "",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3612,
+=======
                       "scope": 5940,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -2034,6 +3044,26 @@
                           "name": "uint",
                           "type": "uint256"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3609,
+                        "name": "ElementaryTypeName",
+                        "src": "578:4:7"
+                      }
+                    ],
+                    "id": 3610,
+                    "name": "VariableDeclaration",
+                    "src": "578:4:7"
+                  }
+                ],
+                "id": 3611,
+                "name": "ParameterList",
+                "src": "577:6:7"
+              }
+            ],
+            "id": 3612,
+            "name": "FunctionDefinition",
+            "src": "504:80:7"
+=======
                         "id": 5937,
                         "name": "ElementaryTypeName",
                         "src": "589:4:2"
@@ -2052,6 +3082,7 @@
             "id": 5940,
             "name": "FunctionDefinition",
             "src": "515:80:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
           },
           {
             "attributes": {
@@ -2066,7 +3097,11 @@
               ],
               "name": "approve",
               "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "scope": 3642,
+=======
               "scope": 5970,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "stateMutability": "nonpayable",
               "virtual": false,
               "visibility": "external"
@@ -2080,7 +3115,11 @@
                       "mutability": "mutable",
                       "name": "spender",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3621,
+=======
                       "scope": 5949,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -2094,6 +3133,16 @@
                           "stateMutability": "nonpayable",
                           "type": "address"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3613,
+                        "name": "ElementaryTypeName",
+                        "src": "607:7:7"
+                      }
+                    ],
+                    "id": 3614,
+                    "name": "VariableDeclaration",
+                    "src": "607:15:7"
+=======
                         "id": 5941,
                         "name": "ElementaryTypeName",
                         "src": "620:7:2"
@@ -2102,6 +3151,7 @@
                     "id": 5942,
                     "name": "VariableDeclaration",
                     "src": "620:15:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   },
                   {
                     "attributes": {
@@ -2109,7 +3159,11 @@
                       "mutability": "mutable",
                       "name": "value",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3621,
+=======
                       "scope": 5949,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -2122,6 +3176,21 @@
                           "name": "uint",
                           "type": "uint256"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3615,
+                        "name": "ElementaryTypeName",
+                        "src": "624:4:7"
+                      }
+                    ],
+                    "id": 3616,
+                    "name": "VariableDeclaration",
+                    "src": "624:10:7"
+                  }
+                ],
+                "id": 3617,
+                "name": "ParameterList",
+                "src": "606:29:7"
+=======
                         "id": 5943,
                         "name": "ElementaryTypeName",
                         "src": "637:4:2"
@@ -2135,6 +3204,7 @@
                 "id": 5945,
                 "name": "ParameterList",
                 "src": "619:29:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               },
               {
                 "children": [
@@ -2144,7 +3214,11 @@
                       "mutability": "mutable",
                       "name": "",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3621,
+=======
                       "scope": 5949,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "bool",
@@ -2157,6 +3231,26 @@
                           "name": "bool",
                           "type": "bool"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3618,
+                        "name": "ElementaryTypeName",
+                        "src": "654:4:7"
+                      }
+                    ],
+                    "id": 3619,
+                    "name": "VariableDeclaration",
+                    "src": "654:4:7"
+                  }
+                ],
+                "id": 3620,
+                "name": "ParameterList",
+                "src": "653:6:7"
+              }
+            ],
+            "id": 3621,
+            "name": "FunctionDefinition",
+            "src": "590:70:7"
+=======
                         "id": 5946,
                         "name": "ElementaryTypeName",
                         "src": "667:4:2"
@@ -2175,6 +3269,7 @@
             "id": 5949,
             "name": "FunctionDefinition",
             "src": "603:70:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
           },
           {
             "attributes": {
@@ -2189,7 +3284,11 @@
               ],
               "name": "transfer",
               "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "scope": 3642,
+=======
               "scope": 5970,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "stateMutability": "nonpayable",
               "virtual": false,
               "visibility": "external"
@@ -2203,7 +3302,11 @@
                       "mutability": "mutable",
                       "name": "to",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3630,
+=======
                       "scope": 5958,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -2217,6 +3320,16 @@
                           "stateMutability": "nonpayable",
                           "type": "address"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3622,
+                        "name": "ElementaryTypeName",
+                        "src": "683:7:7"
+                      }
+                    ],
+                    "id": 3623,
+                    "name": "VariableDeclaration",
+                    "src": "683:10:7"
+=======
                         "id": 5950,
                         "name": "ElementaryTypeName",
                         "src": "697:7:2"
@@ -2225,6 +3338,7 @@
                     "id": 5951,
                     "name": "VariableDeclaration",
                     "src": "697:10:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   },
                   {
                     "attributes": {
@@ -2232,7 +3346,11 @@
                       "mutability": "mutable",
                       "name": "value",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3630,
+=======
                       "scope": 5958,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -2245,6 +3363,21 @@
                           "name": "uint",
                           "type": "uint256"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3624,
+                        "name": "ElementaryTypeName",
+                        "src": "695:4:7"
+                      }
+                    ],
+                    "id": 3625,
+                    "name": "VariableDeclaration",
+                    "src": "695:10:7"
+                  }
+                ],
+                "id": 3626,
+                "name": "ParameterList",
+                "src": "682:24:7"
+=======
                         "id": 5952,
                         "name": "ElementaryTypeName",
                         "src": "709:4:2"
@@ -2258,6 +3391,7 @@
                 "id": 5954,
                 "name": "ParameterList",
                 "src": "696:24:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               },
               {
                 "children": [
@@ -2267,7 +3401,11 @@
                       "mutability": "mutable",
                       "name": "",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3630,
+=======
                       "scope": 5958,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "bool",
@@ -2280,6 +3418,26 @@
                           "name": "bool",
                           "type": "bool"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3627,
+                        "name": "ElementaryTypeName",
+                        "src": "725:4:7"
+                      }
+                    ],
+                    "id": 3628,
+                    "name": "VariableDeclaration",
+                    "src": "725:4:7"
+                  }
+                ],
+                "id": 3629,
+                "name": "ParameterList",
+                "src": "724:6:7"
+              }
+            ],
+            "id": 3630,
+            "name": "FunctionDefinition",
+            "src": "665:66:7"
+=======
                         "id": 5955,
                         "name": "ElementaryTypeName",
                         "src": "739:4:2"
@@ -2298,6 +3456,7 @@
             "id": 5958,
             "name": "FunctionDefinition",
             "src": "679:66:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
           },
           {
             "attributes": {
@@ -2312,7 +3471,11 @@
               ],
               "name": "transferFrom",
               "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+              "scope": 3642,
+=======
               "scope": 5970,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               "stateMutability": "nonpayable",
               "virtual": false,
               "visibility": "external"
@@ -2326,7 +3489,11 @@
                       "mutability": "mutable",
                       "name": "from",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3641,
+=======
                       "scope": 5969,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -2340,6 +3507,16 @@
                           "stateMutability": "nonpayable",
                           "type": "address"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3631,
+                        "name": "ElementaryTypeName",
+                        "src": "758:7:7"
+                      }
+                    ],
+                    "id": 3632,
+                    "name": "VariableDeclaration",
+                    "src": "758:12:7"
+=======
                         "id": 5959,
                         "name": "ElementaryTypeName",
                         "src": "773:7:2"
@@ -2348,6 +3525,7 @@
                     "id": 5960,
                     "name": "VariableDeclaration",
                     "src": "773:12:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   },
                   {
                     "attributes": {
@@ -2355,7 +3533,11 @@
                       "mutability": "mutable",
                       "name": "to",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3641,
+=======
                       "scope": 5969,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "address",
@@ -2369,6 +3551,16 @@
                           "stateMutability": "nonpayable",
                           "type": "address"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3633,
+                        "name": "ElementaryTypeName",
+                        "src": "772:7:7"
+                      }
+                    ],
+                    "id": 3634,
+                    "name": "VariableDeclaration",
+                    "src": "772:10:7"
+=======
                         "id": 5961,
                         "name": "ElementaryTypeName",
                         "src": "787:7:2"
@@ -2377,6 +3569,7 @@
                     "id": 5962,
                     "name": "VariableDeclaration",
                     "src": "787:10:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                   },
                   {
                     "attributes": {
@@ -2384,7 +3577,11 @@
                       "mutability": "mutable",
                       "name": "value",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3641,
+=======
                       "scope": 5969,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "uint256",
@@ -2397,6 +3594,21 @@
                           "name": "uint",
                           "type": "uint256"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3635,
+                        "name": "ElementaryTypeName",
+                        "src": "784:4:7"
+                      }
+                    ],
+                    "id": 3636,
+                    "name": "VariableDeclaration",
+                    "src": "784:10:7"
+                  }
+                ],
+                "id": 3637,
+                "name": "ParameterList",
+                "src": "757:38:7"
+=======
                         "id": 5963,
                         "name": "ElementaryTypeName",
                         "src": "799:4:2"
@@ -2410,6 +3622,7 @@
                 "id": 5965,
                 "name": "ParameterList",
                 "src": "772:38:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
               },
               {
                 "children": [
@@ -2419,7 +3632,11 @@
                       "mutability": "mutable",
                       "name": "",
                       "overrides": null,
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                      "scope": 3641,
+=======
                       "scope": 5969,
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
                       "stateVariable": false,
                       "storageLocation": "default",
                       "type": "bool",
@@ -2432,6 +3649,36 @@
                           "name": "bool",
                           "type": "bool"
                         },
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+                        "id": 3638,
+                        "name": "ElementaryTypeName",
+                        "src": "814:4:7"
+                      }
+                    ],
+                    "id": 3639,
+                    "name": "VariableDeclaration",
+                    "src": "814:4:7"
+                  }
+                ],
+                "id": 3640,
+                "name": "ParameterList",
+                "src": "813:6:7"
+              }
+            ],
+            "id": 3641,
+            "name": "FunctionDefinition",
+            "src": "736:84:7"
+          }
+        ],
+        "id": 3642,
+        "name": "ContractDefinition",
+        "src": "26:796:7"
+      }
+    ],
+    "id": 3643,
+    "name": "SourceUnit",
+    "src": "0:823:7"
+=======
                         "id": 5966,
                         "name": "ElementaryTypeName",
                         "src": "829:4:2"
@@ -2460,14 +3707,20 @@
     "id": 5971,
     "name": "SourceUnit",
     "src": "0:840:2"
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
   },
   "compiler": {
     "name": "solc",
     "version": "0.6.6+commit.6c089d02.Emscripten.clang"
   },
   "networks": {},
+<<<<<<< HEAD:router/build/contracts/IERC20.json
+  "schemaVersion": "3.3.4",
+  "updatedAt": "2021-09-16T01:21:09.069Z",
+=======
   "schemaVersion": "3.4.1",
   "updatedAt": "2021-09-15T10:30:08.038Z",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/IERC20.json
   "devdoc": {
     "methods": {}
   },

@@ -7029,8 +7029,14 @@
     "version": "0.6.6+commit.6c089d02.Emscripten.clang"
   },
   "networks": {},
+<<<<<<< HEAD:router/build/contracts/WETH9.json
+  "schemaVersion": "3.3.4",
+  "updatedAt": "2021-09-14T10:47:25.655Z",
+  "networkType": "ethereum",
+=======
   "schemaVersion": "3.4.1",
   "updatedAt": "2021-09-15T10:27:32.522Z",
+>>>>>>> aeb9e6b71ac60925a6069f310982f873cdc070d6:router/client/src/contracts/WETH9.json
   "devdoc": {
     "methods": {}
   },
