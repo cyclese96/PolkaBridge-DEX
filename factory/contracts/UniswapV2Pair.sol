@@ -196,32 +196,9 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
             }
         }
         
-        // transferFeeDev(amount0In, amount1In, _reserve0, _reserve1);
         _update(balance0, balance1, _reserve0, _reserve1);
         emit Swap(msg.sender, amount0In, amount1In, amount0Out, amount1Out, to);
     }
-    // function transferFeeDev(uint amount0In, uint amount1In, uint112 _reserve0, uint112 _reserve1) public {
-    //     uint balance0;
-    //     uint balance1;
-    //     address _token0 = token0;
-    //     address _token1 = token1;
-    //     balance0 = IERC20(_token0).balanceOf(address(this));
-    //     balance1 = IERC20(_token1).balanceOf(address(this));
-    //     uint devFee;
-        
-    //     if (amount0In > 0) {
-    //         devFee = amount0In.div(5);
-    //         _safeTransfer(_token0, treasury, devFee);
-    //         balance0 = balance0.sub(devFee);
-    //     } 
-    //     if (amount1In > 0) {
-    //         devFee = amount1In.div(5);
-    //         _safeTransfer(_token1, treasury, devFee);
-    //         balance1 = balance1.sub(devFee);
-    //     }
-    //     _update(balance0, balance1, _reserve0, _reserve1);
-    // }
-    // force balances to match reserves
     function skim(address to) external lock {
         address _token0 = token0; // gas savings
         address _token1 = token1; // gas savings
