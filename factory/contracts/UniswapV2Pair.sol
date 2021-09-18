@@ -7,8 +7,10 @@ import './libraries/UQ112x112.sol';
 import './interfaces/IERC20.sol';
 import './interfaces/IUniswapV2Factory.sol';
 // import './interfaces/IUniswapV2Callee.sol';
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
+
+contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
     using SafeMath  for uint;
     using UQ112x112 for uint224;
 
@@ -18,6 +20,8 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
     address public factory;
     address public token0;
     address public token1;
+    
+    address private treasury;
 
     uint112 private reserve0;           // uses single storage slot, accessible via getReserves
     uint112 private reserve1;           // uses single storage slot, accessible via getReserves
@@ -157,7 +161,8 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
     }
 
     // this low-level function should be called from a contract which performs important safety checks
-    function swap(uint amount0Out, uint amount1Out, address to, address polkaTreasury) external lock {
+    // function swap(uint amount0Out, uint amount1Out, address to, address polkaTreasury) external lock {
+    function swap(uint amount0Out, uint amount1Out, address to) external lock {
         require(amount0Out > 0 || amount1Out > 0, 'PolkaBridge AMM V1: INSUFFICIENT_OUTPUT_AMOUNT');
         (uint112 _reserve0, uint112 _reserve1,) = getReserves(); // gas savings
         require(amount0Out < _reserve0 && amount1Out < _reserve1, 'PolkaBridge AMM V1: INSUFFICIENT_LIQUIDITY');
@@ -187,11 +192,11 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
 
         {
             if(amount0In > 0) {
-                _safeTransfer(token0, polkaTreasury, amount0In.mul(4).div(10000));
+                _safeTransfer(token0, treasury, amount0In.mul(4).div(10000));
                 balance0 = balance0 - amount0In.mul(4).div(10000);
             }
             if(amount1In > 0) {
-                _safeTransfer(token1, polkaTreasury, amount1In.mul(4).div(10000));
+                _safeTransfer(token1, treasury, amount1In.mul(4).div(10000));
                 balance1 = balance1 - amount1In.mul(4).div(10000);
             }
         }
@@ -199,6 +204,11 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
         _update(balance0, balance1, _reserve0, _reserve1);
         emit Swap(msg.sender, amount0In, amount1In, amount0Out, amount1Out, to);
     }
+    
+    function setTreasuryAddress(address _address ) public onlyOwner {
+        treasury = _address;
+    }
+
     function skim(address to) external lock {
         address _token0 = token0; // gas savings
         address _token1 = token1; // gas savings
