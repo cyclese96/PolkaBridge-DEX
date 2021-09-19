@@ -22,7 +22,7 @@ export const corgibMemeCoinMainnet =
 
 // factory ethereum
 export const facotryAddressTestnet =
-  "0x1771F427a1020884ED8f69D7d4E58B84dd7E3EC6";
+  "0xAeDC38f770483C0AC7390CAf4edEAdA4F893AC45";
 export const factoryAddresMainnet =
   "0xA1853078D1447C0060c71a672E6D13882f61A0a6";
 
@@ -34,7 +34,7 @@ export const factoryAddresBscMainnet =
 
 // router ethereum addresses
 export const routerAddressTestnet =
-  "0x5ab57C8Ec88E78449Fd3139b82805C4BB5F268ac";
+  "0x2072BeaC55FF4464C647977Fe0cF11Fd8a0e8CBb";
 export const routerAddressMainnet =
   "0x050aAC21096e027142E3f5d089a9251FcCf191b9";
 
@@ -180,14 +180,14 @@ export const tokens = [
     symbol: "USDC",
     address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
   },
-  {
-    name: "1INCH Token",
-    symbol: "1INCH",
-    address:
-      currentConnection === "testnet"
-        ? "0xcc521406C8F796169DCe1D10bDe6AaA60847FB63"
-        : "0x111111111117dc0aa78b770fa6a738034120c302",
-  },
+  // {
+  //   name: "1INCH Token",
+  //   symbol: "1INCH",
+  //   address:
+  //     currentConnection === "testnet"
+  //       ? "0xcc521406C8F796169DCe1D10bDe6AaA60847FB63"
+  //       : "0x111111111117dc0aa78b770fa6a738034120c302",
+  // },
   {
     name: "Dai Stablecoin",
     symbol: "DAI",

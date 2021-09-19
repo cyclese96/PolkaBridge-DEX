@@ -327,8 +327,16 @@ export const cacheImportedToken = (tokenData) => {
     localStorage.setItem("tokens", JSON.stringify([tokenData]));
   } else {
     tokens = JSON.parse(tokens);
+    // check if token already present in the list then skip caching
+    const _index = tokens.findIndex(
+      (_item) => _item.address === tokenData.address
+    );
+    if (_index >= 0) {
+      return;
+    }
+
     tokens = [tokenData, ...tokens];
-    localStorage.setItem(JSON.stringify(tokens));
+    localStorage.setItem("tokens", JSON.stringify(tokens));
   }
 };
 

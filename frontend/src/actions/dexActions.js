@@ -1,6 +1,7 @@
 import BigNumber from "bignumber.js";
 import {
   bscTokens,
+  currentConnection,
   ETH,
   etheriumNetwork,
   nullAddress,
@@ -559,7 +560,14 @@ export const importToken = (address, account, network) => async (dispatch) => {
       fetchTokenInfo(address),
     ]);
 
-    const tokenInfo = tokenInfoData.result[0];
+    // console.log("token info received ", tokenInfoData);
+    let tokenInfo = {};
+    if (!tokenInfoData.result[0]) {
+      tokenInfo.tokenName = "Test token";
+      tokenInfo.symbol = "TEST";
+    } else {
+      tokenInfo = tokenInfoData.result[0];
+    }
 
     const tokenObj = {
       name: tokenInfo.tokenName,
