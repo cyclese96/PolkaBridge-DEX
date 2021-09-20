@@ -26,7 +26,7 @@ const TokenRow = (props) => {
         </TableCell>
 
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.oneDayData.tradeVolumeUSD, true)}
+          {formatCurrency(row.vol_24_h, true)}
         </TableCell>
       </TableRow>
       <TableRow
@@ -51,17 +51,17 @@ const TokenRow = (props) => {
         </TableCell>
         <TableCell align="right">
           <span className={classes.cellText}>
-            {formatCurrency(row.priceUSD, true)}
+            {formatCurrency(row.price, true)}
           </span>
         </TableCell>
         <TableCell align="right" className={classes.cellText}>
-          <PercentLabel percentValue={row.priceChangeUSD} />
+          <PercentLabel percentValue={row.price_change} />
         </TableCell>
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.oneDayData.tradeVolumeUSD, true)}
+          {formatCurrency(row.vol_24_h, true)}
         </TableCell>
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.totalLiquidtyUSD, true)}
+          {formatCurrency(row.tvl, true)}
         </TableCell>
       </TableRow>
     </>

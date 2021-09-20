@@ -31,12 +31,12 @@ const PoolRow = (props) => {
         </TableCell>
 
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.oneDayVolumeUSD, true)}
+          {formatCurrency(row.vol_24_h, true)}
         </TableCell>
       </TableRow>
       <TableRow
         hover
-        onClick={(event) => handleClick(event, row.name)}
+        onClick={(event) => handleClick(event, row.id)}
         //   role="checkbox"
         aria-checked={isItemSelected}
         tabIndex={-1}
@@ -62,15 +62,15 @@ const PoolRow = (props) => {
         </TableCell>
         <TableCell align="right">
           <span className={classes.cellText}>
-            {formatCurrency(row.volumeUSD, true)}
+            {formatCurrency(row.tvl, true)}
           </span>
         </TableCell>
 
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.oneDayVolumeUSD, true)}
+          {formatCurrency(row.vol_24_h, true)}
         </TableCell>
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.oneWeekVolumeUSD, true)}
+          {formatCurrency(row.vol_7_d, true)}
         </TableCell>
       </TableRow>
     </>
