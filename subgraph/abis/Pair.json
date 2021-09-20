@@ -573,9 +573,9 @@
         "type": "address"
       },
       {
-        "internalType": "bytes",
-        "name": "data",
-        "type": "bytes"
+        "internalType": "address",
+        "name": "polkaTreasury",
+        "type": "address"
       }
     ],
     "name": "swap",
