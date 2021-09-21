@@ -9,7 +9,7 @@
   "scripts": {
     "compile": "truffle compile",
     "deploy": "truffle migrate --network rinkeby_infura",
-    "verify": "truffle run verify UniswapV2Factory --network rinkeby_infura",
+    "verify": "truffle run verify UniswapV2Factory UniswapV2Pair --network rinkeby_infura",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

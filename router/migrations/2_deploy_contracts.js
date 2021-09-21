@@ -7,7 +7,8 @@ module.exports = function (deployer) {
 
     //testnet
     let owner = "0x57866ed63ca5f9744cef9aa270bd1f1dce935831";
-    let factorycontract = "0xAeDC38f770483C0AC7390CAf4edEAdA4F893AC45";
+    // let factorycontract = "0xAeDC38f770483C0AC7390CAf4edEAdA4F893AC45";
+    let factorycontract = "0xf86Ff17ceE711c1A296cb3Bf0226BFbe5403e39A";
     let WETH = "0xc778417E063141139Fce010982780140Aa0cD5Ab";
     let treasuey = "0x8419E67fEE7e27F2E13a9399Ae477d7b644495f5";
     //mainnet

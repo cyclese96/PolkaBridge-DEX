@@ -267,7 +267,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
                 : (amountOut, uint256(0));
             address to = i < path.length - 2 ? UniswapV2Library.pairFor(factory, output, path[i + 2]) : _to;
             IUniswapV2Pair(UniswapV2Library.pairFor(factory, input, output)).swap(
-                amount0Out, amount1Out, to, abi.encodePacked(polkaTreasury)
+                amount0Out, amount1Out, to, new bytes(0)
             );
         }
     }
@@ -396,7 +396,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
                 ? (uint256(0), amountOutput)
                 : (amountOutput, uint256(0));
             address to = i < path.length - 2 ? UniswapV2Library.pairFor(factory, output, path[i + 2]) : _to;
-            pair.swap(amount0Out, amount1Out, to, abi.encodePacked(polkaTreasury));
+            pair.swap(amount0Out, amount1Out, to, new bytes(0));
         }
     }
 

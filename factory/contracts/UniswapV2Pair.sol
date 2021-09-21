@@ -150,8 +150,8 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
     }
 
     // this low-level function should be called from a contract which performs important safety checks
-    // function swap(uint amount0Out, uint amount1Out, address to, address polkaTreasury) external lock {
-    function swap(uint amount0Out, uint amount1Out, address to, address polkaTreasury) external override lock {
+    // function swap(uint amount0Out, uint amount1Out, address to, address polkaTreasury) external override lock {
+    function swap(uint amount0Out, uint amount1Out, address to) external override lock {
         require(amount0Out > 0 || amount1Out > 0, 'PolkaBridge AMM V1: INSUFFICIENT_OUTPUT_AMOUNT');
         (uint112 _reserve0, uint112 _reserve1,) = getReserves(); // gas savings
         require(amount0Out < _reserve0 && amount1Out < _reserve1, 'PolkaBridge AMM V1: INSUFFICIENT_LIQUIDITY');
@@ -194,7 +194,7 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
         emit Swap(msg.sender, amount0In, amount1In, amount0Out, amount1Out, to);
 
         // code for no warning
-        polkaTreasury = polkaTreasury;
+        // polkaTreasury = polkaTreasury;
     }
     
     function setTreasuryAddress(address _address ) external override onlyOwner {
