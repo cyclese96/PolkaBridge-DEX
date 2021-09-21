@@ -1,13 +1,6 @@
 import Web3 from "web3";
-import Bite from "../abi/Bite.json";
-import PolkaBridge from "../abi/PolkaBridge.json";
-import PBR_ETH_pairAbi from "../abi/PairPBR_ETH.json";
-import PolkaBridgeMemeToken from "../abi/PolkaBridgeMemeToken.json";
-import pwarCoin from "../abi/Pwar.json";
 import RouterAbi from "../abi/Router.json";
 import FactoryAbi from "../abi/Factory.json";
-import UsdtAbi from "../abi/Usdt.json";
-import PairUsdtEthAbi from "../abi/PairUsdtEth.json";
 import pairAbi from '../abi/pair.json';
 import tokenAbi from '../abi/erc20.json';
 
@@ -21,13 +14,9 @@ import {
   etheriumNetwork,
   pbrAddressTestnet,
   pbrAddressMainnet,
-  pbrEthPairAddressBscMainnet,
-  pbrEthPairAddressBscTestnet,
-  pbrEthPairAddressMainnet,
-  pbrEthPairAddressTestnet,
   pwarAddressMainnet,
   pwarAddressTestnet,
-  PWAR_BNB,
+
   routerAddressBscTestnet,
   routerAddressBscMainnet,
   routerAddressTestnet,
@@ -38,8 +27,7 @@ import {
   factoryAddresMainnet,
   usdtTestnetAddress,
   usdtMainnetAddress,
-  usdtEthPairAddressTestnet,
-  usdtEthPairAddressMainnet,
+
 } from "../../constants";
 import { isMetaMaskInstalled } from "../../utils/helper";
 
@@ -47,7 +35,7 @@ export const biteContract = (network) => {
   const address =
     currentConnection === "testnet" ? biteAddressKoven : biteAddressMainnet;
 
-  const abi = Bite;
+  const abi = tokenAbi;
 
   const connection = getCurrentConnection(network, abi, address);
   return connection;
@@ -57,7 +45,7 @@ export const pbrContract = (network) => {
   const address =
     currentConnection === "testnet" ? pbrAddressTestnet : pbrAddressMainnet;
 
-  const abi = PolkaBridge;
+  const abi = tokenAbi;
   const connection = getCurrentConnection(network, abi, address);
   return connection;
 };
@@ -66,7 +54,7 @@ export const usdtContract = (network) => {
   const address =
     currentConnection === "testnet" ? usdtTestnetAddress : usdtMainnetAddress;
 
-  const abi = UsdtAbi;
+  const abi = tokenAbi;
   const connection = getCurrentConnection(network, abi, address);
   return connection;
 };
@@ -77,7 +65,7 @@ export const corgibCoinContract = (network) => {
       ? corgibMemeCoinTestent
       : corgibMemeCoinMainnet;
 
-  const abi = PolkaBridgeMemeToken;
+  const abi = tokenAbi;
   const connection = getCurrentConnection(network, abi, address);
   return connection;
 };
@@ -86,31 +74,9 @@ export const pwarCoinContract = (network) => {
   const address =
     currentConnection === "testnet" ? pwarAddressTestnet : pwarAddressMainnet;
 
-  const abi = pwarCoin;
+  const abi = tokenAbi;
   const connection = getCurrentConnection(network, abi, address);
   return connection;
-};
-
-// returns [address, abi]
-const getPairInfo = (token0Symbol, token1Symbol) => {
-  const pairName = `${token0Symbol}_${token1Symbol}`;
-  if (pairName === "PBR_ETH" || pairName === "ETH_PBR") {
-    const addr =
-      currentConnection === "testnet"
-        ? pbrEthPairAddressTestnet
-        : pbrEthPairAddressMainnet;
-    const abi = PBR_ETH_pairAbi;
-    return [addr, abi];
-  } else if (pairName === "USDT_ETH" || pairName === "ETH_USDT") {
-    const addr2 =
-      currentConnection === "testnet"
-        ? usdtEthPairAddressTestnet
-        : usdtEthPairAddressMainnet;
-    const abi2 = PairUsdtEthAbi;
-    return [addr2, abi2];
-  } else {
-    return [null, null];
-  }
 };
 
 export const pairContract = (pairAddress, network) => {
