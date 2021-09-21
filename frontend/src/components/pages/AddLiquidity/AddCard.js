@@ -431,9 +431,14 @@ const AddCard = (props) => {
       } else {
         // load current pair ABI
         let _pairAbi = currentPairAbi();
-
-        if (!_pairAbi) {
+        if (!_pairAbi || _pairAbi.length === 0) {
           _pairAbi = await fetchContractAbi(_pairAddress, currentNetwork);
+        }
+
+        if (!_pairAbi || _pairAbi.length === 0) {
+          //failed to load pair abi
+          //handle error:
+          console.log("failed to load pair abi");
         }
 
         // laod current pair reserves

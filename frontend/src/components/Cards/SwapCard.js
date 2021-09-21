@@ -320,7 +320,6 @@ const SwapCard = (props) => {
       );
 
       let _pairAddress = currentPairAddress();
-      console.log("current pair address ", _pairAddress);
       if (!_pairAddress) {
         _pairAddress = await getPairAddress(
           selectedToken1.address,
@@ -336,13 +335,21 @@ const SwapCard = (props) => {
           message: "No liquidity available for this pair",
         });
       } else {
+        console.log("current pair address ", _pairAddress);
         setLiquidityStatus(false);
 
         // load current pair ABI
         let _pairAbi = currentPairAbi();
 
-        if (!_pairAbi) {
+        if (!_pairAbi || _pairAbi.length === 0) {
           _pairAbi = await fetchContractAbi(_pairAddress, currentNetwork);
+        }
+
+        if (!_pairAbi || _pairAbi.length === 0) {
+          setStatus({
+            disabled: true,
+            message: "Something went wrong with this pair",
+          });
         }
         // laod current pair reserves
         let _pairData = { abi: _pairAbi, address: _pairAddress };
