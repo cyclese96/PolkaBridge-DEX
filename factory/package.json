@@ -7,6 +7,9 @@
     "test": "test"
   },
   "scripts": {
+    "compile": "truffle compile",
+    "deploy": "truffle migrate --network rinkeby_infura",
+    "verify": "truffle run verify UniswapV2Factory --network rinkeby_infura",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,9 +23,11 @@
   },
   "homepage": "https://github.com/Uniswap/uniswap-v2-core#readme",
   "dependencies": {
+    "@openzeppelin/contracts": "^4.3.2",
     "@truffle/hdwallet-provider": "^1.4.3",
     "dotenv": "^10.0.0",
-    "fs": "0.0.1-security"
+    "fs": "0.0.1-security",
+    "web3": "^1.5.2"
   },
   "devDependencies": {
     "truffle-plugin-verify": "^0.5.15"

@@ -1,30 +1,30 @@
-pragma solidity =0.5.16;
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.0;
 
 import './interfaces/IUniswapV2Factory.sol';
 import './UniswapV2Pair.sol';
 
 contract UniswapV2Factory is IUniswapV2Factory {
-    address public feeTo;
-    address public feeToSetter;
+    address public override feeTo;
+    address public override feeToSetter;
 
-    mapping(address => mapping(address => address)) public getPair;
+    mapping(address => mapping(address => address)) public override getPair;
     // address[] public allPairs; // storage of all pairs
-    uint public allPairs;
+    uint public override allPairs;
 
-    event PairCreated(address indexed token0, address indexed token1, address pair, uint);
     bytes32 public constant INIT_CODE_PAIR_HASH = keccak256(abi.encodePacked(type(UniswapV2Pair).creationCode));
     
-    constructor(address _feeToSetter) public {
+    constructor(address _feeToSetter) {
         feeToSetter = _feeToSetter;
     }
 
-    function allPairsLength() external view returns (uint) {
+    function allPairsLength() external override view returns (uint) {
         // return pair length
         // return allPairs.length;
         return allPairs;
     }
 
-    function createPair(address tokenA, address tokenB) external returns (address pair) {
+    function createPair(address tokenA, address tokenB) external override returns (address pair) {
         require(tokenA != tokenB, 'PolkaBridge AMM V1: IDENTICAL_ADDRESSES');
         (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
         require(token0 != address(0), 'PolkaBridge AMM V1: ZERO_ADDRESS');
@@ -43,12 +43,12 @@ contract UniswapV2Factory is IUniswapV2Factory {
         emit PairCreated(token0, token1, pair, allPairs);
     }
 
-    function setFeeTo(address _feeTo) external {
+    function setFeeTo(address _feeTo) external override {
         require(msg.sender == feeToSetter, 'PolkaBridge AMM V1: FORBIDDEN');
         feeTo = _feeTo;
     }
 
-    function setFeeToSetter(address _feeToSetter) external {
+    function setFeeToSetter(address _feeToSetter) external override {
         require(msg.sender == feeToSetter, 'PolkaBridge AMM V1: FORBIDDEN');
         feeToSetter = _feeToSetter;
     }

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity =0.5.16;
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.0;
 
 /**
  * @dev Contract module which provides a basic access control mechanism, where
@@ -14,7 +15,7 @@ pragma solidity =0.5.16;
  * `onlyOwner`, which can be applied to your functions to restrict their use to
  * the owner.
  */
- contract Ownable {
+ contract OwnableFactory {
     address private _owner;
 
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
@@ -22,7 +23,7 @@ pragma solidity =0.5.16;
     /**
      * @dev Initializes the contract setting the deployer as the initial owner.
      */
-    constructor() public{
+    constructor(){
         _setOwner(msg.sender);
     }
 

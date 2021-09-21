@@ -7,6 +7,9 @@
     "test": "test"
   },
   "scripts": {
+    "compile": "truffle compile",
+    "deploy": "truffle migrate --network rinkeby_infura",
+    "verify": "truffle run verify UniswapV2Router02 --network rinkeby_infura",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,8 +28,9 @@
     "@uniswap/v2-core": "^1.0.1",
     "chai": "^4.3.4",
     "chai-as-promised": "^7.1.1",
-    "fs": "0.0.1-security",
     "dotenv": "^10.0.0",
-    "truffle-plugin-verify": "^0.5.15"
+    "fs": "0.0.1-security",
+    "truffle-plugin-verify": "^0.5.15",
+    "web3": "^1.5.2"
   }
 }
