@@ -169,28 +169,28 @@ export const swapEthForExactTokens =
     });
   };
 
-export const getTokenPrice = (tokenNumber, network) => async (dispatch) => {
-  try {
-    const _pairContract = pairContract(network);
+// export const getTokenPrice = (tokenNumber, network) => async (dispatch) => {
+//   try {
+//     const _pairContract = pairContract(network);
 
-    const price =
-      tokenNumber === 0
-        ? await _pairContract.methods.price0CumulativeLast().call()
-        : await _pairContract.methods.price1CumulativeLast().call();
+//     const price =
+//       tokenNumber === 0
+//         ? await _pairContract.methods.price0CumulativeLast().call()
+//         : await _pairContract.methods.price1CumulativeLast().call();
 
-    console.log({ tokenNumber, price });
-    dispatch({
-      type: tokenNumber === 0 ? SET_TOKEN0_PRICE : SET_TOKEN1_PRICE,
-      payload: price,
-    });
-  } catch (error) {
-    console.log("getTokenPrice:  ", error);
-    dispatch({
-      type: DEX_ERROR,
-      payload: "Failed to get token price",
-    });
-  }
-};
+//     console.log({ tokenNumber, price });
+//     dispatch({
+//       type: tokenNumber === 0 ? SET_TOKEN0_PRICE : SET_TOKEN1_PRICE,
+//       payload: price,
+//     });
+//   } catch (error) {
+//     console.log("getTokenPrice:  ", error);
+//     dispatch({
+//       type: DEX_ERROR,
+//       payload: "Failed to get token price",
+//     });
+//   }
+// };
 
 //
 export const getAmountsOut =
@@ -214,56 +214,57 @@ export const getAmountsOut =
     }
   };
 
-//
+//token0 : { name, symbol, amount }, token1: {name, symbol, amount }
 export const getPoolShare =
-  (token0Symbol, token1Symbol, token0Input, token1Input, network) =>
-  async (dispatch) => {
-    try {
-      //Load pair contract of selected token pair
-      const _pairContract = pairContract(token0Symbol, token1Symbol, network);
+  (pairAddress, tokenA, tokenB, network) =>
+    async (dispatch) => {
+      try {
+        //Load pair contract of selected token pair
+        const _pairContract = pairContract(pairAddress, network);
 
-      const erc20TokenSymbol =
-        token0Symbol === ETH ? token1Symbol : token0Symbol;
-      const erc20InputValue = token0Symbol === ETH ? token1Input : token0Input;
-      const _erc20Contract = getTokenContract(network, erc20TokenSymbol);
+        // const erc20TokenSymbol =
+        //   token0Symbol === ETH ? token1Symbol : token0Symbol;
+        // const erc20InputValue = token0Symbol === ETH ? token1Input : token0Input;
+        // const _erc20Contract = getTokenContract(network, erc20TokenSymbol);
 
-      const inputTokenValue = toWei(erc20InputValue);
+        // const inputTokenValue = toWei(erc20InputValue);
 
-      if (!_pairContract) {
+        // if (!_pairContract) {
+        //   dispatch({
+        //     type: GET_POOL_SHARE,
+        //     payload: getPercentage(inputTokenValue, "0"),
+        //   });
+        //   return;
+        // }
+
+        const [token0Address, token1Address, reservesData] = await Promise.all([
+          _pairContract.methods.token0().call(),
+          _pairContract.methods.token1().call(),
+          _pairContract.methods.getReserves().call(),
+        ]);
+        // console.log({ token0Address, token1Address, reservesData });
+        let tokenAReserve = '0';
+        let tokenBReserve = '0';
+        if (tokenA.address === token0Address) {
+          tokenAReserve = reservesData._reserve0;
+        } else {
+          tokenAReserve = reservesData._reserve1;
+        }
+
+        // const reserveTokenValue = tokenAReserve ? tokenAReserve : "0";
+
         dispatch({
           type: GET_POOL_SHARE,
-          payload: getPercentage(inputTokenValue, "0"),
+          payload: getPercentage(tokenA.input, tokenAReserve),
         });
-        return;
+      } catch (error) {
+        console.log("getPoolShare:  ", error);
+        dispatch({
+          type: DEX_ERROR,
+          payload: "Failed to get token price",
+        });
       }
-
-      const [token0Address, token1Address, reservesData] = await Promise.all([
-        _pairContract.methods.token0().call(),
-        _pairContract.methods.token1().call(),
-        _pairContract.methods.getReserves().call(),
-      ]);
-      // console.log({ token0Address, token1Address, reservesData });
-      let erc20Reserves = 0;
-      if (_erc20Contract._address === token0Address) {
-        erc20Reserves = reservesData._reserve0;
-      } else {
-        erc20Reserves = reservesData._reserve1;
-      }
-
-      const reserveTokenValue = erc20Reserves ? erc20Reserves : "0";
-
-      dispatch({
-        type: GET_POOL_SHARE,
-        payload: getPercentage(inputTokenValue, reserveTokenValue),
-      });
-    } catch (error) {
-      console.log("getTokenPrice:  ", error);
-      dispatch({
-        type: DEX_ERROR,
-        payload: "Failed to get token price",
-      });
-    }
-  };
+    };
 
 //token0: { amount: "", address: "", desired:"", min:"" }
 //token1 { amount: "", address: "", desired:"", min:"" }
@@ -323,44 +324,44 @@ export const addLiquidityEth =
 //token1 { amount: "", address: "", desired:"", min:"" }
 export const removeLiquidityEth =
   (ethToken, erc20Token, account, lpAmount, deadline, network) =>
-  async (dispatch) => {
-    try {
-      // const _tokenContract = getTokenContract(network, erc20Token.symbol);
-      const _routerContract = routerContract(network);
+    async (dispatch) => {
+      try {
+        // const _tokenContract = getTokenContract(network, erc20Token.symbol);
+        const _routerContract = routerContract(network);
+
+        dispatch({
+          type: SHOW_DEX_LOADING,
+        });
+        //input params
+        // const etherAmount = ethToken.amount;
+        const erc20Address = erc20Token.address;
+        const etherAmountMin = "0";
+        const tokenAmountMin = "0";
+        const lpTokenAmount = lpAmount;
+
+        // deadline should be passed in minites in calculation
+        const _deadlineUnix = getUnixTime(deadline);
+
+        const rmLiquidity = await _routerContract.methods
+          .removeLiquidityETH(
+            erc20Address,
+            lpTokenAmount,
+            tokenAmountMin,
+            etherAmountMin,
+            account,
+            _deadlineUnix
+          )
+          .send({ from: account });
+
+        console.log(rmLiquidity);
+      } catch (error) {
+        console.log("removeLiquidityEth: ", error);
+      }
 
       dispatch({
-        type: SHOW_DEX_LOADING,
+        type: HIDE_DEX_LOADING,
       });
-      //input params
-      // const etherAmount = ethToken.amount;
-      const erc20Address = erc20Token.address;
-      const etherAmountMin = "0";
-      const tokenAmountMin = "0";
-      const lpTokenAmount = lpAmount;
-
-      // deadline should be passed in minites in calculation
-      const _deadlineUnix = getUnixTime(deadline);
-
-      const rmLiquidity = await _routerContract.methods
-        .removeLiquidityETH(
-          erc20Address,
-          lpTokenAmount,
-          tokenAmountMin,
-          etherAmountMin,
-          account,
-          _deadlineUnix
-        )
-        .send({ from: account });
-
-      console.log(rmLiquidity);
-    } catch (error) {
-      console.log("removeLiquidityEth: ", error);
-    }
-
-    dispatch({
-      type: HIDE_DEX_LOADING,
-    });
-  };
+    };
 
 // token: { symbol, name, address, abi }
 export const checkAllowance = (token, account, network) => async (dispatch) => {
@@ -369,7 +370,7 @@ export const checkAllowance = (token, account, network) => async (dispatch) => {
     // const _tokenContract = token.imported
     //   ? tokenContract(token.address, token.abi, network)
     //   : getTokenContract(network, token.symbol);
-    const _tokenContract = tokenContract(token.address, token.abi, network);
+    const _tokenContract = tokenContract(token.address, network);
 
     const _routerContract = routerContract(network);
     if (token.symbol === ETH) {
@@ -417,7 +418,7 @@ export const confirmAllowance =
       //   ? tokenContract(token.address, token.abi, network)
       //   : getTokenContract(network, token.symbol);
       console.log("token", token);
-      const _tokenContract = tokenContract(token.address, token.abi, network);
+      const _tokenContract = tokenContract(token.address, network);
 
       const _routerContract = routerContract(network);
 
@@ -446,11 +447,9 @@ export const confirmAllowance =
   };
 
 export const checkLpAllowance =
-  (token1, token2, pairData, account, network) => async (dispatch) => {
+  (token1, token2, pairAddress, account, network) => async (dispatch) => {
     try {
-      // console.log("checking allowance");
-      // const _pairContract = pairContract(token1.symbol, token2.symbol, network);
-      const _pairContract = pairContract2(pairData, network);
+      const _pairContract = pairContract(pairAddress, network);
       const _routerContract = routerContract(network);
 
       dispatch({
@@ -487,11 +486,9 @@ export const checkLpAllowance =
   };
 
 export const confirmLPAllowance =
-  (balance, token1, token2, pairData, account, network) => async (dispatch) => {
+  (balance, token1, token2, pairAddress, account, network) => async (dispatch) => {
     try {
-      console.log(pairData);
-      // const _pairContract = pairContract(token1.symbol, token2.symbol, network);
-      const _pairContract = pairContract2(pairData, network);
+      const _pairContract = pairContract(pairAddress, network);
       const _routerContract = routerContract(network);
 
       dispatch({
@@ -593,36 +590,24 @@ export const importToken = (address, account, network) => async (dispatch) => {
   });
 };
 
-export const loadPairContractAbi =
-  (token0Symbol, token1Symbol, pairData, network) => async (dispatch) => {
+export const loadPairAddress =
+  (token0Symbol, token1Symbol, pairAddress, network) => async (dispatch) => {
     try {
       dispatch({
         type: SHOW_DEX_LOADING,
       });
 
-      const pairAddress = pairData.address;
-
       const _data = {};
-      _data[`${token0Symbol}_${token1Symbol}`] = pairData;
+      _data[`${token0Symbol}_${token1Symbol}`] = pairAddress;
 
-      if (pairAddress === nullAddress) {
-        dispatch({
-          type: SET_PAIR_DATA,
-          payload: _data,
-        });
-      } else {
-        console.log("loading pair data ", pairData);
+      dispatch({
+        type: SET_PAIR_DATA,
+        payload: _data,
+      });
 
-        dispatch({
-          type: SET_PAIR_DATA,
-          payload: _data,
-        });
-      }
-      // fetch pair abi and load
-      // 1. laod from local if avialable
-      // 2 . download from etherscan if not avialable
+
     } catch (error) {
-      console.log("importToken ", error);
+      console.log("loadPairAddress ", error);
       dispatch({
         type: DEX_ERROR,
         payload: "Pair not founds",
@@ -636,10 +621,10 @@ export const loadPairContractAbi =
 // load token list to be selected
 // pairData = { abi:[], address:"" }
 export const getLpBalance =
-  (token1, token2, pairData, account, network) => async (dispatch) => {
+  (token1, token2, pairAddress, account, network) => async (dispatch) => {
     // console.log("getting balance", { token1, token2 });
     try {
-      const _pairContract = pairContract2(pairData, network);
+      const _pairContract = pairContract(pairAddress, network) // pairContract2(pairData, network);
 
       console.log("pair contract ", _pairContract._address);
       dispatch({
@@ -709,40 +694,39 @@ export const getLpBalance =
     });
   };
 
-export const verifySlippage =
-  (slippage, token1, token2, account, network) => async (dispatch) => {
-    try {
-      const _pairContract = pairContract(token1.symbol, token2.symbol, network);
+// export const verifySlippage =
+//   (slippage, pairAddress, account, network) => async (dispatch) => {
+//     try {
+//       const _pairContract = pairContract(pairAddress, network);
 
-      dispatch({
-        type: SHOW_DEX_LOADING,
-      });
-      console.log("verifying slippage", { token1, token2 });
-      const [lpBalance, token0Addr, token1Addr, reservesData, totalSupply] =
-        await Promise.all([
-          _pairContract.methods.balanceOf(account).call(),
-          _pairContract.methods.token0().call(),
-          _pairContract.methods.token1().call(),
-          _pairContract.methods.getReserves().call(),
-          _pairContract.methods.totalSupply().call(),
-        ]);
+//       dispatch({
+//         type: SHOW_DEX_LOADING,
+//       });
+//       const [lpBalance, token0Addr, token1Addr, reservesData, totalSupply] =
+//         await Promise.all([
+//           _pairContract.methods.balanceOf(account).call(),
+//           _pairContract.methods.token0().call(),
+//           _pairContract.methods.token1().call(),
+//           _pairContract.methods.getReserves().call(),
+//           _pairContract.methods.totalSupply().call(),
+//         ]);
 
-      dispatch({
-        type: VERIFY_SLIPPAGE,
-        payload: true,
-      });
-    } catch (error) {
-      console.log("getTokenPrice:  ", error);
-      dispatch({
-        type: VERIFY_SLIPPAGE,
-        payload: false,
-      });
-      dispatch({
-        type: DEX_ERROR,
-        payload: "Failed to get token price",
-      });
-    }
-    dispatch({
-      type: HIDE_DEX_LOADING,
-    });
-  };
+//       dispatch({
+//         type: VERIFY_SLIPPAGE,
+//         payload: true,
+//       });
+//     } catch (error) {
+//       console.log("verifySlippage:  ", error);
+//       dispatch({
+//         type: VERIFY_SLIPPAGE,
+//         payload: false,
+//       });
+//       dispatch({
+//         type: DEX_ERROR,
+//         payload: "Failed to get token price",
+//       });
+//     }
+//     dispatch({
+//       type: HIDE_DEX_LOADING,
+//     });
+//   };

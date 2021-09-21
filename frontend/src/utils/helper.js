@@ -116,19 +116,19 @@ function convertToInternationalCurrencySystem(labelValue, formatter) {
   // Nine Zeroes for Billions
   return Math.abs(Number(labelValue)) >= 1.0e9
     ? formatter
-        .format((Math.abs(Number(labelValue)) / 1.0e9).toFixed(2))
-        .slice(1) + "B"
+      .format((Math.abs(Number(labelValue)) / 1.0e9).toFixed(2))
+      .slice(1) + "B"
     : // Six Zeroes for Millions
     Math.abs(Number(labelValue)) >= 1.0e6
-    ? formatter
+      ? formatter
         .format((Math.abs(Number(labelValue)) / 1.0e6).toFixed(2))
         .slice(1) + "M"
-    : // Three Zeroes for Thousands
-    Math.abs(Number(labelValue)) >= 1.0e3
-    ? formatter
-        .format((Math.abs(Number(labelValue)) / 1.0e3).toFixed(2))
-        .slice(1) + "K"
-    : formatter.format(Math.abs(Number(labelValue))).slice(1);
+      : // Three Zeroes for Thousands
+      Math.abs(Number(labelValue)) >= 1.0e3
+        ? formatter
+          .format((Math.abs(Number(labelValue)) / 1.0e3).toFixed(2))
+          .slice(1) + "K"
+        : formatter.format(Math.abs(Number(labelValue))).slice(1);
 }
 
 export const resetCurrencyFormatting = (value) => {
@@ -136,6 +136,9 @@ export const resetCurrencyFormatting = (value) => {
 };
 
 export const isNumber = (value) => {
+  if (value === '.') {
+    return true
+  }
   return !isNaN(parseInt(value));
 };
 

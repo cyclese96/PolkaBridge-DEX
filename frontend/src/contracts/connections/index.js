@@ -8,6 +8,8 @@ import RouterAbi from "../abi/Router.json";
 import FactoryAbi from "../abi/Factory.json";
 import UsdtAbi from "../abi/Usdt.json";
 import PairUsdtEthAbi from "../abi/PairUsdtEth.json";
+import pairAbi from '../abi/pair.json';
+import tokenAbi from '../abi/erc20.json';
 
 import {
   biteAddressKoven,
@@ -111,12 +113,11 @@ const getPairInfo = (token0Symbol, token1Symbol) => {
   }
 };
 
-export const pairContract = (token0Symbol, token1Symbol, network) => {
-  const [address, abi] = getPairInfo(token0Symbol, token1Symbol);
-  if (!address || !abi) {
-    return null;
-  }
-  const connection = getCurrentConnection(network, abi, address);
+export const pairContract = (pairAddress, network) => {
+
+  const _pairAbi = pairAbi;
+  const _pairAddress = pairAddress;
+  const connection = getCurrentConnection(network, _pairAbi, _pairAddress);
   return connection;
 };
 
@@ -130,10 +131,10 @@ export const pairContract2 = (pairData, network) => {
 };
 
 //get connecttion of imported contract
-export const tokenContract = (address, abi, network) => {
+export const tokenContract = (address, network) => {
   const _address = address;
 
-  const _abi = abi;
+  const _abi = tokenAbi;
   const connection = getCurrentConnection(network, _abi, _address);
   return connection;
 };

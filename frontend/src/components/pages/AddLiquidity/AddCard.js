@@ -25,7 +25,7 @@ import {
   confirmAllowance,
   getPoolShare,
   getLpBalance,
-  loadPairContractAbi,
+  loadPairAddress,
 } from "../../../actions/dexActions";
 import { getAccountBalance } from "../../../actions/accountActions";
 import tokenThumbnail from "../../../utils/tokenThumbnail";
@@ -34,7 +34,6 @@ import store from "../../../store";
 import { RESET_POOL_SHARE, SET_TOKEN_ABI } from "../../../actions/types";
 import debounce from "lodash.debounce";
 import { getPairAddress, getTokenAbi } from "../../../utils/connectionUtils";
-import { fetchContractAbi } from "../../../utils/httpUtils";
 import { Settings } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
@@ -264,7 +263,7 @@ const AddCard = (props) => {
     getPoolShare,
     handleBack,
     getLpBalance,
-    loadPairContractAbi,
+    loadPairAddress,
     getAccountBalance,
   } = props;
 
@@ -327,7 +326,7 @@ const AddCard = (props) => {
     ) {
       return pairContractData[
         `${selectedToken1.symbol}_${selectedToken2.symbol}`
-      ].address;
+      ];
     } else if (
       Object.keys(pairContractData).includes(
         `${selectedToken2.symbol}_${selectedToken1.symbol}`
@@ -335,33 +334,12 @@ const AddCard = (props) => {
     ) {
       return pairContractData[
         `${selectedToken2.symbol}_${selectedToken1.symbol}`
-      ].address;
+      ];
     } else {
       return null;
     }
   };
 
-  const currentPairAbi = () => {
-    if (
-      Object.keys(pairContractData).includes(
-        `${selectedToken1.symbol}_${selectedToken2.symbol}`
-      )
-    ) {
-      return pairContractData[
-        `${selectedToken1.symbol}_${selectedToken2.symbol}`
-      ].abi;
-    } else if (
-      Object.keys(pairContractData).includes(
-        `${selectedToken2.symbol}_${selectedToken1.symbol}`
-      )
-    ) {
-      return pairContractData[
-        `${selectedToken2.symbol}_${selectedToken1.symbol}`
-      ].abi;
-    } else {
-      return null;
-    }
-  };
 
   const currentTokenApprovalStatus = () => {
     return selectedToken1.symbol === "ETH"
@@ -369,14 +347,6 @@ const AddCard = (props) => {
       : approvedTokens[selectedToken1.symbol];
   };
 
-  const getSelectedTokenAbi = (token) => {
-    let abi = getTokenAbi(token.symbol);
-    if (!abi) {
-      abi = tokenData[token.symbol] ? tokenData[token.symbol] : null;
-    }
-    console.log("returing abi ", tokenData[token.symbol]);
-    return abi;
-  };
 
   const clearInputState = () => {
     setToken1Value("");
@@ -392,80 +362,46 @@ const AddCard = (props) => {
       // load erc20 token abi and balance
       const erc20Token =
         selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
-      let erc20Abi = getSelectedTokenAbi(erc20Token);
-      console.log("abi received ", erc20Abi);
-      if (!erc20Abi) {
-        // load token abi if not loaded
-        erc20Abi = await fetchContractAbi(erc20Token.address, currentNetwork);
-        const abiData = {};
-        abiData[`${erc20Token.symbol}`] = erc20Abi;
-        store.dispatch({
-          type: SET_TOKEN_ABI,
-          payload: abiData,
-        });
-      }
+
       await getAccountBalance(
-        {
-          ...erc20Token,
-          abi: erc20Abi,
-        },
+        erc20Token,
         currentNetwork
       );
 
       let _pairAddress = currentPairAddress();
-      console.log("current pair address ", _pairAddress);
+
       if (!_pairAddress) {
         _pairAddress = await getPairAddress(
           selectedToken1.address,
           selectedToken2.address,
           currentNetwork
         );
-        console.log(
-          "pair address not found fetched from factory ",
-          _pairAddress
+
+        loadPairAddress(
+          selectedToken1.symbol,
+          selectedToken2.symbol,
+          _pairAddress,
+          currentNetwork
         );
+
       }
 
       if (!_pairAddress) {
         //pair not yet created in the factory
       } else {
-        // load current pair ABI
-        let _pairAbi = currentPairAbi();
-        if (!_pairAbi || _pairAbi.length === 0) {
-          _pairAbi = await fetchContractAbi(_pairAddress, currentNetwork);
-        }
 
-        if (!_pairAbi || _pairAbi.length === 0) {
-          //failed to load pair abi
-          //handle error:
-          console.log("failed to load pair abi");
-        }
 
-        // laod current pair reserves
-        let _pairData = { abi: _pairAbi, address: _pairAddress };
-
-        // update pair data into reducer if not available
-        if (!currentPairAddress()) {
-          loadPairContractAbi(
-            selectedToken1.symbol,
-            selectedToken2.symbol,
-            _pairData,
-            currentNetwork
-          );
-        }
-
-        console.log("final pair data ", _pairData);
         await getLpBalance(
           selectedToken1,
           selectedToken2,
-          _pairData,
+          _pairAddress,
           currentAccount,
           currentNetwork
         );
       }
 
       await checkAllowance(
-        { ...selectedToken1, abi: erc20Abi },
+        selectedToken1,
         currentAccount,
         currentNetwork
       );
@@ -475,14 +411,12 @@ const AddCard = (props) => {
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
   const handleConfirmAllowance = async () => {
-    // console.log("token", selectedToken1.symbol);
-    // console.log("abi", getSelectedTokenAbi(selectedToken1));
+
     const allowanceAmount = toWei("999999999");
-    const tokenAbi = getSelectedTokenAbi(selectedToken1);
-    // console.log("abi", tokenData[selectedToken1.symbol].abi);
+
     await confirmAllowance(
       allowanceAmount,
-      { ...selectedToken1, abi: tokenAbi },
+      selectedToken1,
       currentAccount,
       currentNetwork
     );
@@ -519,10 +453,9 @@ const AddCard = (props) => {
 
     if (!disabled) {
       debouncedPoolShareCall(
-        selectedToken1.symbol,
-        selectedToken2.symbol,
-        token1.value,
-        token2.value,
+        currentPairAddress(),
+        { ...selectedToken1, input: token1.value },
+        { ...selectedToken2, input: token2.value },
         currentNetwork
       );
     }
@@ -538,23 +471,23 @@ const AddCard = (props) => {
     [] // will be created only once initially
   );
 
-  const getCurrentPairData = () => {
-    const pairData = { abi: currentPairAbi(), address: currentPairAddress() };
-    return pairData;
-  };
+  // const getCurrentPairData = () => {
+  //   const pairData = { abi: currentPairAbi(), address: currentPairAddress() };
+  //   return pairData;
+  // };
 
   const onToken1InputChange = async (tokens) => {
     setToken1Value(tokens);
 
     //calculate resetpective value of token 2 if selected
     let _token2Value = "";
-    const pairData = getCurrentPairData();
+    const pairAddress = currentPairAddress();
 
-    if (selectedToken2.symbol && tokens && pairData.abi && pairData.address) {
+    if (selectedToken2.symbol && tokens && pairAddress) {
       await debouncedGetLpBalance(
         selectedToken1,
         selectedToken2,
-        pairData,
+        pairAddress,
         currentAccount,
         currentNetwork
       );
@@ -589,13 +522,13 @@ const AddCard = (props) => {
     setToken2Value(tokens);
 
     let _token1Value = "";
-    const pairData = getCurrentPairData();
+    const pairAddress = currentPairAddress();
 
-    if (selectedToken1.symbol && tokens && pairData.abi && pairData.address) {
+    if (selectedToken1.symbol && tokens && pairAddress) {
       await debouncedGetLpBalance(
         selectedToken1,
         selectedToken2,
-        pairData,
+        pairAddress,
         currentAccount,
         currentNetwork
       );
@@ -855,6 +788,6 @@ export default connect(mapStateToProps, {
   confirmAllowance,
   getPoolShare,
   getLpBalance,
-  loadPairContractAbi,
+  loadPairAddress,
   getAccountBalance,
 })(AddCard);
