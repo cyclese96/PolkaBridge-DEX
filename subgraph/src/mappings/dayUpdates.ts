@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
-import { BigDecimal, BigInt, ethereum } from '@graphprotocol/graph-ts'
-import { Bundle, Pair, PairDayData, Token, TokenDayData, PolkabridgeAmmDayData, PolkabridgeAmmFactory } from '../../generated/schema' //'../generated/schema'
+import { BigDecimal, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
+import { Bundle, Pair, PairDayData, UserDayData, Token, TokenDayData, PolkabridgeAmmDayData, PolkabridgeAmmFactory } from '../../generated/schema' //'../generated/schema'
 import { PairHourData } from '../../generated/schema'
 import { FACTORY_ADDRESS, ONE_BI, ZERO_BD, ZERO_BI } from './helpers'
 
@@ -58,6 +58,34 @@ export function updatePairDayData(event: ethereum.Event): PairDayData {
   pairDayData.save()
 
   return pairDayData as PairDayData
+}
+
+export function updateUserDayData(event: ethereum.Event, userAddress: Bytes, amountUSD: BigDecimal, amountETH:BigDecimal): UserDayData {
+  let timestamp = event.block.timestamp.toI32()
+  let dayID = timestamp / 86400
+  let dayStartTimestamp = dayID * 86400
+  let dayPairID = event.address
+    .toHex()
+    .concat('-')
+    .concat(BigInt.fromI32(dayID).toString())
+  // let pair = Pair.load(event.address.toHex())
+  let userDayData = UserDayData.load(dayPairID)
+  if (userDayData === null) {
+    userDayData = new UserDayData(dayPairID)
+    userDayData.date = dayStartTimestamp
+    userDayData.userAddress = userAddress
+    userDayData.dailyVolumeETH = ZERO_BD
+    userDayData.dailyVolumeUSD = ZERO_BD
+    userDayData.dailyTxns = ZERO_BI
+  }
+
+  userDayData.dailyVolumeETH = userDayData.dailyVolumeETH.plus(amountETH)
+  userDayData.dailyVolumeUSD = userDayData.dailyVolumeUSD.plus(amountUSD)
+  
+  userDayData.dailyTxns = userDayData.dailyTxns.plus(ONE_BI)
+  userDayData.save()
+
+  return userDayData as UserDayData
 }
 
 export function updatePairHourData(event: ethereum.Event): PairHourData {

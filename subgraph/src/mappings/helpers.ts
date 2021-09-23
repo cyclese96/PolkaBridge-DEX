@@ -5,7 +5,6 @@ import { ERC20SymbolBytes } from '../../generated/Factory/ERC20SymbolBytes'
 import { ERC20NameBytes } from '../../generated/Factory/ERC20NameBytes'
 // import { Bundle, Token, Pair } from '../../generated/schema'
 import { Factory as FactoryContract } from '../../generated/templates/Pair/Factory'
-import { User } from '../../generated/schema'
 // import { TokenDefinition } from './tokenDefinition'
 
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000"
