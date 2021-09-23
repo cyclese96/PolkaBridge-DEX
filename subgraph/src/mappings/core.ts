@@ -11,7 +11,7 @@ import {
   Bundle,
 } from '../../generated/schema'
 import { Pair as PairContract, Mint, Burn, Swap, Transfer, Sync } from '../../generated/templates/Pair/Pair'
-import { updatePairDayData, updateTokenDayData, updatePolkabridgeAmmDayData, updatePairHourData } from './dayUpdates'
+import { updatePairDayData, updateTokenDayData, updatePolkabridgeAmmDayData, updatePairHourData, updateUserDayData } from './dayUpdates'
 import { getEthPriceInUSD, findEthPerToken, getTrackedVolumeUSD, getTrackedLiquidityUSD } from './pricing'
 import {
   convertTokenToDecimal,
@@ -510,6 +510,7 @@ export function handleSwap(event: Swap): void {
   let polkabridgeAmmDayData = updatePolkabridgeAmmDayData(event)
   let token0DayData = updateTokenDayData(token0 as Token, event)
   let token1DayData = updateTokenDayData(token1 as Token, event)
+  let userDayData = updateUserDayData(event, event.params.sender, trackedAmountUSD, trackedAmountETH)
 
   // swap specific updating
   polkabridgeAmmDayData.dailyVolumeUSD = polkabridgeAmmDayData.dailyVolumeUSD.plus(trackedAmountUSD)
