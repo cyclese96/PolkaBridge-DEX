@@ -268,13 +268,69 @@ export const getPoolShare =
 
 //token0: { amount: "", address: "", desired:"", min:"" }
 //token1 { amount: "", address: "", desired:"", min:"" }
+export const addLiquidity =
+  (tokenA, tokenB, account, deadline, network) => async (dispatch) => {
+    try {
+      const _routerContract = routerContract(network);
+
+      dispatch({
+        type: SHOW_LOADING,
+      });
+      //input params
+      const tokenAAmountDesired = tokenA.amount;
+      const tokenAAmountMin = "0";
+      const tokenBAmountDesired = tokenB.amount;
+      const tokenBAmountMin = "0";
+
+      // deadline should be passed in minites in calculation
+      const _deadlineUnix = getUnixTime(deadline);
+      console.log({
+        address0: tokenA.address,
+        address1: tokenB.address,
+        tokenAAmountDesired,
+        tokenBAmountDesired,
+        tokenAAmountMin,
+        tokenBAmountMin,
+        account,
+        _deadlineUnix,
+      });
+      const liquidity = await _routerContract.methods
+        .addLiquidity(
+          tokenA.address,
+          tokenB.address,
+          tokenAAmountDesired,
+          tokenBAmountDesired,
+          tokenAAmountMin,
+          tokenBAmountMin,
+          account,
+          _deadlineUnix
+        )
+        .send({ from: account });
+
+      // console.log(liquidity);
+    } catch (error) {
+      console.log("addLiquidity: ", error);
+      dispatch({
+        type: DEX_ERROR,
+        payload: "Failed to add liquidity",
+      });
+    }
+
+    dispatch({
+      type: HIDE_LOADING,
+    });
+  };
+
+
+// token0: { amount: "", address: "", desired:"", min:"" }
+// token1 { amount: "", address: "", desired:"", min:"" }
 export const addLiquidityEth =
   (ethToken, erc20Token, account, deadline, network) => async (dispatch) => {
     try {
-      console.log({ token0: ethToken, token1: erc20Token });
+      // console.log({ token0: ethToken, token1: erc20Token });
       // const _tokenContract = getTokenContract(network, erc20Token.symbol);
       const _routerContract = routerContract(network);
-
+      console.log('addLiquidityEth')
       dispatch({
         type: SHOW_LOADING,
       });
@@ -319,6 +375,8 @@ export const addLiquidityEth =
       type: HIDE_LOADING,
     });
   };
+
+
 
 //token0: { amount: "", address: "", desired:"", min:"" }
 //token1 { amount: "", address: "", desired:"", min:"" }
@@ -557,11 +615,15 @@ export const importToken = (address, account, network) => async (dispatch) => {
       fetchTokenInfo(address),
     ]);
 
-    // console.log("token info received ", tokenInfoData);
+    console.log("token info received ", tokenInfoData);
     let tokenInfo = {};
-    if (!tokenInfoData.result[0]) {
-      tokenInfo.tokenName = "Test token";
-      tokenInfo.symbol = "TEST";
+    if (tokenInfoData.status === '0') {
+      tokenInfo = {
+        tokenName: "Test erc20 token",
+        symbol: "TEST"
+      }
+      // tokenInfo.tokenName = "Test token";
+      // tokenInfo.symbol = "TEST";
     } else {
       tokenInfo = tokenInfoData.result[0];
     }

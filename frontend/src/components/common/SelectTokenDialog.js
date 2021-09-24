@@ -151,15 +151,15 @@ const SelectTokenDialog = ({
     handleClose();
   };
 
-  // useEffect(() => {
-  //   setTokens(tokenList);
-  // }, [tokenList]);
-
   useEffect(() => {
-    if (open) {
-      resetInputState();
-    }
-  }, [open]);
+    setTokens(tokenList);
+  }, [tokenList]);
+
+  // useEffect(() => {
+  //   if (open) {
+  //     resetInputState();
+  //   }
+  // }, [open]);
 
   useEffect(() => {
     if (importedToken.symbol) {

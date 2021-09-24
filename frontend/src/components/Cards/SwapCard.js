@@ -288,7 +288,7 @@ const SwapCard = (props) => {
         });
       } else {
         console.log("current pair address ", _pairAddress);
-        setLiquidityStatus(false);
+        // setLiquidityStatus(false);
 
         await getLpBalance(
           selectedToken1,
@@ -308,6 +308,19 @@ const SwapCard = (props) => {
       setLocalStateLoading(false);
     }
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
+
+
+  useEffect(() => {
+
+    if (poolReserves && (new BigNumber(poolReserves[selectedToken1.symbol]).eq(0) || new BigNumber(poolReserves[selectedToken2.symbol]).eq(0))) {
+      setLiquidityStatus(true);
+      setStatus({
+        disabled: true,
+        message: "No liquidity available for this pair",
+      });
+    }
+
+  }, [poolReserves])
 
   const verifySwapStatus = (token1, token2) => {
     let message, disabled;

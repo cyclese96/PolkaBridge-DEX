@@ -26,6 +26,7 @@ import {
   getPoolShare,
   getLpBalance,
   loadPairAddress,
+  addLiquidity
 } from "../../../actions/dexActions";
 import { getAccountBalance } from "../../../actions/accountActions";
 import tokenThumbnail from "../../../utils/tokenThumbnail";
@@ -265,6 +266,7 @@ const AddCard = (props) => {
     getLpBalance,
     loadPairAddress,
     getAccountBalance,
+    addLiquidity
   } = props;
 
   const currentDefaultToken = {
@@ -451,7 +453,7 @@ const AddCard = (props) => {
 
     setStatus({ message, disabled });
 
-    if (!disabled) {
+    if (!disabled && currentPairAddress()) {
       debouncedPoolShareCall(
         currentPairAddress(),
         { ...selectedToken1, input: token1.value },
@@ -459,6 +461,7 @@ const AddCard = (props) => {
         currentNetwork
       );
     }
+    console.log({ token1, token2 })
   };
 
   const debouncedPoolShareCall = useCallback(
@@ -538,13 +541,20 @@ const AddCard = (props) => {
         poolReserves[selectedToken1.symbol],
         poolReserves[selectedToken2.symbol]
       );
-      if (new BigNumber(_token1Value).gt(0)) {
+      if (new BigNumber(_token1Value).eq(0)) {
+        verifySwapStatus(
+          { value: token1Value, selected: selectedToken1 },
+          { value: tokens, selected: selectedToken2 }
+        );
+      } else {
         setToken1Value(_token1Value);
         verifySwapStatus(
           { value: _token1Value, selected: selectedToken1 },
           { value: tokens, selected: selectedToken2 }
         );
       }
+
+
     } else if (selectedToken1.symbol && !tokens) {
       setToken1Value("");
       if (!addStatus.disabled) {
@@ -552,6 +562,7 @@ const AddCard = (props) => {
       }
     } else if (selectedToken1.symbol && tokens) {
       // setStatus({ disabled: false, message: "Add Liquidity" });
+      console.log('checking 2nd else if')
       verifySwapStatus(
         { value: token1Value, selected: selectedToken1 },
         { value: tokens, selected: selectedToken2 }
@@ -594,34 +605,53 @@ const AddCard = (props) => {
   };
 
   const handleAddLiquidity = async () => {
-    let etherToken, erc20Token;
-    if (selectedToken1.symbol === ETH) {
-      etherToken = {
-        ...selectedToken1,
-        amount: token1Value.toString(),
-      };
-      erc20Token = {
-        ...selectedToken2,
-        amount: toWei(token2Value.toString()),
-      };
+
+    if (selectedToken1.symbol === ETH || selectedToken2.symbol === ETH) {
+
+      let etherToken, erc20Token;
+      if (selectedToken1.symbol === ETH) {
+        etherToken = {
+          ...selectedToken1,
+          amount: token1Value.toString(),
+        };
+        erc20Token = {
+          ...selectedToken2,
+          amount: toWei(token2Value.toString()),
+        };
+      } else {
+        etherToken = {
+          ...selectedToken2,
+          amount: token2Value.toString(),
+        };
+        erc20Token = {
+          ...selectedToken1,
+          amount: toWei(token1Value.toString()),
+        };
+      }
+
+      await addLiquidityEth(
+        etherToken,
+        erc20Token,
+        currentAccount,
+        swapSettings.deadline,
+        currentNetwork
+      );
+
     } else {
-      etherToken = {
-        ...selectedToken2,
-        amount: token2Value.toString(),
-      };
-      erc20Token = {
-        ...selectedToken1,
-        amount: toWei(token1Value.toString()),
-      };
+      // addLiquidity
+
+      await addLiquidity(
+        { ...selectedToken1, amount: toWei(token1Value) },
+        { ...selectedToken2, amount: toWei(token2Value) },
+        currentAccount,
+        swapSettings.deadline,
+        currentNetwork
+      )
+
+
     }
 
-    await addLiquidityEth(
-      etherToken,
-      erc20Token,
-      currentAccount,
-      swapSettings.deadline,
-      currentNetwork
-    );
+
   };
 
   const currentPoolShare = () => {
@@ -790,4 +820,5 @@ export default connect(mapStateToProps, {
   getLpBalance,
   loadPairAddress,
   getAccountBalance,
+  addLiquidity
 })(AddCard);

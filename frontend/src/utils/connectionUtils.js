@@ -56,11 +56,23 @@ export const getTokenAddress = (tokenSymbol) => {
 
 
 export const getPairAddress = async (address0, address1, network) => {
-  const factory = factoryContract(network);
-  const pairAddress = await factory.methods.getPair(address0, address1).call();
 
-  if (pairAddress === nullAddress) {
+
+  console.log('getting pair', { address0, address1 })
+  try {
+
+    const factory = factoryContract(network);
+    const pairAddress = await factory.methods.getPair(address0, address1).call();
+
+    if (pairAddress === nullAddress) {
+      return null;
+    }
+    return pairAddress;
+
+  } catch (error) {
+
+    console.log("getPairAddress", error)
     return null;
   }
-  return pairAddress;
+
 };

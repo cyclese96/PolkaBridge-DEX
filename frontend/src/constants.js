@@ -22,7 +22,7 @@ export const corgibMemeCoinMainnet =
 
 // factory ethereum
 export const facotryAddressTestnet =
-  "0xAeDC38f770483C0AC7390CAf4edEAdA4F893AC45";
+  "0x0A5f6F7732d25c6782B913D873EFBe3E0397c8CF";
 export const factoryAddresMainnet =
   "0xA1853078D1447C0060c71a672E6D13882f61A0a6";
 
@@ -34,7 +34,7 @@ export const factoryAddresBscMainnet =
 
 // router ethereum addresses
 export const routerAddressTestnet =
-  "0x2072BeaC55FF4464C647977Fe0cF11Fd8a0e8CBb";
+  "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D";
 export const routerAddressMainnet =
   "0x050aAC21096e027142E3f5d089a9251FcCf191b9";
 
