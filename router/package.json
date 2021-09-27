@@ -8,7 +8,7 @@
   },
   "scripts": {
     "compile": "truffle compile",
-    "deploy": "truffle migrate --network rinkeby_infura",
+    "deploy": "truffle migrate --network rinkeby_infura --reset",
     "verify": "truffle run verify UniswapV2Router02 --network rinkeby_infura",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

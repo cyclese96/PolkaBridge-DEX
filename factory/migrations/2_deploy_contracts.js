@@ -6,4 +6,7 @@ module.exports = function (deployer) {
   let owner = "0xfEEF5F353aE5022d0cfcD072165cDA284B65772B";
   deployer.deploy(UniswapV2Factory, owner);
   deployer.deploy(UniswapV2Pair);
+
+  // console.log("Factory address is ", factoryAddress);
+  // console.log("Pair address is ", pairAddress);
 };

@@ -54,6 +54,7 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
 
     constructor() {
         factory = msg.sender;
+        // factory = _factoryAddress;
     }
 
     // called once by the factory at time of deployment
@@ -162,8 +163,13 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
             address _token0 = token0;
             address _token1 = token1;
             require(to != _token0 && to != _token1, 'PolkaBridge AMM V1: INVALID_TO');
+
             if (amount0Out > 0) _safeTransfer(_token0, to, amount0Out); // optimistically transfer tokens
             if (amount1Out > 0) _safeTransfer(_token1, to, amount1Out); // optimistically transfer tokens
+            /** if (amount0Out - amount0In.mul(4).div(10000) > 0) _safeTransfer(_token0, to, amount0Out - amount0In.mul(4).div(10000)); // optimistically transfer tokens
+            if (amount1Out - amount1In.mul(4).div(10000) > 0) _safeTransfer(_token1, to, amount1Out - amount1In.mul(4).div(10000)); // optimistically transfer tokens */
+
+
             // if (data.length > 0) IUniswapV2Callee(to).uniswapV2Call(msg.sender, amount0Out, amount1Out, data);
             // bytes calldata data = new bytes(0);
             // IUniswapV2Callee(to).uniswapV2Call(msg.sender, amount0Out, amount1Out, data);
@@ -180,11 +186,13 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
         }
 
         {
-            if(amount0In > 0) {
+            // if(amount0In > 0) {
+            if(amount0In.mul(4).div(10000) > 0) {
                 _safeTransfer(token0, treasury, amount0In.mul(4).div(10000));
                 balance0 = balance0 - amount0In.mul(4).div(10000);
             }
-            if(amount1In > 0) {
+            // if(amount1In > 0) {
+            if(amount1In.mul(4).div(10000) > 0) {
                 _safeTransfer(token1, treasury, amount1In.mul(4).div(10000));
                 balance1 = balance1 - amount1In.mul(4).div(10000);
             }
