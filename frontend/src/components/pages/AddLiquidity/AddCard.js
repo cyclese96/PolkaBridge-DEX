@@ -295,7 +295,8 @@ const AddCard = (props) => {
     setOpen(false);
   };
 
-  useEffect(async () => {
+  useEffect(() => {
+   async function initSelection() {
     let defaultToken1, defaultToken2;
     if (currentNetwork === etheriumNetwork) {
       defaultToken1 = tokens[0];
@@ -318,6 +319,8 @@ const AddCard = (props) => {
       { value: token1Value, selected: defaultToken1 },
       { value: token2Value, selected: defaultToken2 }
     );
+   }
+   initSelection();
   }, [currentNetwork]);
 
   const currentPairAddress = () => {
@@ -357,59 +360,64 @@ const AddCard = (props) => {
   };
 
   // new use effect
-  useEffect(async () => {
-    if (selectedToken1.symbol && selectedToken2.symbol) {
-      setLocalStateLoading(true);
-      clearInputState();
-      // load erc20 token abi and balance
-      const erc20Token =
-        selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
-
-      await getAccountBalance(
-        erc20Token,
-        currentNetwork
-      );
-
-      let _pairAddress = currentPairAddress();
-
-      if (!_pairAddress) {
-        _pairAddress = await getPairAddress(
-          selectedToken1.address,
-          selectedToken2.address,
+  useEffect(() => {
+    async function loadPair() {
+      if (selectedToken1.symbol && selectedToken2.symbol) {
+        setLocalStateLoading(true);
+        clearInputState();
+        // load erc20 token abi and balance
+        const erc20Token =
+          selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
+  
+        await getAccountBalance(
+          erc20Token,
           currentNetwork
         );
-
-        loadPairAddress(
-          selectedToken1.symbol,
-          selectedToken2.symbol,
-          _pairAddress,
-          currentNetwork
-        );
-
-      }
-
-      if (!_pairAddress) {
-        //pair not yet created in the factory
-      } else {
-
-
-        await getLpBalance(
+  
+        let _pairAddress = currentPairAddress();
+  
+        if (!_pairAddress) {
+          _pairAddress = await getPairAddress(
+            selectedToken1.address,
+            selectedToken2.address,
+            currentNetwork
+          );
+  
+          loadPairAddress(
+            selectedToken1.symbol,
+            selectedToken2.symbol,
+            _pairAddress,
+            currentNetwork
+          );
+  
+        }
+  
+        if (!_pairAddress) {
+          //pair not yet created in the factory
+        } else {
+  
+  
+          await getLpBalance(
+            selectedToken1,
+            selectedToken2,
+            _pairAddress,
+            currentAccount,
+            currentNetwork
+          );
+        }
+  
+        await checkAllowance(
           selectedToken1,
-          selectedToken2,
-          _pairAddress,
           currentAccount,
           currentNetwork
         );
+  
+        setLocalStateLoading(false);
       }
-
-      await checkAllowance(
-        selectedToken1,
-        currentAccount,
-        currentNetwork
-      );
-
-      setLocalStateLoading(false);
     }
+
+    loadPair()
+    
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
   const handleConfirmAllowance = async () => {
@@ -461,7 +469,6 @@ const AddCard = (props) => {
         currentNetwork
       );
     }
-    console.log({ token1, token2 })
   };
 
   const debouncedPoolShareCall = useCallback(
@@ -562,7 +569,6 @@ const AddCard = (props) => {
       }
     } else if (selectedToken1.symbol && tokens) {
       // setStatus({ disabled: false, message: "Add Liquidity" });
-      console.log('checking 2nd else if')
       verifySwapStatus(
         { value: token1Value, selected: selectedToken1 },
         { value: tokens, selected: selectedToken2 }

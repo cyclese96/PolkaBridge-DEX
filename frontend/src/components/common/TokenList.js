@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import { connect } from "react-redux";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import { List } from "@material-ui/core";
 import TokenIcon from "./TokenIcon";
@@ -42,7 +41,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TokenList = ({
-  account: { currentAccount, balance, connected, currentNetwork },
   handleItemSelected,
   tokens,
   disableToken,
@@ -76,8 +74,4 @@ const TokenList = ({
   );
 };
 
-const mapStateToProps = (state) => ({
-  account: state.account,
-});
-
-export default connect(mapStateToProps, {})(TokenList);
+export default TokenList;

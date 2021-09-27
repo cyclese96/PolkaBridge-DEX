@@ -381,53 +381,56 @@ const RemoveCard = ({
   };
 
   // new use effect
-  useEffect(async () => {
-    if (selectedToken1.symbol && selectedToken2.symbol) {
-      // reset input on token change
-      handleClearState();
-      store.dispatch({
-        type: RESET_POOL_DATA,
-      });
+  useEffect(() => {
 
-      // load erc20 token abi and balance
-      const erc20Token =
-        selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
-
-
-      let _pairAddress = currentPairAddress();
-      if (!_pairAddress) {
-        _pairAddress = await getPairAddress(
-          selectedToken1.address,
-          selectedToken2.address,
+    async function loadPair(){
+      if (selectedToken1.symbol && selectedToken2.symbol) {
+        // reset input on token change
+        handleClearState();
+        store.dispatch({
+          type: RESET_POOL_DATA,
+        });
+  
+        // load erc20 token abi and balance
+        const erc20Token =
+          selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
+  
+  
+        let _pairAddress = currentPairAddress();
+        if (!_pairAddress) {
+          _pairAddress = await getPairAddress(
+            selectedToken1.address,
+            selectedToken2.address,
+            currentNetwork
+          );
+          loadPairAddress(
+            selectedToken1.symbol,
+            selectedToken2.symbol,
+            _pairAddress,
+            currentNetwork
+          );
+        }
+  
+        await getLpBalance(
+          selectedToken1,
+          selectedToken2,
+          _pairAddress,
+          currentAccount,
           currentNetwork
         );
-        loadPairAddress(
-          selectedToken1.symbol,
-          selectedToken2.symbol,
+        
+        await checkLpAllowance(
+          selectedToken1,
+          selectedToken2,
           _pairAddress,
+          currentAccount,
           currentNetwork
         );
       }
-
-      await getLpBalance(
-        selectedToken1,
-        selectedToken2,
-        _pairAddress,
-        currentAccount,
-        currentNetwork
-      );
-
-      // if (!currentLpApproved()) {
-      // console.log("checking approval");
-      await checkLpAllowance(
-        selectedToken1,
-        selectedToken2,
-        _pairAddress,
-        currentAccount,
-        currentNetwork
-      );
-      // }
     }
+
+    loadPair()
+   
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
 
