@@ -14,6 +14,8 @@ library UniswapV2LiquidityMathLibrary {
     using SafeMath for uint256;
 
     // computes the direction and magnitude of the profit-maximizing trade
+    // (sqrt(truePriceTokenA/truePriceTokenB*(1-0.2/100)*reserveA*reserveB)-reserveA)/(1-0.2/100)
+    // (Babylonian.sqrt(truePriceTokenA/truePriceTokenB*(1000-2)*reserveA*reserveB)-reserveA)/(1000-2)
     function computeProfitMaximizingTrade(
         uint256 truePriceTokenA,
         uint256 truePriceTokenB,
@@ -24,19 +26,30 @@ library UniswapV2LiquidityMathLibrary {
 
         uint256 invariant = reserveA.mul(reserveB);
 
+        // uint256 leftSide = Babylonian.sqrt(
+        //     FullMath.mulDiv(
+        //         invariant.mul(1000),
+        //         aToB ? truePriceTokenA : truePriceTokenB,                
+        //         (aToB ? truePriceTokenB : truePriceTokenA).mul(998)
+        //     )
+        // );        
         uint256 leftSide = Babylonian.sqrt(
             FullMath.mulDiv(
-                invariant.mul(1000),
+                invariant.mul(998),// invariant.mul(1000-2),
                 aToB ? truePriceTokenA : truePriceTokenB,
-                (aToB ? truePriceTokenB : truePriceTokenA).mul(998)
+                aToB ? truePriceTokenB : truePriceTokenA
             )
-        );
-        uint256 rightSide = (aToB ? reserveA.mul(1000) : reserveB.mul(1000)) / 998;
+        );        
+        leftSide -= aToB ? reserveA : reserveB;
+        // uint256 rightSide = (aToB ? reserveA.mul(10000) : reserveB.mul(10000)) / 9984;
+        // uint256 rightSide = (aToB ? reserveA.mul(1000) : reserveB.mul(1000)) / 998;
+        uint256 rightSide = 998; //1000-2;
 
         if (leftSide < rightSide) return (false, 0);
 
         // compute the amount that must be sent to move the price to the profit-maximizing price
-        amountIn = leftSide.sub(rightSide);
+        // amountIn = leftSide.sub(rightSide);
+        amountIn = leftSide.div(rightSide);
     }
 
     // gets the reserves after an arbitrage moves the price to the profit-maximizing ratio given an externally observed true price
@@ -63,11 +76,15 @@ library UniswapV2LiquidityMathLibrary {
         if (aToB) {
             uint amountOut = UniswapV2Library.getAmountOut(amountIn, reserveA, reserveB);
             reserveA += amountIn;
+            // reserveA -= amountIn.mul(4).div(10000);
             reserveB -= amountOut;
+            // reserveB -= amountOut.mul(4).div(10000);
         } else {
             uint amountOut = UniswapV2Library.getAmountOut(amountIn, reserveB, reserveA);
             reserveB += amountIn;
+            // reserveB += amountIn.mul(4).div(10000);
             reserveA -= amountOut;
+            // reserveA -= amountOut.mul(4).div(10000);
         }
     }
 

@@ -29,7 +29,7 @@ library UniswapV2Library {
                         hex'ff',
                         factory,
                         keccak256(abi.encodePacked(token0, token1)),
-                        hex'eb123fec15c15ed15075475a6ae7fbc85ccb9bde16cd21104349e8b613da0321' // init code hash
+                        hex'840e00fb61ec306072d8432a6f8c486c08ae789f85c505d800fc45d2c6f753a5' // init code hash of factory
                     )
                 )
             )
@@ -66,10 +66,10 @@ library UniswapV2Library {
     ) internal pure returns (uint256 amountOut) {
         require(amountIn > 0, 'UniswapV2Library: INSUFFICIENT_INPUT_AMOUNT');
         require(reserveIn > 0 && reserveOut > 0, 'UniswapV2Library: INSUFFICIENT_LIQUIDITY');
-        // uint256 amountInWithFee = amountIn.mul(998);
-        uint256 amountInWithFee = amountIn.mul(9984);
+        uint256 amountInWithFee = amountIn.mul(998);
+        // uint256 amountInWithFee = amountIn.mul(9984);
         uint256 numerator = amountInWithFee.mul(reserveOut);
-        uint256 denominator = reserveIn.mul(10000).add(amountInWithFee);
+        uint256 denominator = reserveIn.mul(1000).add(amountInWithFee);
         amountOut = numerator / denominator;
     }
 
@@ -81,8 +81,11 @@ library UniswapV2Library {
     ) internal pure returns (uint256 amountIn) {
         require(amountOut > 0, 'UniswapV2Library: INSUFFICIENT_OUTPUT_AMOUNT');
         require(reserveIn > 0 && reserveOut > 0, 'UniswapV2Library: INSUFFICIENT_LIQUIDITY');
+        // uint256 numerator = reserveIn.mul(amountOut).mul(10000);
         uint256 numerator = reserveIn.mul(amountOut).mul(1000);
+        // uint256 denominator = reserveOut.sub(amountOut).mul(9984);
         uint256 denominator = reserveOut.sub(amountOut).mul(998);
+
         amountIn = (numerator / denominator).add(1);
     }
 
