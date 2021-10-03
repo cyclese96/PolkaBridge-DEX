@@ -199,25 +199,30 @@ const SwapCard = (props) => {
   //   }, 1000);
   // };
 
-  useEffect(async () => {
-    let _token = {};
-    if (currentNetwork === etheriumNetwork) {
-      _token = tokens[2];
-      setToken1(_token);
-    } else {
-      _token = {
-        name: "Binance",
-        symbol: "BNB",
-      };
-      setToken1(_token);
-    }
-    setToken1Value("");
-    setToken2({});
-    setToken2Value("");
-    // updateTokenPrices();
+  useEffect(() => {
 
-    // check selected from token allowance
-    // await checkAllowance(_token, currentAccount, currentNetwork);
+    async function initSelection() {
+      let _token = {};
+      if (currentNetwork === etheriumNetwork) {
+        _token = tokens[2];
+        setToken1(_token);
+      } else {
+        _token = {
+          name: "Binance",
+          symbol: "BNB",
+        };
+        setToken1(_token);
+      }
+      setToken1Value("");
+      setToken2({});
+      setToken2Value("");
+      // updateTokenPrices();
+
+      // check selected from token allowance
+      // await checkAllowance(_token, currentAccount, currentNetwork);
+    }
+    initSelection();
+
   }, [currentNetwork, currentAccount]);
 
   const currentPairAddress = () => {
@@ -248,65 +253,68 @@ const SwapCard = (props) => {
     setToken2Value("");
     setStatus({ disabled: true, message: "Enter Amounts" });
   };
-  useEffect(async () => {
-    if (selectedToken1.symbol && selectedToken2.symbol) {
-      setLocalStateLoading(true);
+  useEffect(() => {
+    async function loadPair() {
+      if (selectedToken1.symbol && selectedToken2.symbol) {
+        setLocalStateLoading(true);
 
-      // reset token input on token selection
-      clearInputState();
+        // reset token input on token selection
+        clearInputState();
 
-      // load erc20 token abi and balance
-      const erc20Token =
-        selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
+        // load erc20 token abi and balance
+        const erc20Token =
+          selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
 
-      await getAccountBalance(
-        erc20Token,
-        currentNetwork
-      );
-
-      let _pairAddress = currentPairAddress();
-      if (!_pairAddress) {
-        _pairAddress = await getPairAddress(
-          selectedToken1.address,
-          selectedToken2.address,
+        await getAccountBalance(
+          erc20Token,
           currentNetwork
         );
 
-        loadPairAddress(
-          selectedToken1.symbol,
-          selectedToken2.symbol,
-          _pairAddress,
-          currentNetwork
-        );
-      }
+        let _pairAddress = currentPairAddress();
+        if (!_pairAddress) {
+          _pairAddress = await getPairAddress(
+            selectedToken1.address,
+            selectedToken2.address,
+            currentNetwork
+          );
 
-      if (!_pairAddress) {
-        setLiquidityStatus(true);
-        setStatus({
-          disabled: true,
-          message: "No liquidity available for this pair",
-        });
-      } else {
-        console.log("current pair address ", _pairAddress);
-        // setLiquidityStatus(false);
+          loadPairAddress(
+            selectedToken1.symbol,
+            selectedToken2.symbol,
+            _pairAddress,
+            currentNetwork
+          );
+        }
 
-        await getLpBalance(
+        if (!_pairAddress) {
+          setLiquidityStatus(true);
+          setStatus({
+            disabled: true,
+            message: "No liquidity available for this pair",
+          });
+        } else {
+          console.log("current pair address ", _pairAddress);
+          // setLiquidityStatus(false);
+
+          await getLpBalance(
+            selectedToken1,
+            selectedToken2,
+            _pairAddress,
+            currentAccount,
+            currentNetwork
+          );
+        }
+
+        await checkAllowance(
           selectedToken1,
-          selectedToken2,
-          _pairAddress,
           currentAccount,
           currentNetwork
         );
+
+        setLocalStateLoading(false);
       }
-
-      await checkAllowance(
-        selectedToken1,
-        currentAccount,
-        currentNetwork
-      );
-
-      setLocalStateLoading(false);
     }
+    loadPair();
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
 

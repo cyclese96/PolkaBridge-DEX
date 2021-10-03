@@ -85,6 +85,9 @@ export const supportedTokens = {
   bsc: [BNB, CORGIB, PWAR],
 };
 
+export const TOKEN_BLACKLIST = []
+
+
 export const exchangeFee = 0.25;
 export const defaultSlippage = 0.5;
 export const defaultTransactionDeadline = 20; //20 minutes

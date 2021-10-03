@@ -29,6 +29,7 @@ import {
 } from "../contracts/connections";
 import web3 from "../web";
 import axios from "axios";
+import { ethers } from "ethers";
 
 export const fromWei = (tokens) => {
   if (!tokens) {
@@ -323,6 +324,14 @@ export const formatFloat = (floatValue) => {
   const _f = new BigNumber(floatValue ? floatValue : 0);
   return _f.toFixed(4).toString();
 };
+
+export const isAddress = (value) => {
+  try {
+    return ethers.utils.getAddress(value.toLowerCase())
+  } catch {
+    return false
+  }
+}
 
 export const cacheImportedToken = (tokenData) => {
   let tokens = localStorage.getItem("tokens");

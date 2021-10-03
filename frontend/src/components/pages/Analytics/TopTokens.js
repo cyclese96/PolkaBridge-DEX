@@ -189,7 +189,7 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            // style={{ color: "#E0077D" }}s
+          // style={{ color: "#E0077D" }}s
           >
             <TableSortLabel
               // active={orderBy === headCell.id}
@@ -221,7 +221,7 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            // style={{ color: "#E0077D" }}s
+          // style={{ color: "#E0077D" }}s
           >
             <TableSortLabel
               // active={orderBy === headCell.id}
@@ -394,6 +394,7 @@ const TopTokens = ({
     return obj;
   };
   const formattedTokens = useMemo(() => {
+    console.log('all tokens', allTokens)
     return (
       allTokens &&
       Object.keys(allTokens).map((key) =>
@@ -491,21 +492,21 @@ const TopTokens = ({
         <>
           {formattedTokens.length > 0
             ? stableSort(formattedTokens, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row, index) => {
+                const isItemSelected = isSelected(row.name);
+                const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TokenRow
-                      row={row}
-                      classes={classes}
-                      isItemSelected={isItemSelected}
-                      labelId={labelId}
-                      handleClick={handleClick}
-                    />
-                  );
-                })
+                return (
+                  <TokenRow
+                    row={row}
+                    classes={classes}
+                    isItemSelected={isItemSelected}
+                    labelId={labelId}
+                    handleClick={handleClick}
+                  />
+                );
+              })
             : ""}
           {emptyRows > 0 && (
             <TableRow

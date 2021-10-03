@@ -10,11 +10,6 @@ import AddLiquidity from "./pages/AddLiquidity";
 import Analytics from "./pages/Analytics";
 // import { ApolloProvider } from 'react-apollo'
 // import { client } from "../apollo/client";
-import ApplicationContextProvider from '../contexts/Application'
-import GlobalDataContextProvider from '../contexts/GlobalData'
-import TokenDataContextProvider, { Updater as TokenDataContextUpdater } from '../contexts/TokenData'
-import PairDataContextProvider, { Updater as PairDataContextUpdater } from '../contexts/PairData'
-
 
 
 const useStyles = makeStyles((theme) => ({
@@ -66,29 +61,6 @@ TabPanel.propTypes = {
 };
 
 
-function ContextProviders({ children }) {
-  return (
-    <ApplicationContextProvider>
-      <TokenDataContextProvider>
-        <GlobalDataContextProvider>
-          <PairDataContextProvider>
-            {children}
-          </PairDataContextProvider>
-        </GlobalDataContextProvider>
-      </TokenDataContextProvider>
-    </ApplicationContextProvider>
-  )
-}
-
-function Updaters() {
-  return (
-    <>
-      <TokenDataContextUpdater />
-      <PairDataContextUpdater />
-    </>
-  )
-}
-
 export default function TabPage() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
@@ -138,12 +110,12 @@ export default function TabPage() {
       <TabPanel value={value} index={2}>
         {/* <TokenDataContextProvider></TokenDataContextProvider>
         <GlobalDataContextProvider> */}
-        <ContextProviders>
+        {/* <ContextProviders>
           <>
-            <Updaters />
-            <Analytics />
-          </>
-        </ContextProviders>
+            <Updaters /> */}
+        <Analytics />
+        {/* </> */}
+        {/* </ContextProviders> */}
         {/* </GlobalDataContextProvider> */}
       </TabPanel>
     </>
