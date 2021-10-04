@@ -246,18 +246,18 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
             require(balance0Adjusted.mul(balance1Adjusted) >= uint(_reserve0).mul(_reserve1).mul(1000**2), 'PolkaBridge AMM V1: K');
         }
 
-        {
-            // if(amount0In > 0) {
-            if(amount0In.mul(16).div(10000) > 0) {
-                _safeTransfer(token0, address(this), amount0In.mul(16).div(10000));
-                balance0 = balance0 - amount0In.mul(16).div(10000);
-            }
-            // if(amount1In > 0) {
-            if(amount1In.mul(16).div(10000) > 0) {
-                _safeTransfer(token1, address(this), amount1In.mul(16).div(10000));
-                balance1 = balance1 - amount1In.mul(16).div(10000);
-            }
-        }
+        // {
+        //     // if(amount0In > 0) {
+        //     if(amount0In.mul(16).div(10000) > 0) {
+        //         _safeTransfer(token0, address(this), amount0In.mul(16).div(10000));
+        //         balance0 = balance0 - amount0In.mul(16).div(10000);
+        //     }
+        //     // if(amount1In > 0) {
+        //     if(amount1In.mul(16).div(10000) > 0) {
+        //         _safeTransfer(token1, address(this), amount1In.mul(16).div(10000));
+        //         balance1 = balance1 - amount1In.mul(16).div(10000);
+        //     }
+        // }
         {
             // if(amount0In > 0) {
             if(amount0In.mul(4).div(10000) > 0) {
