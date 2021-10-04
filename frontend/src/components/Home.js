@@ -93,7 +93,7 @@ const useStyles = makeStyles((theme) => ({
 const Home = ({
   connectWallet,
   loadTokens,
-  account: { currentAccount, balance, connected, currentNetwork },
+  account: { currentNetwork },
 }) => {
   const classes = useStyles();
 
@@ -119,14 +119,14 @@ const Home = ({
           if (accounts.length === 0) {
             return;
           }
-  
+
           await connectWallet(false, currentNetwork);
         });
-  
+
         window.ethereum.on("networkChanged", async (networkId) => {
           // setCurrentNetwork(networkId)
           const network = getCurrentNetwork(networkId);
-  
+
           store.dispatch({
             type: CHANGE_NETWORK,
             payload: network,
@@ -145,10 +145,10 @@ const Home = ({
     async function initConnection() {
       let network = "";
       const account = await getCurrentAccount();
-  
+
       if (isMetaMaskInstalled()) {
         const networkId = await getCurrentNetworkId();
-  
+
         if (!supportedNetworks.includes(networkId.toString())) {
           // alert(
           //   "This network is not supported yet! Please switch to Ethereum or Smart Chain network"
@@ -164,7 +164,7 @@ const Home = ({
         // alert('meta mask not installed')
         network = etheriumNetwork;
       }
-  
+
       if (!isMetaMaskInstalled()) {
         return;
       }
@@ -177,17 +177,18 @@ const Home = ({
   }, []);
 
   return (
-    <div style={{ overflowX: "hidden" }}>
-      <div className={classes.navbar}>
-        <Navbar currentNetwork={currentNetwork} />
-      </div>
-      <div className={classes.mainContent}>
-        <TabPage />
-      </div>
-      <div className={classes.footer}>
-        <Footer />
-      </div>
-    </div>
+    <TabPage />
+    // <div style={{ overflowX: "hidden" }}>
+    //   <div className={classes.navbar}>
+    //     <Navbar />
+    //   </div>
+    //   <div className={classes.mainContent}>
+
+    //   </div>
+    //   <div className={classes.footer}>
+    //     <Footer />
+    //   </div>
+    // </div>
   );
 };
 
