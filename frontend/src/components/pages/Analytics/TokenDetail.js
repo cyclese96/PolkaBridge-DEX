@@ -1,8 +1,11 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { useTokenChartData, useTokenData, useTokenPriceData } from '../../../contexts/TokenData'
+import { useTokenChartData, useTokenData, useTokenPairs, useTokenPriceData, useTokenTransactions } from '../../../contexts/TokenData'
 import { useEffect } from "react/cjs/react.development";
 import { usePrevious } from "react-use";
+import { useDataForList } from "../../../contexts/PairData";
+import { formattedNum } from "../../../utils/formatters";
+import { formattedPercent } from "../../../utils/timeUtils";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -71,36 +74,32 @@ function TokenPage({ address }) {
         txnChange,
     } = useTokenData(address)
 
+    const allPairs = useTokenPairs(address)
 
-    // reset view on new address
-    const addressPrev = usePrevious(address)
-    useEffect(() => {
-        if (address !== addressPrev && addressPrev) {
-            // setChartFilter(CHART_VIEW.LIQUIDITY)
-        }
-    }, [address, addressPrev])
+    // pairs to show in pair list
+    const fetchedPairsList = useDataForList(allPairs)
 
-    let chartData = useTokenChartData(address)
+    // all transactions with this token
+    const transactions = useTokenTransactions(address)
+
+    // price
+    const price = priceUSD ? formattedNum(priceUSD, true) : ''
+    const priceChange = priceChangeUSD ? formattedPercent(priceChangeUSD) : ''
+
+    // volume
+    const volume = formattedNum(!!oneDayVolumeUSD ? oneDayVolumeUSD : oneDayVolumeUT, true)
+
+    const usingUtVolume = oneDayVolumeUSD === 0 && !!oneDayVolumeUT
+    const volumeChange = formattedPercent(!usingUtVolume ? volumeChangeUSD : volumeChangeUT)
+
+    // liquidity
+    const liquidity = formattedNum(totalLiquidityUSD, true)
+    const liquidityChange = formattedPercent(liquidityChangeUSD)
+
+    // transactions
+    const txnChangeFormatted = formattedPercent(txnChange)
 
 
-    useEffect(() => {
-        console.log('token chart data', chartData);
-        console.log({
-            id,
-            name,
-            symbol,
-            priceUSD,
-            oneDayVolumeUSD,
-            totalLiquidityUSD,
-            volumeChangeUSD,
-            oneDayVolumeUT,
-            volumeChangeUT,
-            priceChangeUSD,
-            liquidityChangeUSD,
-            oneDayTxns,
-            txnChange,
-        })
-    }, [chartData])
     const classes = useStyles();
     return (
         <div className="container">
@@ -126,31 +125,31 @@ function TokenPage({ address }) {
                                 <h6 className={classes.subTitle}>Total Liquidity</h6>
                                 <div className="d-flex justify-content-between">
                                     <h3 style={{ color: "white", paddingLeft: 30 }}>
-                                        $64,812,108
+                                        {totalLiquidityUSD}
                                     </h3>
-                                    <h6 className={classes.increasePercent}>+0.82%</h6>
+                                    <h6 className={classes.increasePercent}>{liquidityChangeUSD}</h6>
                                 </div>
                             </div>
                         </div>
                         <div className="col-6 col-sm-4">
                             <div className={classes.cardLiquidity}>
-                                <h6 className={classes.subTitle}>Total Liquidity</h6>
+                                <h6 className={classes.subTitle}>{`Volume (24hrs)`}</h6>
                                 <div className="d-flex justify-content-between">
                                     <h3 style={{ color: "white", paddingLeft: 30 }}>
-                                        $64,812,108
+                                        {volume}
                                     </h3>
-                                    <h6 className={classes.increasePercent}>+0.82%</h6>
+                                    <h6 className={classes.increasePercent}>{volumeChangeUSD}</h6>
                                 </div>
                             </div>
                         </div>
                         <div className="col-6 col-sm-4">
                             <div className={classes.cardLiquidity}>
-                                <h6 className={classes.subTitle}>Total Liquidity</h6>
+                                <h6 className={classes.subTitle}>{`Fees (24hrs)`} </h6>
                                 <div className="d-flex justify-content-between">
                                     <h3 style={{ color: "white", paddingLeft: 30 }}>
-                                        $64,812,108
+                                        {volume}
                                     </h3>
-                                    <h6 className={classes.increasePercent}>+0.82%</h6>
+                                    <h6 className={classes.increasePercent}>{volumeChangeUSD}</h6>
                                 </div>
                             </div>
                         </div>

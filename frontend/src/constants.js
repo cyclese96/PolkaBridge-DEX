@@ -86,6 +86,7 @@ export const supportedTokens = {
 };
 
 export const TOKEN_BLACKLIST = []
+export const PAIR_BLACKLIST = []
 
 
 export const exchangeFee = 0.25;

@@ -1,4 +1,5 @@
 import { TableCell, TableRow } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import { formatCurrency } from "../../../../utils/helper";
 import PercentLabel from "../../../common/PercentLabel";
 import TokenIcon from "../../../common/TokenIcon";
@@ -48,7 +49,7 @@ const PoolRow = (props) => {
         <TableCell padding="checkbox"></TableCell>
 
         <TableCell component="th" id={labelId} scope="row" padding="none">
-          <div>
+          <Link to={`pair/${row.id}`}>
             <TokenIcon symbol={row.token0.symbol} />
             <TokenIcon symbol={row.token1.symbol} />
 
@@ -58,7 +59,7 @@ const PoolRow = (props) => {
             <small className={classes.cellTextSecondary}>
               {"( " + "0.02" + "% )"}
             </small>
-          </div>
+          </Link>
         </TableCell>
         <TableCell align="right">
           <span className={classes.cellText}>

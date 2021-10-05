@@ -1,4 +1,32 @@
+import Decimal from "decimal.js-light"
+import { Numeral } from "numeral"
 
+
+export const formatNumber = (num) => {
+    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+}
+
+// using a currency library here in case we want to add more in future
+export const formatDollarAmount = (num, digits) => {
+    const formatter = new Intl.NumberFormat([], {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits,
+    })
+    return formatter.format(num)
+}
+
+export const toSignificant = (number, significantDigits) => {
+    Decimal.set({ precision: significantDigits + 1, rounding: Decimal.ROUND_UP })
+    const updated = new Decimal(number).toSignificantDigits(significantDigits)
+    return updated.toFormat(updated.decimalPlaces(), { groupSeparator: '' })
+}
+
+
+export const toK = (num) => {
+    return Numeral(num).format('0.[00]a')
+}
 
 export const formattedNum = (number, usd = false, acceptNegatives = false) => {
     if (isNaN(number) || number === '' || number === undefined) {

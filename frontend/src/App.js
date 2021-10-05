@@ -2,18 +2,18 @@ import "./App.css";
 import React, { useEffect } from "react";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "./theme";
-import { Fragment } from "react";
 import Home from "./components/Home";
 import { Provider } from "react-redux";
 import store from "./store";
 import "./web";
 import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom'
-import { TOKEN_BLACKLIST } from "./constants";
+import { PAIR_BLACKLIST, TOKEN_BLACKLIST } from "./constants";
 import TokenPage from "./components/pages/Analytics/TokenDetail";
 import { isAddress } from "./utils/helper";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
+import PoolDetail from "./components/pages/Analytics/PoolDetail";
 
 
 
@@ -120,25 +120,25 @@ function App() {
                     }
                   }}
                 />
-                {/* <Route
-                exacts
-                strict
-                path="/pair/:pairAddress"
-                render={({ match }) => {
-                  if (
-                    isAddress(match.params.pairAddress.toLowerCase()) &&
-                    !Object.keys(PAIR_BLACKLIST).includes(match.params.pairAddress.toLowerCase())
-                  ) {
-                    return (
-                      // <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
-                        <PairPage pairAddress={match.params.pairAddress.toLowerCase()} />
-                      // </LayoutWrapper>
-                    )
-                  } else {
-                    return <Redirect to="/" />
-                  }
-                }}
-              /> */}
+                <Route
+                  exacts
+                  strict
+                  path="/pair/:pairAddress"
+                  render={({ match }) => {
+                    if (
+                      isAddress(match.params.pairAddress.toLowerCase()) &&
+                      !Object.keys(PAIR_BLACKLIST).includes(match.params.pairAddress.toLowerCase())
+                    ) {
+                      return (
+                        // <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
+                        <PoolDetail pairAddress={match.params.pairAddress.toLowerCase()} />
+                        // </LayoutWrapper>
+                      )
+                    } else {
+                      return <Redirect to="/" />
+                    }
+                  }}
+                />
 
                 {/* <Route
               exacts
