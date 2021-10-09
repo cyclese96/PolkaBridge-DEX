@@ -280,6 +280,7 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
     
     function setTreasuryAddress(address _address ) external override onlyOwner {
         treasury = _address;
+        emit TreasurySet(_address);
     }
 
     function skim(address to) external override lock {

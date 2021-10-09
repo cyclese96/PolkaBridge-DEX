@@ -1,4 +1,4 @@
-pragma solidity >=0.5.0;
+pragma solidity 0.6.6;
 
 import '../interfaces/IUniswapV2Pair.sol';
 import '../interfaces/IUniswapV2Factory.sol';
@@ -16,6 +16,42 @@ library UniswapV2LiquidityMathLibrary {
     // computes the direction and magnitude of the profit-maximizing trade
     // (sqrt(truePriceTokenA/truePriceTokenB*(1-0.2/100)*reserveA*reserveB)-reserveA)/(1-0.2/100)
     // (Babylonian.sqrt(truePriceTokenA/truePriceTokenB*(1000-2)*reserveA*reserveB)-reserveA)/(1000-2)
+    // function computeProfitMaximizingTrade(
+    //     uint256 truePriceTokenA,
+    //     uint256 truePriceTokenB,
+    //     uint256 reserveA,
+    //     uint256 reserveB
+    // ) pure internal returns (bool aToB, uint256 amountIn) {
+    //     aToB = FullMath.mulDiv(reserveA, truePriceTokenB, reserveB) < truePriceTokenA;
+
+    //     uint256 invariant = reserveA.mul(reserveB);
+
+    //     // uint256 leftSide = Babylonian.sqrt(
+    //     //     FullMath.mulDiv(
+    //     //         invariant.mul(1000),
+    //     //         aToB ? truePriceTokenA : truePriceTokenB,                
+    //     //         (aToB ? truePriceTokenB : truePriceTokenA).mul(998)
+    //     //     )
+    //     // );        
+    //     uint256 leftSide = Babylonian.sqrt(
+    //         FullMath.mulDiv(
+    //             invariant.mul(998).mul(1000),// invariant.mul(1000-2),
+    //             aToB ? truePriceTokenA : truePriceTokenB,
+    //             aToB ? truePriceTokenB : truePriceTokenA
+    //         )
+    //     );        
+    //     leftSide -= (aToB ? reserveA : reserveB).mul(1000);
+    //     // uint256 rightSide = (aToB ? reserveA.mul(10000) : reserveB.mul(10000)) / 9984;
+    //     // uint256 rightSide = (aToB ? reserveA.mul(1000) : reserveB.mul(1000)) / 998;
+    //     uint256 rightSide = 998; //1000-2;
+
+    //     if (leftSide < rightSide) return (false, 0);
+
+    //     // compute the amount that must be sent to move the price to the profit-maximizing price
+    //     // amountIn = leftSide.sub(rightSide);
+    //     amountIn = leftSide.div(rightSide);
+    // }
+
     function computeProfitMaximizingTrade(
         uint256 truePriceTokenA,
         uint256 truePriceTokenB,
@@ -26,31 +62,20 @@ library UniswapV2LiquidityMathLibrary {
 
         uint256 invariant = reserveA.mul(reserveB);
 
-        // uint256 leftSide = Babylonian.sqrt(
-        //     FullMath.mulDiv(
-        //         invariant.mul(1000),
-        //         aToB ? truePriceTokenA : truePriceTokenB,                
-        //         (aToB ? truePriceTokenB : truePriceTokenA).mul(998)
-        //     )
-        // );        
         uint256 leftSide = Babylonian.sqrt(
             FullMath.mulDiv(
-                invariant.mul(998).mul(1000),// invariant.mul(1000-2),
+                invariant.mul(1000),
                 aToB ? truePriceTokenA : truePriceTokenB,
-                aToB ? truePriceTokenB : truePriceTokenA
+                (aToB ? truePriceTokenB : truePriceTokenA).mul(998)
             )
-        );        
-        leftSide -= (aToB ? reserveA : reserveB).mul(1000);
-        // uint256 rightSide = (aToB ? reserveA.mul(10000) : reserveB.mul(10000)) / 9984;
-        // uint256 rightSide = (aToB ? reserveA.mul(1000) : reserveB.mul(1000)) / 998;
-        uint256 rightSide = 998; //1000-2;
+        );
+        uint256 rightSide = (aToB ? reserveA.mul(1000) : reserveB.mul(1000)) / 998;
 
         if (leftSide < rightSide) return (false, 0);
 
         // compute the amount that must be sent to move the price to the profit-maximizing price
-        // amountIn = leftSide.sub(rightSide);
-        amountIn = leftSide.div(rightSide);
-    }
+        amountIn = leftSide.sub(rightSide);
+    }    
 
     // gets the reserves after an arbitrage moves the price to the profit-maximizing ratio given an externally observed true price
     function getReservesAfterArbitrage(

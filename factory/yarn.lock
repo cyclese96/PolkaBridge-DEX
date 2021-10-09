@@ -2655,6 +2655,11 @@ mock-fs@^4.1.0:
   resolved "https://registry.yarnpkg.com/mock-fs/-/mock-fs-4.14.0.tgz#ce5124d2c601421255985e6e94da80a7357b1b18"
   integrity sha512-qYvlv/exQ4+svI3UOvPUpLDF0OMX5euvUH0Ny4N5QyRyhNdgAgUrVH3iUINSzEPLvx0kbo/Bp28GJKIqvE7URw==
 
+moonbeam-truffle-plugin@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/moonbeam-truffle-plugin/-/moonbeam-truffle-plugin-1.4.0.tgz#951ddf237c386477dd72c7feffcca1996d117b10"
+  integrity sha512-I3k2hErleijPnYE3j+vTFlgvheEpKbdt77KwS8Z/r27TO5FaEO+dSLzQa4K+BY0DrrhdaQSjnJPbAY5NCRocyQ==
+
 ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"

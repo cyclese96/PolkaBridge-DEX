@@ -32,15 +32,15 @@ contract ExampleFlashSwap is IUniswapV2Callee {
         { // scope for token{0,1}, avoids stack too deep errors
         address token0 = IUniswapV2Pair(msg.sender).token0();
         address token1 = IUniswapV2Pair(msg.sender).token1();
-        assert(msg.sender == UniswapV2Library.pairFor(factory, token0, token1)); // ensure that msg.sender is actually a V2 pair
-        assert(amount0 == 0 || amount1 == 0); // this strategy is unidirectional
+        require(msg.sender == UniswapV2Library.pairFor(factory, token0, token1), 'Sender does not equal to pair'); // ensure that msg.sender is actually a V2 pair// assert(msg.sender == UniswapV2Library.pairFor(factory, token0, token1)); // ensure that msg.sender is actually a V2 pair
+        require(amount0 == 0 || amount1 == 0, 'amount0, amount1 does not equal to 0'); // this strategy is unidirectional// assert(amount0 == 0 || amount1 == 0); // this strategy is unidirectional
         path[0] = amount0 == 0 ? token0 : token1;
         path[1] = amount0 == 0 ? token1 : token0;
         amountToken = token0 == address(WETH) ? amount1 : amount0;
         amountETH = token0 == address(WETH) ? amount0 : amount1;
         }
 
-        assert(path[0] == address(WETH) || path[1] == address(WETH)); // this strategy only works with a V2 WETH pair
+        require(path[0] == address(WETH) || path[1] == address(WETH), 'path[0] and path[1] does not equal to WETH address'); // this strategy only works with a V2 WETH pair// assert(path[0] == address(WETH) || path[1] == address(WETH)); // this strategy only works with a V2 WETH pair
         IERC20 token = IERC20(path[0] == address(WETH) ? path[1] : path[0]);
         IUniswapV1Exchange exchangeV1 = IUniswapV1Exchange(factoryV1.getExchange(address(token))); // get V1 exchange
 
@@ -49,19 +49,19 @@ contract ExampleFlashSwap is IUniswapV2Callee {
             token.approve(address(exchangeV1), amountToken);
             uint amountReceived = exchangeV1.tokenToEthSwapInput(amountToken, minETH, uint(-1));
             uint amountRequired = UniswapV2Library.getAmountsIn(factory, amountToken, path)[0];
-            assert(amountReceived > amountRequired); // fail if we didn't get enough ETH back to repay our flash loan
+            require(amountReceived > amountRequired, 'Received amount should greater than required amount'); // fail if we didn't get enough ETH back to repay our flash loan// assert(amountReceived > amountRequired); // fail if we didn't get enough ETH back to repay our flash loan
             WETH.deposit{value: amountRequired}();
-            assert(WETH.transfer(msg.sender, amountRequired)); // return WETH to V2 pair
+            require(WETH.transfer(msg.sender, amountRequired), 'WETH transfer failed'); // return WETH to V2 pair// assert(WETH.transfer(msg.sender, amountRequired)); // return WETH to V2 pair
             (bool success,) = sender.call{value: amountReceived - amountRequired}(new bytes(0)); // keep the rest! (ETH)
-            assert(success);
+            require(success, 'Not success in uniswapV2Call');// assert(success);
         } else {
             (uint minTokens) = abi.decode(data, (uint)); // slippage parameter for V1, passed in by caller
             WETH.withdraw(amountETH);
             uint amountReceived = exchangeV1.ethToTokenSwapInput{value: amountETH}(minTokens, uint(-1));
             uint amountRequired = UniswapV2Library.getAmountsIn(factory, amountETH, path)[0];
-            assert(amountReceived > amountRequired); // fail if we didn't get enough tokens back to repay our flash loan
-            assert(token.transfer(msg.sender, amountRequired)); // return tokens to V2 pair
-            assert(token.transfer(sender, amountReceived - amountRequired)); // keep the rest! (tokens)
+            require(amountReceived > amountRequired, 'amountReceived should be greater than amountRequired'); // fail if we didn't get enough tokens back to repay our flash loan// assert(amountReceived > amountRequired); // fail if we didn't get enough tokens back to repay our flash loan
+            require(token.transfer(msg.sender, amountRequired), 'Token transfer failed 1'); // return tokens to V2 pair// assert(token.transfer(msg.sender, amountRequired)); // return tokens to V2 pair
+            require(token.transfer(sender, amountReceived - amountRequired), 'Token transfer failed 2'); // keep the rest! (tokens)// assert(token.transfer(sender, amountReceived - amountRequired)); // keep the rest! (tokens)
         }
     }
 }

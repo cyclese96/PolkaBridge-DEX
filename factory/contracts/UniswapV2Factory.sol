@@ -46,10 +46,12 @@ contract UniswapV2Factory is IUniswapV2Factory {
     function setFeeTo(address _feeTo) external override {
         require(msg.sender == feeToSetter, 'PolkaBridge AMM V1: FORBIDDEN');
         feeTo = _feeTo;
+        emit SetFeeTo(_feeTo);
     }
 
     function setFeeToSetter(address _feeToSetter) external override {
         require(msg.sender == feeToSetter, 'PolkaBridge AMM V1: FORBIDDEN');
         feeToSetter = _feeToSetter;
+        emit SetFeeToSetter(_feeToSetter);
     }
 }
