@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme) => ({
   },
   card: {
     width: 470,
+    minHeight: 300,
     height: "100%",
     border: "1px solid #616161",
     background: `linear-gradient(to bottom,#191B1F,#191B1F)`,

@@ -14,6 +14,7 @@ import { formattedPercent } from "../../../utils/timeUtils";
 import { useAllTokenData } from "../../../contexts/TokenData";
 import { useAllPairData } from "../../../contexts/PairData";
 import { formatCurrency } from "../../../utils/helper";
+import Loader from "../../common/Loader";
 
 // globalData ->
 // {
@@ -46,48 +47,76 @@ const Analytics = () => {
 
   return (
     <div>
-      {/* {console.log("pairdata 2", allPairs)} */}
-      <p className={classes.heading}>PolkaBridge DEX Overview</p>
-
-      <div className="row g-3">
+      <h3 className={classes.heading}>PolkaBridge DEX Overview</h3>
+      {console.log(globalData)}
+      <div className="mt-2 row g-3">
         <div className="col-md-6">
           <Card elevation={10} className={classes.card}>
-            <span className={classes.cardSpan}>Total value locked</span>
-            <p className={classes.cardP}>
-              {globalData.totalLiquidityUSD
-                ? "$" +
-                formatCurrency(globalData.totalLiquidityUSD, false, 0, false)
-                : "-"}
-              <small>
-                {globalData.liquidityChangeUSD
-                  ? formattedPercent(globalData.liquidityChangeUSD)
-                  : "-"}
-              </small>{" "}
-            </p>
-
-            <div className={classes.chart}>
-              <AreaChart chartData={chartData ? chartData[0] : []} />
-            </div>
+            {globalData && (
+              <div>
+                <span className={classes.cardSpan}>Total value locked</span>
+                <p className={classes.cardP}>
+                  {"$" +
+                    formatCurrency(
+                      globalData.totalLiquidityUSD,
+                      false,
+                      0,
+                      false
+                    )}
+                  <small>
+                    {formattedPercent(globalData.liquidityChangeUSD)}
+                  </small>
+                </p>
+                <div className={classes.chart}>
+                  <AreaChart chartData={chartData ? chartData[0] : []} />
+                </div>
+              </div>
+            )}
+            {!globalData && (
+              <div
+                className="d-flex justify-content-center align-items-center"
+                style={{ height: "100%" }}
+              >
+                <Loader />
+              </div>
+            )}
           </Card>
         </div>
         <div className="col-md-6">
           <Card elevation={10} className={classes.card}>
-            <span className={classes.cardSpan}>Volume 24H</span>
-            <p className={classes.cardP}>
-              {console.log(globalData)}
-              {globalData.oneDayVolumeUSD
-                ? "$" +
-                formatCurrency(globalData.oneDayVolumeUSD, false, 1, false)
-                : "-"}
-              <small>
-                {globalData.volumeChangeUSD !== null
-                  ? formattedPercent(globalData.volumeChangeUSD)
-                  : "-"}
-              </small>{" "}
-            </p>
-            <div className={classes.chart}>
-              <BarChart chartData={chartData ? chartData[0] : []} />
-            </div>
+            {globalData && (
+              <div>
+                <span className={classes.cardSpan}>Volume 24H</span>
+                <p className={classes.cardP}>
+                  {console.log(globalData)}
+                  {globalData.oneDayVolumeUSD
+                    ? "$" +
+                    formatCurrency(
+                      globalData.oneDayVolumeUSD,
+                      false,
+                      1,
+                      false
+                    )
+                    : "-"}
+                  <small>
+                    {globalData.volumeChangeUSD !== null
+                      ? formattedPercent(globalData.volumeChangeUSD)
+                      : "-"}
+                  </small>{" "}
+                </p>
+                <div className={classes.chart}>
+                  <BarChart chartData={chartData ? chartData[0] : []} />
+                </div>
+              </div>
+            )}
+            {!globalData && (
+              <div
+                className="d-flex justify-content-center align-items-center"
+                style={{ height: "100%" }}
+              >
+                <Loader />
+              </div>
+            )}
           </Card>
         </div>
       </div>
@@ -144,6 +173,9 @@ const Analytics = () => {
           allTokens={allTokens ? allTokens : {}}
         />
       </div>
+      {/* 
+
+     
       <div className={classes.tokenListHeading}>Top Pools</div>
       <div className={classes.tokenList}>
         <TopTokens tableType="TopPools" allPairs={allPairs ? allPairs : {}} />
@@ -156,6 +188,7 @@ const Analytics = () => {
         />
       </div>
       <div className="mb-5"></div>
+    */}
     </div>
   );
 };

@@ -616,7 +616,7 @@ export function useGlobalData() {
     updateAllTokensInUniswap,
   ]);
 
-  return data || {};
+  return data || null;
 }
 
 export function useGlobalChartData() {
