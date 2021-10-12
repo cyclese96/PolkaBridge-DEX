@@ -56,7 +56,7 @@ const Analytics = () => {
             <p className={classes.cardP}>
               {globalData.totalLiquidityUSD
                 ? "$" +
-                  formatCurrency(globalData.totalLiquidityUSD, false, 0, false)
+                formatCurrency(globalData.totalLiquidityUSD, false, 0, false)
                 : "-"}
               <small>
                 {globalData.liquidityChangeUSD
@@ -77,7 +77,7 @@ const Analytics = () => {
               {console.log(globalData)}
               {globalData.oneDayVolumeUSD
                 ? "$" +
-                  formatCurrency(globalData.oneDayVolumeUSD, false, 1, false)
+                formatCurrency(globalData.oneDayVolumeUSD, false, 1, false)
                 : "-"}
               <small>
                 {globalData.volumeChangeUSD !== null
@@ -99,7 +99,7 @@ const Analytics = () => {
             ${" "}
             {globalData.oneDayVolumeUSD
               ? "$" +
-                formatCurrency(globalData.oneDayVolumeUSD, false, 0, false)
+              formatCurrency(globalData.oneDayVolumeUSD, false, 0, false)
               : "-"}
           </span>
 
@@ -112,12 +112,12 @@ const Analytics = () => {
             ${" "}
             {globalData.oneDayVolumeUSD
               ? "$" +
-                formatCurrency(
-                  globalData.oneDayVolumeUSD * 0.02,
-                  false,
-                  0,
-                  false
-                )
+              formatCurrency(
+                globalData.oneDayVolumeUSD * 0.02,
+                false,
+                0,
+                false
+              )
               : "-"}
           </span>
 
@@ -129,7 +129,7 @@ const Analytics = () => {
           <span className={classes.statAmount}>
             {globalData.totalLiquidityUSD
               ? "$" +
-                formatCurrency(globalData.totalLiquidityUSD, false, 0, false)
+              formatCurrency(globalData.totalLiquidityUSD, false, 0, false)
               : "-"}{" "}
           </span>
 

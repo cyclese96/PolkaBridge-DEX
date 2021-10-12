@@ -63,3 +63,14 @@ export const formattedNum = (number, usd = false, acceptNegatives = false) => {
 
     return Number(parseFloat(num).toFixed(4)).toString()
 }
+
+export const urls = {
+    showTransaction: (tx) => `https://etherscan.io/tx/${tx}/`,
+    showAddress: (address) => `https://www.etherscan.io/address/${address}/`,
+    showToken: (address) => `https://www.etherscan.io/token/${address}/`,
+    showBlock: (block) => `https://etherscan.io/block/${block}/`,
+}
+
+export function localNumber(val) {
+    return Numeral(val).format('0,0')
+}
