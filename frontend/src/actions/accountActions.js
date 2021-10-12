@@ -24,85 +24,85 @@ import { CORGIB, etheriumNetwork } from "../constants";
 //GET user authenticated
 export const connectWallet =
   (connect = false, network) =>
-  async (dispatch) => {
-    try {
-      const accountAddress = await getCurrentAccount();
-      console.log("connect wallet", accountAddress);
-      if (
-        localStorage.getItem(`logout${accountAddress}`) === accountAddress &&
-        !connect
-      ) {
+    async (dispatch) => {
+      try {
+        const accountAddress = await getCurrentAccount();
+        console.log("connect wallet", accountAddress);
+        if (
+          localStorage.getItem(`logout${accountAddress}`) === accountAddress &&
+          !connect
+        ) {
+          dispatch({
+            type: DISCONNECT_WALLET,
+          });
+          return;
+        } else if (
+          localStorage.getItem(`logout${accountAddress}`) === accountAddress &&
+          connect
+        ) {
+          localStorage.removeItem(`logout${accountAddress}`);
+          console.log("removing logged out user");
+        }
+
+        if (!accountAddress) {
+          dispatch({
+            type: DISCONNECT_WALLET,
+          });
+          return;
+        }
         dispatch({
-          type: DISCONNECT_WALLET,
+          type: CONNECT_WALLET,
+          payload: accountAddress,
         });
-        return;
-      } else if (
-        localStorage.getItem(`logout${accountAddress}`) === accountAddress &&
-        connect
-      ) {
-        localStorage.removeItem(`logout${accountAddress}`);
-        console.log("removing logged out user");
+        dispatch({
+          type: SHOW_LOADING,
+        });
+
+        if (network === etheriumNetwork) {
+          console.log("connectWallet: fetching from", network);
+          const [pbrWei, ethWei] = await Promise.all([
+            pbrContract(network).methods.balanceOf(accountAddress).call(),
+            getNetworkBalance(accountAddress),
+          ]);
+          console.log("curr network bal ", ethWei);
+
+          dispatch({
+            type: LOAD_TOKEN_BALANCE,
+            payload: { PBR: pbrWei, ETH: ethWei },
+          });
+          // dispatch({
+          //   type: LOAD_FROM_TOKEN,
+          //   payload: { name: "ETH", amount: 0, address: "" },
+          // });
+        } else {
+          const [corgibWei, pwarWei, bnbWei] = await Promise.all([
+            corgibCoinContract(network).methods.balanceOf(accountAddress).call(),
+            pwarCoinContract(network).methods.balanceOf(accountAddress).call(),
+            getNetworkBalance(accountAddress),
+          ]);
+          console.log("curr network bal ", bnbWei);
+
+          dispatch({
+            type: LOAD_TOKEN_BALANCE,
+            payload: { CORGIB: corgibWei, PWAR: pwarWei, BNB: bnbWei },
+          });
+          // dispatch({
+          //   type: LOAD_FROM_TOKEN,
+          //   payload: { name: "BNB", amount: 0, address: "" },
+          // });
+        }
+      } catch (error) {
+        console.log("connectWallet ", error);
+        dispatch({
+          type: ERROR,
+          payload: "Failed to connect Meta Mask!",
+        });
       }
 
-      if (!accountAddress) {
-        dispatch({
-          type: DISCONNECT_WALLET,
-        });
-        return;
-      }
       dispatch({
-        type: CONNECT_WALLET,
-        payload: accountAddress,
+        type: HIDE_LOADING,
       });
-      dispatch({
-        type: SHOW_LOADING,
-      });
-
-      if (network === etheriumNetwork) {
-        console.log("connectWallet: fetching from", network);
-        const [pbrWei, ethWei] = await Promise.all([
-          pbrContract(network).methods.balanceOf(accountAddress).call(),
-          getNetworkBalance(accountAddress),
-        ]);
-        console.log("curr network bal ", ethWei);
-
-        dispatch({
-          type: LOAD_TOKEN_BALANCE,
-          payload: { PBR: pbrWei, ETH: ethWei },
-        });
-        // dispatch({
-        //   type: LOAD_FROM_TOKEN,
-        //   payload: { name: "ETH", amount: 0, address: "" },
-        // });
-      } else {
-        const [corgibWei, pwarWei, bnbWei] = await Promise.all([
-          corgibCoinContract(network).methods.balanceOf(accountAddress).call(),
-          pwarCoinContract(network).methods.balanceOf(accountAddress).call(),
-          getNetworkBalance(accountAddress),
-        ]);
-        console.log("curr network bal ", bnbWei);
-
-        dispatch({
-          type: LOAD_TOKEN_BALANCE,
-          payload: { CORGIB: corgibWei, PWAR: pwarWei, BNB: bnbWei },
-        });
-        // dispatch({
-        //   type: LOAD_FROM_TOKEN,
-        //   payload: { name: "BNB", amount: 0, address: "" },
-        // });
-      }
-    } catch (error) {
-      console.log("connectWallet ", error);
-      dispatch({
-        type: ERROR,
-        payload: "Failed to connect Meta Mask!",
-      });
-    }
-
-    dispatch({
-      type: HIDE_LOADING,
-    });
-  };
+    };
 
 export const getAccountBalance = (token, network) => async (dispatch) => {
   dispatch({
@@ -112,7 +112,6 @@ export const getAccountBalance = (token, network) => async (dispatch) => {
     const accountAddress = await getCurrentAccount();
     const _tokenContract = await tokenContract(
       token.address,
-      token.abi,
       network
     );
 

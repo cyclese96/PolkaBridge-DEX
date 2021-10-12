@@ -7,52 +7,31 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import { connect } from "react-redux";
-import TuneIcon from "@material-ui/icons/Tune";
 import SwapCardItem from "./SwapCardItem";
 import SwapVertIcon from "@material-ui/icons/SwapVert";
 import { useState } from "react";
 import SwapSettings from "../common/SwapSettings";
-import CustomButton from "../Buttons/CustomButton";
 import BigNumber from "bignumber.js";
 import CustomSnackBar from "../common/CustomSnackbar";
 import { ETH, etheriumNetwork, tokens } from "../../constants";
-import CachedIcon from "@material-ui/icons/Cached";
 import {
   buyPriceImpact,
-  fetchTokenAbi,
-  fromWei,
   getPercentageAmount,
-  getPercentAmount,
-  getPriceRatio,
   getTokenOut,
   sellPriceImpact,
-  token1PerToken2,
-  token2PerToken1,
   toWei,
 } from "../../utils/helper";
 import {
-  swapEthForExactTokens,
-  swapExactEthForTokens,
-  getTokenPrice,
   checkAllowance,
   confirmAllowance,
   getLpBalance,
-  verifySlippage,
-  loadPairContractAbi,
+  loadPairAddress
 } from "../../actions/dexActions";
 import { getAccountBalance } from "../../actions/accountActions";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import SwapConfirm from "../common/SwapConfirm";
 import debounce from "lodash.debounce";
-import {
-  getPairAbi,
-  getPairAddress,
-  getTokenAbi,
-  getTokenAddress,
-} from "../../utils/connectionUtils";
-import store from "../../store";
-import { SET_TOKEN_ABI } from "../../actions/types";
-import { fetchContractAbi } from "../../utils/httpUtils";
+import { getPairAddress } from "../../utils/connectionUtils";
+
 import { Settings } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
@@ -169,23 +148,16 @@ const SwapCard = (props) => {
   const {
     account: { currentNetwork, currentAccount, loading },
     dex: {
-      swapSettings,
       approvedTokens,
-      dexLoading,
       poolReserves,
-      tokenData,
       pairContractData,
     },
-    swapEthForExactTokens,
-    swapExactEthForTokens,
     checkAllowance,
     confirmAllowance,
     tokenType,
-    getTokenPrice,
     getLpBalance,
-    verifySlippage,
     getAccountBalance,
-    loadPairContractAbi,
+    loadPairAddress
   } = props;
 
   const classes = useStyles();
@@ -214,37 +186,43 @@ const SwapCard = (props) => {
 
   const [priceImpact, setPriceImpact] = useState(null);
   const [liquidityStatus, setLiquidityStatus] = useState(false);
+  const [localStateLoading, setLocalStateLoading] = useState(false);
 
-  const updateTokenPrices = async () => {
-    console.log("updating...");
-    setTimeout(async () => {
-      await Promise.all([
-        getTokenPrice(0, currentNetwork),
-        getTokenPrice(1, currentNetwork),
-      ]);
-      await updateTokenPrices();
-    }, 1000);
-  };
+  // const updateTokenPrices = async () => {
+  //   console.log("updating...");
+  //   setTimeout(async () => {
+  //     await Promise.all([
+  //       getTokenPrice(0, currentNetwork),
+  //       getTokenPrice(1, currentNetwork),
+  //     ]);
+  //     await updateTokenPrices();
+  //   }, 1000);
+  // };
 
-  useEffect(async () => {
-    let _token = {};
-    if (currentNetwork === etheriumNetwork) {
-      _token = tokens[2];
-      setToken1(_token);
-    } else {
-      _token = {
-        name: "Binance",
-        symbol: "BNB",
-      };
-      setToken1(_token);
+  useEffect(() => {
+
+    async function initSelection() {
+      let _token = {};
+      if (currentNetwork === etheriumNetwork) {
+        _token = tokens[2];
+        setToken1(_token);
+      } else {
+        _token = {
+          name: "Binance",
+          symbol: "BNB",
+        };
+        setToken1(_token);
+      }
+      setToken1Value("");
+      setToken2({});
+      setToken2Value("");
+      // updateTokenPrices();
+
+      // check selected from token allowance
+      // await checkAllowance(_token, currentAccount, currentNetwork);
     }
-    setToken1Value("");
-    setToken2({});
-    setToken2Value("");
-    // updateTokenPrices();
+    initSelection();
 
-    // check selected from token allowance
-    // await checkAllowance(_token, currentAccount, currentNetwork);
   }, [currentNetwork, currentAccount]);
 
   const currentPairAddress = () => {
@@ -255,7 +233,7 @@ const SwapCard = (props) => {
     ) {
       return pairContractData[
         `${selectedToken1.symbol}_${selectedToken2.symbol}`
-      ].address;
+      ];
     } else if (
       Object.keys(pairContractData).includes(
         `${selectedToken2.symbol}_${selectedToken1.symbol}`
@@ -263,140 +241,94 @@ const SwapCard = (props) => {
     ) {
       return pairContractData[
         `${selectedToken2.symbol}_${selectedToken1.symbol}`
-      ].address;
+      ];
     } else {
       return null;
     }
   };
 
-  const currentPairAbi = () => {
-    if (
-      Object.keys(pairContractData).includes(
-        `${selectedToken1.symbol}_${selectedToken2.symbol}`
-      )
-    ) {
-      return pairContractData[
-        `${selectedToken1.symbol}_${selectedToken2.symbol}`
-      ].abi;
-    } else if (
-      Object.keys(pairContractData).includes(
-        `${selectedToken2.symbol}_${selectedToken1.symbol}`
-      )
-    ) {
-      return pairContractData[
-        `${selectedToken2.symbol}_${selectedToken1.symbol}`
-      ].abi;
-    } else {
-      return null;
-    }
-  };
-
-  const getSelectedTokenAbi = (token) => {
-    let abi = getTokenAbi(token.symbol);
-    if (!abi) {
-      abi = tokenData[token.symbol] ? tokenData[token.symbol] : null;
-    }
-    return abi;
-  };
 
   const clearInputState = () => {
     setToken1Value("");
     setToken2Value("");
     setStatus({ disabled: true, message: "Enter Amounts" });
   };
-  useEffect(async () => {
-    if (selectedToken1.symbol && selectedToken2.symbol) {
-      // reset token input on token selection
-      clearInputState();
+  useEffect(() => {
+    async function loadPair() {
+      if (selectedToken1.symbol && selectedToken2.symbol) {
+        setLocalStateLoading(true);
 
-      // load erc20 token abi and balance
-      const erc20Token =
-        selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
-      let erc20Abi = getSelectedTokenAbi(erc20Token);
+        // reset token input on token selection
+        clearInputState();
 
-      if (!erc20Abi) {
-        // load token abi if not loaded
-        console.log("getting token abi", erc20Token);
-        erc20Abi = await fetchContractAbi(erc20Token.address, currentNetwork);
+        // load erc20 token abi and balance
+        const erc20Token =
+          selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
 
-        console.log("erc20 abi", erc20Abi);
-        const abiData = {};
-        abiData[`${erc20Token.symbol}`] = erc20Abi;
-        store.dispatch({
-          type: SET_TOKEN_ABI,
-          payload: abiData,
-        });
-      }
-      await getAccountBalance(
-        {
-          ...erc20Token,
-          abi: erc20Abi,
-        },
-        currentNetwork
-      );
-      // load current pair ABI
-      let _pairAbi = currentPairAbi();
-
-      if (!_pairAbi) {
-        _pairAbi = getPairAbi(selectedToken1.symbol, selectedToken2.symbol);
-      }
-
-      let _pairAddress = currentPairAddress();
-      console.log("current pair address ", _pairAddress);
-      if (!_pairAddress) {
-        _pairAddress = await getPairAddress(
-          selectedToken1.address,
-          selectedToken2.address,
+        await getAccountBalance(
+          erc20Token,
           currentNetwork
         );
-      }
 
-      if (!_pairAddress) {
-        setLiquidityStatus(true);
-        setStatus({
-          disabled: true,
-          message: "No liquidity available for this pair",
-        });
-        return;
-      } else {
-        setLiquidityStatus(false);
-      }
+        let _pairAddress = currentPairAddress();
+        if (!_pairAddress) {
+          _pairAddress = await getPairAddress(
+            selectedToken1.address,
+            selectedToken2.address,
+            currentNetwork
+          );
 
-      if (!_pairAbi) {
-        _pairAbi = await fetchContractAbi(_pairAddress, currentNetwork);
-      }
-      // laod current pair reserves
-      let _pairData = { abi: _pairAbi, address: _pairAddress };
+          loadPairAddress(
+            selectedToken1.symbol,
+            selectedToken2.symbol,
+            _pairAddress,
+            currentNetwork
+          );
+        }
 
-      // update pair data into reducer if not available
-      if (!currentPairAddress()) {
-        loadPairContractAbi(
-          selectedToken1.symbol,
-          selectedToken2.symbol,
-          _pairData,
-          currentNetwork
-        );
-      }
+        if (!_pairAddress) {
+          setLiquidityStatus(true);
+          setStatus({
+            disabled: true,
+            message: "No liquidity available for this pair",
+          });
+        } else {
+          console.log("current pair address ", _pairAddress);
+          // setLiquidityStatus(false);
 
-      console.log("final pair data ", _pairData);
-      await getLpBalance(
-        selectedToken1,
-        selectedToken2,
-        _pairData,
-        currentAccount,
-        currentNetwork
-      );
+          await getLpBalance(
+            selectedToken1,
+            selectedToken2,
+            _pairAddress,
+            currentAccount,
+            currentNetwork
+          );
+        }
 
-      //   console.log("checking approval in swap");
-      if (!currentTokenApprovalStatus()) {
         await checkAllowance(
-          { ...selectedToken1, abi: erc20Abi },
+          selectedToken1,
           currentAccount,
           currentNetwork
         );
+
+        setLocalStateLoading(false);
       }
     }
+    loadPair();
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
+
+
+  useEffect(() => {
+
+    if (poolReserves && (new BigNumber(poolReserves[selectedToken1.symbol]).eq(0) || new BigNumber(poolReserves[selectedToken2.symbol]).eq(0))) {
+      setLiquidityStatus(true);
+      setStatus({
+        disabled: true,
+        message: "No liquidity available for this pair",
+      });
+    }
+
+  }, [poolReserves])
 
   const verifySwapStatus = (token1, token2) => {
     let message, disabled;
@@ -433,22 +365,23 @@ const SwapCard = (props) => {
     [] // will be created only once initially
   );
 
-  const getCurrentPairData = () => {
-    const pairData = { abi: currentPairAbi(), address: currentPairAddress() };
-    return pairData;
-  };
 
   const onToken1InputChange = async (tokens) => {
     setToken1Value(tokens);
 
     // calculate resetpective value of token 2 if selected
     let _token2Value = "";
-    if (selectedToken2.symbol && new BigNumber(tokens).gt(0)) {
-      const pairData = getCurrentPairData();
+    const pairAddress = currentPairAddress();
+
+    if (
+      selectedToken2.symbol &&
+      new BigNumber(tokens).gt(0) &&
+      pairAddress
+    ) {
       await debouncedGetLpBalance(
         selectedToken1,
         selectedToken2,
-        pairData,
+        pairAddress,
         currentAccount,
         currentNetwork
       );
@@ -481,12 +414,17 @@ const SwapCard = (props) => {
 
     //calculate respective value of token1 if selected
     let _token1Value = "";
-    if (selectedToken1.symbol && new BigNumber(tokens).gt(0)) {
-      const pairData = getCurrentPairData();
+    const pairAddress = currentPairAddress();
+
+    if (
+      selectedToken1.symbol &&
+      new BigNumber(tokens).gt(0) &&
+      pairAddress
+    ) {
       await debouncedGetLpBalance(
         selectedToken1,
         selectedToken2,
-        pairData,
+        pairAddress,
         currentAccount,
         currentNetwork
       );
@@ -541,7 +479,7 @@ const SwapCard = (props) => {
     const allowanceAmount = toWei("9999999999");
     await confirmAllowance(
       allowanceAmount,
-      { ...selectedToken1, abi: getSelectedTokenAbi(selectedToken1) },
+      selectedToken1,
       currentAccount,
       currentNetwork
     );
@@ -550,13 +488,14 @@ const SwapCard = (props) => {
   const handleSwapToken = async () => {
     checkPriceImpact();
 
-    verifySlippage(
-      swapSettings.slippage,
-      { ...selectedToken1, amount: token1Value },
-      { ...selectedToken2, amount: token2Value },
-      currentAccount,
-      currentNetwork
-    );
+    // verifySlippage(
+    //   swapSettings.slippage,
+
+    //   { ...selectedToken1, amount: token1Value },
+    //   { ...selectedToken2, amount: token2Value },
+    //   currentAccount,
+    //   currentNetwork
+    // );
     setSwapDialog(true);
   };
 
@@ -585,6 +524,7 @@ const SwapCard = (props) => {
     setAlert({ status: false });
   };
 
+  // swap selected tokens and reset inputs
   const handleSwapInputs = () => {
     setRotate(!rotate);
     const tokenSelected1 = selectedToken1;
@@ -602,15 +542,8 @@ const SwapCard = (props) => {
       : approvedTokens[selectedToken1.symbol];
   };
 
-  const isBothTokenSelected = () => {
-    if (selectedToken1.symbol && selectedToken2.symbol) {
-      return true;
-    }
-    return false;
-  };
-
   const disableStatus = () => {
-    return swapStatus.disabled;
+    return swapStatus.disabled || loading || localStateLoading;
   };
 
   const handleAction = () => {
@@ -622,7 +555,9 @@ const SwapCard = (props) => {
   };
   // const handleTokenPriceRatio = () => {};
   const currentButton = () => {
-    if (swapStatus.disabled) {
+    if (localStateLoading) {
+      return "Please wait...";
+    } else if (swapStatus.disabled) {
       return swapStatus.message;
     } else {
       return !currentTokenApprovalStatus() ? "Approve" : swapStatus.message;
@@ -685,32 +620,6 @@ const SwapCard = (props) => {
             disableToken={selectedToken1}
             inputValue={token2Value}
           />
-          {/* <div className={classes.priceRatio}>
-              <small>Price</small>
-              <small>41,250 PBR per ETH </small>
-              <CachedIcon
-                onClick={handleTokenPriceRatio}
-                className={classes.resetIcon}
-                fontSize="small"
-              />
-            </div> */}
-          {/* {!swapStatus.disabled && !liquidityStatus && !dexLoading ? (
-            <div className="d-flex justify-content-around w-100 mt-4 mb-1 ">
-              <span>Price</span>
-              <span>
-                1 {selectedToken1.symbol} {" = "}{" "}
-                {getPriceRatio(
-                  poolReserves[selectedToken2.symbol],
-                  poolReserves[selectedToken1.symbol]
-                )}{" "}
-                {selectedToken2.symbol}
-              </span>
-            </div>
-          ) : liquidityStatus ? (
-            "No liquidity availabe for this pair"
-          ) : (
-            ""
-          )} */}
 
           <Button
             variant="contained"
@@ -740,13 +649,9 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  getTokenPrice,
-  swapEthForExactTokens,
-  swapExactEthForTokens,
   checkAllowance,
   confirmAllowance,
   getLpBalance,
-  verifySlippage,
   getAccountBalance,
-  loadPairContractAbi,
+  loadPairAddress
 })(SwapCard);

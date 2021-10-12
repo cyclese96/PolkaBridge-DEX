@@ -27,6 +27,7 @@ import etherIcon from "../../assets/ether.png";
 import binanceIcon from "../../assets/binance.png";
 import { etheriumNetwork } from "../../constants";
 import DotCircle from "./DotCircle";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -205,7 +206,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Navbar = ({ currentNetwork }) => {
+const Navbar = (props) => {
+  const { account: { currentNetwork } } = props;
   const classes = useStyles();
 
   const [state, setState] = React.useState({
@@ -431,4 +433,8 @@ const Navbar = ({ currentNetwork }) => {
   );
 };
 
-export default Navbar;
+
+const mapStateToProps = (state) => ({
+  account: state.account
+})
+export default connect(mapStateToProps, {})(Navbar);

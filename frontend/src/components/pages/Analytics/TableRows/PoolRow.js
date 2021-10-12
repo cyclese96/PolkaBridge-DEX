@@ -1,4 +1,5 @@
 import { TableCell, TableRow } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import { formatCurrency } from "../../../../utils/helper";
 import PercentLabel from "../../../common/PercentLabel";
 import TokenIcon from "../../../common/TokenIcon";
@@ -31,12 +32,12 @@ const PoolRow = (props) => {
         </TableCell>
 
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.oneDayVolumeUSD, true)}
+          {formatCurrency(row.vol_24_h, true)}
         </TableCell>
       </TableRow>
       <TableRow
         hover
-        onClick={(event) => handleClick(event, row.name)}
+        onClick={(event) => handleClick(event, row.id)}
         //   role="checkbox"
         aria-checked={isItemSelected}
         tabIndex={-1}
@@ -48,7 +49,7 @@ const PoolRow = (props) => {
         <TableCell padding="checkbox"></TableCell>
 
         <TableCell component="th" id={labelId} scope="row" padding="none">
-          <div>
+          <Link to={`pair/${row.id}`}>
             <TokenIcon symbol={row.token0.symbol} />
             <TokenIcon symbol={row.token1.symbol} />
 
@@ -58,19 +59,19 @@ const PoolRow = (props) => {
             <small className={classes.cellTextSecondary}>
               {"( " + "0.02" + "% )"}
             </small>
-          </div>
+          </Link>
         </TableCell>
         <TableCell align="right">
           <span className={classes.cellText}>
-            {formatCurrency(row.volumeUSD, true)}
+            {formatCurrency(row.tvl, true)}
           </span>
         </TableCell>
 
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.oneDayVolumeUSD, true)}
+          {formatCurrency(row.vol_24_h, true)}
         </TableCell>
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.oneWeekVolumeUSD, true)}
+          {formatCurrency(row.vol_7_d, true)}
         </TableCell>
       </TableRow>
     </>

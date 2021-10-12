@@ -1,8 +1,6 @@
-//mainnet contracts
+//tokens contract addresses
 export const pbrAddressMainnet = "0x298d492e8c1d909D3F63Bc4A36C66c64ACB3d695";
 export const biteAddressMainnet = "0x4eed0fa8de12d5a86517f214c2f11586ba2ed88d";
-export const stakingAddressMainnet =
-  "0x1b46b72c5280f30Fbe8A958B4f3c348FD0fD2E55";
 
 //testnet contracts/
 export const pbrAddressTestnet = "0xf6c9FF0543f932178262DF8C81A12A3132129b51";
@@ -27,26 +25,27 @@ export const facotryAddressTestnet =
   "0xA1853078D1447C0060c71a672E6D13882f61A0a6";
 export const factoryAddresMainnet =
   "0xA1853078D1447C0060c71a672E6D13882f61A0a6";
-// factory bsc
+
+// factory bsc address
 export const facotryAddressBscTestnet =
   "0xA1853078D1447C0060c71a672E6D13882f61A0a6";
 export const factoryAddresBscMainnet =
   "0xA1853078D1447C0060c71a672E6D13882f61A0a6";
 
-// router ethereum
+// router ethereum addresses
 export const routerAddressTestnet =
   "0x050aAC21096e027142E3f5d089a9251FcCf191b9";
 export const routerAddressMainnet =
   "0x050aAC21096e027142E3f5d089a9251FcCf191b9";
 
-// router bsc
+// router bsc addresses
 export const routerAddressBscTestnet =
   "0x050aAC21096e027142E3f5d089a9251FcCf191b9";
 export const routerAddressBscMainnet =
   "0x050aAC21096e027142E3f5d089a9251FcCf191b9";
 
 //pbr-eth-pair
-//ethereum
+// ethereum
 export const pbrEthPairAddressTestnet =
   "0x493845349992318411Db0c472C7e7da345f1cDA4";
 export const pbrEthPairAddressMainnet =
@@ -85,6 +84,10 @@ export const supportedTokens = {
   ethereum: [PBR, ETH, USDT, BITE],
   bsc: [BNB, CORGIB, PWAR],
 };
+
+export const TOKEN_BLACKLIST = []
+export const PAIR_BLACKLIST = []
+
 
 export const exchangeFee = 0.25;
 export const defaultSlippage = 0.5;
@@ -181,14 +184,14 @@ export const tokens = [
     symbol: "USDC",
     address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
   },
-  {
-    name: "1INCH Token",
-    symbol: "1INCH",
-    address:
-      currentConnection === "testnet"
-        ? "0xcc521406C8F796169DCe1D10bDe6AaA60847FB63"
-        : "0x111111111117dc0aa78b770fa6a738034120c302",
-  },
+  // {
+  //   name: "1INCH Token",
+  //   symbol: "1INCH",
+  //   address:
+  //     currentConnection === "testnet"
+  //       ? "0xcc521406C8F796169DCe1D10bDe6AaA60847FB63"
+  //       : "0x111111111117dc0aa78b770fa6a738034120c302",
+  // },
   {
     name: "Dai Stablecoin",
     symbol: "DAI",
@@ -318,14 +321,13 @@ export const tokens = [
 
 export const nullAddress = "0x0000000000000000000000000000000000000000";
 
-
 export const timeframeOptions = {
-  WEEK: '1 week',
-  MONTH: '1 month',
-  // THREE_MONTHS: '3 months',
-  // YEAR: '1 year',
-  HALF_YEAR: '6 months',
-  ALL_TIME: 'All time',
-}
+  WEEK: "1 week",
+  MONTH: "1 month",
+  THREE_MONTHS: "3 months",
+  YEAR: "1 year",
+  HALF_YEAR: "6 months",
+  ALL_TIME: "All time",
+};
 
-export const BUNDLE_ID = '1'
+export const BUNDLE_ID = "1";

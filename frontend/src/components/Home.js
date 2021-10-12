@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import Navbar from "./common/Navbar";
 import Footer from "./common/Footer";
 
-import { connectWallet, getAccountBalance } from "../actions/accountActions";
+import { connectWallet } from "../actions/accountActions";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import store from "../store";
@@ -16,13 +16,11 @@ import {
   supportedNetworks,
 } from "../constants";
 import {
-  fromWei,
-  formatCurrency,
   isMetaMaskInstalled,
   getCurrentNetworkId,
   getCurrentAccount,
 } from "../utils/helper";
-import { CHANGE_NETWORK, UPDATE_SETTINGS } from "../actions/types";
+import { CHANGE_NETWORK } from "../actions/types";
 import TabPage from "./TabPage";
 import { loadTokens } from "../actions/dexActions";
 
@@ -95,7 +93,7 @@ const useStyles = makeStyles((theme) => ({
 const Home = ({
   connectWallet,
   loadTokens,
-  account: { currentAccount, balance, connected, currentNetwork },
+  account: { currentNetwork },
 }) => {
   const classes = useStyles();
 
@@ -114,76 +112,83 @@ const Home = ({
       return etheriumNetwork;
     }
   };
-  useEffect(async () => {
-    if (typeof window.web3 !== "undefined") {
-      window.ethereum.on("accountsChanged", async (accounts) => {
-        if (accounts.length === 0) {
-          return;
+  useEffect(() => {
+    async function listenConnectionUpdate() {
+      if (typeof window.web3 !== "undefined") {
+        window.ethereum.on("accountsChanged", async (accounts) => {
+          if (accounts.length === 0) {
+            return;
+          }
+
+          await connectWallet(false, currentNetwork);
+        });
+
+        window.ethereum.on("networkChanged", async (networkId) => {
+          // setCurrentNetwork(networkId)
+          const network = getCurrentNetwork(networkId);
+
+          store.dispatch({
+            type: CHANGE_NETWORK,
+            payload: network,
+          });
+          await connectWallet(false, network);
+        });
+
+        // todo: handle more ethereum event
+        //1. on transaction update balance
+      }
+    }
+    listenConnectionUpdate();
+  }, []);
+
+  useEffect(() => {
+    async function initConnection() {
+      let network = "";
+      const account = await getCurrentAccount();
+
+      if (isMetaMaskInstalled()) {
+        const networkId = await getCurrentNetworkId();
+
+        if (!supportedNetworks.includes(networkId.toString())) {
+          // alert(
+          //   "This network is not supported yet! Please switch to Ethereum or Smart Chain network"
+          // );
         }
-
-        await connectWallet(false, currentNetwork);
-        // await getAccountBalance(currentNetwork)
-      });
-
-      window.ethereum.on("networkChanged", async (networkId) => {
-        // setCurrentNetwork(networkId)
-        const network = getCurrentNetwork(networkId);
-
+        network = getCurrentNetwork(networkId.toString());
+        // alert(`current network set to  ${network}` )
         store.dispatch({
           type: CHANGE_NETWORK,
           payload: network,
         });
-
-        await connectWallet(false, network);
-        // await getAccountBalance(network)
-      });
-    }
-  }, []);
-
-  useEffect(async () => {
-    let network = "";
-    const account = await getCurrentAccount();
-
-    if (isMetaMaskInstalled()) {
-      const networkId = await getCurrentNetworkId();
-
-      if (!supportedNetworks.includes(networkId.toString())) {
-        // alert(
-        //   "This network is not supported yet! Please switch to Ethereum or Smart Chain network"
-        // );
+      } else {
+        // alert('meta mask not installed')
+        network = etheriumNetwork;
       }
-      network = getCurrentNetwork(networkId.toString());
-      // alert(`current network set to  ${network}` )
-      store.dispatch({
-        type: CHANGE_NETWORK,
-        payload: network,
-      });
-    } else {
-      // alert('meta mask not installed')
-      network = etheriumNetwork;
-    }
 
-    if (!isMetaMaskInstalled()) {
-      return;
+      if (!isMetaMaskInstalled()) {
+        return;
+      }
+      await Promise.all([
+        connectWallet(false, network),
+        loadTokens(network)
+      ])
     }
-
-    await connectWallet(false, network);
-    // await getAccountBalance(network);
-    await loadTokens(network);
+    initConnection()
   }, []);
 
   return (
-    <div style={{ overflowX: "hidden" }}>
-      <div className={classes.navbar}>
-        <Navbar currentNetwork={currentNetwork} />
-      </div>
-      <div className={classes.mainContent}>
-        <TabPage />
-      </div>
-      <div className={classes.footer}>
-        <Footer />
-      </div>
-    </div>
+    <TabPage />
+    // <div style={{ overflowX: "hidden" }}>
+    //   <div className={classes.navbar}>
+    //     <Navbar />
+    //   </div>
+    //   <div className={classes.mainContent}>
+
+    //   </div>
+    //   <div className={classes.footer}>
+    //     <Footer />
+    //   </div>
+    // </div>
   );
 };
 
@@ -200,4 +205,3 @@ export default connect(mapStateToProps, {
   connectWallet,
   loadTokens,
 })(Home);
-// balance={balance}

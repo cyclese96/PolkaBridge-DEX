@@ -4,6 +4,9 @@ import { formatTime } from "../../../../utils/timeUtils";
 
 const TransactionRow = (props) => {
   const { classes, isItemSelected, labelId, handleClick, row } = props;
+
+  console.log("transaction row", row);
+
   return (
     <>
       <TableRow
@@ -19,19 +22,19 @@ const TransactionRow = (props) => {
         <TableCell padding="checkbox"></TableCell>
         <TableCell component="th" id={labelId} scope="row" padding="none">
           <span className={classes.cellTextSecondary}>
-            {row.__typename === "Mint"
+            {row.transactionType === "Mint"
               ? "Add"
-              : row.__typename === "Burn"
+              : row.transactionType === "Burn"
               ? "Remove"
               : "Swap"}{" "}
           </span>{" "}
           <span className={classes.cellText}>
-            {row.pair.token0.symbol} And {row.pair.token1.symbol}
+            {row.token0.symbol} And {row.token1.symbol}
           </span>
         </TableCell>
 
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.amountUSD, true)}
+          {formatCurrency(row.total_value, true)}
         </TableCell>
       </TableRow>
       <TableRow
@@ -48,19 +51,19 @@ const TransactionRow = (props) => {
 
         <TableCell component="th" id={labelId} scope="row" padding="none">
           <span className={classes.cellTextSecondary}>
-            {row.__typename === "Mint"
+            {row.transactionType === "Mint"
               ? "Add"
-              : row.__typename === "Burn"
+              : row.transactionType === "Burn"
               ? "Remove"
               : "Swap"}{" "}
           </span>{" "}
           <span className={classes.cellText}>
-            {row.pair.token0.symbol} And {row.pair.token1.symbol}
+            {row.token0.symbol} And {row.token1.symbol}
           </span>
         </TableCell>
         <TableCell align="right">
           <span className={classes.cellText}>
-            {formatCurrency(row.amountUSD, true)}
+            {formatCurrency(row.total_value, true)}
           </span>
         </TableCell>
 
@@ -75,7 +78,7 @@ const TransactionRow = (props) => {
           {[...row.sender].splice([...row.sender].length - 5, 5)}
         </TableCell>
         <TableCell align="right" className={classes.cellText}>
-          <span>{formatTime(row.transaction.timestamp)}</span>
+          <span>{formatTime(row.time)}</span>
         </TableCell>
       </TableRow>
     </>

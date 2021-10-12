@@ -29,6 +29,7 @@ import {
 } from "../contracts/connections";
 import web3 from "../web";
 import axios from "axios";
+import { ethers } from "ethers";
 
 export const fromWei = (tokens) => {
   if (!tokens) {
@@ -116,19 +117,19 @@ function convertToInternationalCurrencySystem(labelValue, formatter) {
   // Nine Zeroes for Billions
   return Math.abs(Number(labelValue)) >= 1.0e9
     ? formatter
-        .format((Math.abs(Number(labelValue)) / 1.0e9).toFixed(2))
-        .slice(1) + "B"
+      .format((Math.abs(Number(labelValue)) / 1.0e9).toFixed(2))
+      .slice(1) + "B"
     : // Six Zeroes for Millions
     Math.abs(Number(labelValue)) >= 1.0e6
-    ? formatter
+      ? formatter
         .format((Math.abs(Number(labelValue)) / 1.0e6).toFixed(2))
         .slice(1) + "M"
-    : // Three Zeroes for Thousands
-    Math.abs(Number(labelValue)) >= 1.0e3
-    ? formatter
-        .format((Math.abs(Number(labelValue)) / 1.0e3).toFixed(2))
-        .slice(1) + "K"
-    : formatter.format(Math.abs(Number(labelValue))).slice(1);
+      : // Three Zeroes for Thousands
+      Math.abs(Number(labelValue)) >= 1.0e3
+        ? formatter
+          .format((Math.abs(Number(labelValue)) / 1.0e3).toFixed(2))
+          .slice(1) + "K"
+        : formatter.format(Math.abs(Number(labelValue))).slice(1);
 }
 
 export const resetCurrencyFormatting = (value) => {
@@ -136,6 +137,9 @@ export const resetCurrencyFormatting = (value) => {
 };
 
 export const isNumber = (value) => {
+  if (value === '.') {
+    return true
+  }
   return !isNaN(parseInt(value));
 };
 
@@ -321,14 +325,30 @@ export const formatFloat = (floatValue) => {
   return _f.toFixed(4).toString();
 };
 
+export const isAddress = (value) => {
+  try {
+    return ethers.utils.getAddress(value.toLowerCase())
+  } catch {
+    return false
+  }
+}
+
 export const cacheImportedToken = (tokenData) => {
   let tokens = localStorage.getItem("tokens");
   if (!tokens) {
     localStorage.setItem("tokens", JSON.stringify([tokenData]));
   } else {
     tokens = JSON.parse(tokens);
+    // check if token already present in the list then skip caching
+    const _index = tokens.findIndex(
+      (_item) => _item.address === tokenData.address
+    );
+    if (_index >= 0) {
+      return;
+    }
+
     tokens = [tokenData, ...tokens];
-    localStorage.setItem(JSON.stringify(tokens));
+    localStorage.setItem("tokens", JSON.stringify(tokens));
   }
 };
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -9,13 +9,11 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
-import { topPoolsData, topTokensData } from "./tableData";
 import TokenRow from "./TableRows/TokenRow";
 import PoolRow from "./TableRows/PoolRow";
 import TransactionRow from "./TableRows/TransactionRow";
 import { Card } from "@material-ui/core";
 import { useMemo } from "react";
-// import { topTransactions } from "../../../apollo/queries";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -73,7 +71,7 @@ const headCells = {
   ],
   TopPools: [
     {
-      id: "pool",
+      id: "name",
       numeric: false,
       disablePadding: true,
       label: "# Pool",
@@ -94,10 +92,10 @@ const headCells = {
   ],
   Transactions: [
     {
-      id: "type",
+      id: "name",
       numeric: false,
       disablePadding: true,
-      label: "#Token",
+      label: "#Transaction",
     },
     {
       id: "total_value",
@@ -106,18 +104,18 @@ const headCells = {
       label: "Total Value",
     },
     {
-      id: "token1_amount",
+      id: "amount0",
       numeric: true,
       disablePadding: false,
       label: "Token Amount",
     },
     {
-      id: "token2_amount",
+      id: "amount1",
       numeric: true,
       disablePadding: false,
       label: "Token Amount",
     },
-    { id: "account", numeric: true, disablePadding: false, label: "Account" },
+    { id: "sender", numeric: true, disablePadding: false, label: "Account" },
     { id: "time", numeric: true, disablePadding: false, label: "Time" },
   ],
 };
@@ -179,7 +177,7 @@ function EnhancedTableHead(props) {
   };
 
   const ownClasses = useHeadStyles();
-  console.log(window.innerWidth);
+  // console.log(window.innerWidth);
 
   return (
     <TableHead>
@@ -191,7 +189,7 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            // style={{ color: "#E0077D" }}s
+          // style={{ color: "#E0077D" }}s
           >
             <TableSortLabel
               // active={orderBy === headCell.id}
@@ -223,7 +221,7 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            // style={{ color: "#E0077D" }}s
+          // style={{ color: "#E0077D" }}s
           >
             <TableSortLabel
               // active={orderBy === headCell.id}
@@ -343,23 +341,6 @@ const TopTokens = ({
   // const [pairs, setPairs] = useState([]);
   // const [tokens, setTokens] = useState([]);
 
-  // useEffect( () => {
-  //   if ( !allTransactions && Object.keys(allTransactions).length === 0) {
-  //     return
-  //   }
-  //   // const page = 1;
-  //   // const order = "desc";
-  //   // const transactions = await topTransactions(page, order);
-  //   //Format transactions data
-  //   formatTransactions(allTransactions);
-  //   // setPairs(allPairs);
-  //   // setTokens(allTokens);
-  //   console.log("transactions", {
-  //     allTransactions
-  //   });
-
-  // }, [Object.key( !allTransactions ? {} : allTransactions)]);
-
   useEffect(() => {
     if (!allTransactions) {
       return;
@@ -367,79 +348,114 @@ const TopTokens = ({
     console.log("raw transactions list ", allTransactions);
   }, [Object.keys(!allTransactions ? {} : allTransactions)]);
 
+  // id: 1,
+  // token0: {id, name, symbol,... },
+  // fee: 0.3,
+  // tvl: 572.82,
+  // vol_24_h: 882.93,
+  // vol_7_d: 882.93,
+  const getFormattedPoolObject = (rawObject) => {
+    const _formtattedObj = {
+      id: rawObject.id,
+      name: rawObject.token0.symbol,
+      token0: rawObject.token0,
+      token1: rawObject.token1,
+      fee: 0.02,
+      tvl: rawObject.volumeUSD,
+      vol_24_h: rawObject.oneDayVolumeUSD,
+      vol_7_d: rawObject.oneWeekVolumeUSD,
+    };
+    return _formtattedObj;
+  };
   const formattedPairs = useMemo(() => {
-    return allPairs && Object.keys(allPairs).map((key) => allPairs[key]);
+    return (
+      allPairs &&
+      Object.keys(allPairs).map((key) => getFormattedPoolObject(allPairs[key]))
+    );
   }, [allPairs]);
 
+  //   id: 1,
+  //   name: "Ether",
+  //   symbol: "ETH",
+  //   price: 2330,
+  //   price_change: 2.74,
+  //   vol_24_h: 882.93,
+  //   tvl: 572.82,
+  const getFormattedTokenObject = (rawObject) => {
+    const obj = {
+      id: rawObject.id,
+      name: rawObject.name,
+      symbol: rawObject.symbol,
+      price: rawObject.priceUSD,
+      price_change: rawObject.priceChangeUSD,
+      vol_24_h: rawObject.oneDayVolumeUSD,
+      tvl: rawObject.totalLiquidtyUSD,
+    };
+    return obj;
+  };
   const formattedTokens = useMemo(() => {
-    return allTokens && Object.keys(allTokens).map((key) => allTokens[key]);
+    console.log('all tokens', allTokens)
+    return (
+      allTokens &&
+      Object.keys(allTokens).map((key) =>
+        getFormattedTokenObject(allTokens[key])
+      )
+    );
   }, [allTokens]);
 
+  // id: 1,
+  // transactionType: "swap",
+  // fromToken: { symbol: "ETH", amount: 1.0003 },
+  // toTokenL: { symbol: "PBR", amount: 42021 },
+  // token1_amount
+  // token2_amount
+  // total_value: 20000,
+  // account: "0x9d1599C943AaDb3c0A1964d159113dF913E08f64",
+  // time: "2 minutes ago",
+  const getFormattedTransactionObject = (rawObject) => {
+    const obj = {
+      id: rawObject.transaction.id,
+      transactionType: rawObject.__typename,
+      token0: rawObject.pair.token0,
+      token1: rawObject.pair.token1,
+      total_value: rawObject.amountUSD,
+      amount0: rawObject.amount0,
+      amount1: rawObject.amount1,
+      sender: rawObject.sender,
+      time: rawObject.transaction.timestamp,
+    };
+    return obj;
+  };
   const formattedTransactions = useMemo(() => {
-    const _mints = !allTransactions ? [] : allTransactions.mints;
-    const _swaps = allTransactions ? allTransactions.swaps : [];
-    const _burns = allTransactions ? allTransactions.burns : [];
-    const _all = _mints; //[..._mints, ..._swaps, ..._burns];
-    return !_all ? [] : _all;
+    if (!allTransactions || Object.keys(allTransactions).length === 0) {
+      return [];
+    }
+    const _mints = !allTransactions.mints ? [] : allTransactions.mints;
+    const _swaps = !allTransactions.swaps ? [] : allTransactions.swaps;
+    const _burns = !allTransactions.burns ? [] : allTransactions.burns;
+    const _all = [..._mints, ..._swaps, ..._burns];
+    // console.log("all formattedTransactions transactions", _all);
+    return _all && _all.map((item) => getFormattedTransactionObject(item));
   }, [allTransactions]);
 
-  // useEffect(() => {
-  //   if ( !allPairs && Object.keys(allPairs) === 0 ) {
-  //     return
-  //   }
-  //   console.log("raw pair list ", allPairs);
-  // }, [Object.keys( !allPairs ? {} : allPairs )]);
-
-  // const formatTransactions = (transactions) => {
-  //   // let fotmattedTxs = transactions.map((singleTx) => {
-  //   //   return singleTx.burns.length === 0
-  //   //     ? singleTx.mints.length === 0
-  //   //       ? singleTx.swaps
-  //   //       : singleTx.mints
-  //   //     : singleTx.burns;
-  //   // });
-  //   // console.log("fetched", fotmattedTxs);
-  //   const allTrx = [];
-
-  //   setTransactions(transactions.burns);
-  //   // console.log(fotmattedTxs);
-  // };
-
   const handleRequestSort = (event, property) => {
-    // console.log("sort ", property);
+    console.log("sort ", property);
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelecteds = rows(tableType).map((n) => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
+  // const handleSelectAllClick = (event) => {
+  //   if (event.target.checked) {
+  //     const newSelecteds = rows(tableType).map((n) => n.name);
+  //     setSelected(newSelecteds);
+  //     return;
+  //   }
+  //   setSelected([]);
+  // };
 
   const handleClick = (event, name) => {
-    console.log("ordering...");
-    // const selectedIndex = selected.indexOf(name);
-    // let newSelected = [];
-
-    // if (selectedIndex === -1) {
-    //   newSelected = newSelected.concat(selected, name);
-    // } else if (selectedIndex === 0) {
-    //   newSelected = newSelected.concat(selected.slice(1));
-    // } else if (selectedIndex === selected.length - 1) {
-    //   newSelected = newSelected.concat(selected.slice(0, -1));
-    // } else if (selectedIndex > 0) {
-    //   newSelected = newSelected.concat(
-    //     selected.slice(0, selectedIndex),
-    //     selected.slice(selectedIndex + 1)
-    //   );
-    // }
-
-    // setSelected(newSelected);
+    console.log("row clicked...", name);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -476,21 +492,21 @@ const TopTokens = ({
         <>
           {formattedTokens.length > 0
             ? stableSort(formattedTokens, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row, index) => {
+                const isItemSelected = isSelected(row.name);
+                const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TokenRow
-                      row={row}
-                      classes={classes}
-                      isItemSelected={isItemSelected}
-                      labelId={labelId}
-                      handleClick={handleClick}
-                    />
-                  );
-                })
+                return (
+                  <TokenRow
+                    row={row}
+                    classes={classes}
+                    isItemSelected={isItemSelected}
+                    labelId={labelId}
+                    handleClick={handleClick}
+                  />
+                );
+              })
             : ""}
           {emptyRows > 0 && (
             <TableRow
@@ -581,7 +597,7 @@ const TopTokens = ({
             numSelected={selected.length}
             order={order}
             orderBy={orderBy}
-            onSelectAllClick={handleSelectAllClick}
+            // onSelectAllClick={handleSelectAllClick}
             onRequestSort={handleRequestSort}
             rowCount={rows(tableType).length}
             tableType={tableType}

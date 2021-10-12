@@ -2,20 +2,6 @@
     {
         "constant": true,
         "inputs": [],
-        "name": "supply",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [],
         "name": "name",
         "outputs": [
             {
@@ -31,11 +17,11 @@
         "constant": false,
         "inputs": [
             {
-                "name": "delegate",
+                "name": "_spender",
                 "type": "address"
             },
             {
-                "name": "numTokens",
+                "name": "_value",
                 "type": "uint256"
             }
         ],
@@ -68,15 +54,15 @@
         "constant": false,
         "inputs": [
             {
-                "name": "owner",
+                "name": "_from",
                 "type": "address"
             },
             {
-                "name": "buyer",
+                "name": "_to",
                 "type": "address"
             },
             {
-                "name": "numTokens",
+                "name": "_value",
                 "type": "uint256"
             }
         ],
@@ -89,25 +75,6 @@
         ],
         "payable": false,
         "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "name": "balances",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -128,37 +95,14 @@
         "constant": true,
         "inputs": [
             {
-                "name": "",
-                "type": "address"
-            },
-            {
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "name": "allowed",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "tokenOwner",
+                "name": "_owner",
                 "type": "address"
             }
         ],
         "name": "balanceOf",
         "outputs": [
             {
-                "name": "",
+                "name": "balance",
                 "type": "uint256"
             }
         ],
@@ -184,11 +128,11 @@
         "constant": false,
         "inputs": [
             {
-                "name": "receiver",
+                "name": "_to",
                 "type": "address"
             },
             {
-                "name": "numTokens",
+                "name": "_value",
                 "type": "uint256"
             }
         ],
@@ -207,11 +151,11 @@
         "constant": true,
         "inputs": [
             {
-                "name": "owner",
+                "name": "_owner",
                 "type": "address"
             },
             {
-                "name": "delegate",
+                "name": "_spender",
                 "type": "address"
             }
         ],
@@ -227,53 +171,52 @@
         "type": "function"
     },
     {
-        "inputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "constructor"
+        "payable": true,
+        "stateMutability": "payable",
+        "type": "fallback"
     },
     {
         "anonymous": false,
         "inputs": [
             {
-                "indexed": false,
-                "name": "sender",
+                "indexed": true,
+                "name": "owner",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "name": "spender",
                 "type": "address"
             },
             {
                 "indexed": false,
-                "name": "receiver",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "name": "tokens",
+                "name": "value",
                 "type": "uint256"
             }
         ],
-        "name": "Transfer",
+        "name": "Approval",
         "type": "event"
     },
     {
         "anonymous": false,
         "inputs": [
             {
-                "indexed": false,
-                "name": "sender",
+                "indexed": true,
+                "name": "from",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "name": "to",
                 "type": "address"
             },
             {
                 "indexed": false,
-                "name": "delegate",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "name": "tokens",
+                "name": "value",
                 "type": "uint256"
             }
         ],
-        "name": "Approval",
+        "name": "Transfer",
         "type": "event"
     }
 ]

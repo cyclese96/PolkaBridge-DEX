@@ -4,9 +4,42 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import ApplicationContextProvider from '../src/contexts/Application';
+import GlobalDataContextProvider from '../src/contexts/GlobalData'
+import TokenDataContextProvider, { Updater as TokenDataContextUpdater } from '../src/contexts/TokenData'
+import PairDataContextProvider, { Updater as PairDataContextUpdater } from '../src/contexts/PairData'
+
+function ContextProviders({ children }) {
+  return (
+    <ApplicationContextProvider>
+      <TokenDataContextProvider>
+        <GlobalDataContextProvider>
+          <PairDataContextProvider>
+            {children}
+          </PairDataContextProvider>
+        </GlobalDataContextProvider>
+      </TokenDataContextProvider>
+    </ApplicationContextProvider>
+  )
+}
+
+function Updaters() {
+  return (
+    <>
+      <TokenDataContextUpdater />
+      <PairDataContextUpdater />
+    </>
+  )
+}
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ContextProviders>
+      <>
+        <Updaters />
+        <App />
+      </>
+    </ContextProviders>
   </React.StrictMode>,
   document.getElementById('root')
 );

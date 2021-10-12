@@ -155,31 +155,39 @@ const SelectTokenDialog = ({
     setTokens(tokenList);
   }, [tokenList]);
 
+  // useEffect(() => {
+  //   if (open) {
+  //     resetInputState();
+  //   }
+  // }, [open]);
+
   useEffect(() => {
-    console.log("current imported token ", importedToken);
     if (importedToken.symbol) {
-      console.log("applying filter now");
       const filteredList = applyFilter(tokenList, importedToken.symbol);
-      console.log("filtered result", filteredList);
       setTokens(filteredList);
     }
   }, [importedToken, tokenList]);
 
   const applyFilter = (list, value) => {
-    // console.log("token list", list);
-    // console.log("on alue", value);
     const filtered = list.filter(
       (item) =>
-        item.symbol.toLocaleLowerCase().includes(value.toLocaleLowerCase()) ||
-        item.name.toLowerCase().includes(value.toLocaleLowerCase()) ||
+        (item.symbol &&
+          item.symbol
+            .toLocaleLowerCase()
+            .includes(value.toLocaleLowerCase())) ||
+        (item.name &&
+          item.name.toLowerCase().includes(value.toLocaleLowerCase())) ||
         (item.address &&
           item.address.toLowerCase().includes(value.toLocaleLowerCase()))
     );
-    // setTokens(filtered);
+
     return filtered;
   };
 
   const handleTokenFilter = async (value) => {
+    if (!value) {
+      value = "";
+    }
     const filteredList = applyFilter(tokenList, value);
     setTokens(filteredList);
     if (value.length === 42 && filteredList.length === 0) {
@@ -190,9 +198,13 @@ const SelectTokenDialog = ({
     }
   };
 
+  const resetInputState = () => {
+    setShowImported(false);
+    handleTokenFilter("");
+  };
+
   const onClose = () => {
     handleClose();
-    setShowImported(false);
   };
 
   return (
@@ -236,6 +248,8 @@ const SelectTokenDialog = ({
         />
         {dexLoading ? (
           <CircularProgress />
+        ) : filteredTokens.length === 0 ? (
+          <span style={{ marginTop: 10 }}>No tokens found</span>
         ) : (
           <TokenList
             handleItemSelected={onTokenSelect}
