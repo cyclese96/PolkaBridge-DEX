@@ -315,8 +315,8 @@ const Navbar = (props) => {
         className={classes.appBarBackground}
       >
         <Toolbar className={classes.sectionDesktop}>
-          <Avatar
-            variant="square"
+          <img
+            alt='logo'
             src="img/logo-white.png"
             className={classes.logo}
           />
@@ -392,7 +392,8 @@ const Navbar = (props) => {
         <Toolbar className={classes.sectionMobile}>
           <div className={classes.row1}>
             <div>
-              <Avatar
+              <img
+                alt='logo'
                 variant="square"
                 src="img/logo-white.png"
                 className={classes.logo}

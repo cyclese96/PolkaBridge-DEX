@@ -141,13 +141,17 @@ const AccountDialog = ({
         className={classes.dialog}
         color="transparent"
         PaperProps={{
-          style: { borderRadius: 15 },
+          style: {
+            borderRadius: 15, backgroundColor: "#121827",
+            color: "#f9f9f9",
+          },
         }}
       >
         <div className={classes.background}>
           <DialogTitle onClose={() => handleClose()}>
             <span className={classes.heading}>My Wallet</span>
           </DialogTitle>
+
           <div className={classes.balanceCard}>
             {getCoins().map((item) => (
               <div

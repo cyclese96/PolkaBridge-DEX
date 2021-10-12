@@ -110,10 +110,24 @@ const useStyles = makeStyles((theme) => ({
   confirmButton: {
     width: 220,
     height: 50,
+    borderRadius: 50,
   },
   acceptPrice: {
     height: 35,
   },
+  detailTitle: {
+    fontSize: 13
+  },
+  detailValue: {
+    fontSize: 12
+  },
+  icon: {
+    color: "#f6f6f6",
+
+    transition: "all 0.4s ease",
+    fontSize: 22,
+    backgroundColor: "#191B1E",
+  }
 }));
 
 const SwapConfirm = (props) => {
@@ -187,7 +201,7 @@ const SwapConfirm = (props) => {
         className={classes.dialog}
         color="transparent"
         PaperProps={{
-          style: { borderRadius: 15 },
+          style: { borderRadius: 15, backgroundColor: "#121827", },
         }}
       >
         <div className={classes.background}>
@@ -195,35 +209,31 @@ const SwapConfirm = (props) => {
             <span className={classes.heading}>Confirm Swap</span>
           </DialogTitle>
           <div className={classes.tokenCard}>
-            <div className="d-flex justify-content-start w-100 mb-1">
-              <span className={classes.subheading}> From</span>
-              <span></span>
-            </div>
             <div className="d-flex justify-content-between w-100">
               <div>
+                <span className={classes.subheading}> From : </span>
                 <TokenIcon symbol={selectedToken1.symbol} />
                 <span style={{ marginLeft: 2 }}> {selectedToken1.symbol}</span>
               </div>
               <span>{token1Value}</span>
             </div>
+
           </div>
 
-          <div className="mt-2 mb-2">
-            <ArrowDownwardIcon fontSize="small" />
+          <div >
+            <ArrowDownwardIcon fontSize="small" className={classes.icon} />
           </div>
 
           <div className={classes.tokenCard}>
-            <div className="d-flex justify-content-start w-100 mb-1">
-              <span className={classes.subheading}>To</span>
-              <span></span>
-            </div>
             <div className="d-flex justify-content-between w-100">
               <div>
+                <span className={classes.subheading}>To : </span>
                 <TokenIcon symbol={selectedToken2.symbol} />
                 <span style={{ marginLeft: 2 }}> {selectedToken2.symbol}</span>
               </div>
               <span>{token2Value}</span>
             </div>
+
           </div>
 
           <div className="d-flex justify-content-around w-100 mt-2 mb-2 ">
@@ -254,8 +264,8 @@ const SwapConfirm = (props) => {
           ) : (
             <div className={classes.tokenCard}>
               <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
-                <span>Liquidity provider fee</span>
-                <span>
+                <span className={classes.detailTitle}>Liquidity provider fee</span>
+                <span className={classes.detailValue}>
                   {getPercentageAmount(token1Value, "0.2 ")}{" "}
                   {selectedToken1.symbol}
                 </span>
@@ -267,19 +277,19 @@ const SwapConfirm = (props) => {
               </span>
             </div> */}
               <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
-                <span>Price impact</span>
-                <span>- {formatFloat(priceImpact)} %</span>
+                <span className={classes.detailTitle}>Price impact</span>
+                <span className={classes.detailValue}>- {formatFloat(priceImpact)} %</span>
               </div>
               <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
-                <span>Minimum received</span>
-                <span>
+                <span className={classes.detailTitle}>Minimum received</span>
+                <span className={classes.detailValue}>
                   {token2Value} {selectedToken2.symbol}
                 </span>
               </div>
 
               <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
-                <span>Slippage tolerance</span>
-                <span>{swapSettings.slippage} %</span>
+                <span className={classes.detailTitle}>Slippage tolerance</span>
+                <span className={classes.detailValue}>{swapSettings.slippage} %</span>
               </div>
             </div>
           )}

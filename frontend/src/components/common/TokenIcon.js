@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
 
   root: {
     width: "auto",
-    height: 22,
+    height: 20,
     borderRadius: "50%",
   },
 }));
