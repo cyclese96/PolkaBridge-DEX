@@ -37,6 +37,7 @@ import { getPairAddress } from "../../utils/connectionUtils";
 
 import { Info, Settings, SwapCalls, SwapHoriz } from "@material-ui/icons";
 import TabPage from "../TabPage";
+import TransactionStatus from "../common/TransactionStatus";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -590,6 +591,7 @@ const SwapCard = (props) => {
   return (
     <>
       <TabPage data={0} />
+
       <CustomSnackBar
         status={snackAlert.status}
         message={snackAlert.message}
@@ -646,18 +648,20 @@ const SwapCard = (props) => {
             disableToken={selectedToken1}
             inputValue={token2Value}
           />
-          {token1Value && token2Value && <div className="mt-1 d-flex justify-content-end">
-            <div className={classes.tokenPrice}>
-              <span> 1 ETH = {token2Value / token1Value} PBR</span>{" "}
-              <Info
-                className={classes.infoIcon}
-                style={{ marginTop: -3 }}
-                onClick={handleTxPoper}
-                onMouseEnter={handleTxPoper}
-                onMouseLeave={() => setAnchorEl(null)}
-              />
+          {token1Value && token2Value && (
+            <div className="mt-1 d-flex justify-content-end">
+              <div className={classes.tokenPrice}>
+                <span> 1 ETH = {token2Value / token1Value} PBR</span>{" "}
+                <Info
+                  className={classes.infoIcon}
+                  style={{ marginTop: -3 }}
+                  onClick={handleTxPoper}
+                  onMouseEnter={handleTxPoper}
+                  onMouseLeave={() => setAnchorEl(null)}
+                />
+              </div>
             </div>
-          </div>}
+          )}
           <Button
             variant="contained"
             disabled={disableStatus()}
@@ -675,6 +679,7 @@ const SwapCard = (props) => {
             )}
           </Button>
         </div>
+
         <Popper id={id} open={open} anchorEl={anchorEl}>
           <div className={classes.txDetailsCard}>
             <h6>Transaction Details</h6>
@@ -704,6 +709,9 @@ const SwapCard = (props) => {
           </div>
         </Popper>
       </Card>
+      {/* <div className="mt-3">
+        <TransactionStatus caseValue={1} />
+      </div> */}
     </>
   );
 };
