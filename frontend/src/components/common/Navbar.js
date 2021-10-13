@@ -28,6 +28,7 @@ import binanceIcon from "../../assets/binance.png";
 import { etheriumNetwork } from "../../constants";
 import DotCircle from "./DotCircle";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -315,11 +316,12 @@ const Navbar = (props) => {
         className={classes.appBarBackground}
       >
         <Toolbar className={classes.sectionDesktop}>
-          <img
+          <a href='/'>  <img
             alt='logo'
-            src="img/logo-white.png"
+            src="/img/logo-white.png"
             className={classes.logo}
           />
+          </a>
 
           <div className={classes.leftMargin} />
 
@@ -349,7 +351,7 @@ const Navbar = (props) => {
             </a>
           </div>
           <div>
-            <a href="#" className={classes.navbarItemsDesktop}>
+            <a href="#" className={classes.navbarItemsDesktop} style={{ color: '#DF097C' }}>
               Swap <DotCircle />
             </a>
           </div>
@@ -392,12 +394,14 @@ const Navbar = (props) => {
         <Toolbar className={classes.sectionMobile}>
           <div className={classes.row1}>
             <div>
-              <img
+
+              <a href='/'>   <img
                 alt='logo'
                 variant="square"
-                src="img/logo-white.png"
+                src="/img/logo-white.png"
                 className={classes.logo}
               />
+              </a>
             </div>
 
             {/* <Wallet onWalletClick={() => setAccountDialog(true)} /> */}

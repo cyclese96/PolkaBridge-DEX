@@ -237,7 +237,7 @@ const SwapConfirm = (props) => {
           </div>
 
           <div className="d-flex justify-content-around w-100 mt-2 mb-2 ">
-            <span className={classes.subheading}>Price</span>
+            <span className={classes.subheading}>Current Price</span>
             <span className={classes.subheading}>
               1 {selectedToken1.symbol} {" = "}{" "}
               {getPriceRatio(

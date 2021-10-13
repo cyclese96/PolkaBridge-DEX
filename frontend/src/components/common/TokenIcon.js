@@ -9,6 +9,7 @@ const useStyles = makeStyles((theme) => ({
     width: "auto",
     height: 20,
     borderRadius: "50%",
+    marginRight: 5
   },
 }));
 

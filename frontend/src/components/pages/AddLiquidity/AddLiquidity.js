@@ -6,6 +6,7 @@ import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import AddCard from "./AddCard";
 import RemoveCard from "./RemoveCard";
+import TabPage from "../../TabPage";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: 20,
     paddingTop: 15,
     paddingBottom: 15,
+
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 7,
       paddingRight: 7,
@@ -75,6 +77,10 @@ const AddLiquidity = ({ account: { balance, loading } }) => {
 
   return (
     <>
+      <div className='mb-3'>
+        <TabPage data={1} />
+      </div>
+
       {!showCard.status ? (
         <Card className={classes.card}>
           <h4>Pools</h4>

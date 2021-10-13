@@ -14,6 +14,9 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
 import PoolDetail from "./components/pages/Analytics/PoolDetail";
+import SwapCard from "./components/Cards/SwapCard";
+import AddLiquidity from "./components/pages/AddLiquidity";
+import Analytics from "./components/pages/Analytics";
 
 const useStyles = makeStyles((theme) => ({
   navbar: {
@@ -92,7 +95,11 @@ function App() {
           </div>
           <div className={classes.mainContent}>
             <BrowserRouter>
-              <Route exact path="/" component={Home} />
+
+              <Route exact path="/" component={SwapCard} />
+              <Route exact path="/liquidity" component={AddLiquidity} />
+              <Route exact path="/charts" component={Analytics} />
+
               <Switch>
                 <Route
                   exacts

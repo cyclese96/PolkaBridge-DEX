@@ -36,6 +36,7 @@ import debounce from "lodash.debounce";
 import { getPairAddress } from "../../utils/connectionUtils";
 
 import { Info, Settings, SwapCalls, SwapHoriz } from "@material-ui/icons";
+import TabPage from "../TabPage";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -588,6 +589,7 @@ const SwapCard = (props) => {
   };
   return (
     <>
+      <TabPage data={0} />
       <CustomSnackBar
         status={snackAlert.status}
         message={snackAlert.message}

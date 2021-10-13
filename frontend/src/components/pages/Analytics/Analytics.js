@@ -15,6 +15,7 @@ import { useAllTokenData } from "../../../contexts/TokenData";
 import { useAllPairData } from "../../../contexts/PairData";
 import { formatCurrency } from "../../../utils/helper";
 import Loader from "../../common/Loader";
+import TabPage from "../../TabPage";
 
 // globalData ->
 // {
@@ -47,8 +48,11 @@ const Analytics = () => {
 
   return (
     <div>
+      <div className='mb-3'>
+        <TabPage data={2} />
+      </div>
       <h3 className={classes.heading}>PolkaBridge DEX Overview</h3>
-      {console.log(globalData)}
+
       <div className="mt-2 row g-3">
         <div className="col-md-6">
           <Card elevation={10} className={classes.card}>
@@ -84,11 +88,10 @@ const Analytics = () => {
         </div>
         <div className="col-md-6">
           <Card elevation={10} className={classes.card}>
-            {globalData && (
+            {globalData !== null && (
               <div>
                 <span className={classes.cardSpan}>Volume 24H</span>
                 <p className={classes.cardP}>
-                  {console.log(globalData)}
                   {globalData.oneDayVolumeUSD
                     ? "$" +
                     formatCurrency(
@@ -120,51 +123,52 @@ const Analytics = () => {
           </Card>
         </div>
       </div>
+      {globalData && (
+        <Card elevetation={10} className={classes.priceStatContainer}>
+          <div className={classes.statsGroup}>
+            <span className={classes.statLabel}>Volume 24H:</span>
+            <span className={classes.statAmount}>
+              ${" "}
+              {globalData.oneDayVolumeUSD
+                ? "$" +
+                formatCurrency(globalData.oneDayVolumeUSD, false, 0, false)
+                : "-"}
+            </span>
 
-      <Card elevetation={10} className={classes.priceStatContainer}>
-        <div className={classes.statsGroup}>
-          <span className={classes.statLabel}>Volume 24H:</span>
-          <span className={classes.statAmount}>
-            ${" "}
-            {globalData.oneDayVolumeUSD
-              ? "$" +
-              formatCurrency(globalData.oneDayVolumeUSD, false, 0, false)
-              : "-"}
-          </span>
+            <PercentLabel percentValue={5} braces={true} />
+          </div>
 
-          <PercentLabel percentValue={5} braces={true} />
-        </div>
+          <div className={classes.statsGroup}>
+            <span className={classes.statLabel}>Fees 24H:</span>
+            <span className={classes.statAmount}>
+              ${" "}
+              {globalData.oneDayVolumeUSD
+                ? "$" +
+                formatCurrency(
+                  globalData.oneDayVolumeUSD * 0.02,
+                  false,
+                  0,
+                  false
+                )
+                : "-"}
+            </span>
 
-        <div className={classes.statsGroup}>
-          <span className={classes.statLabel}>Fees 24H:</span>
-          <span className={classes.statAmount}>
-            ${" "}
-            {globalData.oneDayVolumeUSD
-              ? "$" +
-              formatCurrency(
-                globalData.oneDayVolumeUSD * 0.02,
-                false,
-                0,
-                false
-              )
-              : "-"}
-          </span>
+            <PercentLabel percentValue={8} braces={true} />
+          </div>
 
-          <PercentLabel percentValue={8} braces={true} />
-        </div>
+          <div className={classes.statsGroup}>
+            <span className={classes.statLabel}>TVL</span>
+            <span className={classes.statAmount}>
+              {globalData.totalLiquidityUSD
+                ? "$" +
+                formatCurrency(globalData.totalLiquidityUSD, false, 0, false)
+                : "-"}{" "}
+            </span>
 
-        <div className={classes.statsGroup}>
-          <span className={classes.statLabel}>TVL</span>
-          <span className={classes.statAmount}>
-            {globalData.totalLiquidityUSD
-              ? "$" +
-              formatCurrency(globalData.totalLiquidityUSD, false, 0, false)
-              : "-"}{" "}
-          </span>
-
-          <PercentLabel percentValue={-8} braces={true} />
-        </div>
-      </Card>
+            <PercentLabel percentValue={-8} braces={true} />
+          </div>
+        </Card>
+      )}
 
       <div className={classes.tokenListHeading}>Top Tokens</div>
       <div className={classes.tokenList}>
@@ -173,9 +177,7 @@ const Analytics = () => {
           allTokens={allTokens ? allTokens : {}}
         />
       </div>
-      {/* 
 
-     
       <div className={classes.tokenListHeading}>Top Pools</div>
       <div className={classes.tokenList}>
         <TopTokens tableType="TopPools" allPairs={allPairs ? allPairs : {}} />
@@ -188,6 +190,9 @@ const Analytics = () => {
         />
       </div>
       <div className="mb-5"></div>
+      {/* 
+
+    
     */}
     </div>
   );
