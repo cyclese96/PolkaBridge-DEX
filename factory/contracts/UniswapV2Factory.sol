@@ -19,6 +19,7 @@ contract UniswapV2Factory is IUniswapV2Factory {
 
     constructor(address _feeToSetter) {
         feeToSetter = _feeToSetter;
+        releaseTime = block.timestamp;
     }
 
     function allPairsLength() external override view returns (uint) {
@@ -48,12 +49,12 @@ contract UniswapV2Factory is IUniswapV2Factory {
 
     function setFeeTo(address _feeTo) external override {
         require(msg.sender == feeToSetter, 'PolkaBridge AMM V1: FORBIDDEN');
-        if(releaseTime == 0)
-            releaseTime = block.timestamp;
-        if(releaseTime != 0)
+        // if(releaseTime == 0)
+            
+        // if(releaseTime != 0)
         {
             require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
-            releaseTime = 0;
+            // releaseTime = 0;
             feeTo = _feeTo;
             emit SetFeeTo(_feeTo);    
         }        
@@ -61,12 +62,12 @@ contract UniswapV2Factory is IUniswapV2Factory {
 
     function setFeeToSetter(address _feeToSetter) external override {
         require(msg.sender == feeToSetter, 'PolkaBridge AMM V1: FORBIDDEN');
-        if(releaseTime == 0)
-            releaseTime = block.timestamp;
-        if(releaseTime != 0)
+        // if(releaseTime == 0)
+            // releaseTime = block.timestamp;
+        // if(releaseTime != 0)
         {
             require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
-            releaseTime = 0;
+            // releaseTime = 0;
             feeToSetter = _feeToSetter;
             emit SetFeeToSetter(_feeToSetter);
         }        

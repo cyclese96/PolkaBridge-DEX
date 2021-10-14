@@ -281,13 +281,13 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
     }    
     
     function setTreasuryAddress(address _address ) external override onlyOwner {
-        if(releaseTime == 0)
-            releaseTime = block.timestamp;
-        if(releaseTime != 0)
+        // if(releaseTime == 0)
+        //     releaseTime = block.timestamp;
+        // if(releaseTime != 0)
         {
             require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
             treasury = _address;
-            releaseTime = 0;
+            // releaseTime = 0;
             emit TreasurySet(_address);
         }
     }
