@@ -19,6 +19,9 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
     address public owner;
     // Polka Treasury
     // address polkaTreasury;
+    uint256 private releaseTime;
+    uint256 private lockTime = 2 days;
+
     modifier ensure(uint deadline) {
         require(deadline >= block.timestamp, 'UniswapV2Router: EXPIRED');
         _;
@@ -146,7 +149,8 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         uint256 deadline
     ) public virtual override ensure(deadline) returns (uint256 amountA, uint256 amountB) {
         address pair = UniswapV2Library.pairFor(factory, tokenA, tokenB);
-        IUniswapV2Pair(pair).transferFrom(msg.sender, pair, liquidity); // send liquidity to pair
+        bool bTransfered = IUniswapV2Pair(pair).transferFrom(msg.sender, pair, liquidity);
+        require(bTransfered, 'Failed in sending liquidity to pair'); // send liquidity to pair
         (uint256 amount0, uint256 amount1) = IUniswapV2Pair(pair).burn(to);
         (address token0, ) = UniswapV2Library.sortTokens(tokenA, tokenB);
         (amountA, amountB) = tokenA == token0 ? (amount0, amount1) : (amount1, amount0);
@@ -510,6 +514,15 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
     // Set Polka Treasury Address
     // function setPolkaTreasury(address _new_treasury) public onlyOwner {
     //     require(_new_treasury != address(0), "Router: Treasury contract address can not be zero");
+    // if(releaseTime == 0)
+    //     releaseTime = block.timestamp;
+    // if(releaseTime != 0)
+    // {
+    //     require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
+    //     releaseTime = 0;
+    //     polkaTreasury = _new_treasury;        
+    // }        
+
     //     polkaTreasury = _new_treasury;
     // }
 }

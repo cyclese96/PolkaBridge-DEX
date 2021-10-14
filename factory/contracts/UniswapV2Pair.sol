@@ -33,6 +33,8 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
     uint public override kLast; // reserve0 * reserve1, as of immediately after the most recent liquidity event
 
     uint private unlocked = 1;
+    uint256 private releaseTime;
+    uint256 private lockTime = 2 days;
 
     modifier lock() {
         require(unlocked == 1, 'PolkaBridge AMM V1: LOCKED');
@@ -279,8 +281,15 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
     }    
     
     function setTreasuryAddress(address _address ) external override onlyOwner {
-        treasury = _address;
-        emit TreasurySet(_address);
+        if(releaseTime == 0)
+            releaseTime = block.timestamp;
+        if(releaseTime != 0)
+        {
+            require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
+            treasury = _address;
+            releaseTime = 0;
+            emit TreasurySet(_address);
+        }
     }
 
     function skim(address to) external override lock {

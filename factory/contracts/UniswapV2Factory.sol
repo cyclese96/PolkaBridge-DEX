@@ -14,6 +14,9 @@ contract UniswapV2Factory is IUniswapV2Factory {
 
     bytes32 public constant INIT_CODE_PAIR_HASH = keccak256(abi.encodePacked(type(UniswapV2Pair).creationCode));
     
+    uint256 private releaseTime;
+    uint256 private lockTime = 2 days;
+
     constructor(address _feeToSetter) {
         feeToSetter = _feeToSetter;
     }
@@ -45,13 +48,27 @@ contract UniswapV2Factory is IUniswapV2Factory {
 
     function setFeeTo(address _feeTo) external override {
         require(msg.sender == feeToSetter, 'PolkaBridge AMM V1: FORBIDDEN');
-        feeTo = _feeTo;
-        emit SetFeeTo(_feeTo);
+        if(releaseTime == 0)
+            releaseTime = block.timestamp;
+        if(releaseTime != 0)
+        {
+            require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
+            releaseTime = 0;
+            feeTo = _feeTo;
+            emit SetFeeTo(_feeTo);    
+        }        
     }
 
     function setFeeToSetter(address _feeToSetter) external override {
         require(msg.sender == feeToSetter, 'PolkaBridge AMM V1: FORBIDDEN');
-        feeToSetter = _feeToSetter;
-        emit SetFeeToSetter(_feeToSetter);
+        if(releaseTime == 0)
+            releaseTime = block.timestamp;
+        if(releaseTime != 0)
+        {
+            require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
+            releaseTime = 0;
+            feeToSetter = _feeToSetter;
+            emit SetFeeToSetter(_feeToSetter);
+        }        
     }
 }
