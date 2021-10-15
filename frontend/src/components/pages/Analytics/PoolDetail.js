@@ -22,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
   },
   breadcrumbs: {
     paddingBottom: 20,
+    [theme.breakpoints.down("sm")]: {
+      paddingBottom: 10,
+    },
   },
   breadcrumbsTitle: {
     color: "white",
@@ -31,10 +34,16 @@ const useStyles = makeStyles((theme) => ({
   tokenDetails: {
     paddingTop: 20,
     paddingBottom: 16,
+    [theme.breakpoints.down("sm")]: {
+      paddingTop: 5,
+    },
   },
   tokenTitle: {
     color: "white",
     fontSize: 32,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 17,
+    },
   },
   tokenImage: {
     height: 30,
@@ -115,8 +124,8 @@ function PoolDetail({ pairAddress }) {
   const transactions = usePairTransactions(pairAddress);
 
   useEffect(() => {
-    console.log('alltransaction', transactions)
-  }, [transactions])
+    console.log("alltransaction", transactions);
+  }, [transactions]);
 
   const formattedLiquidity = reserveUSD
     ? formattedNum(reserveUSD, true)
@@ -202,7 +211,9 @@ function PoolDetail({ pairAddress }) {
               address={token1.address}
               className={classes.tokenImage}
             />
-            <span style={{ paddingRight: 3 }}>{token0.symbol} - {token1.symbol}</span>
+            <span style={{ paddingRight: 3 }}>
+              {token0.symbol} - {token1.symbol}
+            </span>
             {/* <span style={{ paddingRight: 15 }}>({symbol})</span> */}
             <span>${formatCurrency(token1USD)}</span>
             <span className={classes.changeIndicator}>
@@ -260,7 +271,6 @@ function PoolDetail({ pairAddress }) {
         <div for="transaction-table" className="mt-5">
           <h6 className={classes.sectionTitle}>Top Transactions</h6>
           <div>
-
             <div className={classes.tokenList}>
               {/* <TopTokens//todo: fix transaction api then it works
                 tableType="Transactions"

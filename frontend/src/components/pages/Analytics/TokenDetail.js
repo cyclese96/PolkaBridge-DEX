@@ -17,8 +17,9 @@ import TokenIcon from "../../common/TokenIcon";
 import { Link } from "react-router-dom";
 import { formatCurrency } from "../../../utils/helper";
 import TokenChart from "./TokenChart";
-import { Card } from "@material-ui/core";
+import { Button, Card } from "@material-ui/core";
 import TopTokens from "./TopTokens";
+import { OpenInNew } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -35,10 +36,17 @@ const useStyles = makeStyles((theme) => ({
   tokenDetails: {
     paddingTop: 20,
     paddingBottom: 16,
+    [theme.breakpoints.down("sm")]: {
+      paddingTop: 5,
+    },
   },
   tokenTitle: {
     color: "white",
+
     fontSize: 32,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 18,
+    },
   },
   tokenImage: {
     height: 30,
@@ -99,6 +107,51 @@ const useStyles = makeStyles((theme) => ({
     border: "1px solid #616161",
     background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
   },
+  tokenInfo: {
+    border: "1px solid #616161",
+    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    borderRadius: 15,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 15,
+    paddingBottom: 15,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  openButton: {
+    backgroundColor: "#4C2238",
+    color: "#f6f6f6",
+    borderColor: "#f6f6f6",
+    width: 200,
+    height: 40,
+    textTransform: "none",
+    fontSize: 16,
+    borderRadius: 10,
+
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 12,
+      padding: "5px 20px 5px 20px",
+      width: "100%",
+    },
+  },
+  detailsBox: {
+    marginRight: 20,
+    [theme.breakpoints.down("sm")]: {
+      marginRight: 10,
+    },
+  },
+  detailTitle: {
+    fontSize: 14,
+    color: "#bdbdbd",
+    fontWeight: 500,
+  },
+  detailValue: {
+    fontSize: 18,
+    fontWeight: 600,
+  },
 }));
 
 function TokenPage({ address }) {
@@ -119,11 +172,11 @@ function TokenPage({ address }) {
   } = useTokenData(address);
 
   // const allPairs = useTokenPairs(address); // todo: fix api
-  const allPairs = useAllPairData();// testing
+  const allPairs = useAllPairData(); // testing
 
   useEffect(() => {
-    console.log('allPairs', allPairs)
-  }, [allPairs])
+    console.log("allPairs", allPairs);
+  }, [allPairs]);
 
   // pairs to show in pair list
   const fetchedPairsList = useDataForList(allPairs);
@@ -150,7 +203,7 @@ function TokenPage({ address }) {
   const liquidity = formattedNum(totalLiquidityUSD, true);
   const liquidityChange = formattedPercent(liquidityChangeUSD);
 
-  const fee = formattedNum(oneDayVolumeUSD * 0.025, true)
+  const fee = formattedNum(oneDayVolumeUSD * 0.025, true);
   // transactions
   const txnChangeFormatted = formattedPercent(txnChange);
 
@@ -238,9 +291,39 @@ function TokenPage({ address }) {
         <div for="transaction-table" className="mt-5">
           <h6 className={classes.sectionTitle}>Top Pairs</h6>
           <div>
-
             <div className={classes.tokenList}>
-              <TopTokens tableType="TopPools" allPairs={!allPairs ? {} : allPairs} />
+              <TopTokens
+                tableType="TopPools"
+                allPairs={!allPairs ? {} : allPairs}
+              />
+            </div>
+          </div>
+        </div>
+        <div for="token-information" className="mt-5">
+          <h6 className={classes.sectionTitle}>Token Information </h6>
+          <div>
+            <div className={classes.tokenList}>
+              <Card elevetation={10} className={classes.tokenInfo}>
+                <div className="d-flex justify-content-start align-items-center">
+                  <div className={classes.detailsBox}>
+                    <h5 className={classes.detailTitle}>Symbol</h5>
+                    <h6 className={classes.detailValue}>UNI</h6>
+                  </div>
+                  <div className={classes.detailsBox}>
+                    <h5 className={classes.detailTitle}>Name</h5>
+                    <h6 className={classes.detailValue}>Uniswap</h6>
+                  </div>
+                  <div className={classes.detailsBox}>
+                    <h5 className={classes.detailTitle}>Address</h5>
+                    <h6 className={classes.detailValue}>UNI</h6>
+                  </div>
+                </div>
+                <div className="d-flex justify-content-end">
+                  <Button className={classes.openButton}>
+                    View On Explorer <OpenInNew />
+                  </Button>
+                </div>
+              </Card>
             </div>
           </div>
         </div>
