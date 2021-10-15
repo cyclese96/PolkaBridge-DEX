@@ -157,10 +157,11 @@ function TokenPage({ address }) {
             <span>
               {symbol}
               <a
+                style={{ color: "#DF097C", paddingLeft: 5 }}
                 target="_blank"
                 href={`https://rinkeby.etherscan.io/address/${id}`}
               >
-                {id && id.slice(0, 8)}
+                ({id && id.slice(0, 8)})
               </a>
             </span>
           </h6>

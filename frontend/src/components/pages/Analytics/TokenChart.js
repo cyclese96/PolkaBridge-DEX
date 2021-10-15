@@ -32,6 +32,7 @@ import CandleStickChart from "../../common/Styled/CandleChart";
 // import LocalLoader from '../LocalLoader'
 import { AutoColumn } from "../../common/Styled/Column";
 import { Activity } from "react-feather";
+import Loader from "../../common/Loader";
 // import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 const ChartWrapper = styled.div`
@@ -416,7 +417,9 @@ const TokenChart = ({ address, color, base }) => {
             <CandleStickChart data={priceData} width={width} base={base} />
           </ResponsiveContainer>
         ) : (
-          <div>Loading...</div>
+          <div className="text-center">
+            <Loader />
+          </div>
         ))}
 
       {chartFilter === CHART_VIEW.VOLUME && (
