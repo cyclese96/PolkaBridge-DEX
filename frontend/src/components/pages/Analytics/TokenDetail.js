@@ -9,7 +9,7 @@ import {
 } from "../../../contexts/TokenData";
 import { useEffect } from "react/cjs/react.development";
 import { usePrevious } from "react-use";
-import { useDataForList } from "../../../contexts/PairData";
+import { useAllPairData, useDataForList } from "../../../contexts/PairData";
 import { formattedNum } from "../../../utils/formatters";
 import { formattedPercent } from "../../../utils/timeUtils";
 import TokenLogo from "../../common/Styled/TokenLogo";
@@ -18,6 +18,7 @@ import { Link } from "react-router-dom";
 import { formatCurrency } from "../../../utils/helper";
 import TokenChart from "./TokenChart";
 import { Card } from "@material-ui/core";
+import TopTokens from "./TopTokens";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -117,7 +118,12 @@ function TokenPage({ address }) {
     txnChange,
   } = useTokenData(address);
 
-  const allPairs = useTokenPairs(address);
+  // const allPairs = useTokenPairs(address); // todo: fix api
+  const allPairs = useAllPairData();// testing
+
+  useEffect(() => {
+    console.log('allPairs', allPairs)
+  }, [allPairs])
 
   // pairs to show in pair list
   const fetchedPairsList = useDataForList(allPairs);
@@ -144,6 +150,7 @@ function TokenPage({ address }) {
   const liquidity = formattedNum(totalLiquidityUSD, true);
   const liquidityChange = formattedPercent(liquidityChangeUSD);
 
+  const fee = formattedNum(oneDayVolumeUSD * 0.025, true)
   // transactions
   const txnChangeFormatted = formattedPercent(txnChange);
 
@@ -192,7 +199,7 @@ function TokenPage({ address }) {
                     {formatCurrency(totalLiquidityUSD)}
                   </h6>
                   <p className={classes.cardChangeIndicator}>
-                    2{liquidityChangeUSD}%
+                    {liquidityChangeUSD}%
                   </p>
                 </div>
               </Card>
@@ -201,16 +208,16 @@ function TokenPage({ address }) {
                 <div className="d-flex justify-content-between">
                   <h6 className={classes.cardValue}>{volume}</h6>
                   <p className={classes.cardChangeIndicator}>
-                    3{volumeChangeUSD}%
+                    {volumeChangeUSD}%
                   </p>
                 </div>
               </Card>
               <Card elevation={10} className={classes.liquidityCard}>
                 <h6 className={classes.cardTitle}>Fees (24hrs)</h6>
                 <div className="d-flex justify-content-between">
-                  <h6 className={classes.cardValue}>{volume}</h6>
+                  <h6 className={classes.cardValue}>{fee}</h6>
                   <p className={classes.cardChangeIndicator}>
-                    4{liquidityChangeUSD}%
+                    {volumeChangeUSD}%
                   </p>
                 </div>
               </Card>
@@ -230,7 +237,12 @@ function TokenPage({ address }) {
         </div>
         <div for="transaction-table" className="mt-5">
           <h6 className={classes.sectionTitle}>Top Pairs</h6>
-          <div>Put Table Here</div>
+          <div>
+
+            <div className={classes.tokenList}>
+              <TopTokens tableType="TopPools" allPairs={!allPairs ? {} : allPairs} />
+            </div>
+          </div>
         </div>
       </div>
     </div>

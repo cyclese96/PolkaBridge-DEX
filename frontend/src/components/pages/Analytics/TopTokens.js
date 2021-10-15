@@ -341,12 +341,12 @@ const TopTokens = ({
   // const [pairs, setPairs] = useState([]);
   // const [tokens, setTokens] = useState([]);
 
-  useEffect(() => {
-    if (!allTransactions) {
-      return;
-    }
-    console.log("raw transactions list ", allTransactions);
-  }, [Object.keys(!allTransactions ? {} : allTransactions)]);
+  // useEffect(() => {
+  //   if (!allTransactions) {
+  //     return;
+  //   }
+  //   console.log("raw transactions list ", allTransactions);
+  // }, [Object.keys(!allTransactions ? {} : allTransactions)]);
 
   // id: 1,
   // token0: {id, name, symbol,... },
@@ -394,7 +394,7 @@ const TopTokens = ({
     return obj;
   };
   const formattedTokens = useMemo(() => {
-    console.log('all tokens', allTokens)
+    // console.log('all tokens', allTokens)
     return (
       allTokens &&
       Object.keys(allTokens).map((key) =>

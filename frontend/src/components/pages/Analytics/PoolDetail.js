@@ -11,32 +11,53 @@ import { usePairData, usePairTransactions } from "../../../contexts/PairData";
 import { formattedNum, formattedPercent } from "../../../utils/timeUtils";
 import { useEthPrice } from "../../../contexts/GlobalData";
 import { Card } from "@material-ui/core";
+import TokenIcon from "../../common/TokenIcon";
+import { formatCurrency } from "../../../utils/helper";
+import TokenChart from "./TokenChart";
+import TopTokens from "./TopTokens";
 
 const useStyles = makeStyles((theme) => ({
   background: {
     padding: 30,
   },
-  header: {
-    width: 950,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingTop: 10,
+  breadcrumbs: {
     paddingBottom: 20,
   },
-  title: {
+  breadcrumbsTitle: {
     color: "white",
-    paddingLeft: 30,
-  },
-  heading: {
     fontSize: 16,
-    color: "white",
-    paddingLeft: 20,
+    fontWeight: 400,
   },
-  cardLiquidity: {
-    height: 115,
-    width: 400,
+  tokenDetails: {
+    paddingTop: 20,
+    paddingBottom: 16,
+  },
+  tokenTitle: {
+    color: "white",
+    fontSize: 32,
+  },
+  tokenImage: {
+    height: 30,
+    marginRight: 10,
+  },
+  changeIndicator: {
+    background: "green",
+    color: "white",
+    fontSize: 12,
+    marginLeft: 10,
+    borderRadius: 7,
+    padding: "4px 8px 4px 8px",
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 400,
+    color: "white",
+    paddingTop: 5,
+    paddingBottom: 10,
+  },
+  liquidityCard: {
+    height: 120,
+    width: "100%",
     borderRadius: 15,
     paddingLeft: 10,
     paddingRight: 10,
@@ -46,19 +67,25 @@ const useStyles = makeStyles((theme) => ({
     border: "1px solid #616161",
     background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
   },
-  subTitle: {
+  cardTitle: {
     color: "white",
-    paddingLeft: 30,
-    marginTop: 20,
+    fontSize: 14,
+    textAlign: "left",
+    paddingBottom: 7,
   },
-  increasePercent: {
+  cardValue: {
+    color: "white",
+    fontSize: 26,
+    textAlign: "left",
+  },
+  cardChangeIndicator: {
     color: "green",
-    fontSize: 20,
-    paddingRight: 30,
+    fontSize: 12,
   },
-  charts: {
-    height: 370,
-    width: 850,
+  chartsCard: {
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 15,
     paddingLeft: 10,
     paddingRight: 10,
@@ -86,6 +113,10 @@ function PoolDetail({ pairAddress }) {
   } = usePairData(pairAddress);
 
   const transactions = usePairTransactions(pairAddress);
+
+  useEffect(() => {
+    console.log('alltransaction', transactions)
+  }, [transactions])
 
   const formattedLiquidity = reserveUSD
     ? formattedNum(reserveUSD, true)
@@ -142,66 +173,99 @@ function PoolDetail({ pairAddress }) {
 
   const classes = useStyles();
   return (
-    <div className={classes.background}>
-      <div className="container">
-        <h1 className={classes.title}>
-          <img
-            style={{ height: 35, width: 35, marginRight: 10 }}
-            src="https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-          />
-          {/* {` ${name}  (${symbol}) $${priceUSD}`} */}
-          PolkaBridge- Ethereum (PBR - WETH)
-        </h1>
-        <div className="mt-4">
-          <h3 className={classes.heading}>Pair Stats</h3>
+    <div className="container">
+      <div className={classes.background}>
+        <div for="breadcrumbs" className={classes.breadcrumbs}>
+          <h6 className={classes.breadcrumbsTitle}>
+            Pair →{" "}
+            <span>
+              {token0.symbol} - {token1.symbol}
+              <a
+                style={{ color: "#DF097C", paddingLeft: 5 }}
+                target="_blank"
+                href={`https://rinkeby.etherscan.io/address/${pairAddress}`}
+              >
+                ({pairAddress && pairAddress.slice(0, 8)})
+              </a>
+            </span>
+          </h6>
         </div>
-        <div className="row mt-3">
-          <div className="col-md-4">
-            <div className="container">
-              <div className="col-6 col-sm-4">
-                <Card elevation={10} className={classes.cardLiquidity}>
-                  <h6 className={classes.subTitle}>Total Liquidity</h6>
-                  <div className="d-flex justify-content-between">
-                    <h3 style={{ color: "white", paddingLeft: 30 }}>
-                      {formattedLiquidity}
-                    </h3>
-                    <h6 className={classes.increasePercent}>
-                      {liquidityChange}
-                    </h6>
-                  </div>
-                </Card>
-              </div>
-              <div className="col-6 col-sm-4">
-                <Card elevation={10} className={classes.cardLiquidity}>
-                  <h6 className={classes.subTitle}>{`Volume (24hrs)`}</h6>
-                  <div className="d-flex justify-content-between">
-                    <h3 style={{ color: "white", paddingLeft: 30 }}>
-                      {volume}
-                    </h3>
-                    <h6 className={classes.increasePercent}>
-                      {volumeChangeUSD}
-                    </h6>
-                  </div>
-                </Card>
-              </div>
-              <div className="col-6 col-sm-4">
-                <Card elevation={10} className={classes.cardLiquidity}>
-                  <h6 className={classes.subTitle}>{`Fee (24hrs)`}</h6>
-                  <div className="d-flex justify-content-between">
-                    <h3 style={{ color: "white", paddingLeft: 30 }}>{fees}</h3>
-                    <h6 className={classes.increasePercent}>
-                      {volumeChangeUSD}
-                    </h6>
-                  </div>
-                </Card>
-              </div>
+        <div for="token-details" className={classes.tokenDetails}>
+          <h1 className={classes.tokenTitle}>
+            <TokenIcon
+              symbol={token0.symbol}
+              address={token0.address}
+              className={classes.tokenImage}
+            />
+            <TokenIcon
+              symbol={token1.symbol}
+              address={token1.address}
+              className={classes.tokenImage}
+            />
+            <span style={{ paddingRight: 3 }}>{token0.symbol} - {token1.symbol}</span>
+            {/* <span style={{ paddingRight: 15 }}>({symbol})</span> */}
+            <span>${formatCurrency(token1USD)}</span>
+            <span className={classes.changeIndicator}>
+              ${formatCurrency(token1Rate)}
+            </span>
+          </h1>
+        </div>
+        <div for="token-stats">
+          <h6 className={classes.sectionTitle}>Token Statistics</h6>
+          <div className="row">
+            <div className="col-md-4">
+              <Card elevation={10} className={classes.liquidityCard}>
+                <h6 className={classes.cardTitle}>Total Liquidity</h6>
+                <div className="d-flex justify-content-between">
+                  <h6 className={classes.cardValue}>
+                    {formatCurrency(trackedReserveUSD)}
+                  </h6>
+                  <p className={classes.cardChangeIndicator}>
+                    {liquidityChangeUSD}%
+                  </p>
+                </div>
+              </Card>
+              <Card elevation={10} className={classes.liquidityCard}>
+                <h6 className={classes.cardTitle}>Volume (24Hrs)</h6>
+                <div className="d-flex justify-content-between">
+                  <h6 className={classes.cardValue}>{oneDayVolumeUSD}</h6>
+                  <p className={classes.cardChangeIndicator}>
+                    {volumeChangeUSD}%
+                  </p>
+                </div>
+              </Card>
+              <Card elevation={10} className={classes.liquidityCard}>
+                <h6 className={classes.cardTitle}>Fees (24hrs)</h6>
+                <div className="d-flex justify-content-between">
+                  <h6 className={classes.cardValue}>{fees}</h6>
+                  <p className={classes.cardChangeIndicator}>
+                    {volumeChangeUSD}%
+                  </p>
+                </div>
+              </Card>
+            </div>
+            <div className="col-md-8">
+              <Card elevation={10} className={classes.chartsCard}>
+                <div>
+                  <TokenChart
+                    address={pairAddress}
+                    color={"#E0077D"}
+                    base={0}
+                  />
+                </div>
+              </Card>
             </div>
           </div>
-          <div className="col-md-8">
-            <div className="container">
-              <Card elevation={10} className={classes.charts}>
-                <div></div>
-              </Card>
+        </div>
+        <div for="transaction-table" className="mt-5">
+          <h6 className={classes.sectionTitle}>Top Transactions</h6>
+          <div>
+
+            <div className={classes.tokenList}>
+              {/* <TopTokens//todo: fix transaction api then it works
+                tableType="Transactions"
+                allTransactions={!transactions ? {} : transactions}
+              /> */}
             </div>
           </div>
         </div>

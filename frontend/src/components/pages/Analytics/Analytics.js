@@ -46,6 +46,9 @@ const Analytics = () => {
 
   const chartData = useGlobalChartData();
 
+  useEffect(() => {
+    console.log('globalData', globalData)
+  }, [globalData])
   return (
     <div>
       <div className='mb-3'>
@@ -129,43 +132,38 @@ const Analytics = () => {
             <span className={classes.statLabel}>Volume 24H:</span>
             <span className={classes.statAmount}>
               ${" "}
-              {globalData.oneDayVolumeUSD
-                ? "$" +
+              {
                 formatCurrency(globalData.oneDayVolumeUSD, false, 0, false)
-                : "-"}
+              }
             </span>
 
-            <PercentLabel percentValue={5} braces={true} />
+            <PercentLabel percentValue={globalData.volumeChangeUSD} braces={true} />
           </div>
 
           <div className={classes.statsGroup}>
             <span className={classes.statLabel}>Fees 24H:</span>
             <span className={classes.statAmount}>
               ${" "}
-              {globalData.oneDayVolumeUSD
-                ? "$" +
+              {
                 formatCurrency(
                   globalData.oneDayVolumeUSD * 0.02,
                   false,
                   0,
                   false
                 )
-                : "-"}
+              }
             </span>
 
-            <PercentLabel percentValue={8} braces={true} />
+            <PercentLabel percentValue={globalData.volumeChangeUSD} braces={true} />
           </div>
 
           <div className={classes.statsGroup}>
             <span className={classes.statLabel}>TVL</span>
             <span className={classes.statAmount}>
-              {globalData.totalLiquidityUSD
-                ? "$" +
-                formatCurrency(globalData.totalLiquidityUSD, false, 0, false)
-                : "-"}{" "}
+              {'$' + formatCurrency(globalData.totalLiquidityUSD, false, 0, false)}
             </span>
 
-            <PercentLabel percentValue={-8} braces={true} />
+            <PercentLabel percentValue={globalData.liquidityChangeUSD} braces={true} />
           </div>
         </Card>
       )}
