@@ -7,6 +7,7 @@ export const formatNumber = (num) => {
 }
 
 // using a currency library here in case we want to add more in future
+// format value without B, M & K symbols for large numbers
 export const formatDollarAmount = (num, digits) => {
     const formatter = new Intl.NumberFormat([], {
         style: 'currency',
@@ -15,6 +16,47 @@ export const formatDollarAmount = (num, digits) => {
         maximumFractionDigits: digits,
     })
     return formatter.format(num)
+}
+
+export const formatCurrency = (value, precision = 1) => {
+    const formatter = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: precision,
+    });
+
+    //for currency format with $symbol
+    if (!value) {
+        return formatter.format(0);
+    }
+
+    // if (typeof window.web3 === "undefined") {
+    //   return formatter.format(value ? value : 0).slice(1);
+    // }
+    // const netId = window.ethereum.networkVersion;
+    // if (["97", "56", "4", "1"].includes(netId) && !currencyFormat) {
+    //   // for bsc network only
+    // }
+    return convertToInternationalCurrencySystem(value, formatter);
+}
+
+function convertToInternationalCurrencySystem(labelValue, formatter) {
+    // Nine Zeroes for Billions
+    return Math.abs(Number(labelValue)) >= 1.0e9
+        ? formatter
+            .format((Math.abs(Number(labelValue)) / 1.0e9).toFixed(2))
+            .slice(1) + "B"
+        : // Six Zeroes for Millions
+        Math.abs(Number(labelValue)) >= 1.0e6
+            ? formatter
+                .format((Math.abs(Number(labelValue)) / 1.0e6).toFixed(2))
+                .slice(1) + "M"
+            : // Three Zeroes for Thousands
+            Math.abs(Number(labelValue)) >= 1.0e3
+                ? formatter
+                    .format((Math.abs(Number(labelValue)) / 1.0e3).toFixed(2))
+                    .slice(1) + "K"
+                : formatter.format(Math.abs(Number(labelValue))).slice(1);
 }
 
 export const toSignificant = (number, significantDigits) => {

@@ -1,5 +1,6 @@
 import { TableCell, TableRow } from "@material-ui/core";
-import { formatCurrency } from "../../../../utils/helper";
+import { formatCurrency } from "../../../../utils/formatters";
+// import { formatCurrency } from "../../../../utils/helper";
 import { formatTime } from "../../../../utils/timeUtils";
 
 const TransactionRow = (props) => {
@@ -25,8 +26,8 @@ const TransactionRow = (props) => {
             {row.transactionType === "Mint"
               ? "Add"
               : row.transactionType === "Burn"
-              ? "Remove"
-              : "Swap"}{" "}
+                ? "Remove"
+                : "Swap"}{" "}
           </span>{" "}
           <span className={classes.cellText}>
             {row.token0.symbol} And {row.token1.symbol}
@@ -34,7 +35,7 @@ const TransactionRow = (props) => {
         </TableCell>
 
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.total_value, true)}
+          {formatCurrency(row.total_value)}
         </TableCell>
       </TableRow>
       <TableRow
@@ -54,8 +55,8 @@ const TransactionRow = (props) => {
             {row.transactionType === "Mint"
               ? "Add"
               : row.transactionType === "Burn"
-              ? "Remove"
-              : "Swap"}{" "}
+                ? "Remove"
+                : "Swap"}{" "}
           </span>{" "}
           <span className={classes.cellText}>
             {row.token0.symbol} And {row.token1.symbol}
@@ -63,15 +64,15 @@ const TransactionRow = (props) => {
         </TableCell>
         <TableCell align="right">
           <span className={classes.cellText}>
-            {formatCurrency(row.total_value, true)}
+            {formatCurrency(row.total_value)}
           </span>
         </TableCell>
 
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.amount0, true)}
+          {formatCurrency(row.amount0)}
         </TableCell>
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.amount1, true)}
+          {formatCurrency(row.amount1)}
         </TableCell>
         <TableCell align="right" className={classes.cellText}>
           {[...row.sender].splice(0, 5)} {"..."}

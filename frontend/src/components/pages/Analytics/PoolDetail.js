@@ -12,9 +12,10 @@ import { formattedNum, formattedPercent } from "../../../utils/timeUtils";
 import { useEthPrice } from "../../../contexts/GlobalData";
 import { Card } from "@material-ui/core";
 import TokenIcon from "../../common/TokenIcon";
-import { formatCurrency } from "../../../utils/helper";
+// import { formatCurrency } from "../../../utils/helper";
 import TokenChart from "./TokenChart";
 import TopTokens from "./TopTokens";
+import { formatCurrency } from "../../../utils/formatters";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -129,6 +130,18 @@ function PoolDetail({ pairAddress }) {
   useEffect(() => {
     console.log("alltransaction", transactions);
   }, [transactions]);
+
+  useEffect(() => {
+    // console.log("allPairs", allPairs);
+    document.querySelector('body').scrollTo(0, 0)
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo({
+      behavior: 'smooth',
+      top: 0
+    })
+  }, [])
 
   const formattedLiquidity = reserveUSD
     ? formattedNum(reserveUSD, true)

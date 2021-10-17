@@ -1,6 +1,7 @@
 import { makeStyles, TableCell, TableRow } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import { formatCurrency } from "../../../../utils/helper";
+import { formatCurrency } from "../../../../utils/formatters";
+// import { formatCurrency } from "../../../../utils/helper";
 import PercentLabel from "../../../common/PercentLabel";
 import TokenIcon from "../../../common/TokenIcon";
 

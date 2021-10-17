@@ -14,7 +14,6 @@ import CustomButton from "../../Buttons/CustomButton";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import { ETH, etheriumNetwork, tokens } from "../../../constants";
 import {
-  formatCurrency,
   fromWei,
   getPercentAmountWithFloor,
   getPriceRatio,
@@ -38,6 +37,7 @@ import {
 import { RESET_POOL_DATA } from "../../../actions/types";
 import store from "../../../store";
 import { Settings } from "@material-ui/icons";
+import { formatCurrency } from "../../../utils/formatters";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -383,19 +383,19 @@ const RemoveCard = ({
   // new use effect
   useEffect(() => {
 
-    async function loadPair(){
+    async function loadPair() {
       if (selectedToken1.symbol && selectedToken2.symbol) {
         // reset input on token change
         handleClearState();
         store.dispatch({
           type: RESET_POOL_DATA,
         });
-  
+
         // load erc20 token abi and balance
         const erc20Token =
           selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
-  
-  
+
+
         let _pairAddress = currentPairAddress();
         if (!_pairAddress) {
           _pairAddress = await getPairAddress(
@@ -410,7 +410,7 @@ const RemoveCard = ({
             currentNetwork
           );
         }
-  
+
         await getLpBalance(
           selectedToken1,
           selectedToken2,
@@ -418,7 +418,7 @@ const RemoveCard = ({
           currentAccount,
           currentNetwork
         );
-        
+
         await checkLpAllowance(
           selectedToken1,
           selectedToken2,
@@ -430,7 +430,7 @@ const RemoveCard = ({
     }
 
     loadPair()
-   
+
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
 

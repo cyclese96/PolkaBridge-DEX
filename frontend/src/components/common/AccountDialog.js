@@ -9,9 +9,10 @@ import CustomButton from "../Buttons/CustomButton";
 import { ContactMailOutlined } from "@material-ui/icons";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import { etheriumNetwork } from "../../constants";
-import { formatCurrency, fromWei } from "../../utils/helper";
+import { fromWei } from "../../utils/helper";
 import { connect } from "react-redux";
 import { logout } from "../../actions/accountActions";
+import { formatCurrency } from "../../utils/formatters";
 
 const styles = (theme) => ({
   root: {

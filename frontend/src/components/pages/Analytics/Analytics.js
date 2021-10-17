@@ -13,9 +13,10 @@ import {
 import { formattedPercent } from "../../../utils/timeUtils";
 import { useAllTokenData } from "../../../contexts/TokenData";
 import { useAllPairData } from "../../../contexts/PairData";
-import { formatCurrency } from "../../../utils/helper";
+// import { formatCurrency } from "../../../utils/helper";
 import Loader from "../../common/Loader";
 import TabPage from "../../TabPage";
+import { formatCurrency } from "../../../utils/formatters";
 
 // globalData ->
 // {
@@ -47,7 +48,7 @@ const Analytics = () => {
   const chartData = useGlobalChartData();
 
   useEffect(() => {
-    console.log("globalData", globalData);
+    console.log("analyticsTest:  ", globalData);
   }, [globalData]);
   return (
     <div>
@@ -59,17 +60,12 @@ const Analytics = () => {
       <div className="mt-2 row g-3" style={{ padding: 10 }}>
         <div className="col-md-6">
           <Card elevation={10} className={classes.card}>
-            {globalData && (
+            {chartData && globalData && (
               <div>
                 <span className={classes.cardSpan}>Total value locked</span>
                 <p className={classes.cardP}>
                   {"$" +
-                    formatCurrency(
-                      globalData.totalLiquidityUSD,
-                      false,
-                      0,
-                      false
-                    )}
+                    formatCurrency(globalData.totalLiquidityUSD)}
                   <small>
                     {formattedPercent(globalData.liquidityChangeUSD)}
                   </small>
@@ -97,12 +93,7 @@ const Analytics = () => {
                 <p className={classes.cardP}>
                   {globalData.oneDayVolumeUSD
                     ? "$" +
-                      formatCurrency(
-                        globalData.oneDayVolumeUSD,
-                        false,
-                        1,
-                        false
-                      )
+                    formatCurrency(globalData.oneDayVolumeUSD)
                     : "-"}
                   <small>
                     {globalData.volumeChangeUSD !== null
@@ -132,7 +123,7 @@ const Analytics = () => {
             <div className={classes.statsGroup}>
               <span className={classes.statLabel}>Volume 24H:</span>
               <span className={classes.statAmount}>
-                $ {formatCurrency(globalData.oneDayVolumeUSD, false, 0, false)}
+                $ {formatCurrency(globalData.oneDayVolumeUSD)}
               </span>
 
               <PercentLabel
@@ -146,10 +137,7 @@ const Analytics = () => {
               <span className={classes.statAmount}>
                 ${" "}
                 {formatCurrency(
-                  globalData.oneDayVolumeUSD * 0.02,
-                  false,
-                  0,
-                  false
+                  globalData.oneDayVolumeUSD * 0.02
                 )}
               </span>
 
@@ -163,7 +151,7 @@ const Analytics = () => {
               <span className={classes.statLabel}>TVL</span>
               <span className={classes.statAmount}>
                 {"$" +
-                  formatCurrency(globalData.totalLiquidityUSD, false, 0, false)}
+                  formatCurrency(globalData.totalLiquidityUSD)}
               </span>
 
               <PercentLabel

@@ -10,16 +10,17 @@ import {
 import { useEffect } from "react/cjs/react.development";
 import { usePrevious } from "react-use";
 import { useAllPairData, useDataForList } from "../../../contexts/PairData";
-import { formattedNum } from "../../../utils/formatters";
+import { formatCurrency, formattedNum } from "../../../utils/formatters";
 import { formattedPercent } from "../../../utils/timeUtils";
 import TokenLogo from "../../common/Styled/TokenLogo";
 import TokenIcon from "../../common/TokenIcon";
 import { Link } from "react-router-dom";
-import { formatCurrency } from "../../../utils/helper";
+// import { formatCurrency } from "../../../utils/helper";
 import TokenChart from "./TokenChart";
 import { Button, Card } from "@material-ui/core";
 import TopTokens from "./TopTokens";
 import { OpenInNew } from "@material-ui/icons";
+import { currentConnection } from "../../../constants";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -178,8 +179,16 @@ function TokenPage({ address }) {
   const allPairs = useAllPairData(); // testing
 
   useEffect(() => {
-    console.log("allPairs", allPairs);
-  }, [allPairs]);
+    // console.log("allPairs", allPairs);
+    document.querySelector('body').scrollTo(0, 0)
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo({
+      behavior: 'smooth',
+      top: 0
+    })
+  }, [])
 
   // pairs to show in pair list
   const fetchedPairsList = useDataForList(allPairs);
@@ -280,13 +289,13 @@ function TokenPage({ address }) {
             </div>
             <div className="col-md-8">
               <Card elevation={10} className={classes.chartsCard}>
-                <div>
-                  <TokenChart
-                    address={address}
-                    color={"#E0077D"}
-                    base={priceUSD}
-                  />
-                </div>
+                {/* <div> */}
+                <TokenChart
+                  address={address}
+                  color={"#E0077D"}
+                  base={priceUSD}
+                />
+                {/* </div> */}
               </Card>
             </div>
           </div>
@@ -310,21 +319,24 @@ function TokenPage({ address }) {
                 <div className="d-flex justify-content-start align-items-center">
                   <div className={classes.detailsBox}>
                     <h5 className={classes.detailTitle}>Symbol</h5>
-                    <h6 className={classes.detailValue}>UNI</h6>
+                    <h6 className={classes.detailValue}>{symbol}</h6>
                   </div>
                   <div className={classes.detailsBox}>
                     <h5 className={classes.detailTitle}>Name</h5>
-                    <h6 className={classes.detailValue}>Uniswap</h6>
+                    <h6 className={classes.detailValue}>{name}</h6>
                   </div>
                   <div className={classes.detailsBox}>
                     <h5 className={classes.detailTitle}>Address</h5>
-                    <h6 className={classes.detailValue}>UNI</h6>
+                    <h6 className={classes.detailValue}>{!id ? "" : id}</h6>
                   </div>
                 </div>
                 <div className="d-flex justify-content-end">
-                  <Button className={classes.openButton}>
-                    View On Explorer <OpenInNew />
-                  </Button>
+                  <a href={currentConnection === 'testnet' ? `https://rinkeby.etherscan.io/address/${id}` : `https://etherscan.io/address/${id}`} target='_blank'>
+                    <Button className={classes.openButton} >
+
+                      View On Explorer <OpenInNew />
+                    </Button>
+                  </a>
                 </div>
               </Card>
             </div>

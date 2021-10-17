@@ -1,24 +1,10 @@
 import BigNumber from "bignumber.js";
 import {
   BITE,
-  biteAddressKoven,
-  biteAddressMainnet,
-  BNB,
   CORGIB,
-  corgibMemeCoinMainnet,
-  corgibMemeCoinTestent,
-  currentConnection,
-  ETH,
   PBR,
-  pbrAddressMainnet,
-  pbrAddressTestnet,
   PWAR,
-  pwarAddressMainnet,
-  pwarAddressTestnet,
   USDT,
-  usdtMainnetAddress,
-  usdtTestnetAddress,
-  WETH_ADDRESS_MAINNET,
 } from "../constants";
 import {
   biteContract,
@@ -85,52 +71,6 @@ export const getNetworkBalance = async (accountAddress) => {
   }
 };
 
-export const formatCurrency = (
-  value,
-  usd = false,
-  fractionDigits = 1,
-  currencyFormat = false
-) => {
-  const formatter = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: fractionDigits,
-  });
-
-  //for currency format with $symbol
-  if (usd) {
-    return formatter.format(value ? value : 0);
-  }
-
-  if (typeof window.web3 === "undefined") {
-    return formatter.format(value ? value : 0).slice(1);
-  }
-  const netId = window.ethereum.networkVersion;
-  if (["97", "56", "4", "1"].includes(netId) && !currencyFormat) {
-    // for bsc network only
-    return convertToInternationalCurrencySystem(value ? value : 0, formatter);
-  }
-  return formatter.format(value ? value : 0).slice(1);
-};
-
-function convertToInternationalCurrencySystem(labelValue, formatter) {
-  // Nine Zeroes for Billions
-  return Math.abs(Number(labelValue)) >= 1.0e9
-    ? formatter
-      .format((Math.abs(Number(labelValue)) / 1.0e9).toFixed(2))
-      .slice(1) + "B"
-    : // Six Zeroes for Millions
-    Math.abs(Number(labelValue)) >= 1.0e6
-      ? formatter
-        .format((Math.abs(Number(labelValue)) / 1.0e6).toFixed(2))
-        .slice(1) + "M"
-      : // Three Zeroes for Thousands
-      Math.abs(Number(labelValue)) >= 1.0e3
-        ? formatter
-          .format((Math.abs(Number(labelValue)) / 1.0e3).toFixed(2))
-          .slice(1) + "K"
-        : formatter.format(Math.abs(Number(labelValue))).slice(1);
-}
 
 export const resetCurrencyFormatting = (value) => {
   return value.split(",").join("");

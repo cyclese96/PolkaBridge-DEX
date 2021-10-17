@@ -1,7 +1,8 @@
 import { Card, CircularProgress, makeStyles } from "@material-ui/core";
-import { fromWei, formatCurrency, isNumber } from "../../utils/helper";
+import { fromWei, isNumber } from "../../utils/helper";
 import { connect } from "react-redux";
 import SelectToken from "../common/SelectToken";
+import { formatCurrency } from "../../utils/formatters";
 
 const useStyles = makeStyles((theme) => ({
   card: {
