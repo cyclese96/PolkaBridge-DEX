@@ -9,13 +9,15 @@ import { useEffect } from "react/cjs/react.development";
 import { usePrevious } from "react-use";
 import { usePairData, usePairTransactions } from "../../../contexts/PairData";
 import { formattedNum, formattedPercent } from "../../../utils/timeUtils";
-import { useEthPrice } from "../../../contexts/GlobalData";
-import { Card } from "@material-ui/core";
+import { useEthPrice, useGlobalTransactions } from "../../../contexts/GlobalData";
+import { Button, Card } from "@material-ui/core";
 import TokenIcon from "../../common/TokenIcon";
 // import { formatCurrency } from "../../../utils/helper";
 import TokenChart from "./TokenChart";
 import TopTokens from "./TopTokens";
 import { formatCurrency } from "../../../utils/formatters";
+import { currentConnection } from "../../../constants";
+import { OpenInNew } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -108,6 +110,51 @@ const useStyles = makeStyles((theme) => ({
     border: "1px solid #616161",
     background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
   },
+  tokenInfo: {
+    border: "1px solid #616161",
+    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    borderRadius: 15,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 15,
+    paddingBottom: 15,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  openButton: {
+    backgroundColor: "#4C2238",
+    color: "#f6f6f6",
+    borderColor: "#f6f6f6",
+    width: 200,
+    height: 40,
+    textTransform: "none",
+    fontSize: 16,
+    borderRadius: 10,
+
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 12,
+      padding: "5px 20px 5px 20px",
+      width: "100%",
+    },
+  },
+  detailsBox: {
+    marginRight: 30,
+    [theme.breakpoints.down("sm")]: {
+      marginRight: 10,
+    },
+  },
+  detailTitle: {
+    fontSize: 14,
+    color: "#bdbdbd",
+    fontWeight: 500,
+  },
+  detailValue: {
+    fontSize: 18,
+    fontWeight: 600,
+  },
 }));
 
 function PoolDetail({ pairAddress }) {
@@ -125,7 +172,8 @@ function PoolDetail({ pairAddress }) {
     liquidityChangeUSD,
   } = usePairData(pairAddress);
 
-  const transactions = usePairTransactions(pairAddress);
+  // const transactions = usePairTransactions(pairAddress);// todo fix api for pair transactions
+  const transactions = useGlobalTransactions();
 
   useEffect(() => {
     console.log("alltransaction", transactions);
@@ -204,7 +252,7 @@ function PoolDetail({ pairAddress }) {
           <h6 className={classes.breadcrumbsTitle}>
             Pair →{" "}
             <span>
-              {token0.symbol} - {token1.symbol}
+              {token0?.symbol} - {token1?.symbol}
               <a
                 style={{ color: "#DF097C", paddingLeft: 5 }}
                 target="_blank"
@@ -218,17 +266,17 @@ function PoolDetail({ pairAddress }) {
         <div for="token-details" className={classes.tokenDetails}>
           <h1 className={classes.tokenTitle}>
             <TokenIcon
-              symbol={token0.symbol}
-              address={token0.address}
+              symbol={token0?.symbol}
+              address={token0?.address}
               className={classes.tokenImage}
             />
             <TokenIcon
-              symbol={token1.symbol}
-              address={token1.address}
+              symbol={token1?.symbol}
+              address={token1?.address}
               className={classes.tokenImage}
             />
             <span style={{ paddingRight: 3 }}>
-              {token0.symbol} - {token1.symbol}
+              {token0?.symbol} - {token1?.symbol}
             </span>
             {/* <span style={{ paddingRight: 15 }}>({symbol})</span> */}
             <span>${formatCurrency(token1USD)}</span>
@@ -285,16 +333,57 @@ function PoolDetail({ pairAddress }) {
           </div>
         </div>
         <div for="transaction-table" className="mt-5">
-          <h6 className={classes.sectionTitle}>Top Transactions</h6>
+          <h6 className={classes.sectionTitle}>Transactions</h6>
           <div>
             <div className={classes.tokenList}>
-              {/* <TopTokens//todo: fix transaction api then it works
+              <TopTokens
                 tableType="Transactions"
                 allTransactions={!transactions ? {} : transactions}
-              /> */}
+              />
             </div>
           </div>
         </div>
+
+        <div for="token-information" className="mt-5">
+          <h6 className={classes.sectionTitle}>Pair Information </h6>
+          <div>
+            <div className={classes.tokenList}>
+              <Card elevetation={10} className={classes.tokenInfo}>
+                <div className="d-flex justify-content-start align-items-center">
+                  <div className={classes.detailsBox}>
+                    <h5 className={classes.detailTitle}>Pair Name</h5>
+                    <h6 className={classes.detailValue}>{token0?.symbol}-{token1?.symbol}</h6>
+                  </div>
+
+                  <div className={classes.detailsBox}>
+                    <h5 className={classes.detailTitle}>Pair Address</h5>
+                    <h6 className={classes.detailValue}>{pairAddress?.slice(0, 8)}</h6>
+                  </div>
+
+                  <div className={classes.detailsBox}>
+                    <h5 className={classes.detailTitle}>{token0?.symbol} Address</h5>
+                    <h6 className={classes.detailValue}>{token0?.id?.slice(0, 8)}</h6>
+                  </div>
+
+                  <div className={classes.detailsBox}>
+                    <h5 className={classes.detailTitle}>{token1?.symbol} Address</h5>
+                    <h6 className={classes.detailValue}>{token1?.id?.slice(0, 8)}</h6>
+                  </div>
+
+                </div>
+                <div className="d-flex justify-content-end">
+                  <a href={currentConnection === 'testnet' ? `https://rinkeby.etherscan.io/address/${pairAddress}` : `https://etherscan.io/address/${pairAddress}`} target='_blank'>
+                    <Button className={classes.openButton} >
+
+                      View On Explorer <OpenInNew />
+                    </Button>
+                  </a>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );

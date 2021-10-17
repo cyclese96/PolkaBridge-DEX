@@ -48,7 +48,7 @@ const Analytics = () => {
   const chartData = useGlobalChartData();
 
   useEffect(() => {
-    console.log("analyticsTest:  ", globalData);
+    console.log("analyticsTest:  globalData ", globalData);
   }, [globalData]);
   return (
     <div>
