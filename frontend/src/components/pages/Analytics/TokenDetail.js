@@ -24,6 +24,9 @@ import { OpenInNew } from "@material-ui/icons";
 const useStyles = makeStyles((theme) => ({
   background: {
     padding: 30,
+    [theme.breakpoints.down("sm")]: {
+      padding: 10,
+    },
   },
   breadcrumbs: {
     paddingBottom: 20,

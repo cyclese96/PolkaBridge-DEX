@@ -95,7 +95,7 @@ function App() {
           </div>
           <div className={classes.mainContent}>
             <BrowserRouter>
-
+              <Home />
               <Route exact path="/" component={SwapCard} />
               <Route exact path="/liquidity" component={AddLiquidity} />
               <Route exact path="/charts" component={Analytics} />
@@ -147,8 +147,6 @@ function App() {
                     }
                   }}
                 />
-
-
               </Switch>
             </BrowserRouter>
           </div>

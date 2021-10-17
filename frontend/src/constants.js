@@ -22,7 +22,7 @@ export const corgibMemeCoinMainnet =
 
 // factory ethereum
 export const facotryAddressTestnet =
-  "0xA1853078D1447C0060c71a672E6D13882f61A0a6";
+  "0x1746F20D3A6118b1244b2EF58c191c810961275a";
 export const factoryAddresMainnet =
   "0xA1853078D1447C0060c71a672E6D13882f61A0a6";
 
@@ -34,7 +34,7 @@ export const factoryAddresBscMainnet =
 
 // router ethereum addresses
 export const routerAddressTestnet =
-  "0x050aAC21096e027142E3f5d089a9251FcCf191b9";
+  "0xf8D222073078858D9574095C2268246Ce1bd6aF5";
 export const routerAddressMainnet =
   "0x050aAC21096e027142E3f5d089a9251FcCf191b9";
 
@@ -85,9 +85,8 @@ export const supportedTokens = {
   bsc: [BNB, CORGIB, PWAR],
 };
 
-export const TOKEN_BLACKLIST = []
-export const PAIR_BLACKLIST = []
-
+export const TOKEN_BLACKLIST = [];
+export const PAIR_BLACKLIST = [];
 
 export const exchangeFee = 0.25;
 export const defaultSlippage = 0.5;

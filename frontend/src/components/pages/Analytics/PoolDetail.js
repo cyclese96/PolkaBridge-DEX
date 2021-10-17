@@ -19,6 +19,9 @@ import TopTokens from "./TopTokens";
 const useStyles = makeStyles((theme) => ({
   background: {
     padding: 30,
+    [theme.breakpoints.down("sm")]: {
+      padding: 10,
+    },
   },
   breadcrumbs: {
     paddingBottom: 20,

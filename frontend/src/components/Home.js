@@ -166,20 +166,7 @@ const Home = ({ connectWallet, loadTokens, account: { currentNetwork } }) => {
     initConnection();
   }, []);
 
-  return (
-    <TabPage />
-    // <div style={{ overflowX: "hidden" }}>
-    //   <div className={classes.navbar}>
-    //     <Navbar />
-    //   </div>
-    //   <div className={classes.mainContent}>
-
-    //   </div>
-    //   <div className={classes.footer}>
-    //     <Footer />
-    //   </div>
-    // </div>
-  );
+  return <></>;
 };
 
 Home.propTypes = {
