@@ -221,7 +221,6 @@ const SwapCard = (props) => {
   const [priceImpact, setPriceImpact] = useState(null);
   const [liquidityStatus, setLiquidityStatus] = useState(false);
   const [localStateLoading, setLocalStateLoading] = useState(false);
-  const [TxDetailsPoper, setTxDetailsPoper] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleTxPoper = (event) => {

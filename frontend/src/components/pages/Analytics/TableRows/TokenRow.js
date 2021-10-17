@@ -5,12 +5,11 @@ import { formatCurrency } from "../../../../utils/formatters";
 import PercentLabel from "../../../common/PercentLabel";
 import TokenIcon from "../../../common/TokenIcon";
 
-
 const useStyles = makeStyles((theme) => ({
   name: {
-    cursor: 'pointer',
-    color: "white"
-  }
+    cursor: "pointer",
+    color: "white",
+  },
 }));
 
 const TokenRow = (props) => {
@@ -32,8 +31,10 @@ const TokenRow = (props) => {
         <TableCell padding="checkbox"></TableCell>
 
         <TableCell component="th" id={labelId} scope="row" padding="none">
-          <TokenIcon symbol={row.symbol} />
-          <span className={classes.cellText}>{row.name}</span>
+          <Link to={`token/${row.id}`}>
+            <TokenIcon symbol={row.symbol} />
+            <span className={classes.cellText}>{row.name}</span>
+          </Link>
         </TableCell>
 
         <TableCell align="right" className={classes.cellText}>
@@ -61,7 +62,6 @@ const TokenRow = (props) => {
               {"(" + row.symbol + ")"}
             </small>
           </Link>
-
         </TableCell>
         <TableCell align="right">
           <span className={classes.cellText}>
