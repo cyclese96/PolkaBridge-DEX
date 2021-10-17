@@ -23,12 +23,14 @@ const PoolRow = (props) => {
         <TableCell padding="checkbox"></TableCell>
 
         <TableCell component="th" id={labelId} scope="row" padding="none">
-          <TokenIcon symbol={row.token0.symbol} />
-          <TokenIcon symbol={row.token1.symbol} />
+          <Link to={`token/${row.id}`}>
+            <TokenIcon symbol={row.token0.symbol} />
+            <TokenIcon symbol={row.token1.symbol} />
 
-          <span className={classes.cellText}>
-            {row.token0.symbol}/{row.token1.symbol}
-          </span>
+            <span className={classes.cellText}>
+              {row.token0.symbol}/{row.token1.symbol}
+            </span>
+          </Link>
         </TableCell>
 
         <TableCell align="right" className={classes.cellText}>

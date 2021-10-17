@@ -34,7 +34,7 @@ export const factoryAddresBscMainnet =
 
 // router ethereum addresses
 export const routerAddressTestnet =
-  "0xf8D222073078858D9574095C2268246Ce1bd6aF5";
+  "0x54dc4B276D2B86A90F01624DBb33075075A9587d";
 export const routerAddressMainnet =
   "0x050aAC21096e027142E3f5d089a9251FcCf191b9";
 
