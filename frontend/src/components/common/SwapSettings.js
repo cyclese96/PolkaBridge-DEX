@@ -12,8 +12,8 @@ import CustomToolTip from "./CustomToolTip";
 import store from "../../store";
 import { UPDATE_SETTINGS } from "../../actions/types";
 import { defaultSlippage, defaultTransactionDeadline } from "../../constants";
-import { Close } from "@material-ui/icons";
-import { Button } from "@material-ui/core";
+import { Close, InfoOutlined, InfoRounded } from "@material-ui/icons";
+import { Button, Tooltip } from "@material-ui/core";
 
 const styles = (theme) => ({
   root: {
@@ -276,9 +276,18 @@ const SwapSettings = ({
           <div className={classes.settingRow}>
             <span className={classes.settingRowLabel}>
               Slippage tolerance
-              <CustomToolTip title="Your transaction will revert if the price changes unfavorably by more than this percentage.">
-                <ErrorOutlineIcon style={{ marginLeft: 10 }} />
-              </CustomToolTip>
+              <Tooltip
+                title="Add"
+                arrow
+                title={
+                  <span style={{ fontSize: 12 }}>
+                    Your transaction will revert if the price changes
+                    unfavorably by more than this percentage.
+                  </span>
+                }
+              >
+                <InfoRounded style={{ marginLeft: 10 }} />
+              </Tooltip>
             </span>
             <div>
               <a
@@ -305,12 +314,16 @@ const SwapSettings = ({
           <div className={classes.settingRow}>
             <span className={classes.settingRowLabel}>
               Transaction deadline
-              <CustomToolTip
-                title="Your transaction will revert if it is pending for more
-                      than this long."
+              <Tooltip
+                title={
+                  <span style={{ fontSize: 12 }}>
+                    Your transaction will revert if it is pending for more than
+                    this long.
+                  </span>
+                }
               >
-                <ErrorOutlineIcon style={{ marginLeft: 10 }} />
-              </CustomToolTip>
+                <InfoRounded style={{ marginLeft: 10 }} />
+              </Tooltip>
             </span>
             <div>
               <input
