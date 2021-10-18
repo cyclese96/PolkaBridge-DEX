@@ -196,25 +196,54 @@ export const getPriceRatio = (token1, token2) => {
   }
 };
 
-export const getTokenOut = (tokenIn, token1Reserve, token2Reserve) => {
-  const _token1 = new BigNumber(token1Reserve ? token1Reserve : 0);
-  const _token2 = new BigNumber(token2Reserve ? token2Reserve : 0);
 
-  if (_token1.eq("0") || _token2.eq("0")) {
-    return new BigNumber("0").toFixed(4).toString();
+export const getTokenOut = (tokenIn, token1Reserve, token2Reserve) => {
+  const r0 = new BigNumber(!token1Reserve ? 0 : token1Reserve);
+  const r1 = new BigNumber(!token2Reserve ? 0 : token2Reserve);
+  const x = new BigNumber(!tokenIn ? 0 : tokenIn);
+
+
+  if (r0.lte(0) || r1.lte(0) || x.lte(0)) {
+    return new BigNumber(0).toFixed(0).toString();
   }
+
+
 
   try {
-    const _out = _token1.div(_token2).multipliedBy(tokenIn);
-    if (_out.gt(1)) {
-      return _out.toFixed(2).toString();
+    // price out calculation
+    const numerator = x.multipliedBy(998).multipliedBy(r1);
+    const denominator = r0.multipliedBy(1000).plus(x.multipliedBy(998))
+    const y = numerator.div(denominator);
+
+
+    if (y.gt(1)) {
+      return y.toFixed(2).toString();
     }
-    return _out.toFixed(5).toString();
+    return y.toFixed(5).toString();
   } catch (error) {
     console.log("exeption getTokenOut", error);
-    return "0";
+    return new BigNumber(0).toFixed(0).toString();
   }
 };
+// export const getTokenOut = (tokenIn, token1Reserve, token2Reserve) => {
+//   const _token1 = new BigNumber(token1Reserve ? token1Reserve : 0);
+//   const _token2 = new BigNumber(token2Reserve ? token2Reserve : 0);
+
+//   if (_token1.eq("0") || _token2.eq("0")) {
+//     return new BigNumber("0").toFixed(4).toString();
+//   }
+
+//   try {
+//     const _out = _token1.div(_token2).multipliedBy(tokenIn);
+//     if (_out.gt(1)) {
+//       return _out.toFixed(2).toString();
+//     }
+//     return _out.toFixed(5).toString();
+//   } catch (error) {
+//     console.log("exeption getTokenOut", error);
+//     return "0";
+//   }
+// };
 
 export const getPercentAmountWithFloor = (amount, percent) => {
   const _amount = new BigNumber(amount ? amount : 0);

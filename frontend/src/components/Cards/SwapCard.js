@@ -418,8 +418,8 @@ const SwapCard = (props) => {
       const _withoutFeeInputToken = getPercentageAmount(tokens, 99.8);
       _token2Value = getTokenOut(
         _withoutFeeInputToken,
-        poolReserves[selectedToken2.symbol],
-        poolReserves[selectedToken1.symbol]
+        poolReserves[selectedToken1.symbol],
+        poolReserves[selectedToken2.symbol]
       );
       if (new BigNumber(_token2Value).gt(0)) {
         setToken2Value(_token2Value);
@@ -455,8 +455,8 @@ const SwapCard = (props) => {
 
       _token1Value = getTokenOut(
         tokens,
-        poolReserves[selectedToken1.symbol],
-        poolReserves[selectedToken2.symbol]
+        poolReserves[selectedToken2.symbol],
+        poolReserves[selectedToken1.symbol]
       );
       if (new BigNumber(_token1Value).gt(0)) {
         setToken1Value(_token1Value);
