@@ -185,7 +185,7 @@ const useStyles = makeStyles((theme) => ({
 const SwapCard = (props) => {
   const {
     account: { currentNetwork, currentAccount, loading },
-    dex: { approvedTokens, poolReserves, pairContractData },
+    dex: { approvedTokens, poolReserves, pairContractData, transaction },
     checkAllowance,
     confirmAllowance,
     tokenType,
@@ -222,6 +222,8 @@ const SwapCard = (props) => {
   const [liquidityStatus, setLiquidityStatus] = useState(false);
   const [localStateLoading, setLocalStateLoading] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const [swapTransactionStatus, setSwapTransactionStatus] = useState(transaction)
 
   const handleTxPoper = (event) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -587,6 +589,16 @@ const SwapCard = (props) => {
       return !currentTokenApprovalStatus() ? "Approve" : swapStatus.message;
     }
   };
+
+  // swap status updates
+  useEffect(() => {
+    if (!transaction.hash) {
+      return
+    }
+    setSwapTransactionStatus(transaction)
+
+  }, [transaction])
+
   return (
     <>
       <TabPage data={0} />

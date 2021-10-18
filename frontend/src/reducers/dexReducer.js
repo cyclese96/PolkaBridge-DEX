@@ -21,8 +21,10 @@ import {
   SET_TOKEN1_PRICE,
   SET_TOKEN_ABI,
   SHOW_DEX_LOADING,
+  START_TRANSACTION,
   SWAP_TOKEN_SELECTION,
   UPDATE_SETTINGS,
+  UPDATE_TRANSACTION_STATUS,
   VERIFY_SLIPPAGE,
 } from "../actions/types";
 import {
@@ -52,6 +54,13 @@ const initalState = {
   isValidSlippage: false,
   pairContractData: {}, // { "PBR_ETH": { abi: [], address: ""  }  }
   tokenData: {}, // { "PBR": { abi: [], address: ""  }  }
+  transaction: {
+    type: null,// swap/ add_liquidity, remove_liquidity
+    hash: null,
+    status: 'pending', // pending, success, failed
+    result: null // transaction result on success, { token0:{symbol, address, amount  }  , token1: { symbol, address, amount }, priceRatio:token0/token1 }
+  },             //  
+  allTransactions: []
 };
 
 export default function (state = initalState, action) {
@@ -201,6 +210,32 @@ export default function (state = initalState, action) {
         poolShare: "0",
         poolReserves: {},
       };
+    case START_TRANSACTION:
+
+      return {
+        ...state,
+        transaction: initalState.transaction
+      }
+
+    case UPDATE_TRANSACTION_STATUS:
+      if (action.payload && action.payload.status === 'success') {
+        //add curr transaction to transaction history
+        return {
+          ...state,
+          transaction: {
+            ...state.transaction,
+            ...action.payload,
+          },
+          allTransactions: [{ ...state.transaction, ...action.payload }, ...state.allTransactions]
+        }
+      }
+      return {
+        ...state,
+        transaction: {
+          ...state.transaction,
+          ...action.payload
+        }
+      }
     default:
       return state;
   }

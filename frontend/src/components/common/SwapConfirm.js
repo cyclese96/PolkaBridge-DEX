@@ -180,7 +180,7 @@ const SwapConfirm = (props) => {
         currentAccount,
         currentNetwork
       );
-    }
+    }// todo: implement two erc20 swaps
 
     handleClose();
   };

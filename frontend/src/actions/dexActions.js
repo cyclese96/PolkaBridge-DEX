@@ -44,6 +44,8 @@ import {
   SET_TOKEN1_PRICE,
   SHOW_DEX_LOADING,
   SHOW_LOADING,
+  START_TRANSACTION,
+  UPDATE_TRANSACTION_STATUS,
   VERIFY_SLIPPAGE,
 } from "./types";
 
@@ -65,6 +67,8 @@ export const swapExactEthForTokens =
         type: SHOW_LOADING,
       });
       console.log({ outAmount: maxTokenOutAmount, path: path });
+
+      dispatch({ type: START_TRANSACTION })
       const swapRes = await _routerContract.methods
         .swapExactETHForTokens(
           maxTokenOutAmount,
@@ -72,7 +76,37 @@ export const swapExactEthForTokens =
           toAddress,
           _deadlineUnix
         )
-        .send({ from: account, value: exactEthTokenInAmount });
+        .send({ from: account, value: exactEthTokenInAmount }, function (error, transactionHash) {
+
+          console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+          if (error) {
+            dispatch({
+              type: UPDATE_TRANSACTION_STATUS,
+              payload: { type: 'swap', hash: null, status: 'failed' }
+            })
+          } else {
+            dispatch({
+              type: UPDATE_TRANSACTION_STATUS,
+              payload: { type: 'swap', hash: transactionHash }
+            })
+          }
+
+        }).on('receipt', async function (receipt) {
+
+          console.log('UPDATE_TRANSACTION_STATUS', receipt)
+          dispatch({
+            type: UPDATE_TRANSACTION_STATUS,
+            payload: { type: 'swap', status: 'success', result: { token0, token1 } }
+          })
+
+        }).on("error", async function (error) {
+
+          console.log('UPDATE_TRANSACTION_STATUS error', error)
+          dispatch({
+            type: UPDATE_TRANSACTION_STATUS,
+            payload: { type: 'swap', status: 'failed' }
+          })
+        });
 
       // console.log({ token0, token1 });
     } catch (error) {
@@ -104,6 +138,7 @@ export const swapExactTokensForEth =
       dispatch({
         type: SHOW_LOADING,
       });
+      dispatch({ type: START_TRANSACTION })
       const swapRes = await _routerContract.methods
         .swapExactTokensForETH(
           exactTokenIn,
@@ -112,15 +147,50 @@ export const swapExactTokensForEth =
           toAddress,
           _deadlineUnix
         )
-        .send({ from: account });
+        .send({ from: account }, function (error, transactionHash) {
 
-      // console.log({ token0, token1 });
+          console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+          if (error) {
+            dispatch({
+              type: UPDATE_TRANSACTION_STATUS,
+              payload: { type: 'swap', hash: null, status: 'failed' }
+            })
+          } else {
+            dispatch({
+              type: UPDATE_TRANSACTION_STATUS,
+              payload: { type: 'swap', hash: transactionHash }
+            })
+          }
+
+        }).on('receipt', async function (receipt) {
+
+          console.log('UPDATE_TRANSACTION_STATUS', receipt)
+          dispatch({
+            type: UPDATE_TRANSACTION_STATUS,
+            payload: { type: 'swap', status: 'success', result: { token0, token1 } }
+          })
+
+        }).on("error", async function (error) {
+
+          console.log('UPDATE_TRANSACTION_STATUS error', error)
+          dispatch({
+            type: UPDATE_TRANSACTION_STATUS,
+            payload: { type: 'swap', status: 'failed' }
+          })
+
+        });
+
+      // console.log('UPDATE_TRANSACTION_STATUS, final response ', swapRes);
     } catch (error) {
-      console.log("swapTokens: ", error);
+      // show failed transaction
       dispatch({
-        type: DEX_ERROR,
-        payload: "Some went wrong with exchange",
-      });
+        type: UPDATE_TRANSACTION_STATUS,
+        payload: { type: 'swap', status: 'failed' }
+      })
+      // dispatch({
+      //   type: DEX_ERROR,
+      //   payload: "Some went wrong with exchange",
+      // });
     }
     dispatch({
       type: HIDE_LOADING,
@@ -147,6 +217,7 @@ export const swapEthForExactTokens =
         type: SHOW_LOADING,
       });
       // console.log({ fromTokenAmount, path, toAddress });
+      dispatch({ type: START_TRANSACTION })
       const swapRes = await _routerContract.methods
         .swapETHForExactTokens(
           exactTokenOutAmount,
@@ -154,7 +225,38 @@ export const swapEthForExactTokens =
           toAddress,
           _deadlineUnix
         )
-        .send({ from: account, value: minEthTokenInAmount });
+        .send({ from: account, value: minEthTokenInAmount }, function (error, transactionHash) {
+
+          console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+          if (error) {
+            dispatch({
+              type: UPDATE_TRANSACTION_STATUS,
+              payload: { type: 'swap', hash: null, status: 'failed' }
+            })
+          } else {
+            dispatch({
+              type: UPDATE_TRANSACTION_STATUS,
+              payload: { type: 'swap', hash: transactionHash }
+            })
+          }
+
+        }).on('receipt', async function (receipt) {
+
+          console.log('UPDATE_TRANSACTION_STATUS', receipt)
+          dispatch({
+            type: UPDATE_TRANSACTION_STATUS,
+            payload: { type: 'swap', status: 'success', result: { token0, token1 } }
+          })
+
+        }).on("error", async function (error) {
+
+          console.log('UPDATE_TRANSACTION_STATUS error', error)
+          dispatch({
+            type: UPDATE_TRANSACTION_STATUS,
+            payload: { type: 'swap', status: 'failed' }
+          })
+
+        });
 
       // console.log({ token0, token1 });
     } catch (error) {
@@ -269,7 +371,7 @@ export const getPoolShare =
 //token0: { amount: "", address: "", desired:"", min:"" }
 //token1 { amount: "", address: "", desired:"", min:"" }
 export const addLiquidity =
-  (tokenA, tokenB, account, deadline, network) => async (dispatch) => {
+  (token0, token1, account, deadline, network) => async (dispatch) => {
     try {
       const _routerContract = routerContract(network);
 
@@ -277,35 +379,67 @@ export const addLiquidity =
         type: SHOW_LOADING,
       });
       //input params
-      const tokenAAmountDesired = tokenA.amount;
-      const tokenAAmountMin = "0";
-      const tokenBAmountDesired = tokenB.amount;
-      const tokenBAmountMin = "0";
+      const token0AmountDesired = token0.amount;
+      const token0AmountMin = "0";
+      const token1AmountDesired = token1.amount;
+      const token1AmountMin = "0";
 
       // deadline should be passed in minites in calculation
       const _deadlineUnix = getUnixTime(deadline);
-      console.log({
-        address0: tokenA.address,
-        address1: tokenB.address,
-        tokenAAmountDesired,
-        tokenBAmountDesired,
-        tokenAAmountMin,
-        tokenBAmountMin,
-        account,
-        _deadlineUnix,
-      });
+      // console.log({
+      //   address0: token0.address,
+      //   address1: token1.address,
+      //   token0AmountDesired,
+      //   token1AmountDesired,
+      //   token0AmountMin,
+      //   token1AmountMin,
+      //   account,
+      //   _deadlineUnix,
+      // });
+      dispatch({ type: START_TRANSACTION })
       const liquidity = await _routerContract.methods
         .addLiquidity(
-          tokenA.address,
-          tokenB.address,
-          tokenAAmountDesired,
-          tokenBAmountDesired,
-          tokenAAmountMin,
-          tokenBAmountMin,
+          token0.address,
+          token1.address,
+          token0AmountDesired,
+          token1AmountDesired,
+          token0AmountMin,
+          token1AmountMin,
           account,
           _deadlineUnix
         )
-        .send({ from: account });
+        .send({ from: account }, function (error, transactionHash) {
+
+          console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+          if (error) {
+            dispatch({
+              type: UPDATE_TRANSACTION_STATUS,
+              payload: { type: 'add', hash: null, status: 'failed' }
+            })
+          } else {
+            dispatch({
+              type: UPDATE_TRANSACTION_STATUS,
+              payload: { type: 'add', hash: transactionHash }
+            })
+          }
+
+        }).on('receipt', async function (receipt) {
+
+          console.log('UPDATE_TRANSACTION_STATUS', receipt)
+          dispatch({
+            type: UPDATE_TRANSACTION_STATUS,
+            payload: { type: 'add', status: 'success', result: { token0, token1 } }
+          })
+
+        }).on("error", async function (error) {
+
+          console.log('UPDATE_TRANSACTION_STATUS error', error)
+          dispatch({
+            type: UPDATE_TRANSACTION_STATUS,
+            payload: { type: 'add', status: 'failed' }
+          })
+
+        });
 
       // console.log(liquidity);
     } catch (error) {
@@ -343,14 +477,15 @@ export const addLiquidityEth =
 
       // deadline should be passed in minites in calculation
       const _deadlineUnix = getUnixTime(deadline);
-      console.log({
-        contAddres: tokenAddress,
-        tokenAmountDesired,
-        tokenAmountMin,
-        etherAmountMin,
-        account,
-        _deadlineUnix,
-      });
+      // console.log({
+      //   contAddres: tokenAddress,
+      //   tokenAmountDesired,
+      //   tokenAmountMin,
+      //   etherAmountMin,
+      //   account,
+      //   _deadlineUnix,
+      // });
+      dispatch({ type: START_TRANSACTION })
       const liquidity = await _routerContract.methods
         .addLiquidityETH(
           tokenAddress,
@@ -360,7 +495,38 @@ export const addLiquidityEth =
           account,
           _deadlineUnix
         )
-        .send({ from: account, value: toWei(etherAmount) });
+        .send({ from: account, value: toWei(etherAmount) }, function (error, transactionHash) {
+
+          console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+          if (error) {
+            dispatch({
+              type: UPDATE_TRANSACTION_STATUS,
+              payload: { type: 'add', hash: null, status: 'failed' }
+            })
+          } else {
+            dispatch({
+              type: UPDATE_TRANSACTION_STATUS,
+              payload: { type: 'add', hash: transactionHash }
+            })
+          }
+
+        }).on('receipt', async function (receipt) {
+
+          console.log('UPDATE_TRANSACTION_STATUS', receipt)
+          dispatch({
+            type: UPDATE_TRANSACTION_STATUS,
+            payload: { type: 'add', status: 'success', result: { token0: ethToken, token1: erc20Token } }
+          })
+
+        }).on("error", async function (error) {
+
+          console.log('UPDATE_TRANSACTION_STATUS error', error)
+          dispatch({
+            type: UPDATE_TRANSACTION_STATUS,
+            payload: { type: 'add', status: 'failed' }
+          })
+
+        });
 
       // console.log(liquidity);
     } catch (error) {
@@ -400,6 +566,7 @@ export const removeLiquidityEth =
         // deadline should be passed in minites in calculation
         const _deadlineUnix = getUnixTime(deadline);
 
+        dispatch({ type: START_TRANSACTION })
         const rmLiquidity = await _routerContract.methods
           .removeLiquidityETH(
             erc20Address,
@@ -409,7 +576,38 @@ export const removeLiquidityEth =
             account,
             _deadlineUnix
           )
-          .send({ from: account });
+          .send({ from: account }, function (error, transactionHash) {
+
+            console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+            if (error) {
+              dispatch({
+                type: UPDATE_TRANSACTION_STATUS,
+                payload: { type: 'remove', hash: null, status: 'failed' }
+              })
+            } else {
+              dispatch({
+                type: UPDATE_TRANSACTION_STATUS,
+                payload: { type: 'remove', hash: transactionHash }
+              })
+            }
+
+          }).on('receipt', async function (receipt) {
+
+            console.log('UPDATE_TRANSACTION_STATUS', receipt)
+            dispatch({
+              type: UPDATE_TRANSACTION_STATUS,
+              payload: { type: 'remove', status: 'success', result: { token0: ethToken, token1: erc20Token, lpToken: lpTokenAmount } }
+            })
+
+          }).on("error", async function (error) {
+
+            console.log('UPDATE_TRANSACTION_STATUS error', error)
+            dispatch({
+              type: UPDATE_TRANSACTION_STATUS,
+              payload: { type: 'remove', status: 'failed' }
+            })
+
+          });
 
         console.log(rmLiquidity);
       } catch (error) {
