@@ -19,7 +19,7 @@ import { Link } from "react-router-dom";
 import TokenChart from "./TokenChart";
 import { Button, Card } from "@material-ui/core";
 import TopTokens from "./TopTokens";
-import { OpenInNew } from "@material-ui/icons";
+import { FileCopyOutlined, OpenInNew } from "@material-ui/icons";
 import { currentConnection } from "../../../constants";
 
 const useStyles = makeStyles((theme) => ({
@@ -156,6 +156,10 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 18,
     fontWeight: 600,
   },
+  copyIcon: {
+    fontSize: 14,
+    cursor: "pointer",
+  },
 }));
 
 function TokenPage({ address }) {
@@ -180,15 +184,15 @@ function TokenPage({ address }) {
 
   useEffect(() => {
     // console.log("allPairs", allPairs);
-    document.querySelector('body').scrollTo(0, 0)
+    document.querySelector("body").scrollTo(0, 0);
   }, []);
 
   useEffect(() => {
     window.scrollTo({
-      behavior: 'smooth',
-      top: 0
-    })
-  }, [])
+      behavior: "smooth",
+      top: 0,
+    });
+  }, []);
 
   // pairs to show in pair list
   const fetchedPairsList = useDataForList(allPairs);
@@ -327,13 +331,29 @@ function TokenPage({ address }) {
                   </div>
                   <div className={classes.detailsBox}>
                     <h5 className={classes.detailTitle}>Address</h5>
-                    <h6 className={classes.detailValue}>{!id ? "" : id}</h6>
+                    <h6 className={classes.detailValue}>
+                      {!id ? "" : id}{" "}
+                      <span>
+                        <FileCopyOutlined
+                          className={classes.copyIcon}
+                          onClick={() =>
+                            navigator.clipboard.writeText(!id ? "" : id)
+                          }
+                        />
+                      </span>
+                    </h6>
                   </div>
                 </div>
                 <div className="d-flex justify-content-end">
-                  <a href={currentConnection === 'testnet' ? `https://rinkeby.etherscan.io/address/${id}` : `https://etherscan.io/address/${id}`} target='_blank'>
-                    <Button className={classes.openButton} >
-
+                  <a
+                    href={
+                      currentConnection === "testnet"
+                        ? `https://rinkeby.etherscan.io/address/${id}`
+                        : `https://etherscan.io/address/${id}`
+                    }
+                    target="_blank"
+                  >
+                    <Button className={classes.openButton}>
                       View On Explorer <OpenInNew />
                     </Button>
                   </a>

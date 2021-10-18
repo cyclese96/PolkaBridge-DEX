@@ -9,7 +9,10 @@ import { useEffect } from "react/cjs/react.development";
 import { usePrevious } from "react-use";
 import { usePairData, usePairTransactions } from "../../../contexts/PairData";
 import { formattedNum, formattedPercent } from "../../../utils/timeUtils";
-import { useEthPrice, useGlobalTransactions } from "../../../contexts/GlobalData";
+import {
+  useEthPrice,
+  useGlobalTransactions,
+} from "../../../contexts/GlobalData";
 import { Button, Card } from "@material-ui/core";
 import TokenIcon from "../../common/TokenIcon";
 // import { formatCurrency } from "../../../utils/helper";
@@ -17,7 +20,7 @@ import TokenChart from "./TokenChart";
 import TopTokens from "./TopTokens";
 import { formatCurrency } from "../../../utils/formatters";
 import { currentConnection } from "../../../constants";
-import { OpenInNew } from "@material-ui/icons";
+import { FileCopy, FileCopyOutlined, OpenInNew } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -27,14 +30,14 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   breadcrumbs: {
-    paddingBottom: 20,
+    paddingBottom: 10,
     [theme.breakpoints.down("sm")]: {
       paddingBottom: 10,
     },
   },
   breadcrumbsTitle: {
     color: "white",
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 400,
   },
   tokenDetails: {
@@ -44,9 +47,18 @@ const useStyles = makeStyles((theme) => ({
       paddingTop: 5,
     },
   },
+  ratioCard: {
+    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+
+    border: "0.5px solid #616161",
+    borderRadius: 15,
+    color: "white",
+    padding: "5px 10px 5px 10px",
+    marginRight: 10,
+  },
   tokenTitle: {
     color: "white",
-    fontSize: 32,
+    fontSize: "2rem",
     [theme.breakpoints.down("sm")]: {
       fontSize: 17,
     },
@@ -54,6 +66,12 @@ const useStyles = makeStyles((theme) => ({
   tokenImage: {
     height: 30,
     marginRight: 10,
+  },
+  tokenImage2: {
+    height: 30,
+    marginRight: 10,
+    marginLeft: -20,
+    zIndex: -100,
   },
   changeIndicator: {
     background: "green",
@@ -155,6 +173,10 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 18,
     fontWeight: 600,
   },
+  copyIcon: {
+    fontSize: 14,
+    cursor: "pointer",
+  },
 }));
 
 function PoolDetail({ pairAddress }) {
@@ -181,15 +203,15 @@ function PoolDetail({ pairAddress }) {
 
   useEffect(() => {
     // console.log("allPairs", allPairs);
-    document.querySelector('body').scrollTo(0, 0)
+    document.querySelector("body").scrollTo(0, 0);
   }, []);
 
   useEffect(() => {
     window.scrollTo({
-      behavior: 'smooth',
-      top: 0
-    })
-  }, [])
+      behavior: "smooth",
+      top: 0,
+    });
+  }, []);
 
   const formattedLiquidity = reserveUSD
     ? formattedNum(reserveUSD, true)
@@ -273,7 +295,7 @@ function PoolDetail({ pairAddress }) {
             <TokenIcon
               symbol={token1?.symbol}
               address={token1?.address}
-              className={classes.tokenImage}
+              className={classes.tokenImage2}
             />
             <span style={{ paddingRight: 3 }}>
               {token0?.symbol} - {token1?.symbol}
@@ -285,6 +307,31 @@ function PoolDetail({ pairAddress }) {
             </span>
           </h1>
         </div>
+        <div
+          for="tokenRatioCards"
+          className="d-flex justify-content-start mb-4"
+        >
+          <div className={classes.ratioCard}>
+            {" "}
+            <TokenIcon
+              symbol={token0?.symbol}
+              address={token0?.address}
+              className={classes.tokenImage}
+              size={20}
+            />{" "}
+            {token0?.symbol} = 3,849 {token1?.symbol} (US$3,849)
+          </div>
+          <div className={classes.ratioCard}>
+            {" "}
+            <TokenIcon
+              symbol={token1?.symbol}
+              address={token1?.address}
+              className={classes.tokenImage}
+              size={20}
+            />{" "}
+            {token1?.symbol} = 3,849 {token0?.symbol} (US$3,849)
+          </div>
+        </div>{" "}
         <div for="token-stats">
           <h6 className={classes.sectionTitle}>Token Statistics</h6>
           <div className="row">
@@ -343,7 +390,6 @@ function PoolDetail({ pairAddress }) {
             </div>
           </div>
         </div>
-
         <div for="token-information" className="mt-5">
           <h6 className={classes.sectionTitle}>Pair Information </h6>
           <div>
@@ -352,29 +398,62 @@ function PoolDetail({ pairAddress }) {
                 <div className="d-flex justify-content-start align-items-center">
                   <div className={classes.detailsBox}>
                     <h5 className={classes.detailTitle}>Pair Name</h5>
-                    <h6 className={classes.detailValue}>{token0?.symbol}-{token1?.symbol}</h6>
+                    <h6 className={classes.detailValue}>
+                      {token0?.symbol}-{token1?.symbol}
+                    </h6>
                   </div>
 
                   <div className={classes.detailsBox}>
                     <h5 className={classes.detailTitle}>Pair Address</h5>
-                    <h6 className={classes.detailValue}>{pairAddress?.slice(0, 8)}</h6>
+                    <h6 className={classes.detailValue}>
+                      {pairAddress?.slice(0, 8)}
+                    </h6>
                   </div>
 
                   <div className={classes.detailsBox}>
-                    <h5 className={classes.detailTitle}>{token0?.symbol} Address</h5>
-                    <h6 className={classes.detailValue}>{token0?.id?.slice(0, 8)}</h6>
+                    <h5 className={classes.detailTitle}>
+                      {token0?.symbol} Address
+                    </h5>
+                    <h6 className={classes.detailValue}>
+                      {token0?.id?.slice(0, 8)}{" "}
+                      <span>
+                        <FileCopyOutlined
+                          className={classes.copyIcon}
+                          onClick={() =>
+                            navigator.clipboard.writeText(token0?.id)
+                          }
+                        />
+                      </span>
+                    </h6>
                   </div>
 
                   <div className={classes.detailsBox}>
-                    <h5 className={classes.detailTitle}>{token1?.symbol} Address</h5>
-                    <h6 className={classes.detailValue}>{token1?.id?.slice(0, 8)}</h6>
+                    <h5 className={classes.detailTitle}>
+                      {token1?.symbol} Address
+                    </h5>
+                    <h6 className={classes.detailValue}>
+                      {token1?.id?.slice(0, 8)}{" "}
+                      <span>
+                        <FileCopyOutlined
+                          className={classes.copyIcon}
+                          onClick={() =>
+                            navigator.clipboard.writeText(token1?.id)
+                          }
+                        />
+                      </span>
+                    </h6>
                   </div>
-
                 </div>
                 <div className="d-flex justify-content-end">
-                  <a href={currentConnection === 'testnet' ? `https://rinkeby.etherscan.io/address/${pairAddress}` : `https://etherscan.io/address/${pairAddress}`} target='_blank'>
-                    <Button className={classes.openButton} >
-
+                  <a
+                    href={
+                      currentConnection === "testnet"
+                        ? `https://rinkeby.etherscan.io/address/${pairAddress}`
+                        : `https://etherscan.io/address/${pairAddress}`
+                    }
+                    target="_blank"
+                  >
+                    <Button className={classes.openButton}>
                       View On Explorer <OpenInNew />
                     </Button>
                   </a>
@@ -383,7 +462,6 @@ function PoolDetail({ pairAddress }) {
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );
