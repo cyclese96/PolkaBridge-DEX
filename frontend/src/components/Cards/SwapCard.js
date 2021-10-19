@@ -223,7 +223,8 @@ const SwapCard = (props) => {
   const [localStateLoading, setLocalStateLoading] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const [swapTransactionStatus, setSwapTransactionStatus] = useState(transaction)
+  const [swapTransactionStatus, setSwapTransactionStatus] =
+    useState(transaction);
 
   const handleTxPoper = (event) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -593,11 +594,10 @@ const SwapCard = (props) => {
   // swap status updates
   useEffect(() => {
     if (!transaction.hash) {
-      return
+      return;
     }
-    setSwapTransactionStatus(transaction)
-
-  }, [transaction])
+    setSwapTransactionStatus(transaction);
+  }, [transaction]);
 
   return (
     <>
@@ -659,10 +659,16 @@ const SwapCard = (props) => {
             disableToken={selectedToken1}
             inputValue={token2Value}
           />
+
           {token1Value && token2Value && (
             <div className="mt-1 d-flex justify-content-end">
               <div className={classes.tokenPrice}>
-                <span> 1 ETH = {token2Value / token1Value} PBR</span>{" "}
+                <span>
+                  {" "}
+                  1 {selectedToken1.symbol && selectedToken1.symbol} ={" "}
+                  {(token2Value / token1Value).toFixed(2)}{" "}
+                  {selectedToken2.symbol && selectedToken2.symbol}
+                </span>{" "}
                 <Info
                   className={classes.infoIcon}
                   style={{ marginTop: -3 }}
@@ -700,7 +706,13 @@ const SwapCard = (props) => {
                 <div className={classes.txDetailsTitle}>
                   Liquidity Provider Fee
                 </div>
-                <div className={classes.txDetailsValue}>0.02967 ETH</div>
+                <div className={classes.txDetailsValue}>
+                  {" "}
+                  {parseFloat(getPercentageAmount(token1Value, "0.2 ")).toFixed(
+                    5
+                  )}{" "}
+                  {selectedToken1.symbol}
+                </div>
               </div>
               <div className="mt-1 d-flex justify-content-between">
                 <div className={classes.txDetailsTitle}>Price Impact</div>
@@ -713,7 +725,7 @@ const SwapCard = (props) => {
               <div className="mt-1 d-flex justify-content-between">
                 <div className={classes.txDetailsTitle}>Minimum received</div>
                 <div className={classes.txDetailsValue}>
-                  345028000000000 DAI
+                  {token2Value} {selectedToken2.symbol}
                 </div>
               </div>
             </div>
