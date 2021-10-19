@@ -26,7 +26,7 @@ import {
   getPoolShare,
   getLpBalance,
   loadPairAddress,
-  addLiquidity
+  addLiquidity,
 } from "../../../actions/dexActions";
 import { getAccountBalance } from "../../../actions/accountActions";
 import tokenThumbnail from "../../../utils/tokenThumbnail";
@@ -257,6 +257,7 @@ const AddCard = (props) => {
       poolReserves,
       pairContractData,
       tokenData,
+      transaction,
     },
     addLiquidityEth,
     checkAllowance,
@@ -266,7 +267,7 @@ const AddCard = (props) => {
     getLpBalance,
     loadPairAddress,
     getAccountBalance,
-    addLiquidity
+    addLiquidity,
   } = props;
 
   const currentDefaultToken = {
@@ -345,13 +346,11 @@ const AddCard = (props) => {
     }
   };
 
-
   const currentTokenApprovalStatus = () => {
     return selectedToken1.symbol === "ETH"
       ? true
       : approvedTokens[selectedToken1.symbol];
   };
-
 
   const clearInputState = () => {
     setToken1Value("");
@@ -369,10 +368,7 @@ const AddCard = (props) => {
         const erc20Token =
           selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
 
-        await getAccountBalance(
-          erc20Token,
-          currentNetwork
-        );
+        await getAccountBalance(erc20Token, currentNetwork);
 
         let _pairAddress = currentPairAddress();
 
@@ -389,14 +385,11 @@ const AddCard = (props) => {
             _pairAddress,
             currentNetwork
           );
-
         }
 
         if (!_pairAddress) {
           //pair not yet created in the factory
         } else {
-
-
           await getLpBalance(
             selectedToken1,
             selectedToken2,
@@ -406,22 +399,16 @@ const AddCard = (props) => {
           );
         }
 
-        await checkAllowance(
-          selectedToken1,
-          currentAccount,
-          currentNetwork
-        );
+        await checkAllowance(selectedToken1, currentAccount, currentNetwork);
 
         setLocalStateLoading(false);
       }
     }
 
-    loadPair()
-
+    loadPair();
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
   const handleConfirmAllowance = async () => {
-
     const allowanceAmount = toWei("999999999");
 
     await confirmAllowance(
@@ -505,7 +492,7 @@ const AddCard = (props) => {
       _token2Value = getTokenOut(
         tokens,
         poolReserves[selectedToken1.symbol],
-        poolReserves[selectedToken2.symbol],
+        poolReserves[selectedToken2.symbol]
       );
       if (new BigNumber(_token2Value).gt(0)) {
         setToken2Value(_token2Value);
@@ -546,7 +533,7 @@ const AddCard = (props) => {
       _token1Value = getTokenOut(
         tokens,
         poolReserves[selectedToken2.symbol],
-        poolReserves[selectedToken1.symbol],
+        poolReserves[selectedToken1.symbol]
       );
       if (new BigNumber(_token1Value).eq(0)) {
         verifySwapStatus(
@@ -560,8 +547,6 @@ const AddCard = (props) => {
           { value: tokens, selected: selectedToken2 }
         );
       }
-
-
     } else if (selectedToken1.symbol && !tokens) {
       setToken1Value("");
       if (!addStatus.disabled) {
@@ -611,9 +596,7 @@ const AddCard = (props) => {
   };
 
   const handleAddLiquidity = async () => {
-
     if (selectedToken1.symbol === ETH || selectedToken2.symbol === ETH) {
-
       let etherToken, erc20Token;
       if (selectedToken1.symbol === ETH) {
         etherToken = {
@@ -642,7 +625,6 @@ const AddCard = (props) => {
         swapSettings.deadline,
         currentNetwork
       );
-
     } else {
       // addLiquidity
 
@@ -652,12 +634,8 @@ const AddCard = (props) => {
         currentAccount,
         swapSettings.deadline,
         currentNetwork
-      )
-
-
+      );
     }
-
-
   };
 
   const currentPoolShare = () => {
@@ -798,11 +776,15 @@ const AddCard = (props) => {
             className={classes.addLiquidityButton}
           >
             {!addStatus.disabled && loading ? (
-              <CircularProgress
-                style={{ color: "black" }}
-                color="secondary"
-                size={30}
-              />
+              <span>
+                {transaction.status === "pending" && "Transaction Pending"}
+
+                <CircularProgress
+                  style={{ color: "grey" }}
+                  color="secondary"
+                  size={30}
+                />
+              </span>
             ) : (
               currentButton()
             )}
@@ -826,5 +808,5 @@ export default connect(mapStateToProps, {
   getLpBalance,
   loadPairAddress,
   getAccountBalance,
-  addLiquidity
+  addLiquidity,
 })(AddCard);
