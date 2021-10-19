@@ -17,10 +17,6 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
     address public immutable override factory;
     address public immutable override WETH;
     address public owner;
-    // Polka Treasury
-    // address polkaTreasury;
-    uint256 private releaseTime;
-    uint256 private lockTime = 2 days;
 
     modifier ensure(uint deadline) {
         require(deadline >= block.timestamp, 'UniswapV2Router: EXPIRED');
@@ -30,11 +26,9 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         require(msg.sender == owner, 'Only Owner');
         _;
     }
-    constructor(address _factory, address _WETH, address _treasury) public {
-        require(_treasury != address(0), "Router: Treasury contract address can not be zero");
+    constructor(address _factory, address _WETH) public {
         factory = _factory;
         WETH = _WETH;
-        // polkaTreasury = _treasury;
         owner = msg.sender;
     }
 
@@ -277,7 +271,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
             );
         }
     }
-
+    
     function swapExactTokensForTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -290,7 +284,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         TransferHelper.safeTransferFrom(
             path[0], msg.sender, UniswapV2Library.pairFor(factory, path[0], path[1]), amounts[0]
         );
-        _swap(amounts, path, to);
+        _swap(amounts, path, to);        
     }
 
     function swapTokensForExactTokens(
@@ -320,6 +314,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         IWETH(WETH).deposit{value: amounts[0]}();
         require(IWETH(WETH).transfer(UniswapV2Library.pairFor(factory, path[0], path[1]), amounts[0]), 'UniswapV2Router: WETH transfer failed in swapExactETHForTokens');// assert(IWETH(WETH).transfer(UniswapV2Library.pairFor(factory, path[0], path[1]), amounts[0]));
         _swap(amounts, path, to);
+
     }
 
     function swapTokensForExactETH(
@@ -376,6 +371,10 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         IWETH(WETH).deposit{value: amounts[0]}();
         require(IWETH(WETH).transfer(UniswapV2Library.pairFor(factory, path[0], path[1]), amounts[0]), 'UniswapV2Router: WETH transfer failed in swapETHForExactTokens');// assert(IWETH(WETH).transfer(UniswapV2Library.pairFor(factory, path[0], path[1]), amounts[0]));
         _swap(amounts, path, to);
+        // TransferHelper.safeTransferFrom(
+        //     path[0], address(this), polkaTreasury, amounts[0].mul(4).div(10000)
+        // );
+
         // refund dust eth, if any
         if (msg.value > amounts[0]) TransferHelper.safeTransferETH(msg.sender, msg.value - amounts[0]);
     }
@@ -510,19 +509,4 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
     {
         return UniswapV2Library.getAmountsIn(factory, amountOut, path);
     }
-
-    // Set Polka Treasury Address
-    // function setPolkaTreasury(address _new_treasury) public onlyOwner {
-    //     require(_new_treasury != address(0), "Router: Treasury contract address can not be zero");
-    // if(releaseTime == 0)
-    //     releaseTime = block.timestamp;
-    // if(releaseTime != 0)
-    // {
-    //     require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
-    //     releaseTime = 0;
-    //     polkaTreasury = _new_treasury;        
-    // }        
-
-    //     polkaTreasury = _new_treasury;
-    // }
 }

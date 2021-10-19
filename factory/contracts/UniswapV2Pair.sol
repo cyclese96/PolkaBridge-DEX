@@ -21,8 +21,9 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
     address public override factory;
     address public override token0;
     address public override token1;
+    address feeToSetter;
     
-    address private treasury;
+    address treasury;
 
     uint112 private reserve0;           // uses single storage slot, accessible via getReserves
     uint112 private reserve1;           // uses single storage slot, accessible via getReserves
@@ -56,14 +57,19 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
 
     constructor() {
         factory = msg.sender;
+        // treasury = _treasury;
+        // feeToSetter = _feeToSetter;        
+        // owner1 = _owner;
         // factory = _factoryAddress;
     }
 
     // called once by the factory at time of deployment
-    function initialize(address _token0, address _token1) external override {
+    function initialize(address _token0, address _token1, address _feeToSetter, address _treasury) external override {
         require(msg.sender == factory, 'PolkaBridge AMM V1: FORBIDDEN'); // sufficient check
         token0 = _token0;
         token1 = _token1;
+        treasury = _treasury;
+        feeToSetter = _feeToSetter;
     }
 
     // update reserves and, on the first call per block, price accumulators
@@ -151,9 +157,8 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
         if (feeOn) kLast = uint(reserve0).mul(reserve1); // reserve0 and reserve1 are up-to-date
         emit Burn(msg.sender, amount0, amount1, to);
     }
-
+    
     // this low-level function should be called from a contract which performs important safety checks
-    // function swap(uint amount0Out, uint amount1Out, address to, address polkaTreasury) external override lock {
     function swap(uint amount0Out, uint amount1Out, address to) external override lock {
         require(amount0Out > 0 || amount1Out > 0, 'PolkaBridge AMM V1: INSUFFICIENT_OUTPUT_AMOUNT');
         (uint112 _reserve0, uint112 _reserve1,) = getReserves(); // gas savings
@@ -166,19 +171,8 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
             address _token1 = token1;
             require(to != _token0 && to != _token1, 'PolkaBridge AMM V1: INVALID_TO');
 
-            // uint amount0OutPair = amount0Out.mul(80).div(100);
-            // uint amount1OutPair = amount1Out.mul(80).div(100);
-            // if (amount0OutPair > 0) _safeTransfer(_token0, to, amount0OutPair); // optimistically transfer tokens
-            // if (amount1OutPair > 0) _safeTransfer(_token1, to, amount1OutPair); // optimistically transfer tokens
             if (amount0Out > 0) _safeTransfer(_token0, to, amount0Out); // optimistically transfer tokens
             if (amount1Out > 0) _safeTransfer(_token1, to, amount1Out); // optimistically transfer tokens
-            /** if (amount0Out - amount0In.mul(4).div(10000) > 0) _safeTransfer(_token0, to, amount0Out - amount0In.mul(4).div(10000)); // optimistically transfer tokens
-            if (amount1Out - amount1In.mul(4).div(10000) > 0) _safeTransfer(_token1, to, amount1Out - amount1In.mul(4).div(10000)); // optimistically transfer tokens */
-
-
-            // if (data.length > 0) IUniswapV2Callee(to).uniswapV2Call(msg.sender, amount0Out, amount1Out, data);
-            // bytes calldata data = new bytes(0);
-            // IUniswapV2Callee(to).uniswapV2Call(msg.sender, amount0Out, amount1Out, data);
             balance0 = IERC20(_token0).balanceOf(address(this));
             balance1 = IERC20(_token1).balanceOf(address(this));
         }
@@ -191,103 +185,29 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
             require(balance0Adjusted.mul(balance1Adjusted) >= uint(_reserve0).mul(_reserve1).mul(1000**2), 'PolkaBridge AMM V1: K');
         }
 
-        // {
-        //     if(amount0In > 0) {
-        //     // if(amount0In.mul(4).div(10000) > 0) {
-        //         _safeTransfer(token0, treasury, amount0In.mul(4).div(10000));
-        //         balance0 = balance0 - amount0In.mul(4).div(10000);
-        //     }
-        //     if(amount1In > 0) {
-        //     // if(amount1In.mul(4).div(10000) > 0) {
-        //         _safeTransfer(token1, treasury, amount1In.mul(4).div(10000));
-        //         balance1 = balance1 - amount1In.mul(4).div(10000);
-        //     }
-        // }
-        
-        _update(balance0, balance1, _reserve0, _reserve1);
-        emit Swap(msg.sender, amount0In, amount1In, amount0Out, amount1Out, to);
-
-        // code for no warning
-        // polkaTreasury = polkaTreasury;
-    }
-
-    function swapWithTreasury(uint amount0Out, uint amount1Out, address to) external override lock {
-        require(amount0Out > 0 || amount1Out > 0, 'PolkaBridge AMM V1: INSUFFICIENT_OUTPUT_AMOUNT');
-        (uint112 _reserve0, uint112 _reserve1,) = getReserves(); // gas savings
-        require(amount0Out < _reserve0 && amount1Out < _reserve1, 'PolkaBridge AMM V1: INSUFFICIENT_LIQUIDITY');
-
-        uint balance0;
-        uint balance1;
-        { // scope for _token{0,1}, avoids stack too deep errors
-            address _token0 = token0;
-            address _token1 = token1;
-            require(to != _token0 && to != _token1, 'PolkaBridge AMM V1: INVALID_TO');
-
-            // uint amount0OutPair = amount0Out.mul(80).div(100);
-            // uint amount1OutPair = amount1Out.mul(80).div(100);
-            // if (amount0OutPair > 0) _safeTransfer(_token0, to, amount0OutPair); // optimistically transfer tokens
-            // if (amount1OutPair > 0) _safeTransfer(_token1, to, amount1OutPair); // optimistically transfer tokens
-            if (amount0Out > 0) _safeTransfer(_token0, to, amount0Out); // optimistically transfer tokens
-            if (amount1Out > 0) _safeTransfer(_token1, to, amount1Out); // optimistically transfer tokens
-            /** if (amount0Out - amount0In.mul(4).div(10000) > 0) _safeTransfer(_token0, to, amount0Out - amount0In.mul(4).div(10000)); // optimistically transfer tokens
-            if (amount1Out - amount1In.mul(4).div(10000) > 0) _safeTransfer(_token1, to, amount1Out - amount1In.mul(4).div(10000)); // optimistically transfer tokens */
-
-
-            // if (data.length > 0) IUniswapV2Callee(to).uniswapV2Call(msg.sender, amount0Out, amount1Out, data);
-            // bytes calldata data = new bytes(0);
-            // IUniswapV2Callee(to).uniswapV2Call(msg.sender, amount0Out, amount1Out, data);
-            balance0 = IERC20(_token0).balanceOf(address(this));
-            balance1 = IERC20(_token1).balanceOf(address(this));
-        }
-        uint amount0In = balance0 > _reserve0 - amount0Out ? balance0 - (_reserve0 - amount0Out) : 0;
-        uint amount1In = balance1 > _reserve1 - amount1Out ? balance1 - (_reserve1 - amount1Out) : 0;
-        require(amount0In > 0 || amount1In > 0, 'PolkaBridge AMM V1: INSUFFICIENT_INPUT_AMOUNT');
-        { // scope for reserve{0,1}Adjusted, avoids stack too deep errors
-            uint balance0Adjusted = balance0.mul(1000).sub(amount0In.mul(2));
-            uint balance1Adjusted = balance1.mul(1000).sub(amount1In.mul(2));
-            require(balance0Adjusted.mul(balance1Adjusted) >= uint(_reserve0).mul(_reserve1).mul(1000**2), 'PolkaBridge AMM V1: K');
-        }
-
-        // {
-        //     // if(amount0In > 0) {
-        //     if(amount0In.mul(16).div(10000) > 0) {
-        //         _safeTransfer(token0, address(this), amount0In.mul(16).div(10000));
-        //         balance0 = balance0 - amount0In.mul(16).div(10000);
-        //     }
-        //     // if(amount1In > 0) {
-        //     if(amount1In.mul(16).div(10000) > 0) {
-        //         _safeTransfer(token1, address(this), amount1In.mul(16).div(10000));
-        //         balance1 = balance1 - amount1In.mul(16).div(10000);
-        //     }
-        // }
-        {
-            // if(amount0In > 0) {
             if(amount0In.mul(4).div(10000) > 0) {
+                require(treasury != address(0), 'Treasury address error');
                 _safeTransfer(token0, treasury, amount0In.mul(4).div(10000));
                 balance0 = balance0 - amount0In.mul(4).div(10000);
+                _reserve0 = _reserve0 - uint112(amount0In.mul(4).div(10000));
             }
-            // if(amount1In > 0) {
             if(amount1In.mul(4).div(10000) > 0) {
+                require(treasury != address(0), 'Treasury address error');
                 _safeTransfer(token1, treasury, amount1In.mul(4).div(10000));
                 balance1 = balance1 - amount1In.mul(4).div(10000);
+                _reserve1 = _reserve1 - uint112(amount1In.mul(4).div(10000));
             }
-        }
         
         _update(balance0, balance1, _reserve0, _reserve1);
         emit Swap(msg.sender, amount0In, amount1In, amount0Out, amount1Out, to);
 
-        // code for no warning
-        // polkaTreasury = polkaTreasury;
     }    
     
-    function setTreasuryAddress(address _address ) external override onlyOwner {
-        // if(releaseTime == 0)
-        //     releaseTime = block.timestamp;
-        // if(releaseTime != 0)
+    function setTreasuryAddress(address _address) external override {
+        require(msg.sender == feeToSetter, 'Only owner can set treasury');
         {
             require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
             treasury = _address;
-            // releaseTime = 0;
             emit TreasurySet(_address);
         }
     }

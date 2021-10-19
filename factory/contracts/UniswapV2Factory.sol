@@ -4,9 +4,13 @@ pragma solidity 0.8.0;
 import './interfaces/IUniswapV2Factory.sol';
 import './UniswapV2Pair.sol';
 
+// import "@openzeppelin/contracts/access/Ownable.sol";
+
 contract UniswapV2Factory is IUniswapV2Factory {
     address public override feeTo;
     address public override feeToSetter;
+
+    address treasury;
 
     mapping(address => mapping(address => address)) public override getPair;
     // address[] public allPairs; // storage of all pairs
@@ -14,11 +18,12 @@ contract UniswapV2Factory is IUniswapV2Factory {
 
     bytes32 public constant INIT_CODE_PAIR_HASH = keccak256(abi.encodePacked(type(UniswapV2Pair).creationCode));
     
-    uint256 private releaseTime;
-    uint256 private lockTime = 2 days;
+    uint releaseTime;
+    uint lockTime = 2 days;
 
-    constructor(address _feeToSetter) {
+    constructor(address _feeToSetter, address _treasury) {
         feeToSetter = _feeToSetter;
+        treasury = _treasury;
         releaseTime = block.timestamp;
     }
 
@@ -38,7 +43,7 @@ contract UniswapV2Factory is IUniswapV2Factory {
         assembly {
             pair := create2(0, add(bytecode, 32), mload(bytecode), salt)
         }
-        IUniswapV2Pair(pair).initialize(token0, token1);
+        IUniswapV2Pair(pair).initialize(token0, token1, feeToSetter, treasury);
         getPair[token0][token1] = pair;
         getPair[token1][token0] = pair; // populate mapping in the reverse direction
         // allPairs.push(pair);
@@ -49,12 +54,9 @@ contract UniswapV2Factory is IUniswapV2Factory {
 
     function setFeeTo(address _feeTo) external override {
         require(msg.sender == feeToSetter, 'PolkaBridge AMM V1: FORBIDDEN');
-        // if(releaseTime == 0)
-            
-        // if(releaseTime != 0)
         {
-            require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
-            // releaseTime = 0;
+            if(feeTo != address(0))
+                require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
             feeTo = _feeTo;
             emit SetFeeTo(_feeTo);    
         }        
@@ -62,12 +64,9 @@ contract UniswapV2Factory is IUniswapV2Factory {
 
     function setFeeToSetter(address _feeToSetter) external override {
         require(msg.sender == feeToSetter, 'PolkaBridge AMM V1: FORBIDDEN');
-        // if(releaseTime == 0)
-            // releaseTime = block.timestamp;
-        // if(releaseTime != 0)
         {
-            require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
-            // releaseTime = 0;
+            if(feeToSetter != address(0))
+                require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
             feeToSetter = _feeToSetter;
             emit SetFeeToSetter(_feeToSetter);
         }        
