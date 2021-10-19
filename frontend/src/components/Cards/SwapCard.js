@@ -608,7 +608,7 @@ const SwapCard = (props) => {
 
   const handleConfirmSwapClose = (value) => {
     setSwapDialog(value);
-    if (transaction.type === 'swap' && transaction.status === 'success') {
+    if (transaction.type === 'swap' && (transaction.status === 'success' || transaction.status === 'failed')) {
       store.dispatch({ type: START_TRANSACTION })
     }
   };
