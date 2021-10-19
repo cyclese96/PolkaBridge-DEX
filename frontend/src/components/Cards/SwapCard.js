@@ -19,6 +19,7 @@ import CustomSnackBar from "../common/CustomSnackbar";
 import { ETH, etheriumNetwork, tokens } from "../../constants";
 import {
   buyPriceImpact,
+  formatFloat,
   getPercentageAmount,
   getTokenOut,
   sellPriceImpact,
@@ -38,6 +39,8 @@ import { getPairAddress } from "../../utils/connectionUtils";
 import { Info, Settings, SwapCalls, SwapHoriz } from "@material-ui/icons";
 import TabPage from "../TabPage";
 import TransactionStatus from "../common/TransactionStatus";
+import store from "../../store";
+import { START_TRANSACTION } from "../../actions/types";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -185,7 +188,7 @@ const useStyles = makeStyles((theme) => ({
 const SwapCard = (props) => {
   const {
     account: { currentNetwork, currentAccount, loading },
-    dex: { approvedTokens, poolReserves, pairContractData, transaction },
+    dex: { approvedTokens, poolReserves, pairContractData, transaction, swapSettings },
     checkAllowance,
     confirmAllowance,
     tokenType,
@@ -570,7 +573,7 @@ const SwapCard = (props) => {
   };
 
   const disableStatus = () => {
-    return swapStatus.disabled || loading || localStateLoading;
+    return swapStatus.disabled || localStateLoading;
   };
 
   const handleAction = () => {
@@ -586,6 +589,8 @@ const SwapCard = (props) => {
       return "Please wait...";
     } else if (swapStatus.disabled) {
       return swapStatus.message;
+    } else if (transaction.type === 'swap' && transaction.status === 'pending') {
+      return "Pending Swap Transaction..."
     } else {
       return !currentTokenApprovalStatus() ? "Approve" : swapStatus.message;
     }
@@ -596,11 +601,16 @@ const SwapCard = (props) => {
     if (!transaction.hash) {
       return;
     }
-    setSwapTransactionStatus(transaction);
+    if (transaction.type === 'swap' && transaction.status === 'success' && !swapDialogOpen) {
+      store.dispatch({ type: START_TRANSACTION })
+    }
   }, [transaction]);
 
   const handleConfirmSwapClose = (value) => {
     setSwapDialog(value);
+    if (transaction.type === 'swap' && transaction.status === 'success') {
+      store.dispatch({ type: START_TRANSACTION })
+    }
   };
   return (
     <>
@@ -688,15 +698,15 @@ const SwapCard = (props) => {
             className={classes.swapButton}
             onClick={handleAction}
           >
-            {!swapStatus.disabled && loading ? (
+            {/* {!swapStatus.disabled ? (
               <CircularProgress
                 style={{ color: "black" }}
                 color="secondary"
                 size={30}
               />
             ) : (
-              currentButton()
-            )}
+              )} */}
+            {currentButton()}
           </Button>
         </div>
 
@@ -711,19 +721,17 @@ const SwapCard = (props) => {
                 </div>
                 <div className={classes.txDetailsValue}>
                   {" "}
-                  {parseFloat(getPercentageAmount(token1Value, "0.2 ")).toFixed(
-                    4
-                  )}{" "}
+                  {getPercentageAmount(token1Value, "0.2 ")}{" "}
                   {selectedToken1.symbol}
                 </div>
               </div>
               <div className="mt-1 d-flex justify-content-between">
                 <div className={classes.txDetailsTitle}>Price Impact</div>
-                <div className={classes.txDetailsValue}>0.02967 ETH</div>
+                <div className={classes.txDetailsValue}>{formatFloat(priceImpact)} %</div>
               </div>
               <div className="mt-1 d-flex justify-content-between">
                 <div className={classes.txDetailsTitle}>Allowed Slippage</div>
-                <div className={classes.txDetailsValue}>2.00%</div>
+                <div className={classes.txDetailsValue}>{swapSettings.slippage} %</div>
               </div>
               <div className="mt-1 d-flex justify-content-between">
                 <div className={classes.txDetailsTitle}>Minimum received</div>

@@ -358,8 +358,8 @@ const SwapConfirm = (props) => {
           {transaction.type !== null && (
             <div>
               <TransactionStatus
-                caseType={transaction.status}
-                txHash={transaction.hash}
+                // caseType={transaction.status}
+                // txHash={transaction.hash}
                 onClose={() => handleClose()}
               />
             </div>

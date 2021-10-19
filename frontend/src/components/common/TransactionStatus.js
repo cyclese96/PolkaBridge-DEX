@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Close } from "@material-ui/icons";
 import { Button } from "@material-ui/core";
 import { currentConnection } from "../../constants";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -60,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TransactionStatus = ({ caseType = "pending", onClose, txHash }) => {
+const TransactionStatus = ({ dex: { transaction }, onClose }) => {
   const classes = useStyles();
 
   return (
@@ -68,19 +69,19 @@ const TransactionStatus = ({ caseType = "pending", onClose, txHash }) => {
       <div className={classes.background}>
         <h6 style={{ fontSize: 18 }}>Transaction Status</h6>{" "}
         <div className="mt-4 ">
-          {caseType === "pending" && (
+          {transaction.status === "pending" && (
             <div className="text-center">
               <img src="/img/submit.png" className={classes.image} />
               <h6 className={classes.message}>Transaction Submitted</h6>
             </div>
           )}
-          {caseType === "failed" && (
+          {transaction.status === "failed" && (
             <div>
               <img src="/img/fail.png" className={classes.image} />
               <h6 className={classes.message}>Transaction Failed</h6>
             </div>
           )}
-          {caseType === "success" && (
+          {transaction.status === "success" && (
             <div className="text-center">
               <img src="/img/success.png" className={classes.image} />{" "}
               <h6 className={classes.message}>Transaction Succeed</h6>
@@ -90,8 +91,8 @@ const TransactionStatus = ({ caseType = "pending", onClose, txHash }) => {
             <a
               href={
                 currentConnection === "testnet"
-                  ? `https://rinkeby.etherscan.io/tx/${txHash}`
-                  : `https://etherscan.io/tx/${txHash}`
+                  ? `https://rinkeby.etherscan.io/tx/${transaction.hash}`
+                  : `https://etherscan.io/tx/${transaction.hash}`
               }
               target="_blank"
             >
@@ -101,27 +102,21 @@ const TransactionStatus = ({ caseType = "pending", onClose, txHash }) => {
             </a>
           </div>
         </div>
-        {caseType !== "success" && (
-          <Button
-            variant="contained"
-            className={classes.closeButton}
-            onClick={onClose}
-          >
-            Close
-          </Button>
-        )}
-        {caseType === "success" && (
-          <Button
-            variant="contained"
-            className={classes.closeButton}
-            onClick={() => window.location.reload()}
-          >
-            Close
-          </Button>
-        )}
+        {/* {caseType !== "success" && ( */}
+        <Button
+          variant="contained"
+          className={classes.closeButton}
+          onClick={onClose}
+        >
+          Close
+        </Button>
       </div>
     </div>
   );
 };
 
-export default TransactionStatus;
+const mapStateToProps = (state) => ({
+  dex: state.dex
+})
+
+export default connect(mapStateToProps, {})(TransactionStatus);
