@@ -23,6 +23,7 @@ import {
 import { ETH } from "../../constants";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import BigNumber from "bignumber.js";
+import TransactionStatus from "./TransactionStatus";
 
 const styles = (theme) => ({
   root: {
@@ -116,10 +117,10 @@ const useStyles = makeStyles((theme) => ({
     height: 35,
   },
   detailTitle: {
-    fontSize: 13
+    fontSize: 13,
   },
   detailValue: {
-    fontSize: 12
+    fontSize: 12,
   },
   icon: {
     color: "#f6f6f6",
@@ -127,7 +128,7 @@ const useStyles = makeStyles((theme) => ({
     transition: "all 0.4s ease",
     fontSize: 22,
     backgroundColor: "#191B1E",
-  }
+  },
 }));
 
 const SwapConfirm = (props) => {
@@ -140,7 +141,13 @@ const SwapConfirm = (props) => {
     selectedToken2,
     token1Value,
     token2Value,
-    dex: { swapSettings, poolReserves, dexLoading, pairContractData },
+    dex: {
+      swapSettings,
+      poolReserves,
+      dexLoading,
+      pairContractData,
+      transaction,
+    },
     swapExactEthForTokens,
     swapExactTokensForEth,
   } = props;
@@ -180,9 +187,9 @@ const SwapConfirm = (props) => {
         currentAccount,
         currentNetwork
       );
-    }// todo: implement two erc20 swaps
+    } // todo: implement two erc20 swaps
 
-    handleClose();
+    //handleClose();
   };
 
   const isValidSlippage = () => {
@@ -201,133 +208,162 @@ const SwapConfirm = (props) => {
         className={classes.dialog}
         color="transparent"
         PaperProps={{
-          style: { borderRadius: 15, backgroundColor: "#121827", },
+          style: { borderRadius: 15, backgroundColor: "#121827" },
         }}
       >
-        <div className={classes.background}>
-          <DialogTitle onClose={() => handleClose()}>
-            <span className={classes.heading}>Confirm Swap</span>
-          </DialogTitle>
-          <div className={classes.tokenCard}>
-            <div className="d-flex justify-content-between w-100">
-              <div>
-                <span className={classes.subheading}> From : </span>
-                <TokenIcon symbol={selectedToken1.symbol} />
-                <span style={{ marginLeft: 2 }}> {selectedToken1.symbol}</span>
-              </div>
-              <span>{token1Value}</span>
-            </div>
-
-          </div>
-
-          <div >
-            <ArrowDownwardIcon fontSize="small" className={classes.icon} />
-          </div>
-
-          <div className={classes.tokenCard}>
-            <div className="d-flex justify-content-between w-100">
-              <div>
-                <span className={classes.subheading}>To : </span>
-                <TokenIcon symbol={selectedToken2.symbol} />
-                <span style={{ marginLeft: 2 }}> {selectedToken2.symbol}</span>
-              </div>
-              <span>{token2Value}</span>
-            </div>
-
-          </div>
-
-          <div className="d-flex justify-content-around w-100 mt-2 mb-2 ">
-            <span className={classes.subheading}>Current Price</span>
-            <span className={classes.subheading}>
-              1 {selectedToken1.symbol} {" = "}{" "}
-              {getPriceRatio(
-                poolReserves[selectedToken2.symbol],
-                poolReserves[selectedToken1.symbol]
-              )}{" "}
-              {selectedToken2.symbol}
-            </span>
-          </div>
-
-          {dexLoading ? (
+        {transaction.type === null && (
+          <div className={classes.background}>
+            <DialogTitle onClose={() => handleClose()}>
+              <span className={classes.heading}>Confirm Swap</span>
+            </DialogTitle>
             <div className={classes.tokenCard}>
-              <div className="d-flex justify-content-center w-100 mt-1 mb-1 ">
-                <CircularProgress
-                  style={{ color: "#E0077D" }}
-                  color="secondary"
-                  size={30}
-                />
-              </div>
-              <div className="d-flex justify-content-center w-100 mt-1 mb-1 ">
-                <span>Validating swap</span>
+              <div className="d-flex justify-content-between w-100">
+                <div>
+                  <span className={classes.subheading}> From : </span>
+                  <TokenIcon symbol={selectedToken1.symbol} />
+                  <span style={{ marginLeft: 2 }}>
+                    {" "}
+                    {selectedToken1.symbol}
+                  </span>
+                </div>
+                <span>{token1Value}</span>
               </div>
             </div>
-          ) : (
+
+            <div>
+              <ArrowDownwardIcon fontSize="small" className={classes.icon} />
+            </div>
+
             <div className={classes.tokenCard}>
-              <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
-                <span className={classes.detailTitle}>Liquidity provider fee</span>
-                <span className={classes.detailValue}>
-                  {getPercentageAmount(token1Value, "0.2 ")}{" "}
-                  {selectedToken1.symbol}
-                </span>
+              <div className="d-flex justify-content-between w-100">
+                <div>
+                  <span className={classes.subheading}>To : </span>
+                  <TokenIcon symbol={selectedToken2.symbol} />
+                  <span style={{ marginLeft: 2 }}>
+                    {" "}
+                    {selectedToken2.symbol}
+                  </span>
+                </div>
+                <span>{token2Value}</span>
               </div>
-              {/* <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
+            </div>
+
+            <div className="d-flex justify-content-around w-100 mt-2 mb-2 ">
+              <span className={classes.subheading}>Current Price</span>
+              <span className={classes.subheading}>
+                1 {selectedToken1.symbol} {" = "}{" "}
+                {getPriceRatio(
+                  poolReserves[selectedToken2.symbol],
+                  poolReserves[selectedToken1.symbol]
+                )}{" "}
+                {selectedToken2.symbol}
+              </span>
+            </div>
+
+            {dexLoading ? (
+              <div className={classes.tokenCard}>
+                <div className="d-flex justify-content-center w-100 mt-1 mb-1 ">
+                  <CircularProgress
+                    style={{ color: "#E0077D" }}
+                    color="secondary"
+                    size={30}
+                  />
+                </div>
+                <div className="d-flex justify-content-center w-100 mt-1 mb-1 ">
+                  <span>Validating swap</span>
+                </div>
+              </div>
+            ) : (
+              <div className={classes.tokenCard}>
+                <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
+                  <span className={classes.detailTitle}>
+                    Liquidity provider fee
+                  </span>
+                  <span className={classes.detailValue}>
+                    {getPercentageAmount(token1Value, "0.2 ")}{" "}
+                    {selectedToken1.symbol}
+                  </span>
+                </div>
+                {/* <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
               <span>Route</span>
               <span>
                 {selectedToken1.symbol} {">"} {selectedToken2.symbol}
               </span>
             </div> */}
-              <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
-                <span className={classes.detailTitle}>Price impact</span>
-                <span className={classes.detailValue}>- {formatFloat(priceImpact)} %</span>
-              </div>
-              <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
-                <span className={classes.detailTitle}>Minimum received</span>
-                <span className={classes.detailValue}>
-                  {token2Value} {selectedToken2.symbol}
-                </span>
-              </div>
+                <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
+                  <span className={classes.detailTitle}>Price impact</span>
+                  <span className={classes.detailValue}>
+                    - {formatFloat(priceImpact)} %
+                  </span>
+                </div>
+                <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
+                  <span className={classes.detailTitle}>Minimum received</span>
+                  <span className={classes.detailValue}>
+                    {token2Value} {selectedToken2.symbol}
+                  </span>
+                </div>
 
-              <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
-                <span className={classes.detailTitle}>Slippage tolerance</span>
-                <span className={classes.detailValue}>{swapSettings.slippage} %</span>
+                <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
+                  <span className={classes.detailTitle}>
+                    Slippage tolerance
+                  </span>
+                  <span className={classes.detailValue}>
+                    {swapSettings.slippage} %
+                  </span>
+                </div>
               </div>
-            </div>
-          )}
-          {/* <div className="d-flex justify-content-around align-items-center w-100 mt-2">
+            )}
+            {/* <div className="d-flex justify-content-around align-items-center w-100 mt-2">
             <span>Price updated</span>
             <CustomButton  className={classes.acceptPrice} variant="primary">
               Accept
             </CustomButton>
           </div> */}
-          <div className="d-flex justify-content-center mt-1">
-            <span className={classes.subheading}>
-              {isValidSlippage()
-                ? ""
-                : "Your slippage is less than price impact"}
-            </span>
+            <div className="d-flex justify-content-center mt-1">
+              <span className={classes.subheading}>
+                {isValidSlippage()
+                  ? ""
+                  : "Your slippage is less than price impact"}
+              </span>
+            </div>
+            <div className={classes.buttons}>
+              <CustomButton
+                className={classes.confirmButton}
+                onClick={onConfirmSwap}
+                disabled={
+                  dexLoading ||
+                  !isValidSlippage ||
+                  !isValidSlippage() ||
+                  loading
+                }
+              >
+                {loading ? (
+                  <>
+                    Transaction pending
+                    <CircularProgress
+                      style={{ color: "black" }}
+                      color="secondary"
+                      size={30}
+                    />
+                  </>
+                ) : (
+                  "Confirm Swap"
+                )}
+              </CustomButton>
+            </div>
           </div>
-          <div className={classes.buttons}>
-            <CustomButton
-              className={classes.confirmButton}
-              onClick={onConfirmSwap}
-              disabled={
-                dexLoading || !isValidSlippage || !isValidSlippage() || loading
-              }
-            >
-              {loading ? (
-                <>
-                  Transaction pending
-                  <CircularProgress
-                    style={{ color: "black" }}
-                    color="secondary"
-                    size={30}
-                  />
-                </>
-              ) : (
-                "Confirm Swap"
-              )}
-            </CustomButton>
-          </div>
+        )}
+
+        <div>
+          {transaction.type !== null && (
+            <div>
+              <TransactionStatus
+                caseType={transaction.status}
+                txHash={transaction.hash}
+                onClose={() => handleClose()}
+              />
+            </div>
+          )}
         </div>
       </Dialog>
     </div>

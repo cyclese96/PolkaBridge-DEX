@@ -599,6 +599,9 @@ const SwapCard = (props) => {
     setSwapTransactionStatus(transaction);
   }, [transaction]);
 
+  const handleConfirmSwapClose = (value) => {
+    setSwapDialog(value);
+  };
   return (
     <>
       <TabPage data={0} />
@@ -610,7 +613,7 @@ const SwapCard = (props) => {
       />
       <SwapConfirm
         open={swapDialogOpen}
-        handleClose={() => setSwapDialog(false)}
+        handleClose={() => handleConfirmSwapClose(false)}
         selectedToken1={selectedToken1}
         selectedToken2={selectedToken2}
         token1Value={token1Value}
@@ -709,7 +712,7 @@ const SwapCard = (props) => {
                 <div className={classes.txDetailsValue}>
                   {" "}
                   {parseFloat(getPercentageAmount(token1Value, "0.2 ")).toFixed(
-                    5
+                    4
                   )}{" "}
                   {selectedToken1.symbol}
                 </div>
@@ -732,9 +735,6 @@ const SwapCard = (props) => {
           </div>
         </Popper>
       </Card>
-      {/* <div className="mt-3">
-        <TransactionStatus caseValue={1} />
-      </div> */}
     </>
   );
 };

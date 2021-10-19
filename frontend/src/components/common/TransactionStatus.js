@@ -2,15 +2,17 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Close } from "@material-ui/icons";
 import { Button } from "@material-ui/core";
+import { currentConnection } from "../../constants";
 
 const useStyles = makeStyles((theme) => ({
   background: {
-    backgroundColor: "#121827",
     color: "#f9f9f9",
     display: "flex",
     flexDirection: "column",
+    justifyContent: "space-around",
     alignItems: "center",
-    width: 320,
+    minWidth: 300,
+    width: "100%",
     height: 350,
     padding: 20,
     [theme.breakpoints.down("sm")]: {
@@ -20,17 +22,21 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   message: {
+    marginTop: 15,
     color: "#f9f9f9",
-    fontSize: 22,
+    fontSize: 16,
   },
   closeIcon: {
+    position: "absolute",
+    top: 15,
+    right: 10,
     color: "white",
-    fontSize: 22,
+    fontSize: 20,
     textAlign: "right",
     width: 50,
   },
   image: {
-    height: 60,
+    height: 90,
   },
   closeButton: {
     marginTop: 20,
@@ -54,42 +60,65 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TransactionStatus = ({ caseValue = 1 }) => {
+const TransactionStatus = ({ caseType = "pending", onClose, txHash }) => {
   const classes = useStyles();
 
   return (
     <div>
       <div className={classes.background}>
-        <div className="d-flex justify-content-end" style={{ width: "100%" }}>
-          <Close fontSize="default" className={classes.closeIcon} />
+        <h6 style={{ fontSize: 18 }}>Transaction Status</h6>{" "}
+        <div className="mt-4 ">
+          {caseType === "pending" && (
+            <div className="text-center">
+              <img src="/img/submit.png" className={classes.image} />
+              <h6 className={classes.message}>Transaction Submitted</h6>
+            </div>
+          )}
+          {caseType === "failed" && (
+            <div>
+              <img src="/img/fail.png" className={classes.image} />
+              <h6 className={classes.message}>Transaction Failed</h6>
+            </div>
+          )}
+          {caseType === "success" && (
+            <div className="text-center">
+              <img src="/img/success.png" className={classes.image} />{" "}
+              <h6 className={classes.message}>Transaction Succeed</h6>
+            </div>
+          )}
+          <div className="text-center">
+            <a
+              href={
+                currentConnection === "testnet"
+                  ? `https://rinkeby.etherscan.io/tx/${txHash}`
+                  : `https://etherscan.io/tx/${txHash}`
+              }
+              target="_blank"
+            >
+              <h6 style={{ color: "#DF097C", fontSize: 14 }}>
+                View on explorer
+              </h6>
+            </a>
+          </div>
         </div>
-        <div className="mt-4 mb-2">
-          {caseValue === 0 && (
-            <img src="/img/submit.png" className={classes.image} />
-          )}
-          {caseValue === 1 && (
-            <img src="/img/fail.png" className={classes.image} />
-          )}
-          {caseValue === 2 && (
-            <img src="/img/success.png" className={classes.image} />
-          )}
-        </div>
-        {caseValue === 0 && (
-          <h6 className={classes.message}>Transaction Submitted</h6>
+        {caseType !== "success" && (
+          <Button
+            variant="contained"
+            className={classes.closeButton}
+            onClick={onClose}
+          >
+            Close
+          </Button>
         )}
-        {caseValue === 1 && (
-          <h6 className={classes.message}>Transaction Failed</h6>
+        {caseType === "success" && (
+          <Button
+            variant="contained"
+            className={classes.closeButton}
+            onClick={() => window.location.reload()}
+          >
+            Close
+          </Button>
         )}
-        {caseValue === 2 && (
-          <h6 className={classes.message}>Transaction Succeed</h6>
-        )}
-
-        <h6 style={{ paddingTop: 2, color: "#DF097C", fontSize: 15 }}>
-          View on explorer
-        </h6>
-        <Button variant="contained" className={classes.closeButton}>
-          Close
-        </Button>
       </div>
     </div>
   );
