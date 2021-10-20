@@ -32,10 +32,11 @@ import { getAccountBalance } from "../../../actions/accountActions";
 import tokenThumbnail from "../../../utils/tokenThumbnail";
 import BigNumber from "bignumber.js";
 import store from "../../../store";
-import { RESET_POOL_SHARE, SET_TOKEN_ABI } from "../../../actions/types";
+import { RESET_POOL_SHARE, SET_TOKEN_ABI, START_TRANSACTION } from "../../../actions/types";
 import debounce from "lodash.debounce";
 import { getPairAddress, getTokenAbi } from "../../../utils/connectionUtils";
 import { Settings } from "@material-ui/icons";
+import SwapConfirm from "../../common/SwapConfirm";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -282,6 +283,8 @@ const AddCard = (props) => {
   const [token1Value, setToken1Value] = useState(""); // token1 for eth only
   const [token2Value, setToken2Value] = useState(""); // token2 for pbr
   const [localStateLoading, setLocalStateLoading] = useState(false);
+
+  const [swapDialogOpen, setSwapDialog] = useState(false);
 
   const [addStatus, setStatus] = useState({
     message: "Please select tokens",
@@ -676,9 +679,37 @@ const AddCard = (props) => {
     }
   };
 
+  // liquidity transaction status updates
+  useEffect(() => {
+    if (!transaction.hash) {
+      return;
+    }
+    if (transaction.type === 'add' && transaction.status === 'success') {
+      // store.dispatch({ type: START_TRANSACTION })
+      setSwapDialog(true)
+    }
+  }, [transaction]);
+
+  const handleConfirmSwapClose = (value) => {
+    setSwapDialog(value);
+    if (transaction.type === 'add' && (transaction.status === 'success' || transaction.status === 'failed')) {
+      store.dispatch({ type: START_TRANSACTION })
+      clearInputState()
+    }
+  };
+
   return (
     <>
       <SwapSettings open={settingOpen} handleClose={close} />
+      <SwapConfirm
+        open={swapDialogOpen}
+        handleClose={() => handleConfirmSwapClose(false)}
+        selectedToken1={selectedToken1}
+        selectedToken2={selectedToken2}
+        token1Value={token1Value}
+        token2Value={token2Value}
+        priceImpact={0}
+      />
       <Card elevation={20} className={classes.card}>
         <div className={classes.cardContents}>
           <div className={classes.cardHeading}>

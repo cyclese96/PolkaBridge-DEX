@@ -298,6 +298,7 @@ const SwapCard = (props) => {
     setToken2Value("");
     setStatus({ disabled: true, message: "Enter Amounts" });
   };
+
   useEffect(() => {
     async function loadPair() {
       if (selectedToken1.symbol && selectedToken2.symbol) {
@@ -610,8 +611,10 @@ const SwapCard = (props) => {
     setSwapDialog(value);
     if (transaction.type === 'swap' && (transaction.status === 'success' || transaction.status === 'failed')) {
       store.dispatch({ type: START_TRANSACTION })
+      clearInputState()
     }
   };
+
   return (
     <>
       <TabPage data={0} />
