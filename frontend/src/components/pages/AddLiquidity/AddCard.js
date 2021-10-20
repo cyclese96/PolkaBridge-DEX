@@ -32,7 +32,11 @@ import { getAccountBalance } from "../../../actions/accountActions";
 import tokenThumbnail from "../../../utils/tokenThumbnail";
 import BigNumber from "bignumber.js";
 import store from "../../../store";
-import { RESET_POOL_SHARE, SET_TOKEN_ABI, START_TRANSACTION } from "../../../actions/types";
+import {
+  RESET_POOL_SHARE,
+  SET_TOKEN_ABI,
+  START_TRANSACTION,
+} from "../../../actions/types";
 import debounce from "lodash.debounce";
 import { getPairAddress, getTokenAbi } from "../../../utils/connectionUtils";
 import { Settings } from "@material-ui/icons";
@@ -493,7 +497,7 @@ const AddCard = (props) => {
       );
 
       _token2Value = getTokenOut(
-        tokens,
+        toWei(tokens),
         poolReserves[selectedToken1.symbol],
         poolReserves[selectedToken2.symbol]
       );
@@ -684,17 +688,23 @@ const AddCard = (props) => {
     if (!transaction.hash && !transaction.type) {
       return;
     }
-    if (transaction.type === 'add' && transaction.status === 'success' || transaction.status === 'failed') {
+    if (
+      (transaction.type === "add" && transaction.status === "success") ||
+      transaction.status === "failed"
+    ) {
       // store.dispatch({ type: START_TRANSACTION })
-      setSwapDialog(true)
+      setSwapDialog(true);
     }
   }, [transaction]);
 
   const handleConfirmSwapClose = (value) => {
     setSwapDialog(value);
-    if (transaction.type === 'add' && (transaction.status === 'success' || transaction.status === 'failed')) {
-      store.dispatch({ type: START_TRANSACTION })
-      clearInputState()
+    if (
+      transaction.type === "add" &&
+      (transaction.status === "success" || transaction.status === "failed")
+    ) {
+      store.dispatch({ type: START_TRANSACTION });
+      clearInputState();
     }
   };
 

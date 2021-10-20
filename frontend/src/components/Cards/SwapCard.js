@@ -188,7 +188,13 @@ const useStyles = makeStyles((theme) => ({
 const SwapCard = (props) => {
   const {
     account: { currentNetwork, currentAccount, loading },
-    dex: { approvedTokens, poolReserves, pairContractData, transaction, swapSettings },
+    dex: {
+      approvedTokens,
+      poolReserves,
+      pairContractData,
+      transaction,
+      swapSettings,
+    },
     checkAllowance,
     confirmAllowance,
     tokenType,
@@ -422,9 +428,9 @@ const SwapCard = (props) => {
       );
 
       //input tokens will be 99.8% of input value 0.2% will be deducted for fee
-      const _withoutFeeInputToken = getPercentageAmount(tokens, 99.8);
+      // const _withoutFeeInputToken = getPercentageAmount(tokens, 99.8);
       _token2Value = getTokenOut(
-        _withoutFeeInputToken,
+        toWei(tokens),
         poolReserves[selectedToken1.symbol],
         poolReserves[selectedToken2.symbol]
       );
@@ -590,8 +596,11 @@ const SwapCard = (props) => {
       return "Please wait...";
     } else if (swapStatus.disabled) {
       return swapStatus.message;
-    } else if (transaction.type === 'swap' && transaction.status === 'pending') {
-      return "Pending Swap Transaction..."
+    } else if (
+      transaction.type === "swap" &&
+      transaction.status === "pending"
+    ) {
+      return "Pending Swap Transaction...";
     } else {
       return !currentTokenApprovalStatus() ? "Approve" : swapStatus.message;
     }
@@ -602,8 +611,12 @@ const SwapCard = (props) => {
     if (!transaction.hash) {
       return;
     }
-    if (transaction.type === 'swap' && transaction.status === 'success' && !swapDialogOpen) {
-      store.dispatch({ type: START_TRANSACTION })
+    if (
+      transaction.type === "swap" &&
+      transaction.status === "success" &&
+      !swapDialogOpen
+    ) {
+      store.dispatch({ type: START_TRANSACTION });
       debouncedGetLpBalance(
         selectedToken1,
         selectedToken2,
@@ -616,9 +629,12 @@ const SwapCard = (props) => {
 
   const handleConfirmSwapClose = (value) => {
     setSwapDialog(value);
-    if (transaction.type === 'swap' && (transaction.status === 'success' || transaction.status === 'failed')) {
-      store.dispatch({ type: START_TRANSACTION })
-      clearInputState()
+    if (
+      transaction.type === "swap" &&
+      (transaction.status === "success" || transaction.status === "failed")
+    ) {
+      store.dispatch({ type: START_TRANSACTION });
+      clearInputState();
       debouncedGetLpBalance(
         selectedToken1,
         selectedToken2,
@@ -744,11 +760,15 @@ const SwapCard = (props) => {
               </div>
               <div className="mt-1 d-flex justify-content-between">
                 <div className={classes.txDetailsTitle}>Price Impact</div>
-                <div className={classes.txDetailsValue}>{formatFloat(priceImpact)} %</div>
+                <div className={classes.txDetailsValue}>
+                  {formatFloat(priceImpact)} %
+                </div>
               </div>
               <div className="mt-1 d-flex justify-content-between">
                 <div className={classes.txDetailsTitle}>Allowed Slippage</div>
-                <div className={classes.txDetailsValue}>{swapSettings.slippage} %</div>
+                <div className={classes.txDetailsValue}>
+                  {swapSettings.slippage} %
+                </div>
               </div>
               <div className="mt-1 d-flex justify-content-between">
                 <div className={classes.txDetailsTitle}>Minimum received</div>

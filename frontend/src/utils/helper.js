@@ -1,11 +1,5 @@
 import BigNumber from "bignumber.js";
-import {
-  BITE,
-  CORGIB,
-  PBR,
-  PWAR,
-  USDT,
-} from "../constants";
+import { BITE, CORGIB, PBR, PWAR, USDT } from "../constants";
 import {
   biteContract,
   corgibCoinContract,
@@ -71,14 +65,13 @@ export const getNetworkBalance = async (accountAddress) => {
   }
 };
 
-
 export const resetCurrencyFormatting = (value) => {
   return value.split(",").join("");
 };
 
 export const isNumber = (value) => {
-  if (value === '.') {
-    return true
+  if (value === ".") {
+    return true;
   }
   return !isNaN(parseInt(value));
 };
@@ -196,30 +189,32 @@ export const getPriceRatio = (token1, token2) => {
   }
 };
 
-
 export const getTokenOut = (tokenIn, token1Reserve, token2Reserve) => {
   const r0 = new BigNumber(!token1Reserve ? 0 : token1Reserve);
   const r1 = new BigNumber(!token2Reserve ? 0 : token2Reserve);
   const x = new BigNumber(!tokenIn ? 0 : tokenIn);
 
-
   if (r0.lte(0) || r1.lte(0) || x.lte(0)) {
     return new BigNumber(0).toFixed(0).toString();
   }
 
-
-
   try {
     // price out calculation
     const numerator = x.multipliedBy(998).multipliedBy(r1);
-    const denominator = r0.multipliedBy(1000).plus(x.multipliedBy(998))
+    const denominator = r0.multipliedBy(1000).plus(x.multipliedBy(998));
     const y = numerator.div(denominator);
 
-
+    let result;
+    let integerPart;
     if (y.gt(1)) {
-      return y.toFixed(2).toString();
+      integerPart = y.toString().split(".");
+      result = fromWei(integerPart[0]);
+    } else {
+      integerPart = y.toString().split(".");
+      result = fromWei(y.toString());
     }
-    return y.toFixed(5).toString();
+
+    return parseInt(result).toFixed(2);
   } catch (error) {
     console.log("exeption getTokenOut", error);
     return new BigNumber(0).toFixed(0).toString();
@@ -296,11 +291,11 @@ export const formatFloat = (floatValue) => {
 
 export const isAddress = (value) => {
   try {
-    return ethers.utils.getAddress(value.toLowerCase())
+    return ethers.utils.getAddress(value.toLowerCase());
   } catch {
-    return false
+    return false;
   }
-}
+};
 
 export const cacheImportedToken = (tokenData) => {
   let tokens = localStorage.getItem("tokens");
