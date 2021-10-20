@@ -16,7 +16,7 @@ import { useState } from "react";
 import SwapSettings from "../common/SwapSettings";
 import BigNumber from "bignumber.js";
 import CustomSnackBar from "../common/CustomSnackbar";
-import { ETH, etheriumNetwork, tokens } from "../../constants";
+import { ETH, etheriumNetwork, swapFnConstants, tokens } from "../../constants";
 import {
   buyPriceImpact,
   formatFloat,
@@ -239,6 +239,8 @@ const SwapCard = (props) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
   };
 
+  const [currentSwapFn, setCurrentSwapFn] = useState(swapFnConstants.swapExactETHForTokens);
+
   const open = Boolean(anchorEl);
   const id = open ? "simple-popper" : undefined;
 
@@ -414,6 +416,15 @@ const SwapCard = (props) => {
   const onToken1InputChange = async (tokens) => {
     setToken1Value(tokens);
 
+    if (selectedToken1.symbol === ETH) {
+      setCurrentSwapFn(swapFnConstants.swapExactETHForTokens)
+    } else if (selectedToken2.symbol && selectedToken2.symbol === ETH) {
+      setCurrentSwapFn(swapFnConstants.swapExactTokensForETH)
+    } else {
+      setCurrentSwapFn(swapFnConstants.swapExactTokensForTokens)
+    }
+
+
     // calculate resetpective value of token 2 if selected
     let _token2Value = "";
     const pairAddress = currentPairAddress();
@@ -427,8 +438,6 @@ const SwapCard = (props) => {
         currentNetwork
       );
 
-      //input tokens will be 99.8% of input value 0.2% will be deducted for fee
-      // const _withoutFeeInputToken = getPercentageAmount(tokens, 99.8);
       _token2Value = getTokenOut(
         toWei(tokens),
         poolReserves[selectedToken1.symbol],
@@ -453,6 +462,14 @@ const SwapCard = (props) => {
   const onToken2InputChange = async (tokens) => {
     setToken2Value(tokens);
 
+    if (selectedToken1.symbol === ETH) {
+      setCurrentSwapFn(swapFnConstants.swapETHforExactTokens)
+    } else if (selectedToken2.symbol && selectedToken2.symbol === ETH) {
+      setCurrentSwapFn(swapFnConstants.swapTokensForExactETH)
+    } else {
+      setCurrentSwapFn(swapFnConstants.swapTokensForExactTokens)
+    }
+
     //calculate respective value of token1 if selected
     let _token1Value = "";
     const pairAddress = currentPairAddress();
@@ -467,10 +484,11 @@ const SwapCard = (props) => {
       );
 
       _token1Value = getTokenOut(
-        tokens,
+        toWei(tokens).toString(),
         poolReserves[selectedToken2.symbol],
         poolReserves[selectedToken1.symbol]
       );
+      console.log('token out ', _token1Value)
       if (new BigNumber(_token1Value).gt(0)) {
         setToken1Value(_token1Value);
         // verify swap status with current inputs
@@ -608,15 +626,20 @@ const SwapCard = (props) => {
 
   // swap status updates
   useEffect(() => {
-    if (!transaction.hash) {
+    if (!transaction.hash && !transaction.type) {
       return;
     }
-    if (
-      transaction.type === "swap" &&
-      transaction.status === "success" &&
-      !swapDialogOpen
-    ) {
-      store.dispatch({ type: START_TRANSACTION });
+
+    if (transaction.type === 'swap' && (transaction.status === 'success' || transaction.status === 'failed') && !swapDialogOpen) {
+      setSwapDialog(true)
+    }
+  }, [transaction]);
+
+  const handleConfirmSwapClose = (value) => {
+    setSwapDialog(value);
+    if (transaction.type === 'swap' && (transaction.status === 'success')) {
+      store.dispatch({ type: START_TRANSACTION })
+      clearInputState()
       debouncedGetLpBalance(
         selectedToken1,
         selectedToken2,
@@ -624,17 +647,8 @@ const SwapCard = (props) => {
         currentAccount,
         currentNetwork
       );
-    }
-  }, [transaction]);
-
-  const handleConfirmSwapClose = (value) => {
-    setSwapDialog(value);
-    if (
-      transaction.type === "swap" &&
-      (transaction.status === "success" || transaction.status === "failed")
-    ) {
-      store.dispatch({ type: START_TRANSACTION });
-      clearInputState();
+    } else if (transaction.type === 'swap' && transaction.status === 'failed') {
+      store.dispatch({ type: START_TRANSACTION })
       debouncedGetLpBalance(
         selectedToken1,
         selectedToken2,
@@ -662,6 +676,7 @@ const SwapCard = (props) => {
         token1Value={token1Value}
         token2Value={token2Value}
         priceImpact={priceImpact}
+        currentSwapFn={currentSwapFn}
       />
       <SwapSettings open={settingOpen} handleClose={close} />
       <Card elevation={20} className={classes.card}>

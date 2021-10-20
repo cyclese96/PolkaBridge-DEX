@@ -19,8 +19,9 @@ import {
 import {
   swapExactEthForTokens,
   swapExactTokensForEth,
+  swapTokens
 } from "../../actions/dexActions";
-import { ETH } from "../../constants";
+import { ETH, swapFnConstants } from "../../constants";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import BigNumber from "bignumber.js";
 import TransactionStatus from "./TransactionStatus";
@@ -148,8 +149,10 @@ const SwapConfirm = (props) => {
       pairContractData,
       transaction,
     },
+    currentSwapFn,
     swapExactEthForTokens,
     swapExactTokensForEth,
+    swapTokens
   } = props;
 
   const classes = useStyles();
@@ -169,25 +172,42 @@ const SwapConfirm = (props) => {
       ...selectedToken2,
     };
 
-    if (token1.symbol === ETH) {
-      //buy trade
-      await swapExactEthForTokens(
-        token1,
-        token2,
-        swapSettings.deadline,
-        currentAccount,
-        currentNetwork
-      );
-    } else {
-      //sell trade
-      await swapExactTokensForEth(
-        token1,
-        token2,
-        swapSettings.deadline,
-        currentAccount,
-        currentNetwork
-      );
-    } // todo: implement two erc20 swaps
+    await swapTokens(
+      token1,
+      token2,
+      swapSettings.deadline,
+      currentSwapFn,
+      currentAccount,
+      currentNetwork
+    )
+    // if (currentSwapFn === swapFnConstants.swapExactETHForTokens) {
+    //   //buy trade
+    //   await swapExactEthForTokens(
+    //     token1,
+    //     token2,
+    //     swapSettings.deadline,
+    //     currentAccount,
+    //     currentNetwork
+    //   );
+    // } else if (currentSwapFn === swapFnConstants.swapExactTokensForETH) {
+    //   //sell trade
+    //   await swapExactTokensForEth(
+    //     token1,
+    //     token2,
+    //     swapSettings.deadline,
+    //     currentAccount,
+    //     currentNetwork
+    //   );
+    // } else if (currentSwapFn === swapFnConstants.swapETHforExactTokens) {
+
+
+    // } else if (currentSwapFn === swapFnConstants.swapTokensForExactETH) {
+
+    // } else if (currentSwapFn === swapFnConstants.swapExactTokensForTokens) {
+
+    // } else {// swapTokensForExactTokens
+
+    // }
 
     //handleClose();
   };
@@ -376,4 +396,5 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   swapExactTokensForEth,
   swapExactEthForTokens,
+  swapTokens
 })(SwapConfirm);

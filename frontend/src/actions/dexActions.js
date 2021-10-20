@@ -6,6 +6,7 @@ import {
   etheriumNetwork,
   nullAddress,
   supportedTokens,
+  swapFnConstants,
   tokens,
   WETH_ADDRESS_TESTNET,
 } from "../constants";
@@ -48,6 +49,249 @@ import {
   UPDATE_TRANSACTION_STATUS,
   VERIFY_SLIPPAGE,
 } from "./types";
+
+
+// swap transaction function
+export const swapTokens =
+  (token0, token1, deadline, currentSwapFn, account, network) => async (dispatch) => {
+    try {
+      console.log("swapExactEthForTokens");
+      const _routerContract = routerContract(network);
+
+      const token0In = token0.amount;
+      const token1In = token1.amount;
+
+      const token0Min = 0; // todo: veirfy min amount out with henry and update this
+      const token1Min = 0;
+
+      const path = [token0.address, token1.address];
+      const toAddress = account;
+      const _deadlineUnix = getUnixTime(deadline);
+      dispatch({
+        type: SHOW_LOADING,
+      });
+      dispatch({ type: START_TRANSACTION })
+
+      console.log("swapTokens:  inputs -->", { token0In, token1In, token0Min, token1Min, path, toAddress, _deadlineUnix, currentSwapFn })
+
+
+      let swapPromise;
+      if (currentSwapFn === swapFnConstants.swapExactETHForTokens) {//case 1
+        console.log('swapTokens:  case 1 swapExactETHForTokens')
+        swapPromise = _routerContract.methods
+          .swapExactETHForTokens(
+            token1Min,
+            path,
+            toAddress,
+            _deadlineUnix
+          ).send({ from: account, value: token0In }, function (error, transactionHash) {
+
+            console.log('swapTokens: UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+            if (error) {
+              dispatch({
+                type: UPDATE_TRANSACTION_STATUS,
+                payload: { type: 'swap', hash: null, status: 'failed' }
+              })
+            } else {
+              dispatch({
+                type: UPDATE_TRANSACTION_STATUS,
+                payload: { type: 'swap', hash: transactionHash }
+              })
+            }
+
+          })
+
+      } else if (currentSwapFn === swapFnConstants.swapETHforExactTokens) { // case 2
+        console.log('swapTokens:  case 2 swapETHforExactTokens')
+        swapPromise = _routerContract.methods
+          .swapExactETHForTokens(
+            token1Min,
+            path,
+            toAddress,
+            _deadlineUnix
+          ).send({ from: account, value: token0In }, function (error, transactionHash) {
+
+            console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+            if (error) {
+              dispatch({
+                type: UPDATE_TRANSACTION_STATUS,
+                payload: { type: 'swap', hash: null, status: 'failed' }
+              })
+            } else {
+              dispatch({
+                type: UPDATE_TRANSACTION_STATUS,
+                payload: { type: 'swap', hash: transactionHash }
+              })
+            }
+
+          })
+
+      } else if (currentSwapFn === swapFnConstants.swapExactTokensForETH) { // case 3
+        console.log('swapTokens:  case 3 swapExactTokensForETH')
+
+        swapPromise = _routerContract.methods
+          .swapExactTokensForETH(
+            token0In,
+            token1Min,
+            path,
+            toAddress,
+            _deadlineUnix
+          ).send({ from: account }, function (error, transactionHash) {
+
+            console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+            if (error) {
+              dispatch({
+                type: UPDATE_TRANSACTION_STATUS,
+                payload: { type: 'swap', hash: null, status: 'failed' }
+              })
+            } else {
+              dispatch({
+                type: UPDATE_TRANSACTION_STATUS,
+                payload: { type: 'swap', hash: transactionHash }
+              })
+            }
+
+          })
+
+      } else if (currentSwapFn === swapFnConstants.swapTokensForExactETH) { // case 4
+        console.log('swapTokens:  case 4 swapTokensForExactETH')
+
+        swapPromise = _routerContract.methods
+          .swapExactTokensForETH(
+            token1In,
+            token0In,
+            path,
+            toAddress,
+            _deadlineUnix
+          ).send({ from: account }, function (error, transactionHash) {
+
+            console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+            if (error) {
+              dispatch({
+                type: UPDATE_TRANSACTION_STATUS,
+                payload: { type: 'swap', hash: null, status: 'failed' }
+              })
+            } else {
+              dispatch({
+                type: UPDATE_TRANSACTION_STATUS,
+                payload: { type: 'swap', hash: transactionHash }
+              })
+            }
+
+          })
+
+      } else if (currentSwapFn === swapFnConstants.swapExactTokensForTokens) { // case 5
+        console.log('swapTokens:  case 5 swapExactTokensForTokens')
+
+        swapPromise = _routerContract.methods
+          .swapExactTokensForTokens(
+            token0In,
+            token1Min,
+            path,
+            toAddress,
+            _deadlineUnix
+          ).send({ from: account }, function (error, transactionHash) {
+
+            console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+            if (error) {
+              dispatch({
+                type: UPDATE_TRANSACTION_STATUS,
+                payload: { type: 'swap', hash: null, status: 'failed' }
+              })
+            } else {
+              dispatch({
+                type: UPDATE_TRANSACTION_STATUS,
+                payload: { type: 'swap', hash: transactionHash }
+              })
+            }
+
+          })
+
+      } else { // case 6 swapTokensForExactTokens
+        console.log('swapTokens:  case 6 swapTokensForExactTokens')
+
+        swapPromise = _routerContract.methods
+          .swapExactTokensForTokens(
+            token0In,
+            token1Min,
+            path,
+            toAddress,
+            _deadlineUnix
+          ).send({ from: account }, function (error, transactionHash) {
+
+            console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+            if (error) {
+              dispatch({
+                type: UPDATE_TRANSACTION_STATUS,
+                payload: { type: 'swap', hash: null, status: 'failed' }
+              })
+            } else {
+              dispatch({
+                type: UPDATE_TRANSACTION_STATUS,
+                payload: { type: 'swap', hash: transactionHash }
+              })
+            }
+
+          })
+        // swapPromise = _routerContract.methods
+        //   .swapTokensForExactTokens(
+        //     token1In,
+        //     token0In,
+        //     path,
+        //     toAddress,
+        //     _deadlineUnix
+        //   ).send({ from: account }, function (error, transactionHash) {
+
+        //     console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+        //     if (error) {
+        //       dispatch({
+        //         type: UPDATE_TRANSACTION_STATUS,
+        //         payload: { type: 'swap', hash: null, status: 'failed' }
+        //       })
+        //     } else {
+        //       dispatch({
+        //         type: UPDATE_TRANSACTION_STATUS,
+        //         payload: { type: 'swap', hash: transactionHash }
+        //       })
+        //     }
+
+        //   })
+
+
+      }
+
+      await swapPromise
+        .on('receipt', async function (receipt) {
+
+          console.log('UPDATE_TRANSACTION_STATUS', receipt)
+          dispatch({
+            type: UPDATE_TRANSACTION_STATUS,
+            payload: { type: 'swap', status: 'success', result: { token0, token1 } }
+          })
+
+        }).on("error", async function (error) {
+
+          console.log('UPDATE_TRANSACTION_STATUS error', error)
+          dispatch({
+            type: UPDATE_TRANSACTION_STATUS,
+            payload: { type: 'swap', status: 'failed' }
+          })
+        });
+
+      // console.log({ token0, token1 });
+    } catch (error) {
+      console.log("swapTokens: ", error);
+      dispatch({
+        type: DEX_ERROR,
+        payload: "Some went wrong with exchange",
+      });
+    }
+    dispatch({
+      type: HIDE_LOADING,
+    });
+  };
+
+
 
 // Buy trade action // in use
 // token0 will be eth and token1 could be any erc20 token
@@ -110,7 +354,7 @@ export const swapExactEthForTokens =
 
       // console.log({ token0, token1 });
     } catch (error) {
-      console.log("swapTokens: ", error);
+      console.log(": ", error);
       dispatch({
         type: DEX_ERROR,
         payload: "Some went wrong with exchange",
@@ -120,6 +364,8 @@ export const swapExactEthForTokens =
       type: HIDE_LOADING,
     });
   };
+
+
 // in use
 // Sell trade action, user send tokens get eth
 // token0 will be erc20 and token1 is eth
@@ -260,7 +506,7 @@ export const swapEthForExactTokens =
 
       // console.log({ token0, token1 });
     } catch (error) {
-      console.log("swapTokens: ", error);
+
       dispatch({
         type: DEX_ERROR,
         payload: "Some went wrong with exchange",

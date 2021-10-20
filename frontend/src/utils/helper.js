@@ -207,16 +207,20 @@ export const getTokenOut = (tokenIn, token1Reserve, token2Reserve) => {
     let result;
     let integerPart;
     if (y.gt(1)) {
-      integerPart = y.toString().split(".");
-      result = fromWei(integerPart[0]);
+      // integerPart = y.toString().split(".");
+      // result = fromWei(integerPart[0]);
+      const _toString = y.div(1000000000000000000).toFixed(4).toString()
+      result = _toString;
     } else {
-      integerPart = y.toString().split(".");
-      result = fromWei(y.toString());
+      // integerPart = y.toString().split(".");
+      // result = fromWei(y.toString());
+      const _toString = y.div(1000000000000000000).toFixed(5).toString();
+      result = _toString;
     }
 
-    return parseInt(result).toFixed(2);
+    return result;
   } catch (error) {
-    console.log("exeption getTokenOut", error);
+    console.log("exeption getTokenOut", { error, tokenIn });
     return new BigNumber(0).toFixed(0).toString();
   }
 };
