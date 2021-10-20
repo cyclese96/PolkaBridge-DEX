@@ -681,10 +681,10 @@ const AddCard = (props) => {
 
   // liquidity transaction status updates
   useEffect(() => {
-    if (!transaction.hash) {
+    if (!transaction.hash && !transaction.type) {
       return;
     }
-    if (transaction.type === 'add' && transaction.status === 'success') {
+    if (transaction.type === 'add' && transaction.status === 'success' || transaction.status === 'failed') {
       // store.dispatch({ type: START_TRANSACTION })
       setSwapDialog(true)
     }

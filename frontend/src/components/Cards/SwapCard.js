@@ -604,6 +604,13 @@ const SwapCard = (props) => {
     }
     if (transaction.type === 'swap' && transaction.status === 'success' && !swapDialogOpen) {
       store.dispatch({ type: START_TRANSACTION })
+      debouncedGetLpBalance(
+        selectedToken1,
+        selectedToken2,
+        currentPairAddress(),
+        currentAccount,
+        currentNetwork
+      );
     }
   }, [transaction]);
 
@@ -612,6 +619,13 @@ const SwapCard = (props) => {
     if (transaction.type === 'swap' && (transaction.status === 'success' || transaction.status === 'failed')) {
       store.dispatch({ type: START_TRANSACTION })
       clearInputState()
+      debouncedGetLpBalance(
+        selectedToken1,
+        selectedToken2,
+        currentPairAddress(),
+        currentAccount,
+        currentNetwork
+      );
     }
   };
 

@@ -76,7 +76,7 @@ const TransactionStatus = ({ dex: { transaction }, onClose }) => {
             </div>
           )}
           {transaction.status === "failed" && (
-            <div>
+            <div className="text-center">
               <img src="/img/fail.png" className={classes.image} />
               <h6 className={classes.message}>Transaction Failed</h6>
             </div>
@@ -88,21 +88,25 @@ const TransactionStatus = ({ dex: { transaction }, onClose }) => {
             </div>
           )}
           <div className="text-center">
-            <a
-              href={
-                currentConnection === "testnet"
-                  ? `https://rinkeby.etherscan.io/tx/${transaction.hash}`
-                  : `https://etherscan.io/tx/${transaction.hash}`
-              }
-              target="_blank"
-            >
-              <h6 style={{ color: "#DF097C", fontSize: 14 }}>
-                View on explorer
-              </h6>
-            </a>
+            {!transaction.hash ? (<h6 style={{ color: "#DF097C", fontSize: 14 }}>
+              Cancelled
+            </h6>) : (
+              <a
+                href={
+                  currentConnection === "testnet"
+                    ? `https://rinkeby.etherscan.io/tx/${transaction.hash}`
+                    : `https://etherscan.io/tx/${transaction.hash}`
+                }
+                target="_blank"
+              >
+                <h6 style={{ color: "#DF097C", fontSize: 14 }}>
+                  {!transaction.hash ? "Cancelled" : "View on explorer"}
+                </h6>
+              </a>
+            )}
           </div>
         </div>
-        {/* {caseType !== "success" && ( */}
+
         <Button
           variant="contained"
           className={classes.closeButton}
