@@ -22,7 +22,7 @@ export const corgibMemeCoinMainnet =
 
 // factory ethereum
 export const facotryAddressTestnet =
-  "0xA1853078D1447C0060c71a672E6D13882f61A0a6";
+  "0x33e198B0C77595d847c71ee1443683547C732A0b";
 export const factoryAddresMainnet =
   "0xA1853078D1447C0060c71a672E6D13882f61A0a6";
 
@@ -34,7 +34,7 @@ export const factoryAddresBscMainnet =
 
 // router ethereum addresses
 export const routerAddressTestnet =
-  "0x050aAC21096e027142E3f5d089a9251FcCf191b9";
+  "0xA2A8c4a8a9587948882ED90C49eA71e7Ed137558";
 export const routerAddressMainnet =
   "0x050aAC21096e027142E3f5d089a9251FcCf191b9";
 
@@ -85,9 +85,8 @@ export const supportedTokens = {
   bsc: [BNB, CORGIB, PWAR],
 };
 
-export const TOKEN_BLACKLIST = []
-export const PAIR_BLACKLIST = []
-
+export const TOKEN_BLACKLIST = [];
+export const PAIR_BLACKLIST = [];
 
 export const exchangeFee = 0.25;
 export const defaultSlippage = 0.5;
@@ -331,3 +330,12 @@ export const timeframeOptions = {
 };
 
 export const BUNDLE_ID = "1";
+
+export const swapFnConstants = {
+  swapExactETHForTokens: "swapExactETHForTokens",
+  swapETHforExactTokens: "swapETHforExactTokens",
+  swapExactTokensForETH: "swapExactTokensForETH",
+  swapTokensForExactETH: "swapTokensForExactETH",
+  swapExactTokensForTokens: "swapExactTokensForTokens",
+  swapTokensForExactTokens: "swapTokensForExactTokens"
+};

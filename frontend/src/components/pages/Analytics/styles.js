@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme) => ({
   },
   card: {
     width: 470,
+    minHeight: 300,
     height: "100%",
     border: "1px solid #616161",
     background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
@@ -93,9 +94,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-evenly",
+    border: "1px solid #616161",
     background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
     borderRadius: 15,
-    border: "1px solid #616161",
     paddingLeft: 10,
     paddingRight: 10,
     paddingTop: 15,
@@ -158,8 +159,9 @@ const useStyles = makeStyles((theme) => ({
   },
   tokenList: {
     width: "100%",
+
     [theme.breakpoints.down("sm")]: {
-      width: 240,
+      width: "100%",
     },
   },
 }));

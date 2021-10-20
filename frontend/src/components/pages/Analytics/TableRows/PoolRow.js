@@ -1,6 +1,7 @@
 import { TableCell, TableRow } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import { formatCurrency } from "../../../../utils/helper";
+import { formatCurrency } from "../../../../utils/formatters";
+// import { formatCurrency } from "../../../../utils/helper";
 import PercentLabel from "../../../common/PercentLabel";
 import TokenIcon from "../../../common/TokenIcon";
 
@@ -23,16 +24,18 @@ const PoolRow = (props) => {
         <TableCell padding="checkbox"></TableCell>
 
         <TableCell component="th" id={labelId} scope="row" padding="none">
-          <TokenIcon symbol={row.token0.symbol} />
-          <TokenIcon symbol={row.token1.symbol} />
+          <Link to={`token/${row.id}`}>
+            <TokenIcon symbol={row.token0.symbol} />
+            <TokenIcon symbol={row.token1.symbol} />
 
-          <span className={classes.cellText}>
-            {row.token0.symbol}/{row.token1.symbol}
-          </span>
+            <span className={classes.cellText}>
+              {row.token0.symbol}/{row.token1.symbol}
+            </span>
+          </Link>
         </TableCell>
 
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.vol_24_h, true)}
+          {formatCurrency(row.vol_24_h)}
         </TableCell>
       </TableRow>
       <TableRow
@@ -63,15 +66,15 @@ const PoolRow = (props) => {
         </TableCell>
         <TableCell align="right">
           <span className={classes.cellText}>
-            {formatCurrency(row.tvl, true)}
+            {formatCurrency(row.tvl)}
           </span>
         </TableCell>
 
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.vol_24_h, true)}
+          {formatCurrency(row.vol_24_h)}
         </TableCell>
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.vol_7_d, true)}
+          {formatCurrency(row.vol_7_d)}
         </TableCell>
       </TableRow>
     </>

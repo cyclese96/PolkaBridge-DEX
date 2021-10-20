@@ -26,16 +26,21 @@ import {
   getPoolShare,
   getLpBalance,
   loadPairAddress,
-  addLiquidity
+  addLiquidity,
 } from "../../../actions/dexActions";
 import { getAccountBalance } from "../../../actions/accountActions";
 import tokenThumbnail from "../../../utils/tokenThumbnail";
 import BigNumber from "bignumber.js";
 import store from "../../../store";
-import { RESET_POOL_SHARE, SET_TOKEN_ABI } from "../../../actions/types";
+import {
+  RESET_POOL_SHARE,
+  SET_TOKEN_ABI,
+  START_TRANSACTION,
+} from "../../../actions/types";
 import debounce from "lodash.debounce";
 import { getPairAddress, getTokenAbi } from "../../../utils/connectionUtils";
 import { Settings } from "@material-ui/icons";
+import SwapConfirm from "../../common/SwapConfirm";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -257,6 +262,7 @@ const AddCard = (props) => {
       poolReserves,
       pairContractData,
       tokenData,
+      transaction,
     },
     addLiquidityEth,
     checkAllowance,
@@ -266,7 +272,7 @@ const AddCard = (props) => {
     getLpBalance,
     loadPairAddress,
     getAccountBalance,
-    addLiquidity
+    addLiquidity,
   } = props;
 
   const currentDefaultToken = {
@@ -282,6 +288,8 @@ const AddCard = (props) => {
   const [token2Value, setToken2Value] = useState(""); // token2 for pbr
   const [localStateLoading, setLocalStateLoading] = useState(false);
 
+  const [swapDialogOpen, setSwapDialog] = useState(false);
+
   const [addStatus, setStatus] = useState({
     message: "Please select tokens",
     disabled: true,
@@ -296,31 +304,31 @@ const AddCard = (props) => {
   };
 
   useEffect(() => {
-   async function initSelection() {
-    let defaultToken1, defaultToken2;
-    if (currentNetwork === etheriumNetwork) {
-      defaultToken1 = tokens[0];
-      defaultToken2 = tokens[2];
-    } else {
-      defaultToken1 = {
-        icon: tokenThumbnail("PWAR"),
-        name: "Polkawar",
-        symbol: "PWAR",
-      };
-      defaultToken2 = {
-        icon: tokenThumbnail("BNB"),
-        name: "Binance",
-        symbol: "BNB",
-      };
+    async function initSelection() {
+      let defaultToken1, defaultToken2;
+      if (currentNetwork === etheriumNetwork) {
+        defaultToken1 = tokens[0];
+        defaultToken2 = tokens[2];
+      } else {
+        defaultToken1 = {
+          icon: tokenThumbnail("PWAR"),
+          name: "Polkawar",
+          symbol: "PWAR",
+        };
+        defaultToken2 = {
+          icon: tokenThumbnail("BNB"),
+          name: "Binance",
+          symbol: "BNB",
+        };
+      }
+      setToken1(defaultToken1);
+      setToken2(defaultToken2);
+      verifySwapStatus(
+        { value: token1Value, selected: defaultToken1 },
+        { value: token2Value, selected: defaultToken2 }
+      );
     }
-    setToken1(defaultToken1);
-    setToken2(defaultToken2);
-    verifySwapStatus(
-      { value: token1Value, selected: defaultToken1 },
-      { value: token2Value, selected: defaultToken2 }
-    );
-   }
-   initSelection();
+    initSelection();
   }, [currentNetwork]);
 
   const currentPairAddress = () => {
@@ -345,13 +353,11 @@ const AddCard = (props) => {
     }
   };
 
-
   const currentTokenApprovalStatus = () => {
     return selectedToken1.symbol === "ETH"
       ? true
       : approvedTokens[selectedToken1.symbol];
   };
-
 
   const clearInputState = () => {
     setToken1Value("");
@@ -368,35 +374,29 @@ const AddCard = (props) => {
         // load erc20 token abi and balance
         const erc20Token =
           selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
-  
-        await getAccountBalance(
-          erc20Token,
-          currentNetwork
-        );
-  
+
+        await getAccountBalance(erc20Token, currentNetwork);
+
         let _pairAddress = currentPairAddress();
-  
+
         if (!_pairAddress) {
           _pairAddress = await getPairAddress(
             selectedToken1.address,
             selectedToken2.address,
             currentNetwork
           );
-  
+
           loadPairAddress(
             selectedToken1.symbol,
             selectedToken2.symbol,
             _pairAddress,
             currentNetwork
           );
-  
         }
-  
+
         if (!_pairAddress) {
           //pair not yet created in the factory
         } else {
-  
-  
           await getLpBalance(
             selectedToken1,
             selectedToken2,
@@ -405,23 +405,17 @@ const AddCard = (props) => {
             currentNetwork
           );
         }
-  
-        await checkAllowance(
-          selectedToken1,
-          currentAccount,
-          currentNetwork
-        );
-  
+
+        await checkAllowance(selectedToken1, currentAccount, currentNetwork);
+
         setLocalStateLoading(false);
       }
     }
 
-    loadPair()
-    
+    loadPair();
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
   const handleConfirmAllowance = async () => {
-
     const allowanceAmount = toWei("999999999");
 
     await confirmAllowance(
@@ -503,9 +497,9 @@ const AddCard = (props) => {
       );
 
       _token2Value = getTokenOut(
-        tokens,
-        poolReserves[selectedToken2.symbol],
-        poolReserves[selectedToken1.symbol]
+        toWei(tokens),
+        poolReserves[selectedToken1.symbol],
+        poolReserves[selectedToken2.symbol]
       );
       if (new BigNumber(_token2Value).gt(0)) {
         setToken2Value(_token2Value);
@@ -545,8 +539,8 @@ const AddCard = (props) => {
 
       _token1Value = getTokenOut(
         tokens,
-        poolReserves[selectedToken1.symbol],
-        poolReserves[selectedToken2.symbol]
+        poolReserves[selectedToken2.symbol],
+        poolReserves[selectedToken1.symbol]
       );
       if (new BigNumber(_token1Value).eq(0)) {
         verifySwapStatus(
@@ -560,8 +554,6 @@ const AddCard = (props) => {
           { value: tokens, selected: selectedToken2 }
         );
       }
-
-
     } else if (selectedToken1.symbol && !tokens) {
       setToken1Value("");
       if (!addStatus.disabled) {
@@ -611,9 +603,7 @@ const AddCard = (props) => {
   };
 
   const handleAddLiquidity = async () => {
-
     if (selectedToken1.symbol === ETH || selectedToken2.symbol === ETH) {
-
       let etherToken, erc20Token;
       if (selectedToken1.symbol === ETH) {
         etherToken = {
@@ -642,7 +632,6 @@ const AddCard = (props) => {
         swapSettings.deadline,
         currentNetwork
       );
-
     } else {
       // addLiquidity
 
@@ -652,12 +641,8 @@ const AddCard = (props) => {
         currentAccount,
         swapSettings.deadline,
         currentNetwork
-      )
-
-
+      );
     }
-
-
   };
 
   const currentPoolShare = () => {
@@ -698,9 +683,43 @@ const AddCard = (props) => {
     }
   };
 
+  // liquidity transaction status updates
+  useEffect(() => {
+    if (!transaction.hash && !transaction.type) {
+      return;
+    }
+    if (
+      (transaction.type === "add" && transaction.status === "success") ||
+      transaction.status === "failed"
+    ) {
+      // store.dispatch({ type: START_TRANSACTION })
+      setSwapDialog(true);
+    }
+  }, [transaction]);
+
+  const handleConfirmSwapClose = (value) => {
+    setSwapDialog(value);
+    if (
+      transaction.type === "add" &&
+      (transaction.status === "success" || transaction.status === "failed")
+    ) {
+      store.dispatch({ type: START_TRANSACTION });
+      clearInputState();
+    }
+  };
+
   return (
     <>
       <SwapSettings open={settingOpen} handleClose={close} />
+      <SwapConfirm
+        open={swapDialogOpen}
+        handleClose={() => handleConfirmSwapClose(false)}
+        selectedToken1={selectedToken1}
+        selectedToken2={selectedToken2}
+        token1Value={token1Value}
+        token2Value={token2Value}
+        priceImpact={0}
+      />
       <Card elevation={20} className={classes.card}>
         <div className={classes.cardContents}>
           <div className={classes.cardHeading}>
@@ -798,11 +817,15 @@ const AddCard = (props) => {
             className={classes.addLiquidityButton}
           >
             {!addStatus.disabled && loading ? (
-              <CircularProgress
-                style={{ color: "black" }}
-                color="secondary"
-                size={30}
-              />
+              <span>
+                {transaction.status === "pending" && "Transaction Pending"}
+
+                <CircularProgress
+                  style={{ color: "grey" }}
+                  color="secondary"
+                  size={30}
+                />
+              </span>
             ) : (
               currentButton()
             )}
@@ -826,5 +849,5 @@ export default connect(mapStateToProps, {
   getLpBalance,
   loadPairAddress,
   getAccountBalance,
-  addLiquidity
+  addLiquidity,
 })(AddCard);

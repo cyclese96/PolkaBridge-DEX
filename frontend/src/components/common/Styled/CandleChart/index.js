@@ -65,27 +65,27 @@ const CandleStickChart = ({
   const previousTheme = usePrevious(darkMode)
 
   // reset the chart if theme switches
-  useEffect(() => {
-    if (chartCreated && previousTheme !== darkMode) {
-      // remove the tooltip element
-      let tooltip = document.getElementById('tooltip-id')
-      let node = document.getElementById('test-id')
-      node.removeChild(tooltip)
-      chartCreated.resize(0, 0)
-      setChartCreated()
-    }
-  }, [chartCreated, darkMode, previousTheme])
+  // useEffect(() => {
+  //   if (chartCreated && previousTheme !== darkMode) {
+  //     // remove the tooltip element
+  //     let tooltip = document.getElementById('tooltip-id')
+  //     let node = document.getElementById('test-id')
+  //     node.removeChild(tooltip)
+  //     chartCreated.resize(0, 0)
+  //     setChartCreated()
+  //   }
+  // }, [chartCreated, darkMode, previousTheme])
 
-  useEffect(() => {
-    if (data !== dataPrev && chartCreated) {
-      // remove the tooltip element
-      let tooltip = document.getElementById('tooltip-id')
-      let node = document.getElementById('test-id')
-      node.removeChild(tooltip)
-      chartCreated.resize(0, 0)
-      setChartCreated()
-    }
-  }, [chartCreated, data, dataPrev])
+  // useEffect(() => {
+  //   if (data !== dataPrev && chartCreated) {
+  //     // remove the tooltip element
+  //     let tooltip = document.getElementById('tooltip-id')
+  //     let node = document.getElementById('test-id')
+  //     node.removeChild(tooltip)
+  //     chartCreated.resize(0, 0)
+  //     setChartCreated()
+  //   }
+  // }, [chartCreated, data, dataPrev])
 
   // if no chart created yet, create one with options and add to DOM manually
   useEffect(() => {

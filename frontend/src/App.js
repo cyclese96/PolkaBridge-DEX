@@ -6,7 +6,7 @@ import Home from "./components/Home";
 import { Provider } from "react-redux";
 import store from "./store";
 import "./web";
-import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom'
+import { Route, Switch, BrowserRouter, Redirect } from "react-router-dom";
 import { PAIR_BLACKLIST, TOKEN_BLACKLIST } from "./constants";
 import TokenPage from "./components/pages/Analytics/TokenDetail";
 import { isAddress } from "./utils/helper";
@@ -14,8 +14,9 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
 import PoolDetail from "./components/pages/Analytics/PoolDetail";
-
-
+import SwapCard from "./components/Cards/SwapCard";
+import AddLiquidity from "./components/pages/AddLiquidity";
+import Analytics from "./components/pages/Analytics";
 
 const useStyles = makeStyles((theme) => ({
   navbar: {
@@ -83,22 +84,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 function App() {
-
-
   const classes = useStyles();
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-
         <div style={{ overflowX: "hidden" }}>
           <div className={classes.navbar}>
             <Navbar />
           </div>
           <div className={classes.mainContent}>
             <BrowserRouter>
-              <Route exact path="/" component={Home} />
+              <Home />
+              <Route exact path="/" component={SwapCard} />
+              <Route exact path="/liquidity" component={AddLiquidity} />
+              <Route exact path="/charts" component={Analytics} />
 
               <Switch>
                 <Route
@@ -108,15 +108,19 @@ function App() {
                   render={({ match }) => {
                     if (
                       isAddress(match.params.tokenAddress.toLowerCase()) &&
-                      !Object.keys(TOKEN_BLACKLIST).includes(match.params.tokenAddress.toLowerCase())
+                      !Object.keys(TOKEN_BLACKLIST).includes(
+                        match.params.tokenAddress.toLowerCase()
+                      )
                     ) {
                       return (
                         // <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
-                        <TokenPage address={match.params.tokenAddress.toLowerCase()} />
+                        <TokenPage
+                          address={match.params.tokenAddress.toLowerCase()}
+                        />
                         // </LayoutWrapper>
-                      )
+                      );
                     } else {
-                      return <Redirect to="/" />
+                      return <Redirect to="/" />;
                     }
                   }}
                 />
@@ -127,48 +131,29 @@ function App() {
                   render={({ match }) => {
                     if (
                       isAddress(match.params.pairAddress.toLowerCase()) &&
-                      !Object.keys(PAIR_BLACKLIST).includes(match.params.pairAddress.toLowerCase())
+                      !Object.keys(PAIR_BLACKLIST).includes(
+                        match.params.pairAddress.toLowerCase()
+                      )
                     ) {
                       return (
                         // <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
-                        <PoolDetail pairAddress={match.params.pairAddress.toLowerCase()} />
+                        <PoolDetail
+                          pairAddress={match.params.pairAddress.toLowerCase()}
+                        />
                         // </LayoutWrapper>
-                      )
+                      );
                     } else {
-                      return <Redirect to="/" />
+                      return <Redirect to="/" />;
                     }
                   }}
                 />
-
-                {/* <Route
-              exacts
-              strict
-              path="/account/:accountAddress"
-              render={({ match }) => {
-                if (isAddress(match.params.accountAddress.toLowerCase())) {
-                  return (
-                    <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
-                      <AccountPage account={match.params.accountAddress.toLowerCase()} />
-                    </LayoutWrapper>
-                  )
-                } else {
-                  return <Redirect to="/home" />
-                }
-              }}
-            /> */}
-
-
               </Switch>
             </BrowserRouter>
-
           </div>
           <div className={classes.footer}>
             <Footer />
           </div>
         </div>
-
-
-
       </ThemeProvider>
     </Provider>
   );

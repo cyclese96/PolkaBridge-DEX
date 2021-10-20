@@ -1,9 +1,5 @@
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import React, { useEffect } from "react";
-
-import Navbar from "./common/Navbar";
-import Footer from "./common/Footer";
-
 import { connectWallet } from "../actions/accountActions";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -90,11 +86,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Home = ({
-  connectWallet,
-  loadTokens,
-  account: { currentNetwork },
-}) => {
+const Home = ({ connectWallet, loadTokens, account: { currentNetwork } }) => {
   const classes = useStyles();
 
   const getCurrentNetwork = (networkId) => {
@@ -112,6 +104,7 @@ const Home = ({
       return etheriumNetwork;
     }
   };
+
   useEffect(() => {
     async function listenConnectionUpdate() {
       if (typeof window.web3 !== "undefined") {
@@ -168,28 +161,12 @@ const Home = ({
       if (!isMetaMaskInstalled()) {
         return;
       }
-      await Promise.all([
-        connectWallet(false, network),
-        loadTokens(network)
-      ])
+      await Promise.all([connectWallet(false, network), loadTokens(network)]);
     }
-    initConnection()
+    initConnection();
   }, []);
 
-  return (
-    <TabPage />
-    // <div style={{ overflowX: "hidden" }}>
-    //   <div className={classes.navbar}>
-    //     <Navbar />
-    //   </div>
-    //   <div className={classes.mainContent}>
-
-    //   </div>
-    //   <div className={classes.footer}>
-    //     <Footer />
-    //   </div>
-    // </div>
-  );
+  return <></>;
 };
 
 Home.propTypes = {

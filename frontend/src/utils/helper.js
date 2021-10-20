@@ -1,25 +1,5 @@
 import BigNumber from "bignumber.js";
-import {
-  BITE,
-  biteAddressKoven,
-  biteAddressMainnet,
-  BNB,
-  CORGIB,
-  corgibMemeCoinMainnet,
-  corgibMemeCoinTestent,
-  currentConnection,
-  ETH,
-  PBR,
-  pbrAddressMainnet,
-  pbrAddressTestnet,
-  PWAR,
-  pwarAddressMainnet,
-  pwarAddressTestnet,
-  USDT,
-  usdtMainnetAddress,
-  usdtTestnetAddress,
-  WETH_ADDRESS_MAINNET,
-} from "../constants";
+import { BITE, CORGIB, PBR, PWAR, USDT } from "../constants";
 import {
   biteContract,
   corgibCoinContract,
@@ -85,60 +65,13 @@ export const getNetworkBalance = async (accountAddress) => {
   }
 };
 
-export const formatCurrency = (
-  value,
-  usd = false,
-  fractionDigits = 1,
-  currencyFormat = false
-) => {
-  const formatter = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: fractionDigits,
-  });
-
-  //for currency format with $symbol
-  if (usd) {
-    return formatter.format(value ? value : 0);
-  }
-
-  if (typeof window.web3 === "undefined") {
-    return formatter.format(value ? value : 0).slice(1);
-  }
-  const netId = window.ethereum.networkVersion;
-  if (["97", "56", "4", "1"].includes(netId) && !currencyFormat) {
-    // for bsc network only
-    return convertToInternationalCurrencySystem(value ? value : 0, formatter);
-  }
-  return formatter.format(value ? value : 0).slice(1);
-};
-
-function convertToInternationalCurrencySystem(labelValue, formatter) {
-  // Nine Zeroes for Billions
-  return Math.abs(Number(labelValue)) >= 1.0e9
-    ? formatter
-      .format((Math.abs(Number(labelValue)) / 1.0e9).toFixed(2))
-      .slice(1) + "B"
-    : // Six Zeroes for Millions
-    Math.abs(Number(labelValue)) >= 1.0e6
-      ? formatter
-        .format((Math.abs(Number(labelValue)) / 1.0e6).toFixed(2))
-        .slice(1) + "M"
-      : // Three Zeroes for Thousands
-      Math.abs(Number(labelValue)) >= 1.0e3
-        ? formatter
-          .format((Math.abs(Number(labelValue)) / 1.0e3).toFixed(2))
-          .slice(1) + "K"
-        : formatter.format(Math.abs(Number(labelValue))).slice(1);
-}
-
 export const resetCurrencyFormatting = (value) => {
   return value.split(",").join("");
 };
 
 export const isNumber = (value) => {
-  if (value === '.') {
-    return true
+  if (value === ".") {
+    return true;
   }
   return !isNaN(parseInt(value));
 };
@@ -257,24 +190,59 @@ export const getPriceRatio = (token1, token2) => {
 };
 
 export const getTokenOut = (tokenIn, token1Reserve, token2Reserve) => {
-  const _token1 = new BigNumber(token1Reserve ? token1Reserve : 0);
-  const _token2 = new BigNumber(token2Reserve ? token2Reserve : 0);
+  const r0 = new BigNumber(!token1Reserve ? 0 : token1Reserve);
+  const r1 = new BigNumber(!token2Reserve ? 0 : token2Reserve);
+  const x = new BigNumber(!tokenIn ? 0 : tokenIn);
 
-  if (_token1.eq("0") || _token2.eq("0")) {
-    return new BigNumber("0").toFixed(4).toString();
+  if (r0.lte(0) || r1.lte(0) || x.lte(0)) {
+    return new BigNumber(0).toFixed(0).toString();
   }
 
   try {
-    const _out = _token1.div(_token2).multipliedBy(tokenIn);
-    if (_out.gt(1)) {
-      return _out.toFixed(2).toString();
+    // price out calculation
+    const numerator = x.multipliedBy(998).multipliedBy(r1);
+    const denominator = r0.multipliedBy(1000).plus(x.multipliedBy(998));
+    const y = numerator.div(denominator);
+
+    let result;
+    let integerPart;
+    if (y.gt(1)) {
+      // integerPart = y.toString().split(".");
+      // result = fromWei(integerPart[0]);
+      const _toString = y.div(1000000000000000000).toFixed(4).toString()
+      result = _toString;
+    } else {
+      // integerPart = y.toString().split(".");
+      // result = fromWei(y.toString());
+      const _toString = y.div(1000000000000000000).toFixed(5).toString();
+      result = _toString;
     }
-    return _out.toFixed(5).toString();
+
+    return result;
   } catch (error) {
-    console.log("exeption getTokenOut", error);
-    return "0";
+    console.log("exeption getTokenOut", { error, tokenIn });
+    return new BigNumber(0).toFixed(0).toString();
   }
 };
+// export const getTokenOut = (tokenIn, token1Reserve, token2Reserve) => {
+//   const _token1 = new BigNumber(token1Reserve ? token1Reserve : 0);
+//   const _token2 = new BigNumber(token2Reserve ? token2Reserve : 0);
+
+//   if (_token1.eq("0") || _token2.eq("0")) {
+//     return new BigNumber("0").toFixed(4).toString();
+//   }
+
+//   try {
+//     const _out = _token1.div(_token2).multipliedBy(tokenIn);
+//     if (_out.gt(1)) {
+//       return _out.toFixed(2).toString();
+//     }
+//     return _out.toFixed(5).toString();
+//   } catch (error) {
+//     console.log("exeption getTokenOut", error);
+//     return "0";
+//   }
+// };
 
 export const getPercentAmountWithFloor = (amount, percent) => {
   const _amount = new BigNumber(amount ? amount : 0);
@@ -327,11 +295,11 @@ export const formatFloat = (floatValue) => {
 
 export const isAddress = (value) => {
   try {
-    return ethers.utils.getAddress(value.toLowerCase())
+    return ethers.utils.getAddress(value.toLowerCase());
   } catch {
-    return false
+    return false;
   }
-}
+};
 
 export const cacheImportedToken = (tokenData) => {
   let tokens = localStorage.getItem("tokens");

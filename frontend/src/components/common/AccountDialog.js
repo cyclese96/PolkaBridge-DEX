@@ -9,9 +9,10 @@ import CustomButton from "../Buttons/CustomButton";
 import { ContactMailOutlined } from "@material-ui/icons";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import { etheriumNetwork } from "../../constants";
-import { formatCurrency, fromWei } from "../../utils/helper";
+import { fromWei } from "../../utils/helper";
 import { connect } from "react-redux";
 import { logout } from "../../actions/accountActions";
+import { formatCurrency } from "../../utils/formatters";
 
 const styles = (theme) => ({
   root: {
@@ -141,13 +142,17 @@ const AccountDialog = ({
         className={classes.dialog}
         color="transparent"
         PaperProps={{
-          style: { borderRadius: 15 },
+          style: {
+            borderRadius: 15, backgroundColor: "#121827",
+            color: "#f9f9f9",
+          },
         }}
       >
         <div className={classes.background}>
           <DialogTitle onClose={() => handleClose()}>
             <span className={classes.heading}>My Wallet</span>
           </DialogTitle>
+
           <div className={classes.balanceCard}>
             {getCoins().map((item) => (
               <div

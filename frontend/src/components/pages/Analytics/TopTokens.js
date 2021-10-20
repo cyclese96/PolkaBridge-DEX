@@ -189,7 +189,7 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-          // style={{ color: "#E0077D" }}s
+            // style={{ color: "#E0077D" }}s
           >
             <TableSortLabel
               // active={orderBy === headCell.id}
@@ -221,7 +221,7 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-          // style={{ color: "#E0077D" }}s
+            // style={{ color: "#E0077D" }}s
           >
             <TableSortLabel
               // active={orderBy === headCell.id}
@@ -265,7 +265,7 @@ const useStyles = makeStyles((theme) => ({
     background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
     borderRadius: 15,
     [theme.breakpoints.down("sm")]: {
-      width: "92vw",
+      width: "100%",
     },
   },
   paper: {
@@ -341,12 +341,12 @@ const TopTokens = ({
   // const [pairs, setPairs] = useState([]);
   // const [tokens, setTokens] = useState([]);
 
-  useEffect(() => {
-    if (!allTransactions) {
-      return;
-    }
-    console.log("raw transactions list ", allTransactions);
-  }, [Object.keys(!allTransactions ? {} : allTransactions)]);
+  // useEffect(() => {
+  //   if (!allTransactions) {
+  //     return;
+  //   }
+  //   console.log("raw transactions list ", allTransactions);
+  // }, [Object.keys(!allTransactions ? {} : allTransactions)]);
 
   // id: 1,
   // token0: {id, name, symbol,... },
@@ -394,7 +394,7 @@ const TopTokens = ({
     return obj;
   };
   const formattedTokens = useMemo(() => {
-    console.log('all tokens', allTokens)
+    // console.log('all tokens', allTokens)
     return (
       allTokens &&
       Object.keys(allTokens).map((key) =>
@@ -492,21 +492,21 @@ const TopTokens = ({
         <>
           {formattedTokens.length > 0
             ? stableSort(formattedTokens, getComparator(order, orderBy))
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row, index) => {
-                const isItemSelected = isSelected(row.name);
-                const labelId = `enhanced-table-checkbox-${index}`;
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => {
+                  const isItemSelected = isSelected(row.name);
+                  const labelId = `enhanced-table-checkbox-${index}`;
 
-                return (
-                  <TokenRow
-                    row={row}
-                    classes={classes}
-                    isItemSelected={isItemSelected}
-                    labelId={labelId}
-                    handleClick={handleClick}
-                  />
-                );
-              })
+                  return (
+                    <TokenRow
+                      row={row}
+                      classes={classes}
+                      isItemSelected={isItemSelected}
+                      labelId={labelId}
+                      handleClick={handleClick}
+                    />
+                  );
+                })
             : ""}
           {emptyRows > 0 && (
             <TableRow
@@ -584,7 +584,7 @@ const TopTokens = ({
     }
   };
   return (
-    <Card className={classes.card}>
+    <Card elevation={10} className={classes.card}>
       <TableContainer>
         <Table
           className={classes.table}

@@ -1,10 +1,13 @@
 import React, { useCallback, useEffect } from "react";
 import {
+  Box,
   Button,
   Card,
   CircularProgress,
+  Divider,
   IconButton,
   makeStyles,
+  Popper,
 } from "@material-ui/core";
 import { connect } from "react-redux";
 import SwapCardItem from "./SwapCardItem";
@@ -13,9 +16,10 @@ import { useState } from "react";
 import SwapSettings from "../common/SwapSettings";
 import BigNumber from "bignumber.js";
 import CustomSnackBar from "../common/CustomSnackbar";
-import { ETH, etheriumNetwork, tokens } from "../../constants";
+import { ETH, etheriumNetwork, swapFnConstants, tokens } from "../../constants";
 import {
   buyPriceImpact,
+  formatFloat,
   getPercentageAmount,
   getTokenOut,
   sellPriceImpact,
@@ -25,14 +29,18 @@ import {
   checkAllowance,
   confirmAllowance,
   getLpBalance,
-  loadPairAddress
+  loadPairAddress,
 } from "../../actions/dexActions";
 import { getAccountBalance } from "../../actions/accountActions";
 import SwapConfirm from "../common/SwapConfirm";
 import debounce from "lodash.debounce";
 import { getPairAddress } from "../../utils/connectionUtils";
 
-import { Settings } from "@material-ui/icons";
+import { Info, Settings, SwapCalls, SwapHoriz } from "@material-ui/icons";
+import TabPage from "../TabPage";
+import TransactionStatus from "../common/TransactionStatus";
+import store from "../../store";
+import { START_TRANSACTION } from "../../actions/types";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -142,6 +150,39 @@ const useStyles = makeStyles((theme) => ({
   resetIcon: {
     cursor: "pointer",
   },
+  tokenPrice: {
+    color: "white",
+    textAlign: "right",
+    width: 430,
+    fontSize: 13,
+
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
+  },
+  infoIcon: {
+    color: "white",
+    fontSize: 16,
+    color: "#bdbdbd",
+  },
+  txDetailsCard: {
+    backgroundColor: "black",
+    height: "100%",
+    width: 320,
+    borderRadius: 10,
+    marginTop: 5,
+    padding: 14,
+    color: "#bdbdbd",
+    fontSize: 12,
+  },
+  txDetailsTitle: {
+    color: "#f9f9f9",
+    fontSize: 12,
+  },
+  txDetailsValue: {
+    color: "#ffffff",
+    fontSize: 12,
+  },
 }));
 
 const SwapCard = (props) => {
@@ -151,13 +192,15 @@ const SwapCard = (props) => {
       approvedTokens,
       poolReserves,
       pairContractData,
+      transaction,
+      swapSettings,
     },
     checkAllowance,
     confirmAllowance,
     tokenType,
     getLpBalance,
     getAccountBalance,
-    loadPairAddress
+    loadPairAddress,
   } = props;
 
   const classes = useStyles();
@@ -187,6 +230,19 @@ const SwapCard = (props) => {
   const [priceImpact, setPriceImpact] = useState(null);
   const [liquidityStatus, setLiquidityStatus] = useState(false);
   const [localStateLoading, setLocalStateLoading] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const [swapTransactionStatus, setSwapTransactionStatus] =
+    useState(transaction);
+
+  const handleTxPoper = (event) => {
+    setAnchorEl(anchorEl ? null : event.currentTarget);
+  };
+
+  const [currentSwapFn, setCurrentSwapFn] = useState(swapFnConstants.swapExactETHForTokens);
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popper" : undefined;
 
   // const updateTokenPrices = async () => {
   //   console.log("updating...");
@@ -200,7 +256,6 @@ const SwapCard = (props) => {
   // };
 
   useEffect(() => {
-
     async function initSelection() {
       let _token = {};
       if (currentNetwork === etheriumNetwork) {
@@ -222,7 +277,6 @@ const SwapCard = (props) => {
       // await checkAllowance(_token, currentAccount, currentNetwork);
     }
     initSelection();
-
   }, [currentNetwork, currentAccount]);
 
   const currentPairAddress = () => {
@@ -247,12 +301,12 @@ const SwapCard = (props) => {
     }
   };
 
-
   const clearInputState = () => {
     setToken1Value("");
     setToken2Value("");
     setStatus({ disabled: true, message: "Enter Amounts" });
   };
+
   useEffect(() => {
     async function loadPair() {
       if (selectedToken1.symbol && selectedToken2.symbol) {
@@ -265,10 +319,7 @@ const SwapCard = (props) => {
         const erc20Token =
           selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
 
-        await getAccountBalance(
-          erc20Token,
-          currentNetwork
-        );
+        await getAccountBalance(erc20Token, currentNetwork);
 
         let _pairAddress = currentPairAddress();
         if (!_pairAddress) {
@@ -305,11 +356,7 @@ const SwapCard = (props) => {
           );
         }
 
-        await checkAllowance(
-          selectedToken1,
-          currentAccount,
-          currentNetwork
-        );
+        await checkAllowance(selectedToken1, currentAccount, currentNetwork);
 
         setLocalStateLoading(false);
       }
@@ -317,18 +364,19 @@ const SwapCard = (props) => {
     loadPair();
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
-
   useEffect(() => {
-
-    if (poolReserves && (new BigNumber(poolReserves[selectedToken1.symbol]).eq(0) || new BigNumber(poolReserves[selectedToken2.symbol]).eq(0))) {
+    if (
+      poolReserves &&
+      (new BigNumber(poolReserves[selectedToken1.symbol]).eq(0) ||
+        new BigNumber(poolReserves[selectedToken2.symbol]).eq(0))
+    ) {
       setLiquidityStatus(true);
       setStatus({
         disabled: true,
         message: "No liquidity available for this pair",
       });
     }
-
-  }, [poolReserves])
+  }, [poolReserves]);
 
   const verifySwapStatus = (token1, token2) => {
     let message, disabled;
@@ -365,19 +413,23 @@ const SwapCard = (props) => {
     [] // will be created only once initially
   );
 
-
   const onToken1InputChange = async (tokens) => {
     setToken1Value(tokens);
+
+    if (selectedToken1.symbol === ETH) {
+      setCurrentSwapFn(swapFnConstants.swapExactETHForTokens)
+    } else if (selectedToken2.symbol && selectedToken2.symbol === ETH) {
+      setCurrentSwapFn(swapFnConstants.swapExactTokensForETH)
+    } else {
+      setCurrentSwapFn(swapFnConstants.swapExactTokensForTokens)
+    }
+
 
     // calculate resetpective value of token 2 if selected
     let _token2Value = "";
     const pairAddress = currentPairAddress();
 
-    if (
-      selectedToken2.symbol &&
-      new BigNumber(tokens).gt(0) &&
-      pairAddress
-    ) {
+    if (selectedToken2.symbol && new BigNumber(tokens).gt(0) && pairAddress) {
       await debouncedGetLpBalance(
         selectedToken1,
         selectedToken2,
@@ -386,12 +438,10 @@ const SwapCard = (props) => {
         currentNetwork
       );
 
-      //input tokens will be 99.8% of input value 0.2% will be deducted for fee
-      const _withoutFeeInputToken = getPercentageAmount(tokens, 99.8);
       _token2Value = getTokenOut(
-        _withoutFeeInputToken,
-        poolReserves[selectedToken2.symbol],
-        poolReserves[selectedToken1.symbol]
+        toWei(tokens),
+        poolReserves[selectedToken1.symbol],
+        poolReserves[selectedToken2.symbol]
       );
       if (new BigNumber(_token2Value).gt(0)) {
         setToken2Value(_token2Value);
@@ -412,15 +462,19 @@ const SwapCard = (props) => {
   const onToken2InputChange = async (tokens) => {
     setToken2Value(tokens);
 
+    if (selectedToken1.symbol === ETH) {
+      setCurrentSwapFn(swapFnConstants.swapETHforExactTokens)
+    } else if (selectedToken2.symbol && selectedToken2.symbol === ETH) {
+      setCurrentSwapFn(swapFnConstants.swapTokensForExactETH)
+    } else {
+      setCurrentSwapFn(swapFnConstants.swapTokensForExactTokens)
+    }
+
     //calculate respective value of token1 if selected
     let _token1Value = "";
     const pairAddress = currentPairAddress();
 
-    if (
-      selectedToken1.symbol &&
-      new BigNumber(tokens).gt(0) &&
-      pairAddress
-    ) {
+    if (selectedToken1.symbol && new BigNumber(tokens).gt(0) && pairAddress) {
       await debouncedGetLpBalance(
         selectedToken1,
         selectedToken2,
@@ -430,10 +484,11 @@ const SwapCard = (props) => {
       );
 
       _token1Value = getTokenOut(
-        tokens,
-        poolReserves[selectedToken1.symbol],
-        poolReserves[selectedToken2.symbol]
+        toWei(tokens).toString(),
+        poolReserves[selectedToken2.symbol],
+        poolReserves[selectedToken1.symbol]
       );
+      console.log('token out ', _token1Value)
       if (new BigNumber(_token1Value).gt(0)) {
         setToken1Value(_token1Value);
         // verify swap status with current inputs
@@ -543,7 +598,7 @@ const SwapCard = (props) => {
   };
 
   const disableStatus = () => {
-    return swapStatus.disabled || loading || localStateLoading;
+    return swapStatus.disabled || localStateLoading;
   };
 
   const handleAction = () => {
@@ -559,12 +614,55 @@ const SwapCard = (props) => {
       return "Please wait...";
     } else if (swapStatus.disabled) {
       return swapStatus.message;
+    } else if (
+      transaction.type === "swap" &&
+      transaction.status === "pending"
+    ) {
+      return "Pending Swap Transaction...";
     } else {
       return !currentTokenApprovalStatus() ? "Approve" : swapStatus.message;
     }
   };
+
+  // swap status updates
+  useEffect(() => {
+    if (!transaction.hash && !transaction.type) {
+      return;
+    }
+
+    if (transaction.type === 'swap' && (transaction.status === 'success' || transaction.status === 'failed') && !swapDialogOpen) {
+      setSwapDialog(true)
+    }
+  }, [transaction]);
+
+  const handleConfirmSwapClose = (value) => {
+    setSwapDialog(value);
+    if (transaction.type === 'swap' && (transaction.status === 'success')) {
+      store.dispatch({ type: START_TRANSACTION })
+      clearInputState()
+      debouncedGetLpBalance(
+        selectedToken1,
+        selectedToken2,
+        currentPairAddress(),
+        currentAccount,
+        currentNetwork
+      );
+    } else if (transaction.type === 'swap' && transaction.status === 'failed') {
+      store.dispatch({ type: START_TRANSACTION })
+      debouncedGetLpBalance(
+        selectedToken1,
+        selectedToken2,
+        currentPairAddress(),
+        currentAccount,
+        currentNetwork
+      );
+    }
+  };
+
   return (
     <>
+      <TabPage data={0} />
+
       <CustomSnackBar
         status={snackAlert.status}
         message={snackAlert.message}
@@ -572,12 +670,13 @@ const SwapCard = (props) => {
       />
       <SwapConfirm
         open={swapDialogOpen}
-        handleClose={() => setSwapDialog(false)}
+        handleClose={() => handleConfirmSwapClose(false)}
         selectedToken1={selectedToken1}
         selectedToken2={selectedToken2}
         token1Value={token1Value}
         token2Value={token2Value}
         priceImpact={priceImpact}
+        currentSwapFn={currentSwapFn}
       />
       <SwapSettings open={settingOpen} handleClose={close} />
       <Card elevation={20} className={classes.card}>
@@ -601,6 +700,7 @@ const SwapCard = (props) => {
             disableToken={selectedToken2}
             inputValue={token1Value}
           />
+
           <IconButton className={classes.iconButton}>
             {" "}
             <SwapVertIcon
@@ -621,23 +721,79 @@ const SwapCard = (props) => {
             inputValue={token2Value}
           />
 
+          {token1Value && token2Value && (
+            <div className="mt-1 d-flex justify-content-end">
+              <div className={classes.tokenPrice}>
+                <span>
+                  {" "}
+                  1 {selectedToken1.symbol && selectedToken1.symbol} ={" "}
+                  {(token2Value / token1Value).toFixed(2)}{" "}
+                  {selectedToken2.symbol && selectedToken2.symbol}
+                </span>{" "}
+                <Info
+                  className={classes.infoIcon}
+                  style={{ marginTop: -3 }}
+                  onClick={handleTxPoper}
+                  onMouseEnter={handleTxPoper}
+                  onMouseLeave={() => setAnchorEl(null)}
+                />
+              </div>
+            </div>
+          )}
           <Button
             variant="contained"
             disabled={disableStatus()}
             className={classes.swapButton}
             onClick={handleAction}
           >
-            {!swapStatus.disabled && loading ? (
+            {/* {!swapStatus.disabled ? (
               <CircularProgress
                 style={{ color: "black" }}
                 color="secondary"
                 size={30}
               />
             ) : (
-              currentButton()
-            )}
+              )} */}
+            {currentButton()}
           </Button>
         </div>
+
+        <Popper id={id} open={open} anchorEl={anchorEl}>
+          <div className={classes.txDetailsCard}>
+            <h6>Transaction Details</h6>
+            <hr style={{ color: "grey", width: "100%", height: 1 }} />
+            <div>
+              <div className="mt-1 d-flex justify-content-between">
+                <div className={classes.txDetailsTitle}>
+                  Liquidity Provider Fee
+                </div>
+                <div className={classes.txDetailsValue}>
+                  {" "}
+                  {getPercentageAmount(token1Value, "0.2 ")}{" "}
+                  {selectedToken1.symbol}
+                </div>
+              </div>
+              <div className="mt-1 d-flex justify-content-between">
+                <div className={classes.txDetailsTitle}>Price Impact</div>
+                <div className={classes.txDetailsValue}>
+                  {formatFloat(priceImpact)} %
+                </div>
+              </div>
+              <div className="mt-1 d-flex justify-content-between">
+                <div className={classes.txDetailsTitle}>Allowed Slippage</div>
+                <div className={classes.txDetailsValue}>
+                  {swapSettings.slippage} %
+                </div>
+              </div>
+              <div className="mt-1 d-flex justify-content-between">
+                <div className={classes.txDetailsTitle}>Minimum received</div>
+                <div className={classes.txDetailsValue}>
+                  {token2Value} {selectedToken2.symbol}
+                </div>
+              </div>
+            </div>
+          </div>
+        </Popper>
       </Card>
     </>
   );
@@ -653,5 +809,5 @@ export default connect(mapStateToProps, {
   confirmAllowance,
   getLpBalance,
   getAccountBalance,
-  loadPairAddress
+  loadPairAddress,
 })(SwapCard);

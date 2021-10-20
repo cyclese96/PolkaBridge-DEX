@@ -4,12 +4,11 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import PropTypes, { func } from "prop-types";
 import SwapCard from "./Cards/SwapCard";
 import AddLiquidity from "./pages/AddLiquidity";
 import Analytics from "./pages/Analytics";
-// import { ApolloProvider } from 'react-apollo'
-// import { client } from "../apollo/client";
+import { Link } from "react-router-dom";
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -54,26 +53,19 @@ function TabPanel(props) {
   );
 }
 
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
 
 
-export default function TabPage() {
+
+export default function TabPage({ data = 1 }) {
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+
 
   return (
     <>
       <Tabs
-        value={value}
-        onChange={handleChange}
+        value={data}
+
         TabIndicatorProps={{
           style: {
             backgroundColor: "#E0077D",
@@ -82,41 +74,45 @@ export default function TabPage() {
         centered
         className={classes.tabs}
       >
-        <Tab
-          className={
-            value === 0 ? classes.active_tabStyle : classes.default_tabStyle
-          }
-          label="Swap"
-        />
-        <Tab
-          className={
-            value === 1 ? classes.active_tabStyle : classes.default_tabStyle
-          }
-          label="Pool"
-        />
-        <Tab
-          className={
-            value === 2 ? classes.active_tabStyle : classes.default_tabStyle
-          }
-          label="Charts"
-        />
+        <Link to='/'>
+          <Tab
+            className={
+              data === 0 ? classes.active_tabStyle : classes.default_tabStyle
+            }
+            label="Swap"
+          />
+        </Link>
+        <Link to='/liquidity'>
+          <Tab
+            className={
+              data === 1 ? classes.active_tabStyle : classes.default_tabStyle
+            }
+            label="Pool"
+          />
+        </Link>
+        <Link to='/charts'>
+          <Tab
+            className={
+              data === 2 ? classes.active_tabStyle : classes.default_tabStyle
+            }
+            label="Charts"
+          />
+        </Link>
+
+
+
       </Tabs>
-      <TabPanel value={value} index={0}>
+
+      <TabPanel data={0} index={0}>
         <SwapCard />
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      <TabPanel data={1} index={1}>
         <AddLiquidity />
       </TabPanel>
-      <TabPanel value={value} index={2}>
-        {/* <TokenDataContextProvider></TokenDataContextProvider>
-        <GlobalDataContextProvider> */}
-        {/* <ContextProviders>
-          <>
-            <Updaters /> */}
+      <TabPanel data={2} index={2}>
+
         <Analytics />
-        {/* </> */}
-        {/* </ContextProviders> */}
-        {/* </GlobalDataContextProvider> */}
+
       </TabPanel>
     </>
   );

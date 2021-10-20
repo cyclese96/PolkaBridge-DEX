@@ -14,7 +14,6 @@ import CustomButton from "../../Buttons/CustomButton";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import { ETH, etheriumNetwork, tokens } from "../../../constants";
 import {
-  formatCurrency,
   fromWei,
   getPercentAmountWithFloor,
   getPriceRatio,
@@ -35,9 +34,11 @@ import BigNumber from "bignumber.js";
 import {
   getPairAddress,
 } from "../../../utils/connectionUtils";
-import { RESET_POOL_DATA } from "../../../actions/types";
+import { RESET_POOL_DATA, START_TRANSACTION } from "../../../actions/types";
 import store from "../../../store";
 import { Settings } from "@material-ui/icons";
+import { formatCurrency } from "../../../utils/formatters";
+import SwapConfirm from "../../common/SwapConfirm";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -268,7 +269,7 @@ const RemoveCard = ({
     poolShare,
     swapSettings,
     pairContractData,
-    tokenData,
+    transaction
   },
   handleBack,
   checkLpAllowance,
@@ -288,6 +289,8 @@ const RemoveCard = ({
   const [settingOpen, setOpen] = useState(false);
   const [selectedToken1, setToken1] = useState(currentDefaultToken);
   const [selectedToken2, setToken2] = useState({});
+
+  const [swapDialogOpen, setSwapDialog] = useState(false);
 
   const handleSettings = () => {
     setOpen(true);
@@ -383,19 +386,19 @@ const RemoveCard = ({
   // new use effect
   useEffect(() => {
 
-    async function loadPair(){
+    async function loadPair() {
       if (selectedToken1.symbol && selectedToken2.symbol) {
         // reset input on token change
         handleClearState();
         store.dispatch({
           type: RESET_POOL_DATA,
         });
-  
+
         // load erc20 token abi and balance
         const erc20Token =
           selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
-  
-  
+
+
         let _pairAddress = currentPairAddress();
         if (!_pairAddress) {
           _pairAddress = await getPairAddress(
@@ -410,7 +413,7 @@ const RemoveCard = ({
             currentNetwork
           );
         }
-  
+
         await getLpBalance(
           selectedToken1,
           selectedToken2,
@@ -418,7 +421,7 @@ const RemoveCard = ({
           currentAccount,
           currentNetwork
         );
-        
+
         await checkLpAllowance(
           selectedToken1,
           selectedToken2,
@@ -430,7 +433,7 @@ const RemoveCard = ({
     }
 
     loadPair()
-   
+
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
 
@@ -500,9 +503,38 @@ const RemoveCard = ({
     );
   };
 
+  // liquidity transaction status updates
+  useEffect(() => {
+    if (!transaction.hash && !transaction.type) {
+      return;
+    }
+    if (transaction.type === 'remove' && (transaction.status === 'success' || transaction.status === 'failed')) {
+      // store.dispatch({ type: START_TRANSACTION })
+      console.log('START_TRANSACTION: failed')
+      setSwapDialog(true)
+    }
+  }, [transaction]);
+
+  const handleConfirmSwapClose = (value) => {
+    setSwapDialog(value);
+    if (transaction.type === 'remove' && (transaction.status === 'success' || transaction.status === 'failed')) {
+      store.dispatch({ type: START_TRANSACTION })
+      handleClearState()
+    }
+  };
+
   return (
     <>
       <SwapSettings open={settingOpen} handleClose={close} />
+      <SwapConfirm
+        open={swapDialogOpen}
+        handleClose={() => handleConfirmSwapClose(false)}
+        selectedToken1={selectedToken1}
+        selectedToken2={selectedToken2}
+        token1Value={0}
+        token2Value={0}
+        priceImpact={0}
+      />
       <Card elevation={20} className={classes.card}>
         <div className={classes.cardContents}>
           <div className={classes.cardHeading}>

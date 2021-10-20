@@ -19,10 +19,12 @@ import {
 import {
   swapExactEthForTokens,
   swapExactTokensForEth,
+  swapTokens
 } from "../../actions/dexActions";
-import { ETH } from "../../constants";
+import { ETH, swapFnConstants } from "../../constants";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import BigNumber from "bignumber.js";
+import TransactionStatus from "./TransactionStatus";
 
 const styles = (theme) => ({
   root: {
@@ -110,9 +112,23 @@ const useStyles = makeStyles((theme) => ({
   confirmButton: {
     width: 220,
     height: 50,
+    borderRadius: 50,
   },
   acceptPrice: {
     height: 35,
+  },
+  detailTitle: {
+    fontSize: 13,
+  },
+  detailValue: {
+    fontSize: 12,
+  },
+  icon: {
+    color: "#f6f6f6",
+
+    transition: "all 0.4s ease",
+    fontSize: 22,
+    backgroundColor: "#191B1E",
   },
 }));
 
@@ -126,9 +142,17 @@ const SwapConfirm = (props) => {
     selectedToken2,
     token1Value,
     token2Value,
-    dex: { swapSettings, poolReserves, dexLoading, pairContractData },
+    dex: {
+      swapSettings,
+      poolReserves,
+      dexLoading,
+      pairContractData,
+      transaction,
+    },
+    currentSwapFn,
     swapExactEthForTokens,
     swapExactTokensForEth,
+    swapTokens
   } = props;
 
   const classes = useStyles();
@@ -148,27 +172,44 @@ const SwapConfirm = (props) => {
       ...selectedToken2,
     };
 
-    if (token1.symbol === ETH) {
-      //buy trade
-      await swapExactEthForTokens(
-        token1,
-        token2,
-        swapSettings.deadline,
-        currentAccount,
-        currentNetwork
-      );
-    } else {
-      //sell trade
-      await swapExactTokensForEth(
-        token1,
-        token2,
-        swapSettings.deadline,
-        currentAccount,
-        currentNetwork
-      );
-    }
+    await swapTokens(
+      token1,
+      token2,
+      swapSettings.deadline,
+      currentSwapFn,
+      currentAccount,
+      currentNetwork
+    )
+    // if (currentSwapFn === swapFnConstants.swapExactETHForTokens) {
+    //   //buy trade
+    //   await swapExactEthForTokens(
+    //     token1,
+    //     token2,
+    //     swapSettings.deadline,
+    //     currentAccount,
+    //     currentNetwork
+    //   );
+    // } else if (currentSwapFn === swapFnConstants.swapExactTokensForETH) {
+    //   //sell trade
+    //   await swapExactTokensForEth(
+    //     token1,
+    //     token2,
+    //     swapSettings.deadline,
+    //     currentAccount,
+    //     currentNetwork
+    //   );
+    // } else if (currentSwapFn === swapFnConstants.swapETHforExactTokens) {
 
-    handleClose();
+
+    // } else if (currentSwapFn === swapFnConstants.swapTokensForExactETH) {
+
+    // } else if (currentSwapFn === swapFnConstants.swapExactTokensForTokens) {
+
+    // } else {// swapTokensForExactTokens
+
+    // }
+
+    //handleClose();
   };
 
   const isValidSlippage = () => {
@@ -187,137 +228,160 @@ const SwapConfirm = (props) => {
         className={classes.dialog}
         color="transparent"
         PaperProps={{
-          style: { borderRadius: 15 },
+          style: { borderRadius: 15, backgroundColor: "#121827" },
         }}
       >
-        <div className={classes.background}>
-          <DialogTitle onClose={() => handleClose()}>
-            <span className={classes.heading}>Confirm Swap</span>
-          </DialogTitle>
-          <div className={classes.tokenCard}>
-            <div className="d-flex justify-content-start w-100 mb-1">
-              <span className={classes.subheading}> From</span>
-              <span></span>
-            </div>
-            <div className="d-flex justify-content-between w-100">
-              <div>
-                <TokenIcon symbol={selectedToken1.symbol} />
-                <span style={{ marginLeft: 2 }}> {selectedToken1.symbol}</span>
-              </div>
-              <span>{token1Value}</span>
-            </div>
-          </div>
-
-          <div className="mt-2 mb-2">
-            <ArrowDownwardIcon fontSize="small" />
-          </div>
-
-          <div className={classes.tokenCard}>
-            <div className="d-flex justify-content-start w-100 mb-1">
-              <span className={classes.subheading}>To</span>
-              <span></span>
-            </div>
-            <div className="d-flex justify-content-between w-100">
-              <div>
-                <TokenIcon symbol={selectedToken2.symbol} />
-                <span style={{ marginLeft: 2 }}> {selectedToken2.symbol}</span>
-              </div>
-              <span>{token2Value}</span>
-            </div>
-          </div>
-
-          <div className="d-flex justify-content-around w-100 mt-2 mb-2 ">
-            <span className={classes.subheading}>Price</span>
-            <span className={classes.subheading}>
-              1 {selectedToken1.symbol} {" = "}{" "}
-              {getPriceRatio(
-                poolReserves[selectedToken2.symbol],
-                poolReserves[selectedToken1.symbol]
-              )}{" "}
-              {selectedToken2.symbol}
-            </span>
-          </div>
-
-          {dexLoading ? (
+        {transaction.type === null && (
+          <div className={classes.background}>
+            <DialogTitle onClose={() => handleClose()}>
+              <span className={classes.heading}>Confirm Swap</span>
+            </DialogTitle>
             <div className={classes.tokenCard}>
-              <div className="d-flex justify-content-center w-100 mt-1 mb-1 ">
-                <CircularProgress
-                  style={{ color: "#E0077D" }}
-                  color="secondary"
-                  size={30}
-                />
-              </div>
-              <div className="d-flex justify-content-center w-100 mt-1 mb-1 ">
-                <span>Validating swap</span>
+              <div className="d-flex justify-content-between w-100">
+                <div>
+                  <span className={classes.subheading}> From : </span>
+                  <TokenIcon symbol={selectedToken1.symbol} />
+                  <span style={{ marginLeft: 2 }}>
+                    {" "}
+                    {selectedToken1.symbol}
+                  </span>
+                </div>
+                <span>{token1Value}</span>
               </div>
             </div>
-          ) : (
+
+            <div>
+              <ArrowDownwardIcon fontSize="small" className={classes.icon} />
+            </div>
+
             <div className={classes.tokenCard}>
-              <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
-                <span>Liquidity provider fee</span>
-                <span>
-                  {getPercentageAmount(token1Value, "0.2 ")}{" "}
-                  {selectedToken1.symbol}
-                </span>
+              <div className="d-flex justify-content-between w-100">
+                <div>
+                  <span className={classes.subheading}>To : </span>
+                  <TokenIcon symbol={selectedToken2.symbol} />
+                  <span style={{ marginLeft: 2 }}>
+                    {" "}
+                    {selectedToken2.symbol}
+                  </span>
+                </div>
+                <span>{token2Value}</span>
               </div>
-              {/* <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
+            </div>
+
+            <div className="d-flex justify-content-around w-100 mt-2 mb-2 ">
+              <span className={classes.subheading}>Current Price</span>
+              <span className={classes.subheading}>
+                1 {selectedToken1.symbol} {" = "}{" "}
+                {getPriceRatio(
+                  poolReserves[selectedToken2.symbol],
+                  poolReserves[selectedToken1.symbol]
+                )}{" "}
+                {selectedToken2.symbol}
+              </span>
+            </div>
+
+            {dexLoading ? (
+              <div className={classes.tokenCard}>
+                <div className="d-flex justify-content-center w-100 mt-1 mb-1 ">
+                  <CircularProgress
+                    style={{ color: "#E0077D" }}
+                    color="secondary"
+                    size={30}
+                  />
+                </div>
+                <div className="d-flex justify-content-center w-100 mt-1 mb-1 ">
+                  <span>Validating swap</span>
+                </div>
+              </div>
+            ) : (
+              <div className={classes.tokenCard}>
+                <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
+                  <span className={classes.detailTitle}>
+                    Liquidity provider fee
+                  </span>
+                  <span className={classes.detailValue}>
+                    {getPercentageAmount(token1Value, "0.2 ")}{" "}
+                    {selectedToken1.symbol}
+                  </span>
+                </div>
+                {/* <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
               <span>Route</span>
               <span>
                 {selectedToken1.symbol} {">"} {selectedToken2.symbol}
               </span>
             </div> */}
-              <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
-                <span>Price impact</span>
-                <span>- {formatFloat(priceImpact)} %</span>
-              </div>
-              <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
-                <span>Minimum received</span>
-                <span>
-                  {token2Value} {selectedToken2.symbol}
-                </span>
-              </div>
+                <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
+                  <span className={classes.detailTitle}>Price impact</span>
+                  <span className={classes.detailValue}>
+                    - {formatFloat(priceImpact)} %
+                  </span>
+                </div>
+                <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
+                  <span className={classes.detailTitle}>Minimum received</span>
+                  <span className={classes.detailValue}>
+                    {token2Value} {selectedToken2.symbol}
+                  </span>
+                </div>
 
-              <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
-                <span>Slippage tolerance</span>
-                <span>{swapSettings.slippage} %</span>
+                <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
+                  <span className={classes.detailTitle}>
+                    Slippage tolerance
+                  </span>
+                  <span className={classes.detailValue}>
+                    {swapSettings.slippage} %
+                  </span>
+                </div>
               </div>
-            </div>
-          )}
-          {/* <div className="d-flex justify-content-around align-items-center w-100 mt-2">
+            )}
+            {/* <div className="d-flex justify-content-around align-items-center w-100 mt-2">
             <span>Price updated</span>
             <CustomButton  className={classes.acceptPrice} variant="primary">
               Accept
             </CustomButton>
           </div> */}
-          <div className="d-flex justify-content-center mt-1">
-            <span className={classes.subheading}>
-              {isValidSlippage()
-                ? ""
-                : "Your slippage is less than price impact"}
-            </span>
+            <div className="d-flex justify-content-center mt-1">
+              <span className={classes.subheading}>
+                {isValidSlippage()
+                  ? ""
+                  : "Your slippage is less than price impact"}
+              </span>
+            </div>
+            <div className={classes.buttons}>
+              <CustomButton
+                className={classes.confirmButton}
+                onClick={onConfirmSwap}
+                disabled={
+                  dexLoading ||
+                  !isValidSlippage ||
+                  !isValidSlippage() ||
+                  loading
+                }
+              >
+                {loading ? (
+                  <>
+                    Transaction pending
+                    <CircularProgress
+                      style={{ color: "black" }}
+                      color="secondary"
+                      size={30}
+                    />
+                  </>
+                ) : (
+                  "Confirm Swap"
+                )}
+              </CustomButton>
+            </div>
           </div>
-          <div className={classes.buttons}>
-            <CustomButton
-              className={classes.confirmButton}
-              onClick={onConfirmSwap}
-              disabled={
-                dexLoading || !isValidSlippage || !isValidSlippage() || loading
-              }
-            >
-              {loading ? (
-                <>
-                  Transaction pending
-                  <CircularProgress
-                    style={{ color: "black" }}
-                    color="secondary"
-                    size={30}
-                  />
-                </>
-              ) : (
-                "Confirm Swap"
-              )}
-            </CustomButton>
-          </div>
+        )}
+
+        <div>
+          {transaction.type !== null && (
+            <div>
+              <TransactionStatus
+                onClose={() => handleClose()}
+              />
+            </div>
+          )}
         </div>
       </Dialog>
     </div>
@@ -332,4 +396,5 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   swapExactTokensForEth,
   swapExactEthForTokens,
+  swapTokens
 })(SwapConfirm);
