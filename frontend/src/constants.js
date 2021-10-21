@@ -332,10 +332,10 @@ export const timeframeOptions = {
 export const BUNDLE_ID = "1";
 
 export const swapFnConstants = {
-  swapExactETHForTokens: "swapExactETHForTokens",
-  swapETHforExactTokens: "swapETHforExactTokens",
-  swapExactTokensForETH: "swapExactTokensForETH",
-  swapTokensForExactETH: "swapTokensForExactETH",
-  swapExactTokensForTokens: "swapExactTokensForTokens",
-  swapTokensForExactTokens: "swapTokensForExactTokens"
+  swapExactETHForTokens: "swapExactETHForTokens",// case 1
+  swapETHforExactTokens: "swapETHforExactTokens",// case2
+  swapExactTokensForETH: "swapExactTokensForETH",// case3
+  swapTokensForExactETH: "swapTokensForExactETH",// case 4
+  swapExactTokensForTokens: "swapExactTokensForTokens",// case 5
+  swapTokensForExactTokens: "swapTokensForExactTokens"// case 6
 };

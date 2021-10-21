@@ -17,11 +17,9 @@ import {
   toWei,
 } from "../../utils/helper";
 import {
-  swapExactEthForTokens,
-  swapExactTokensForEth,
   swapTokens
 } from "../../actions/dexActions";
-import { ETH, swapFnConstants } from "../../constants";
+// import { ETH, swapFnConstants } from "../../constants";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import BigNumber from "bignumber.js";
 import TransactionStatus from "./TransactionStatus";
@@ -146,12 +144,9 @@ const SwapConfirm = (props) => {
       swapSettings,
       poolReserves,
       dexLoading,
-      pairContractData,
       transaction,
     },
     currentSwapFn,
-    swapExactEthForTokens,
-    swapExactTokensForEth,
     swapTokens
   } = props;
 
@@ -180,36 +175,7 @@ const SwapConfirm = (props) => {
       currentAccount,
       currentNetwork
     )
-    // if (currentSwapFn === swapFnConstants.swapExactETHForTokens) {
-    //   //buy trade
-    //   await swapExactEthForTokens(
-    //     token1,
-    //     token2,
-    //     swapSettings.deadline,
-    //     currentAccount,
-    //     currentNetwork
-    //   );
-    // } else if (currentSwapFn === swapFnConstants.swapExactTokensForETH) {
-    //   //sell trade
-    //   await swapExactTokensForEth(
-    //     token1,
-    //     token2,
-    //     swapSettings.deadline,
-    //     currentAccount,
-    //     currentNetwork
-    //   );
-    // } else if (currentSwapFn === swapFnConstants.swapETHforExactTokens) {
 
-
-    // } else if (currentSwapFn === swapFnConstants.swapTokensForExactETH) {
-
-    // } else if (currentSwapFn === swapFnConstants.swapExactTokensForTokens) {
-
-    // } else {// swapTokensForExactTokens
-
-    // }
-
-    //handleClose();
   };
 
   const isValidSlippage = () => {
@@ -393,8 +359,4 @@ const mapStateToProps = (state) => ({
   dex: state.dex,
 });
 
-export default connect(mapStateToProps, {
-  swapExactTokensForEth,
-  swapExactEthForTokens,
-  swapTokens
-})(SwapConfirm);
+export default connect(mapStateToProps, { swapTokens })(SwapConfirm);

@@ -145,6 +145,7 @@ const SelectTokenDialog = ({
   const [filteredTokens, setTokens] = useState([]);
   const [showImported, setShowImported] = useState(false);
   const [_importedTokens, setImported] = useState([]);
+  const [filterInput, setFilterInput] = useState("")
 
   const onTokenSelect = (token) => {
     handleTokenSelected(token);
@@ -185,6 +186,7 @@ const SelectTokenDialog = ({
   };
 
   const handleTokenFilter = async (value) => {
+    setFilterInput(value)
     if (!value) {
       value = "";
     }
@@ -199,12 +201,13 @@ const SelectTokenDialog = ({
   };
 
   const resetInputState = () => {
-    setShowImported(false);
+    // setShowImported(false);
     handleTokenFilter("");
   };
 
   const onClose = () => {
     handleClose();
+    resetInputState()
   };
 
   return (
@@ -235,6 +238,7 @@ const SelectTokenDialog = ({
         <input
           type="text"
           className={classes.input}
+          value={filterInput}
           placeholder="Search name or paste address"
           onChange={({ target: { value } }) => handleTokenFilter(value)}
         />

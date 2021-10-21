@@ -25,6 +25,7 @@ import {
   getLpBalance,
   removeLiquidityEth,
   loadPairAddress,
+  removeLiquidity
 } from "../../../actions/dexActions";
 import pwarImg from "../../../assets/pwar.png";
 import SelectToken from "../../common/SelectToken";
@@ -277,6 +278,7 @@ const RemoveCard = ({
   getLpBalance,
   removeLiquidityEth,
   loadPairAddress,
+  removeLiquidity
 }) => {
   const currentDefaultToken = {
     icon: etherImg,
@@ -450,34 +452,86 @@ const RemoveCard = ({
   };
 
   const handleRemoveLiquidity = async () => {
-    const ethToken =
-      selectedToken1.symbol === ETH ? selectedToken1 : selectedToken2;
-    const erc20Token =
-      selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
+
+
     const lpAmount = getPercentAmountWithFloor(
       currentLpBalance(),
       liquidityPercent
     );
-    // console.log({ ethToken, erc20Token, lpAmount });
-    await removeLiquidityEth(
-      ethToken,
-      erc20Token,
-      currentAccount,
-      lpAmount,
-      swapSettings.deadline,
-      currentNetwork
-    );
+    if (selectedToken1.symbol === ETH || selectedToken2.symbol === ETH) {
+      // remove liquidity eth-erc20 || erc20 - eth
+      let ethToken, erc20Token;
+      if (selectedToken1.symbol === ETH) {
 
-    const pairAddress = currentPairAddress()
-    await getLpBalance(
-      selectedToken1,
-      selectedToken2,
-      pairAddress,
-      currentAccount,
-      currentNetwork
-    );
+        ethToken = selectedToken1;
+        erc20Token = selectedToken2;
 
-    handleClearState();
+      } else {
+
+        ethToken = selectedToken2;
+        erc20Token = selectedToken1;
+
+      }
+
+      await removeLiquidityEth(
+        ethToken,
+        erc20Token,
+        currentAccount,
+        lpAmount,
+        swapSettings.deadline,
+        currentNetwork
+      );
+    } else {
+      // remove liquidy erc20 - erc20
+
+      await removeLiquidity(
+        selectedToken1,
+        selectedToken2,
+        currentAccount,
+        lpAmount,
+        swapSettings.deadline,
+        currentNetwork
+      );
+
+      const pairAddress = currentPairAddress()
+      await getLpBalance(
+        selectedToken1,
+        selectedToken2,
+        pairAddress,
+        currentAccount,
+        currentNetwork
+      );
+    }
+
+
+    // const ethToken =
+    //   selectedToken1.symbol === ETH ? selectedToken1 : selectedToken2;
+    // const erc20Token =
+    //   selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
+    // const lpAmount = getPercentAmountWithFloor(
+    //   currentLpBalance(),
+    //   liquidityPercent
+    // );
+    // // console.log({ ethToken, erc20Token, lpAmount });
+    // await removeLiquidityEth(
+    //   ethToken,
+    //   erc20Token,
+    //   currentAccount,
+    //   lpAmount,
+    //   swapSettings.deadline,
+    //   currentNetwork
+    // );
+
+    // const pairAddress = currentPairAddress()
+    // await getLpBalance(
+    //   selectedToken1,
+    //   selectedToken2,
+    //   pairAddress,
+    //   currentAccount,
+    //   currentNetwork
+    // );
+
+
   };
 
   const handleInputChange = (value) => {
@@ -509,17 +563,18 @@ const RemoveCard = ({
       return;
     }
     if (transaction.type === 'remove' && (transaction.status === 'success' || transaction.status === 'failed')) {
-      // store.dispatch({ type: START_TRANSACTION })
-      console.log('START_TRANSACTION: failed')
+
       setSwapDialog(true)
     }
   }, [transaction]);
 
   const handleConfirmSwapClose = (value) => {
     setSwapDialog(value);
-    if (transaction.type === 'remove' && (transaction.status === 'success' || transaction.status === 'failed')) {
+    if (transaction.type === 'remove' && transaction.status === 'success') {
       store.dispatch({ type: START_TRANSACTION })
       handleClearState()
+    } else if (transaction.type === 'remove' && transaction.status === 'failed') {
+      store.dispatch({ type: START_TRANSACTION })
     }
   };
 
@@ -703,7 +758,7 @@ const RemoveCard = ({
       <div className="mt-4 mb-5">
         <Card elevation={20} className={classes.card}>
           <div className={classes.priceContainer}>
-            {dexLoading ? (
+            {false ? (
               <div className="d-flex justify-content-center pt-2 pb-2">
                 <CircularProgress className={classes.spinner} size={30} />
               </div>
@@ -758,4 +813,5 @@ export default connect(mapStateToProps, {
   getLpBalance,
   removeLiquidityEth,
   loadPairAddress,
+  removeLiquidity
 })(RemoveCard);

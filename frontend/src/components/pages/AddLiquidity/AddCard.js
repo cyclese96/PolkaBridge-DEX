@@ -701,10 +701,12 @@ const AddCard = (props) => {
     setSwapDialog(value);
     if (
       transaction.type === "add" &&
-      (transaction.status === "success" || transaction.status === "failed")
+      transaction.status === "success"
     ) {
       store.dispatch({ type: START_TRANSACTION });
       clearInputState();
+    } else if (transaction.type === "add" && transaction.status === "failed") {
+      store.dispatch({ type: START_TRANSACTION });
     }
   };
 
