@@ -16,7 +16,9 @@ import { ETH, etheriumNetwork, tokens } from "../../../constants";
 import {
   getPercentage,
   getPriceRatio,
-  getTokenOut,
+  getToken1Out,
+  getToken2Out,
+  getTokenOutWithReserveRatio,
   toWei,
 } from "../../../utils/helper";
 import {
@@ -365,6 +367,40 @@ const AddCard = (props) => {
     setStatus({ disabled: true, message: "Enter Amounts" });
   };
 
+  const loadPairReserves = async () => {
+
+    console.log('loading pair reserves after add liquidity')
+    let _pairAddress = currentPairAddress();
+
+    if (!_pairAddress) {
+      _pairAddress = await getPairAddress(
+        selectedToken1.address,
+        selectedToken2.address,
+        currentNetwork
+      );
+
+      loadPairAddress(
+        selectedToken1.symbol,
+        selectedToken2.symbol,
+        _pairAddress,
+        currentNetwork
+      );
+    }
+
+    if (!_pairAddress) {
+      //pair not yet created in the factory
+    } else {
+      await getLpBalance(
+        selectedToken1,
+        selectedToken2,
+        _pairAddress,
+        currentAccount,
+        currentNetwork
+      );
+    }
+  }
+
+
   // new use effect
   useEffect(() => {
     async function loadPair() {
@@ -379,32 +415,33 @@ const AddCard = (props) => {
 
         let _pairAddress = currentPairAddress();
 
-        if (!_pairAddress) {
-          _pairAddress = await getPairAddress(
-            selectedToken1.address,
-            selectedToken2.address,
-            currentNetwork
-          );
+        await loadPairReserves()
+        // if (!_pairAddress) {
+        //   _pairAddress = await getPairAddress(
+        //     selectedToken1.address,
+        //     selectedToken2.address,
+        //     currentNetwork
+        //   );
 
-          loadPairAddress(
-            selectedToken1.symbol,
-            selectedToken2.symbol,
-            _pairAddress,
-            currentNetwork
-          );
-        }
+        //   loadPairAddress(
+        //     selectedToken1.symbol,
+        //     selectedToken2.symbol,
+        //     _pairAddress,
+        //     currentNetwork
+        //   );
+        // }
 
-        if (!_pairAddress) {
-          //pair not yet created in the factory
-        } else {
-          await getLpBalance(
-            selectedToken1,
-            selectedToken2,
-            _pairAddress,
-            currentAccount,
-            currentNetwork
-          );
-        }
+        // if (!_pairAddress) {
+        //   //pair not yet created in the factory
+        // } else {
+        //   await getLpBalance(
+        //     selectedToken1,
+        //     selectedToken2,
+        //     _pairAddress,
+        //     currentAccount,
+        //     currentNetwork
+        //   );
+        // }
 
         await checkAllowance(selectedToken1, currentAccount, currentNetwork);
 
@@ -496,10 +533,10 @@ const AddCard = (props) => {
         currentNetwork
       );
 
-      _token2Value = getTokenOut(
+      _token2Value = getTokenOutWithReserveRatio(
         toWei(tokens),
+        poolReserves[selectedToken2.symbol],
         poolReserves[selectedToken1.symbol],
-        poolReserves[selectedToken2.symbol]
       );
       if (new BigNumber(_token2Value).gt(0)) {
         setToken2Value(_token2Value);
@@ -537,10 +574,10 @@ const AddCard = (props) => {
         currentNetwork
       );
 
-      _token1Value = getTokenOut(
-        tokens,
+      _token1Value = getTokenOutWithReserveRatio(
+        toWei(tokens),
+        poolReserves[selectedToken1.symbol],
         poolReserves[selectedToken2.symbol],
-        poolReserves[selectedToken1.symbol]
       );
       if (new BigNumber(_token1Value).eq(0)) {
         verifySwapStatus(
@@ -643,6 +680,8 @@ const AddCard = (props) => {
         currentNetwork
       );
     }
+
+    await loadPairReserves()
   };
 
   const currentPoolShare = () => {

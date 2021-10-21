@@ -492,44 +492,16 @@ const RemoveCard = ({
         swapSettings.deadline,
         currentNetwork
       );
-
-      const pairAddress = currentPairAddress()
-      await getLpBalance(
-        selectedToken1,
-        selectedToken2,
-        pairAddress,
-        currentAccount,
-        currentNetwork
-      );
     }
 
-
-    // const ethToken =
-    //   selectedToken1.symbol === ETH ? selectedToken1 : selectedToken2;
-    // const erc20Token =
-    //   selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
-    // const lpAmount = getPercentAmountWithFloor(
-    //   currentLpBalance(),
-    //   liquidityPercent
-    // );
-    // // console.log({ ethToken, erc20Token, lpAmount });
-    // await removeLiquidityEth(
-    //   ethToken,
-    //   erc20Token,
-    //   currentAccount,
-    //   lpAmount,
-    //   swapSettings.deadline,
-    //   currentNetwork
-    // );
-
-    // const pairAddress = currentPairAddress()
-    // await getLpBalance(
-    //   selectedToken1,
-    //   selectedToken2,
-    //   pairAddress,
-    //   currentAccount,
-    //   currentNetwork
-    // );
+    const pairAddress = currentPairAddress()
+    await getLpBalance(
+      selectedToken1,
+      selectedToken2,
+      pairAddress,
+      currentAccount,
+      currentNetwork
+    );
 
 
   };

@@ -21,7 +21,8 @@ import {
   buyPriceImpact,
   formatFloat,
   getPercentageAmount,
-  getTokenOut,
+  getToken1Out,
+  getToken2Out,
   sellPriceImpact,
   toWei,
 } from "../../utils/helper";
@@ -273,8 +274,6 @@ const SwapCard = (props) => {
       setToken2Value("");
       // updateTokenPrices();
 
-      // check selected from token allowance
-      // await checkAllowance(_token, currentAccount, currentNetwork);
     }
     initSelection();
   }, [currentNetwork, currentAccount]);
@@ -438,7 +437,7 @@ const SwapCard = (props) => {
         currentNetwork
       );
 
-      _token2Value = getTokenOut(
+      _token2Value = getToken2Out(
         toWei(tokens),
         poolReserves[selectedToken1.symbol],
         poolReserves[selectedToken2.symbol]
@@ -483,10 +482,10 @@ const SwapCard = (props) => {
         currentNetwork
       );
 
-      _token1Value = getTokenOut(
+      _token1Value = getToken1Out(
         toWei(tokens).toString(),
+        poolReserves[selectedToken1.symbol],
         poolReserves[selectedToken2.symbol],
-        poolReserves[selectedToken1.symbol]
       );
       console.log('token out ', _token1Value)
       if (new BigNumber(_token1Value).gt(0)) {
@@ -542,15 +541,6 @@ const SwapCard = (props) => {
 
   const handleSwapToken = async () => {
     checkPriceImpact();
-
-    // verifySlippage(
-    //   swapSettings.slippage,
-
-    //   { ...selectedToken1, amount: token1Value },
-    //   { ...selectedToken2, amount: token2Value },
-    //   currentAccount,
-    //   currentNetwork
-    // );
     setSwapDialog(true);
   };
 
@@ -637,25 +627,19 @@ const SwapCard = (props) => {
 
   const handleConfirmSwapClose = (value) => {
     setSwapDialog(value);
+    debouncedGetLpBalance(
+      selectedToken1,
+      selectedToken2,
+      currentPairAddress(),
+      currentAccount,
+      currentNetwork
+    );
     if (transaction.type === 'swap' && (transaction.status === 'success')) {
       store.dispatch({ type: START_TRANSACTION })
       clearInputState()
-      debouncedGetLpBalance(
-        selectedToken1,
-        selectedToken2,
-        currentPairAddress(),
-        currentAccount,
-        currentNetwork
-      );
+
     } else if (transaction.type === 'swap' && transaction.status === 'failed') {
       store.dispatch({ type: START_TRANSACTION })
-      debouncedGetLpBalance(
-        selectedToken1,
-        selectedToken2,
-        currentPairAddress(),
-        currentAccount,
-        currentNetwork
-      );
     }
   };
 

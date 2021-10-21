@@ -11,19 +11,36 @@ import web3 from "../web";
 import axios from "axios";
 import { ethers } from "ethers";
 
+const WEI_UNITS = 1000000000000000000;
+
 export const fromWei = (tokens) => {
-  if (!tokens) {
-    return web3.utils.fromWei("0", "ether");
+
+  try {
+
+    if (!tokens) {
+      return new BigNumber(0).toString();
+    }
+    ;
+    return new BigNumber(tokens).div(WEI_UNITS).toString()
+
+  } catch (error) {
+    console.log('exeption in fromWei ', error)
+    return null;
   }
-  let amount = web3.utils.fromWei(tokens, "ether");
-  return amount;
+
 };
 
 export const toWei = (tokens) => {
-  if (!tokens) {
-    return web3.utils.toWei("0", "ether");
+  try {
+    if (!tokens) {
+      return new BigNumber(0).toString();
+    }
+    return new BigNumber(tokens).multipliedBy(WEI_UNITS).toFixed(0).toString();
+  } catch (error) {
+    console.log('exeption in toWei , ', error)
+    return null;
   }
-  return web3.utils.toWei(tokens, "ether");
+
 };
 
 export const getCurrentAccount = async () => {
@@ -81,8 +98,14 @@ export const isMetaMaskInstalled = () => {
 };
 
 export const token2PerToken1 = (token1UsdPrice, token2UsdPrice) => {
-  const price = token1UsdPrice / token2UsdPrice;
-  return price;
+  try {
+    const price = token1UsdPrice / token2UsdPrice;
+    return price;
+  } catch (error) {
+    console.log('exeption in token2PerToken1', error)
+    return '0'
+  }
+
 };
 
 export const token1PerToken2 = (token1UsdPrice, token2UsdPrice) => {
@@ -189,7 +212,7 @@ export const getPriceRatio = (token1, token2) => {
   }
 };
 
-export const getTokenOut = (tokenIn, token1Reserve, token2Reserve) => {
+export const getToken2Out = (tokenIn, token1Reserve, token2Reserve) => {
   const r0 = new BigNumber(!token1Reserve ? 0 : token1Reserve);
   const r1 = new BigNumber(!token2Reserve ? 0 : token2Reserve);
   const x = new BigNumber(!tokenIn ? 0 : tokenIn);
@@ -204,19 +227,18 @@ export const getTokenOut = (tokenIn, token1Reserve, token2Reserve) => {
     const denominator = r0.multipliedBy(1000).plus(x.multipliedBy(998));
     const y = numerator.div(denominator);
 
-    let result;
-    let integerPart;
-    if (y.gt(1)) {
-      // integerPart = y.toString().split(".");
-      // result = fromWei(integerPart[0]);
-      const _toString = y.div(1000000000000000000).toFixed(4).toString()
-      result = _toString;
-    } else {
-      // integerPart = y.toString().split(".");
-      // result = fromWei(y.toString());
-      const _toString = y.div(1000000000000000000).toFixed(5).toString();
-      result = _toString;
-    }
+    // let result;
+    // let integerPart;
+    const result = fromWei(y.toFixed(0).toString())
+    // if (y.gt(1)) {
+    //   // integerPart = y.toString().split(".");
+    //   // result = fromWei(integerPart[0]);
+    // } else {
+    //   // integerPart = y.toString().split(".");
+    //   // result = fromWei(y.toString());
+    //   const _toString = y.div(WEI_UNITS).toString();
+    //   result = _toString;
+    // }
 
     return result;
   } catch (error) {
@@ -224,25 +246,60 @@ export const getTokenOut = (tokenIn, token1Reserve, token2Reserve) => {
     return new BigNumber(0).toFixed(0).toString();
   }
 };
-// export const getTokenOut = (tokenIn, token1Reserve, token2Reserve) => {
-//   const _token1 = new BigNumber(token1Reserve ? token1Reserve : 0);
-//   const _token2 = new BigNumber(token2Reserve ? token2Reserve : 0);
 
-//   if (_token1.eq("0") || _token2.eq("0")) {
-//     return new BigNumber("0").toFixed(4).toString();
-//   }
+export const getToken1Out = (tokenIn, token1Reserve, token2Reserve) => {
+  const r0 = new BigNumber(!token1Reserve ? 0 : token1Reserve);
+  const r1 = new BigNumber(!token2Reserve ? 0 : token2Reserve);
+  const y = new BigNumber(!tokenIn ? 0 : tokenIn);
 
-//   try {
-//     const _out = _token1.div(_token2).multipliedBy(tokenIn);
-//     if (_out.gt(1)) {
-//       return _out.toFixed(2).toString();
-//     }
-//     return _out.toFixed(5).toString();
-//   } catch (error) {
-//     console.log("exeption getTokenOut", error);
-//     return "0";
-//   }
-// };
+  if (r0.lte(0) || r1.lte(0) || y.lte(0)) {
+    return new BigNumber(0).toFixed(0).toString();
+  }
+
+  try {
+    // price out calculation
+    const numerator = y.multipliedBy(1000).multipliedBy(r0);
+    const denominator = r1.multipliedBy(998).minus(y.multipliedBy(998));
+    const x = numerator.div(denominator);
+
+    const result = fromWei(x.toFixed(0).toString())
+
+    // if (x.gt(1)) {
+    //   const _toString = x.div(WEI_UNITS).toString()
+    //   result = _toString;
+    // } else {
+    //   const _toString = x.div(WEI_UNITS).toString();
+    //   result = _toString;
+    // }
+
+    return result;
+  } catch (error) {
+    console.log("exeption getTokenOut", { error, tokenIn });
+    return new BigNumber(0).toFixed(0).toString();
+  }
+};
+
+// Token out amount for add liquidity
+export const getTokenOutWithReserveRatio = (tokenIn, token1Reserve, token2Reserve) => {
+  const _token1 = new BigNumber(token1Reserve ? token1Reserve : 0);
+  const _token2 = new BigNumber(token2Reserve ? token2Reserve : 0);
+
+  if (_token1.eq("0") || _token2.eq("0")) {
+    return new BigNumber("0").toFixed(4).toString();
+  }
+
+  try {
+    const _out = _token1.div(_token2).multipliedBy(tokenIn)
+
+    // if (_out.gt(1)) {
+    //   return _out.toFixed(2).toString();
+    // }
+    return _out.div(WEI_UNITS).toString();
+  } catch (error) {
+    console.log("exeption getTokenOut", error);
+    return "0";
+  }
+};
 
 export const getPercentAmountWithFloor = (amount, percent) => {
   const _amount = new BigNumber(amount ? amount : 0);
