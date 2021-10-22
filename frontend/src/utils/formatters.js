@@ -27,7 +27,7 @@ export const formatCurrency = (value, precision = 1) => {
 
     //for currency format with $symbol
     if (!value) {
-        return formatter.format(0);
+        return formatter.format(0).slice(1);
     }
 
     // if (typeof window.web3 === "undefined") {

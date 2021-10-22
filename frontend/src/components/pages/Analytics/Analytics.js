@@ -91,10 +91,9 @@ const Analytics = () => {
               <div>
                 <span className={classes.cardSpan}>Volume 24H</span>
                 <p className={classes.cardP}>
-                  {globalData.oneDayVolumeUSD
-                    ? "$" +
+                  {"$" +
                     formatCurrency(globalData.oneDayVolumeUSD)
-                    : "-"}
+                  }
                   <small>
                     {globalData.volumeChangeUSD !== null
                       ? formattedPercent(globalData.volumeChangeUSD)

@@ -43,7 +43,7 @@ const PercentLabel = ({ percentValue, className, braces = false }) => {
         className,
       ].join(" ")}
     >
-      <span className={ownClasses.label}>
+      {!percentValue ? <span className={ownClasses.label}>0%</span> : (<span className={ownClasses.label}>
         {!braces || "("}
         {percentValue >= 0 ? (
           <ArrowUpwardIcon
@@ -57,7 +57,8 @@ const PercentLabel = ({ percentValue, className, braces = false }) => {
           />
         )}
         {formatPercentValue(percentValue)}%{!braces || ")"}
-      </span>
+      </span>)}
+
     </div>
   );
 };

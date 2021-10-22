@@ -4,7 +4,7 @@ import { HttpLink } from 'apollo-link-http'
 // import { HttpLink } from 'apollo-link-http'
 // const APIURL =
 // "https://gateway.thegraph.com/api/584823fe20b487773537ceae7d79941b/subgraphs/id/0x4bb4c1b0745ef7b4642feeccd0740dec417ca0a0-0";
-const APIURL = "https://api.studio.thegraph.com/query/8207/amm/0.8.2";
+const APIURL = "https://api.studio.thegraph.com/query/2992/pbr-dex/2.2";
 const BLOCKS_API_TESTNET = "https://api.studio.thegraph.com/query/8207/rinkeby-blocks/0.0.1";
 const BLOCKS_API_MAINNET = 'https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks';
 // const tokensQuery = `

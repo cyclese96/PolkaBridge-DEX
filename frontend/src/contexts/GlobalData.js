@@ -240,6 +240,8 @@ async function getGlobalData(ethPrice, oldEthPrice) {
     const utcOneWeekBack = utcCurrentTime.subtract(1, "week").unix();
     const utcTwoWeeksBack = utcCurrentTime.subtract(2, "week").unix();
 
+    console.log('analyticsTest: getGloabal data fn global data ', { utcCurrentTime, utcOneDayBack, utcTwoDaysBack, utcOneWeekBack, utcTwoWeeksBack })
+
     // get the blocks needed for time travel queries
     let [oneDayBlock, twoDayBlock, oneWeekBlock, twoWeekBlock] =
       await getBlocksFromTimestamps([
@@ -249,11 +251,13 @@ async function getGlobalData(ethPrice, oldEthPrice) {
         utcTwoWeeksBack,
       ]);
 
+    console.log('analyticsTest:  blocks ', { oneDayBlock, twoDayBlock, oneWeekBlock, twoWeekBlock })
     // fetch the global data
     let result = await client.query({
       query: GLOBAL_DATA(),
       fetchPolicy: "cache-first",
     });
+    console.log('analyticsTest: oday result ', result)
     data = result.data.polkabridgeAmmFactories[0];
 
     // fetch the historical data
@@ -261,12 +265,14 @@ async function getGlobalData(ethPrice, oldEthPrice) {
       query: GLOBAL_DATA(oneDayBlock?.number),
       fetchPolicy: "cache-first",
     });
+    console.log('analyticsTest: oneDayResult', { oneDayResult, block: oneDayBlock?.number })
     oneDayData = oneDayResult.data.polkabridgeAmmFactories[0];
 
     let twoDayResult = await client.query({
       query: GLOBAL_DATA(twoDayBlock?.number),
       fetchPolicy: "cache-first",
     });
+    console.log('analyticsTest: twoDayResult', twoDayResult)
     twoDayData = twoDayResult.data.polkabridgeAmmFactories[0];
 
     let oneWeekResult = await client.query({
@@ -317,7 +323,7 @@ async function getGlobalData(ethPrice, oldEthPrice) {
       data.txnChange = txnChange;
     }
   } catch (e) {
-    console.log("getGlobalData", e);
+    console.log("analyticsTest global data exeption ", e);
   }
 
   return data;
@@ -591,11 +597,11 @@ export function useGlobalData() {
   // const combinedVolume = useTokenDataCombined(offsetVolumes)
 
   useEffect(() => {
-    console.log("loading global data...");
     async function fetchData() {
+      console.log("analyticsTest: fetching global data...", { ethPrice, oldEthPrice });
       let globalData = await getGlobalData(ethPrice, oldEthPrice);
 
-      // console.log('fetched global data ', globalData)
+      console.log('analyticsTest: fetched global data ', globalData)
       globalData && update(globalData);
 
       let allPairs = await getAllPairsOnUniswap();
