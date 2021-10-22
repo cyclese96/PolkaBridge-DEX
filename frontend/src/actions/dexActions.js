@@ -1225,16 +1225,7 @@ export const getLpBalance =
         type: SHOW_DEX_LOADING,
       });
 
-      // if (!_pairContract._address) {
-      //   dispatch({
-      //     type: GET_POOL_SHARE,
-      //     payload: "100",
-      //   });
-      //   dispatch({
-      //     type: HIDE_DEX_LOADING,
-      //   });
-      //   return;
-      // }
+
       const [lpBalance, token0Addr, token1Addr, reservesData, totalSupply] =
         await Promise.all([
           _pairContract.methods.balanceOf(account).call(),
@@ -1280,9 +1271,6 @@ export const getLpBalance =
       });
     }
 
-    // dispatch({
-    //   type: RESET_POOL_DATA,
-    // });
     dispatch({
       type: HIDE_DEX_LOADING,
     });

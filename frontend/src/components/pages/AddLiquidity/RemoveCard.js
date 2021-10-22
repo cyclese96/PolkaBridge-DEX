@@ -660,7 +660,7 @@ const RemoveCard = ({
                 <div className="d-flex justify-content-between">
                   <span>Price:</span>
                   <span>
-                    1 {selectedToken1.symbol} = {priceRatio1}{" "}
+                    1 {selectedToken1.symbol} = {priceRatio1()}
                     {selectedToken2.symbol}
                   </span>
                 </div>
@@ -668,7 +668,7 @@ const RemoveCard = ({
                   <span></span>
                   <span>
                     {" "}
-                    1 {selectedToken2.symbol} = {priceRatio2()}{" "}
+                    1 {selectedToken2.symbol} = {priceRatio2()}
                     {selectedToken1.symbol}
                   </span>
                 </div>
