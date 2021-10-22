@@ -14,20 +14,15 @@ import { ethers } from "ethers";
 const WEI_UNITS = 1000000000000000000;
 
 export const fromWei = (tokens) => {
-
   try {
-
     if (!tokens) {
       return new BigNumber(0).toString();
     }
-    ;
-    return new BigNumber(tokens).div(WEI_UNITS).toString()
-
+    return new BigNumber(tokens).div(WEI_UNITS).toString();
   } catch (error) {
-    console.log('exeption in fromWei ', error)
+    console.log("exeption in fromWei ", error);
     return null;
   }
-
 };
 
 export const toWei = (tokens) => {
@@ -37,10 +32,9 @@ export const toWei = (tokens) => {
     }
     return new BigNumber(tokens).multipliedBy(WEI_UNITS).toFixed(0).toString();
   } catch (error) {
-    console.log('exeption in toWei , ', error)
+    console.log("exeption in toWei , ", error);
     return null;
   }
-
 };
 
 export const getCurrentAccount = async () => {
@@ -102,10 +96,9 @@ export const token2PerToken1 = (token1UsdPrice, token2UsdPrice) => {
     const price = token1UsdPrice / token2UsdPrice;
     return price;
   } catch (error) {
-    console.log('exeption in token2PerToken1', error)
-    return '0'
+    console.log("exeption in token2PerToken1", error);
+    return "0";
   }
-
 };
 
 export const token1PerToken2 = (token1UsdPrice, token2UsdPrice) => {
@@ -229,7 +222,7 @@ export const getToken2Out = (tokenIn, token1Reserve, token2Reserve) => {
 
     // let result;
     // let integerPart;
-    const result = fromWei(y.toFixed(0).toString())
+    const result = fromWei(y.toFixed(0).toString());
     // if (y.gt(1)) {
     //   // integerPart = y.toString().split(".");
     //   // result = fromWei(integerPart[0]);
@@ -262,7 +255,7 @@ export const getToken1Out = (tokenIn, token1Reserve, token2Reserve) => {
     const denominator = r1.multipliedBy(998).minus(y.multipliedBy(998));
     const x = numerator.div(denominator);
 
-    const result = fromWei(x.toFixed(0).toString())
+    const result = fromWei(x.toFixed(0).toString());
 
     // if (x.gt(1)) {
     //   const _toString = x.div(WEI_UNITS).toString()
@@ -280,7 +273,11 @@ export const getToken1Out = (tokenIn, token1Reserve, token2Reserve) => {
 };
 
 // Token out amount for add liquidity
-export const getTokenOutWithReserveRatio = (tokenIn, token1Reserve, token2Reserve) => {
+export const getTokenOutWithReserveRatio = (
+  tokenIn,
+  token1Reserve,
+  token2Reserve
+) => {
   const _token1 = new BigNumber(token1Reserve ? token1Reserve : 0);
   const _token2 = new BigNumber(token2Reserve ? token2Reserve : 0);
 
@@ -289,7 +286,7 @@ export const getTokenOutWithReserveRatio = (tokenIn, token1Reserve, token2Reserv
   }
 
   try {
-    const _out = _token1.div(_token2).multipliedBy(tokenIn)
+    const _out = _token1.div(_token2).multipliedBy(tokenIn);
 
     // if (_out.gt(1)) {
     //   return _out.toFixed(2).toString();

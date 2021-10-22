@@ -176,13 +176,11 @@ const useStyles = makeStyles((theme) => ({
     color: "#bdbdbd",
     fontSize: 12,
   },
-  txDetailsTitle: {
-    color: "#f9f9f9",
-    fontSize: 12,
-  },
+
   txDetailsValue: {
     color: "#ffffff",
-    fontSize: 12,
+    fontSize: 14,
+    paddingBottom: 5,
   },
 }));
 
@@ -240,7 +238,9 @@ const SwapCard = (props) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
   };
 
-  const [currentSwapFn, setCurrentSwapFn] = useState(swapFnConstants.swapExactETHForTokens);
+  const [currentSwapFn, setCurrentSwapFn] = useState(
+    swapFnConstants.swapExactETHForTokens
+  );
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popper" : undefined;
@@ -273,7 +273,6 @@ const SwapCard = (props) => {
       setToken2({});
       setToken2Value("");
       // updateTokenPrices();
-
     }
     initSelection();
   }, [currentNetwork, currentAccount]);
@@ -416,13 +415,12 @@ const SwapCard = (props) => {
     setToken1Value(tokens);
 
     if (selectedToken1.symbol === ETH) {
-      setCurrentSwapFn(swapFnConstants.swapExactETHForTokens)
+      setCurrentSwapFn(swapFnConstants.swapExactETHForTokens);
     } else if (selectedToken2.symbol && selectedToken2.symbol === ETH) {
-      setCurrentSwapFn(swapFnConstants.swapExactTokensForETH)
+      setCurrentSwapFn(swapFnConstants.swapExactTokensForETH);
     } else {
-      setCurrentSwapFn(swapFnConstants.swapExactTokensForTokens)
+      setCurrentSwapFn(swapFnConstants.swapExactTokensForTokens);
     }
-
 
     // calculate resetpective value of token 2 if selected
     let _token2Value = "";
@@ -462,11 +460,11 @@ const SwapCard = (props) => {
     setToken2Value(tokens);
 
     if (selectedToken1.symbol === ETH) {
-      setCurrentSwapFn(swapFnConstants.swapETHforExactTokens)
+      setCurrentSwapFn(swapFnConstants.swapETHforExactTokens);
     } else if (selectedToken2.symbol && selectedToken2.symbol === ETH) {
-      setCurrentSwapFn(swapFnConstants.swapTokensForExactETH)
+      setCurrentSwapFn(swapFnConstants.swapTokensForExactETH);
     } else {
-      setCurrentSwapFn(swapFnConstants.swapTokensForExactTokens)
+      setCurrentSwapFn(swapFnConstants.swapTokensForExactTokens);
     }
 
     //calculate respective value of token1 if selected
@@ -485,9 +483,9 @@ const SwapCard = (props) => {
       _token1Value = getToken1Out(
         toWei(tokens).toString(),
         poolReserves[selectedToken1.symbol],
-        poolReserves[selectedToken2.symbol],
+        poolReserves[selectedToken2.symbol]
       );
-      console.log('token out ', _token1Value)
+      console.log("token out ", _token1Value);
       if (new BigNumber(_token1Value).gt(0)) {
         setToken1Value(_token1Value);
         // verify swap status with current inputs
@@ -620,8 +618,12 @@ const SwapCard = (props) => {
       return;
     }
 
-    if (transaction.type === 'swap' && (transaction.status === 'success' || transaction.status === 'failed') && !swapDialogOpen) {
-      setSwapDialog(true)
+    if (
+      transaction.type === "swap" &&
+      (transaction.status === "success" || transaction.status === "failed") &&
+      !swapDialogOpen
+    ) {
+      setSwapDialog(true);
     }
   }, [transaction]);
 
@@ -634,12 +636,11 @@ const SwapCard = (props) => {
       currentAccount,
       currentNetwork
     );
-    if (transaction.type === 'swap' && (transaction.status === 'success')) {
-      store.dispatch({ type: START_TRANSACTION })
-      clearInputState()
-
-    } else if (transaction.type === 'swap' && transaction.status === 'failed') {
-      store.dispatch({ type: START_TRANSACTION })
+    if (transaction.type === "swap" && transaction.status === "success") {
+      store.dispatch({ type: START_TRANSACTION });
+      clearInputState();
+    } else if (transaction.type === "swap" && transaction.status === "failed") {
+      store.dispatch({ type: START_TRANSACTION });
     }
   };
 
@@ -744,36 +745,16 @@ const SwapCard = (props) => {
 
         <Popper id={id} open={open} anchorEl={anchorEl}>
           <div className={classes.txDetailsCard}>
-            <h6>Transaction Details</h6>
-            <hr style={{ color: "grey", width: "100%", height: 1 }} />
-            <div>
-              <div className="mt-1 d-flex justify-content-between">
-                <div className={classes.txDetailsTitle}>
-                  Liquidity Provider Fee
-                </div>
-                <div className={classes.txDetailsValue}>
-                  {" "}
-                  {getPercentageAmount(token1Value, "0.2 ")}{" "}
-                  {selectedToken1.symbol}
-                </div>
+            <h6 className={classes.txDetailsValue}>
+              For each trade a 0.2% fee is paid
+            </h6>
+
+            <div className="mt-2">
+              <div className={classes.txDetailsValue}>
+                - 80% to LP token holders
               </div>
-              <div className="mt-1 d-flex justify-content-between">
-                <div className={classes.txDetailsTitle}>Price Impact</div>
-                <div className={classes.txDetailsValue}>
-                  {formatFloat(priceImpact)} %
-                </div>
-              </div>
-              <div className="mt-1 d-flex justify-content-between">
-                <div className={classes.txDetailsTitle}>Allowed Slippage</div>
-                <div className={classes.txDetailsValue}>
-                  {swapSettings.slippage} %
-                </div>
-              </div>
-              <div className="mt-1 d-flex justify-content-between">
-                <div className={classes.txDetailsTitle}>Minimum received</div>
-                <div className={classes.txDetailsValue}>
-                  {token2Value} {selectedToken2.symbol}
-                </div>
+              <div className={classes.txDetailsValue}>
+                - 20% to the Treasury, for buyback PBR and burn
               </div>
             </div>
           </div>
