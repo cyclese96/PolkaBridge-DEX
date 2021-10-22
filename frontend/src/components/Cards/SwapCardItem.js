@@ -142,7 +142,11 @@ const SwapCardItem = (props) => {
             )}
             <p className={classes.labelFont}>
               Balance:
-              {" " + formatCurrency(fromWei(balance[currentToken.symbol]))}
+              {console.log(fromWei(balance[currentToken.symbol]), 6)}
+              {" " + currentToken.symbol === "USDC" &&
+                formatCurrency(fromWei(balance[currentToken.symbol]), 6)}
+              {currentToken.symbol !== "USDC" &&
+                formatCurrency(fromWei(balance[currentToken.symbol]))}
             </p>
           </div>
           <div className={classes.inputRow}>

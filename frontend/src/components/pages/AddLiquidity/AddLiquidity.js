@@ -145,8 +145,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       fontSize: 12,
       color: "white",
-      width: "100%",
-      padding: "5px 20px 5px 20px",
+      width: "fit-content",
     },
   },
 }));
