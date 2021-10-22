@@ -12,12 +12,17 @@ import axios from "axios";
 import { ethers } from "ethers";
 
 const WEI_UNITS = 1000000000000000000;
+const WEI_UNITS_6 = 1000000;
 
-export const fromWei = (tokens) => {
+export const fromWei = (tokens, precision = 18) => {
   try {
     if (!tokens) {
       return new BigNumber(0).toString();
     }
+    if (precision === 6) {
+      return new BigNumber(tokens).div(WEI_UNITS_6).toString();
+    }
+
     return new BigNumber(tokens).div(WEI_UNITS).toString();
   } catch (error) {
     console.log("exeption in fromWei ", error);
