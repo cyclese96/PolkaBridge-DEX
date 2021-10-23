@@ -162,6 +162,22 @@ export const GLOBAL_CHART = gql`
 
 export const GLOBAL_DATA = (block) => {
 
+  if (!block) {
+    const queryString = ` query  polkabridgeAmmFactories{
+      polkabridgeAmmFactories {
+        id
+        totalVolumeUSD
+        totalVolumeETH
+        untrackedVolumeUSD
+        totalLiquidityUSD
+        totalLiquidityETH
+        txCount
+        pairCount
+      }
+    }`
+    return gql(queryString)
+  }
+
   const queryString = ` query  polkabridgeAmmFactories{
     polkabridgeAmmFactories(${block ? `block: { number: ${block}}` : ``}) {
       id

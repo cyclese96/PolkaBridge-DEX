@@ -17,6 +17,7 @@ import { useAllPairData } from "../../../contexts/PairData";
 import Loader from "../../common/Loader";
 import TabPage from "../../TabPage";
 import { formatCurrency } from "../../../utils/formatters";
+import BigNumber from "bignumber.js";
 
 // globalData ->
 // {
@@ -48,7 +49,7 @@ const Analytics = () => {
   const chartData = useGlobalChartData();
 
   useEffect(() => {
-    console.log("analyticsTest:  globalData ", globalData);
+    console.log("analyticsTest:  globalData load ", globalData);
   }, [globalData]);
   return (
     <div>
@@ -95,10 +96,8 @@ const Analytics = () => {
                     formatCurrency(globalData.oneDayVolumeUSD)
                   }
                   <small>
-                    {globalData.volumeChangeUSD !== null
-                      ? formattedPercent(globalData.volumeChangeUSD)
-                      : "-"}
-                  </small>{" "}
+                    {formattedPercent(globalData.volumeChangeUSD)}
+                  </small>
                 </p>
                 <div className={classes.chart}>
                   <BarChart chartData={chartData ? chartData[0] : []} />
@@ -122,7 +121,7 @@ const Analytics = () => {
             <div className={classes.statsGroup}>
               <span className={classes.statLabel}>Volume 24H:</span>
               <span className={classes.statAmount}>
-                $ {formatCurrency(globalData.oneDayVolumeUSD)}
+                $ {formatCurrency(new BigNumber(globalData.oneDayVolumeUSD))}
               </span>
 
               <PercentLabel

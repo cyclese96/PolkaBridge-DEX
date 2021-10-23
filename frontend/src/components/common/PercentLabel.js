@@ -1,6 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
+import BigNumber from "bignumber.js";
 
 const useStyles = makeStyles((theme) => ({
   statPercentageGreen: {
@@ -32,7 +33,11 @@ const PercentLabel = ({ percentValue, className, braces = false }) => {
   const ownClasses = useStyles();
 
   const formatPercentValue = (value) => {
-    return value >= 0 ? value : -value;
+    const _value = !value ? new BigNumber(0) : new BigNumber(value)
+    if (_value.gt(1)) {
+      return _value.toFixed(2).toString();
+    }
+    return _value.toFixed(3).toString();
   };
   return (
     <div

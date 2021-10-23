@@ -240,53 +240,50 @@ async function getGlobalData(ethPrice, oldEthPrice) {
     const utcOneWeekBack = utcCurrentTime.subtract(1, "week").unix();
     const utcTwoWeeksBack = utcCurrentTime.subtract(2, "week").unix();
 
-    console.log('analyticsTest: getGloabal times ', { utcCurrentTime, utcOneDayBack, utcTwoDaysBack, utcOneWeekBack, utcTwoWeeksBack })
-
     // get the blocks needed for time travel queries
-    let [currenBlock, oneDayBlock, twoDayBlock, oneWeekBlock, twoWeekBlock] =
+    let [oneDayBlock, twoDayBlock, oneWeekBlock, twoWeekBlock] =
       await getBlocksFromTimestamps([
-        utcCurrentTime.unix(),
         utcOneDayBack,
         utcTwoDaysBack,
         utcOneWeekBack,
         utcTwoWeeksBack,
       ]);
 
-    console.log('analyticsTest:  blocks ', { oneDayBlock, twoDayBlock, oneWeekBlock, twoWeekBlock })
     // fetch the global data
     let result = await client.query({
-      query: GLOBAL_DATA(currenBlock?.number),
+      query: GLOBAL_DATA(),
       fetchPolicy: "cache-first",
     });
-    console.log('analyticsTest: oday result ', result)
-    data = result.data.polkabridgeAmmFactories[0];
+
+    data = !result.data.polkabridgeAmmFactories[0] ? {} : result.data.polkabridgeAmmFactories[0];
 
     // fetch the historical data
     let oneDayResult = await client.query({
       query: GLOBAL_DATA(oneDayBlock?.number),
       fetchPolicy: "cache-first",
     });
-    console.log('analyticsTest: oneDayResult', { oneDayResult, block: oneDayBlock?.number })
-    oneDayData = oneDayResult.data.polkabridgeAmmFactories[0];
+
+    oneDayData = !oneDayResult.data.polkabridgeAmmFactories[0] ? {} : oneDayResult.data.polkabridgeAmmFactories[0];
 
     let twoDayResult = await client.query({
       query: GLOBAL_DATA(twoDayBlock?.number),
       fetchPolicy: "cache-first",
     });
-    console.log('analyticsTest: twoDayResult', twoDayResult)
-    twoDayData = twoDayResult.data.polkabridgeAmmFactories[0];
+
+    twoDayData = !twoDayResult.data.polkabridgeAmmFactories[0] ? {} : twoDayResult.data.polkabridgeAmmFactories[0];
 
     let oneWeekResult = await client.query({
       query: GLOBAL_DATA(oneWeekBlock?.number),
       fetchPolicy: "cache-first",
     });
-    const oneWeekData = oneWeekResult.data.polkabridgeAmmFactories[0];
+    const oneWeekData = !oneWeekResult.data.polkabridgeAmmFactories[0] ? {} : oneWeekResult.data.polkabridgeAmmFactories[0];
 
     let twoWeekResult = await client.query({
       query: GLOBAL_DATA(twoWeekBlock?.number),
       fetchPolicy: "cache-first",
     });
-    const twoWeekData = twoWeekResult.data.polkabridgeAmmFactories[0];
+
+    const twoWeekData = !twoWeekResult.data.polkabridgeAmmFactories[0] ? {} : twoWeekResult.data.polkabridgeAmmFactories[0];
 
     if (data && oneDayData && twoDayData && twoWeekData) {
       let [oneDayVolumeUSD, volumeChangeUSD] = get2DayPercentChange(
