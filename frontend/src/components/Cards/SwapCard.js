@@ -21,6 +21,7 @@ import {
   buyPriceImpact,
   formatFloat,
   getPercentageAmount,
+  getPriceRatio,
   getToken1Out,
   getToken2Out,
   sellPriceImpact,
@@ -230,6 +231,7 @@ const SwapCard = (props) => {
   const [liquidityStatus, setLiquidityStatus] = useState(false);
   const [localStateLoading, setLocalStateLoading] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [priceRatio, setPriceRatio] = useState(null)
 
   const [swapTransactionStatus, setSwapTransactionStatus] =
     useState(transaction);
@@ -448,6 +450,10 @@ const SwapCard = (props) => {
           { value: _token2Value, selected: selectedToken2 }
         );
       }
+
+      // update current price ratio based on trade amounts
+      const _ratio = getPriceRatio(_token2Value, tokens)
+      setPriceRatio(_ratio)
     } else if (selectedToken2.symbol && !tokens) {
       setToken2Value("");
       if (!swapStatus.disabled) {
@@ -485,7 +491,7 @@ const SwapCard = (props) => {
         poolReserves[selectedToken1.symbol],
         poolReserves[selectedToken2.symbol]
       );
-      console.log("token out ", _token1Value);
+
       if (new BigNumber(_token1Value).gt(0)) {
         setToken1Value(_token1Value);
         // verify swap status with current inputs
@@ -494,6 +500,11 @@ const SwapCard = (props) => {
           { value: tokens, selected: selectedToken2 }
         );
       }
+
+      // update current price ratio based on trade amounts
+      const _ratio = getPriceRatio(tokens, _token1Value)
+      setPriceRatio(_ratio)
+
     } else if (selectedToken1.symbol && !tokens) {
       setToken1Value("");
       if (!swapStatus.disabled) {
@@ -709,12 +720,12 @@ const SwapCard = (props) => {
           {token1Value && token2Value && (
             <div className="mt-1 d-flex justify-content-end">
               <div className={classes.tokenPrice}>
-                <span>
-                  {" "}
-                  1 {selectedToken1.symbol && selectedToken1.symbol} ={" "}
-                  {(token2Value / token1Value).toFixed(2)}{" "}
-                  {selectedToken2.symbol && selectedToken2.symbol}
-                </span>{" "}
+                {(selectedToken1.symbol && selectedToken2.symbol && !disableStatus()) ? (
+                  <span>
+                    1 {selectedToken1.symbol} {" = "} {priceRatio}  {selectedToken2.symbol}
+                  </span>
+                ) : ""}
+
                 <Info
                   className={classes.infoIcon}
                   style={{ marginTop: -3 }}

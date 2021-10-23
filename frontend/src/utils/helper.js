@@ -256,8 +256,10 @@ export const getToken1Out = (tokenIn, token1Reserve, token2Reserve) => {
 
   try {
     // price out calculation
-    const numerator = y.multipliedBy(1000).multipliedBy(r0);
-    const denominator = r1.multipliedBy(998).minus(y.multipliedBy(998));
+    const numerator = y.multipliedBy(998).multipliedBy(r0);
+    const denominator = r1.multipliedBy(1000).plus(y.multipliedBy(998));
+    // const numerator = y.multipliedBy(1000).multipliedBy(r0);
+    // const denominator = r1.multipliedBy(998).minus(y.multipliedBy(998));
     const x = numerator.div(denominator);
 
     const result = fromWei(x.toFixed(0).toString());
