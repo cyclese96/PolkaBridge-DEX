@@ -322,6 +322,11 @@ export const tokens = [
   },
 ];
 
+export const DECIMAL_6_ADDRESSES = [
+  usdcTestnetAddress,
+  usdcMainnetAddress
+]
+
 export const nullAddress = "0x0000000000000000000000000000000000000000";
 
 export const timeframeOptions = {

@@ -30,12 +30,12 @@ export const fromWei = (tokens, precision = 18) => {
   }
 };
 
-export const toWei = (tokens) => {
+export const toWei = (tokens, decimals = 18) => {
   try {
     if (!tokens) {
       return new BigNumber(0).toString();
     }
-    return new BigNumber(tokens).multipliedBy(WEI_UNITS).toFixed(0).toString();
+    return new BigNumber(tokens).multipliedBy(parseInt(decimals) === 6 ? WEI_UNITS_6 : WEI_UNITS).toFixed(0).toString();
   } catch (error) {
     console.log("exeption in toWei , ", error);
     return null;

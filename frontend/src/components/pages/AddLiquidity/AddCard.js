@@ -12,7 +12,7 @@ import SwapSettings from "../../common/SwapSettings";
 import etherImg from "../../../assets/ether.png";
 import SwapCardItem from "../../Cards/SwapCardItem";
 import AddIcon from "@material-ui/icons/Add";
-import { ETH, etheriumNetwork, tokens } from "../../../constants";
+import { DECIMAL_6_ADDRESSES, ETH, etheriumNetwork, tokens } from "../../../constants";
 import {
   getPercentage,
   getPriceRatio,
@@ -645,20 +645,26 @@ const AddCard = (props) => {
       if (selectedToken1.symbol === ETH) {
         etherToken = {
           ...selectedToken1,
-          amount: token1Value.toString(),
+          amount: token1Value,
         };
+
+        const _amount = DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token2Value)
         erc20Token = {
           ...selectedToken2,
-          amount: toWei(token2Value.toString()),
+          amount: _amount,
         };
+
       } else {
+
         etherToken = {
           ...selectedToken2,
-          amount: token2Value.toString(),
+          amount: token2Value,
         };
+
+        const _amount = DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value)
         erc20Token = {
           ...selectedToken1,
-          amount: toWei(token1Value.toString()),
+          amount: _amount,
         };
       }
 
@@ -672,9 +678,11 @@ const AddCard = (props) => {
     } else {
       // addLiquidity
 
+      const _amount1 = DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value)
+      const _amount2 = DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token1Value)
       await addLiquidity(
-        { ...selectedToken1, amount: toWei(token1Value) },
-        { ...selectedToken2, amount: toWei(token2Value) },
+        { ...selectedToken1, amount: _amount1 },
+        { ...selectedToken2, amount: _amount2 },
         currentAccount,
         swapSettings.deadline,
         currentNetwork
