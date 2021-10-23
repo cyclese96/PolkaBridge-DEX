@@ -160,29 +160,10 @@ export const GLOBAL_CHART = gql`
 `;
 
 
-// export const GLOBAL_DATA = (block) => {
-//   console.log('analyticsTest query block ', block)
-//   const queryString = gql` query 
-//     polkabridgeAmmFactories(
-//        ${block ? `block: { number: ${block}}` : ``} 
-//        where: { id: "${FACTORY_ADDRESS}" }) {
-//         id
-//         totalVolumeUSD
-//         totalVolumeETH
-//         untrackedVolumeUSD
-//         totalLiquidityUSD
-//         totalLiquidityETH
-//         txCount
-//         pairCount
-//       }
-//     }`;
-//   return queryString
-// };
-
 export const GLOBAL_DATA = (block) => {
-  const queryString = ` query polkabridgeAmmFactories(
-     ${block ? `block: { number: ${block}}` : ``} 
-     where: { id: "${FACTORY_ADDRESS}" }) {
+
+  const queryString = ` query  polkabridgeAmmFactories{
+    polkabridgeAmmFactories(${block ? `block: { number: ${block}}` : ``}) {
       id
       totalVolumeUSD
       totalVolumeETH

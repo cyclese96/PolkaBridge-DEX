@@ -186,7 +186,7 @@ const AddLiquidity = ({ account: { balance, loading } }) => {
               </Button>
             </div>
           </Card>
-          <div className="mt-5">
+          {/* <div className="mt-5">
             <Card elevation={10} className={classes.card}>
               <h4>Your Liquidity</h4>
               <Card className={classes.cardAddedLiquidity}>
@@ -252,7 +252,7 @@ const AddLiquidity = ({ account: { balance, loading } }) => {
                 </div>
               </Card>
             </Card>
-          </div>
+          </div> */}
         </div>
       ) : showCard.component === "AddCard" ? (
         <AddCard

@@ -240,11 +240,12 @@ async function getGlobalData(ethPrice, oldEthPrice) {
     const utcOneWeekBack = utcCurrentTime.subtract(1, "week").unix();
     const utcTwoWeeksBack = utcCurrentTime.subtract(2, "week").unix();
 
-    console.log('analyticsTest: getGloabal data fn global data ', { utcCurrentTime, utcOneDayBack, utcTwoDaysBack, utcOneWeekBack, utcTwoWeeksBack })
+    console.log('analyticsTest: getGloabal times ', { utcCurrentTime, utcOneDayBack, utcTwoDaysBack, utcOneWeekBack, utcTwoWeeksBack })
 
     // get the blocks needed for time travel queries
-    let [oneDayBlock, twoDayBlock, oneWeekBlock, twoWeekBlock] =
+    let [currenBlock, oneDayBlock, twoDayBlock, oneWeekBlock, twoWeekBlock] =
       await getBlocksFromTimestamps([
+        utcCurrentTime.unix(),
         utcOneDayBack,
         utcTwoDaysBack,
         utcOneWeekBack,
@@ -254,7 +255,7 @@ async function getGlobalData(ethPrice, oldEthPrice) {
     console.log('analyticsTest:  blocks ', { oneDayBlock, twoDayBlock, oneWeekBlock, twoWeekBlock })
     // fetch the global data
     let result = await client.query({
-      query: GLOBAL_DATA(),
+      query: GLOBAL_DATA(currenBlock?.number),
       fetchPolicy: "cache-first",
     });
     console.log('analyticsTest: oday result ', result)
