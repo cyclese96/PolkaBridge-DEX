@@ -21,18 +21,19 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 15,
 
     [theme.breakpoints.down("sm")]: {
-      paddingLeft: 10,
-      paddingRight: 10,
+      paddingLeft: 5,
+      paddingRight: 5,
       paddingTop: 15,
       paddingBottom: 15,
-      width: "92vw",
+      width: "95vw",
+      maxWidth: "100%",
       height: "100%",
     },
   },
   chart: {
     width: 440,
     [theme.breakpoints.down("sm")]: {
-      width: "100vw",
+      width: "100%",
     },
   },
   heading: {
@@ -101,7 +102,7 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: 10,
     paddingTop: 15,
     paddingBottom: 15,
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("xs")]: {
       height: "100%",
       marginTop: 30,
       display: "flex",
@@ -114,7 +115,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     width: "30%",
     justifyContent: "center",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("xs")]: {
       display: "flex",
       width: "100%",
       justifyContent: "center",
@@ -122,16 +123,21 @@ const useStyles = makeStyles((theme) => ({
   },
   statLabel: {
     paddingRight: 10,
+    fontSize: 15,
+
     color: "rgba(255,255,255,0.5)",
     [theme.breakpoints.down("sm")]: {
-      fontSize: 14,
+      fontSize: 12,
+      paddingRight: 5,
     },
   },
   statAmount: {
     color: "#bdbdbd",
     paddingRight: 5,
+    fontSize: 14,
+
     [theme.breakpoints.down("sm")]: {
-      fontSize: 13,
+      fontSize: 11,
     },
   },
   // statPercentageGreen: {

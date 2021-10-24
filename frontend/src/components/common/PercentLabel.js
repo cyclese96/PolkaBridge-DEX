@@ -6,21 +6,27 @@ import BigNumber from "bignumber.js";
 const useStyles = makeStyles((theme) => ({
   statPercentageGreen: {
     color: "#4caf50",
+    fontSize: 14,
+
     [theme.breakpoints.down("sm")]: {
-      fontSize: 14,
+      fontSize: 12,
     },
   },
   statPercentageRed: {
     color: "#ff1744",
+    fontSize: 14,
+
     [theme.breakpoints.down("sm")]: {
-      fontSize: 14,
+      fontSize: 12,
     },
   },
   arrowIcon: {
     margin: 0,
     padding: 0,
+    fontSize: 14,
+
     [theme.breakpoints.down("sm")]: {
-      fontSize: 14,
+      fontSize: 12,
     },
   },
   label: {
@@ -33,7 +39,7 @@ const PercentLabel = ({ percentValue, className, braces = false }) => {
   const ownClasses = useStyles();
 
   const formatPercentValue = (value) => {
-    const _value = !value ? new BigNumber(0) : new BigNumber(value)
+    const _value = !value ? new BigNumber(0) : new BigNumber(value);
     if (_value.gt(1)) {
       return _value.toFixed(2).toString();
     }
@@ -48,22 +54,25 @@ const PercentLabel = ({ percentValue, className, braces = false }) => {
         className,
       ].join(" ")}
     >
-      {!percentValue ? <span className={ownClasses.label}>0%</span> : (<span className={ownClasses.label}>
-        {!braces || "("}
-        {percentValue >= 0 ? (
-          <ArrowUpwardIcon
-            fontSize="small"
-            className={[ownClasses.arrowIcon, className].join(" ")}
-          />
-        ) : (
-          <ArrowDownwardIcon
-            fontSize="small"
-            className={[ownClasses.arrowIcon, className].join(" ")}
-          />
-        )}
-        {formatPercentValue(percentValue)}%{!braces || ")"}
-      </span>)}
-
+      {!percentValue ? (
+        <span className={ownClasses.label}>0%</span>
+      ) : (
+        <span className={ownClasses.label}>
+          {!braces || "("}
+          {percentValue >= 0 ? (
+            <ArrowUpwardIcon
+              fontSize="small"
+              className={[ownClasses.arrowIcon, className].join(" ")}
+            />
+          ) : (
+            <ArrowDownwardIcon
+              fontSize="small"
+              className={[ownClasses.arrowIcon, className].join(" ")}
+            />
+          )}
+          {formatPercentValue(percentValue)}%{!braces || ")"}
+        </span>
+      )}
     </div>
   );
 };
