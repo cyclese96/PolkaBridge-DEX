@@ -1,10 +1,7 @@
 import React, { useCallback, useEffect } from "react";
 import {
-  Box,
   Button,
   Card,
-  CircularProgress,
-  Divider,
   IconButton,
   makeStyles,
   Popper,
@@ -16,11 +13,9 @@ import { useState } from "react";
 import SwapSettings from "../common/SwapSettings";
 import BigNumber from "bignumber.js";
 import CustomSnackBar from "../common/CustomSnackbar";
-import { ETH, etheriumNetwork, swapFnConstants, tokens } from "../../constants";
+import { DECIMAL_6_ADDRESSES, ETH, etheriumNetwork, swapFnConstants, THRESOLD_WEI_VALUE, tokens } from "../../constants";
 import {
   buyPriceImpact,
-  formatFloat,
-  getPercentageAmount,
   getPriceRatio,
   getToken1Out,
   getToken2Out,
@@ -31,6 +26,8 @@ import {
   checkAllowance,
   confirmAllowance,
   getLpBalance,
+  getToken0InAmount,
+  getToken1OutAmount,
   loadPairAddress,
 } from "../../actions/dexActions";
 import { getAccountBalance } from "../../actions/accountActions";
@@ -38,9 +35,8 @@ import SwapConfirm from "../common/SwapConfirm";
 import debounce from "lodash.debounce";
 import { getPairAddress } from "../../utils/connectionUtils";
 
-import { Info, Settings, SwapCalls, SwapHoriz } from "@material-ui/icons";
+import { Info, Settings } from "@material-ui/icons";
 import TabPage from "../TabPage";
-import TransactionStatus from "../common/TransactionStatus";
 import store from "../../store";
 import { START_TRANSACTION } from "../../actions/types";
 
@@ -193,11 +189,9 @@ const SwapCard = (props) => {
       poolReserves,
       pairContractData,
       transaction,
-      swapSettings,
     },
     checkAllowance,
     confirmAllowance,
-    tokenType,
     getLpBalance,
     getAccountBalance,
     loadPairAddress,
@@ -228,13 +222,9 @@ const SwapCard = (props) => {
   const [swapDialogOpen, setSwapDialog] = useState(false);
 
   const [priceImpact, setPriceImpact] = useState(null);
-  const [liquidityStatus, setLiquidityStatus] = useState(false);
   const [localStateLoading, setLocalStateLoading] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [priceRatio, setPriceRatio] = useState(null)
-
-  const [swapTransactionStatus, setSwapTransactionStatus] =
-    useState(transaction);
 
   const handleTxPoper = (event) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -243,6 +233,7 @@ const SwapCard = (props) => {
   const [currentSwapFn, setCurrentSwapFn] = useState(
     swapFnConstants.swapExactETHForTokens
   );
+  const [swapPath, setSwapPath] = useState([])
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popper" : undefined;
@@ -307,6 +298,42 @@ const SwapCard = (props) => {
     setStatus({ disabled: true, message: "Enter Amounts" });
   };
 
+  const loadPairReserves = async () => {
+    let _pairAddress = currentPairAddress();
+    if (!_pairAddress) {
+      _pairAddress = await getPairAddress(
+        selectedToken1.address,
+        selectedToken2.address,
+        currentNetwork
+      );
+
+      loadPairAddress(
+        selectedToken1.symbol,
+        selectedToken2.symbol,
+        _pairAddress,
+        currentNetwork
+      );
+    }
+
+    if (!_pairAddress) {
+
+      setStatus({
+        disabled: true,
+        message: "No liquidity available for this pair",
+      });
+    } else {
+      // console.log("current pair address ", _pairAddress);
+
+      await getLpBalance(
+        selectedToken1,
+        selectedToken2,
+        _pairAddress,
+        currentAccount,
+        currentNetwork
+      );
+    }
+  }
+
   useEffect(() => {
     async function loadPair() {
       if (selectedToken1.symbol && selectedToken2.symbol) {
@@ -321,40 +348,8 @@ const SwapCard = (props) => {
 
         await getAccountBalance(erc20Token, currentNetwork);
 
-        let _pairAddress = currentPairAddress();
-        if (!_pairAddress) {
-          _pairAddress = await getPairAddress(
-            selectedToken1.address,
-            selectedToken2.address,
-            currentNetwork
-          );
+        await loadPairReserves()
 
-          loadPairAddress(
-            selectedToken1.symbol,
-            selectedToken2.symbol,
-            _pairAddress,
-            currentNetwork
-          );
-        }
-
-        if (!_pairAddress) {
-          setLiquidityStatus(true);
-          setStatus({
-            disabled: true,
-            message: "No liquidity available for this pair",
-          });
-        } else {
-          console.log("current pair address ", _pairAddress);
-          // setLiquidityStatus(false);
-
-          await getLpBalance(
-            selectedToken1,
-            selectedToken2,
-            _pairAddress,
-            currentAccount,
-            currentNetwork
-          );
-        }
 
         await checkAllowance(selectedToken1, currentAccount, currentNetwork);
 
@@ -364,13 +359,13 @@ const SwapCard = (props) => {
     loadPair();
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
+
   useEffect(() => {
     if (
       poolReserves &&
       (new BigNumber(poolReserves[selectedToken1.symbol]).eq(0) ||
         new BigNumber(poolReserves[selectedToken2.symbol]).eq(0))
     ) {
-      setLiquidityStatus(true);
       setStatus({
         disabled: true,
         message: "No liquidity available for this pair",
@@ -413,8 +408,12 @@ const SwapCard = (props) => {
     [] // will be created only once initially
   );
 
+
+  // token 1 input change
   const onToken1InputChange = async (tokens) => {
     setToken1Value(tokens);
+
+    setLocalStateLoading(true)
 
     if (selectedToken1.symbol === ETH) {
       setCurrentSwapFn(swapFnConstants.swapExactETHForTokens);
@@ -437,11 +436,15 @@ const SwapCard = (props) => {
         currentNetwork
       );
 
-      _token2Value = getToken2Out(
-        toWei(tokens),
-        poolReserves[selectedToken1.symbol],
-        poolReserves[selectedToken2.symbol]
-      );
+
+      const _tokensInWei = DECIMAL_6_ADDRESSES.includes(selectedToken1.address)
+        ? toWei(tokens, 6)
+        : toWei(tokens);
+
+      const result = await getToken1OutAmount({ ...selectedToken1, amount: _tokensInWei }, selectedToken2, currentNetwork)
+      _token2Value = result.resultOut;
+      setSwapPath(result.selectedPath)
+
       if (new BigNumber(_token2Value).gt(0)) {
         setToken2Value(_token2Value);
         // verify swap status with current inputs
@@ -450,6 +453,14 @@ const SwapCard = (props) => {
           { value: _token2Value, selected: selectedToken2 }
         );
       }
+
+      if (new BigNumber(_token2Value).lt(THRESOLD_WEI_VALUE)) {
+        setStatus({
+          disabled: true,
+          message: "Not enough liquidity for this trade!",
+        });
+      }
+
 
       // update current price ratio based on trade amounts
       const _ratio = getPriceRatio(_token2Value, tokens)
@@ -460,8 +471,11 @@ const SwapCard = (props) => {
         setStatus({ disabled: true, message: "Enter Amounts" });
       }
     }
+
+    setLocalStateLoading(false)
   };
 
+  // token2 input change
   const onToken2InputChange = async (tokens) => {
     setToken2Value(tokens);
 
@@ -486,11 +500,15 @@ const SwapCard = (props) => {
         currentNetwork
       );
 
-      _token1Value = getToken1Out(
-        toWei(tokens).toString(),
-        poolReserves[selectedToken1.symbol],
-        poolReserves[selectedToken2.symbol]
-      );
+
+
+      const _tokensInWei = DECIMAL_6_ADDRESSES.includes(selectedToken2.address)
+        ? toWei(tokens, 6)
+        : toWei(tokens);
+
+      const result = await getToken0InAmount(selectedToken1, { ...selectedToken2, amount: _tokensInWei }, currentNetwork)
+      _token1Value = result.resultIn;
+      setSwapPath(result.selectedPath)
 
       if (new BigNumber(_token1Value).gt(0)) {
         setToken1Value(_token1Value);
@@ -499,6 +517,13 @@ const SwapCard = (props) => {
           { value: _token1Value, selected: selectedToken1 },
           { value: tokens, selected: selectedToken2 }
         );
+      }
+
+      if (new BigNumber(_token1Value).lt(THRESOLD_WEI_VALUE)) {
+        setStatus({
+          disabled: true,
+          message: "Not enough liquidity for this trade!",
+        });
       }
 
       // update current price ratio based on trade amounts
@@ -553,9 +578,6 @@ const SwapCard = (props) => {
     setSwapDialog(true);
   };
 
-  const handleSwapConfirm = () => {
-    //todo
-  };
 
   const checkPriceImpact = () => {
     let impact;
@@ -629,6 +651,8 @@ const SwapCard = (props) => {
       return;
     }
 
+    loadPairReserves()
+
     if (
       transaction.type === "swap" &&
       (transaction.status === "success" || transaction.status === "failed") &&
@@ -673,6 +697,7 @@ const SwapCard = (props) => {
         token2Value={token2Value}
         priceImpact={priceImpact}
         currentSwapFn={currentSwapFn}
+        currenSwapPath={swapPath}
       />
       <SwapSettings open={settingOpen} handleClose={close} />
       <Card elevation={20} className={classes.card}>

@@ -9,6 +9,9 @@ import {
   supportedTokens,
   swapFnConstants,
   tokens,
+  usdtMainnetAddress,
+  usdtTestnetAddress,
+  WETH_ADDRESS_MAINNET,
   WETH_ADDRESS_TESTNET,
 } from "../constants";
 import {
@@ -18,6 +21,7 @@ import {
   routerContract,
   tokenContract,
 } from "../contracts/connections";
+import { getPairAddress } from "../utils/connectionUtils";
 import {
   toWei,
   getTokenContract,
@@ -27,6 +31,7 @@ import {
   fetchTokenInfo,
   cacheImportedToken,
   getCachedTokens,
+  fromWei,
 } from "../utils/helper";
 import {
   APPROVE_LP_TOKENS,
@@ -54,7 +59,7 @@ import {
 
 // swap transaction function
 export const swapTokens =
-  (token0, token1, deadline, currentSwapFn, account, network) => async (dispatch) => {
+  (token0, token1, deadline, currentSwapFn, currenSwapPath, account, network) => async (dispatch) => {
     try {
       console.log("swapExactEthForTokens");
       const _routerContract = routerContract(network);
@@ -65,7 +70,7 @@ export const swapTokens =
       const token0Min = 0//token0.min; // todo: veirfy min amount out with henry and update this
       const token1Min = 0//token1.min;
 
-      const path = [token0.address, token1.address];
+      const path = currenSwapPath//[token0.address, token1.address];
       const toAddress = account;
       const _deadlineUnix = getUnixTime(deadline);
       dispatch({
@@ -521,11 +526,10 @@ export const removeLiquidity =
         // console.log({
         //   address0: token0.address,
         //   address1: token1.address,
-        //   token0AmountDesired,
-        //   token1AmountDesired,
-        //   token0AmountMin,
-        //   token1AmountMin,
+
+
         //   account,
+        //   lpAmount,
         //   _deadlineUnix,
         // });
         dispatch({ type: START_TRANSACTION })
@@ -606,6 +610,7 @@ export const removeLiquidityEth =
         const tokenAmountMin = "0";
         const lpTokenAmount = lpAmount;
 
+        console.log({ ethToken, erc20Token, lpAmount })
         // deadline should be passed in minites in calculation
         const _deadlineUnix = getUnixTime(deadline);
 
@@ -893,6 +898,153 @@ export const importToken = (address, account, network) => async (dispatch) => {
   });
 };
 
+// token0 {input, address, symbol  }
+export const getToken1OutAmount = async (token0, token1, network) => {
+  try {
+
+    const _routerContract = routerContract(network);
+
+    // calculate price from token0->weth->token path
+    const wethAddress = currentConnection === 'testnet' ? WETH_ADDRESS_TESTNET : WETH_ADDRESS_MAINNET;
+    const usdtAddress = currentConnection === 'testnet' ? usdtTestnetAddress : usdtMainnetAddress;
+
+    const token0In = token0.amount;
+
+    const _path0 = [token0.address, token1.address]
+    const _path1 = [token0.address, wethAddress, token1.address]
+    const _path2 = [token0.address, wethAddress, usdtAddress, token1.address];
+
+    const bridgePath = (DECIMAL_6_ADDRESSES.includes(token0.address) || DECIMAL_6_ADDRESSES.includes(token1.address))
+      ? _path2 : _path1;
+
+    let amountsOutPair;
+    let amountsOutWethBridge;
+    let selectedPath = [];
+    let resultOut = '0';
+
+    // const pairAddress = await getPairAddress(token0.address, token1.address);
+
+    if ((token0.symbol === ETH || token1.symbol === ETH) || DECIMAL_6_ADDRESSES.includes(token0.address)) {
+      console.log('getToken1OutAmount fetching from direct pair', _path0)
+      // fetch from pair only
+      amountsOutPair = await _routerContract.methods.getAmountsOut(token0In, _path0).call();
+      const token1OutPair = new BigNumber(amountsOutPair[1])
+      resultOut = DECIMAL_6_ADDRESSES.includes(token1.address) ? fromWei(token1OutPair.toString(), 6) : fromWei(token1OutPair.toString());
+      selectedPath = _path0;
+
+    } else {
+
+      [amountsOutPair, amountsOutWethBridge] = await Promise.all([
+        _routerContract.methods.getAmountsOut(token0In, _path0).call(),
+        _routerContract.methods.getAmountsOut(token0In, bridgePath).call(),
+      ])
+
+      console.log('getToken1OutAmount  data ', { amountsOutPair, amountsOutWethBridge })
+      const token1OutPair = new BigNumber(amountsOutPair[1])
+      const token1OutWethBridge = new BigNumber(amountsOutWethBridge[amountsOutWethBridge.length - 1])
+
+      if (token1OutPair.gt(token1OutWethBridge)) {
+
+        console.log('fetching from direct  pair ', _path0, { token1OutPair: token1OutPair.toString(), token1OutWethBridge: token1OutWethBridge.toString() })
+
+        resultOut = DECIMAL_6_ADDRESSES.includes(token1.address) ? fromWei(token1OutPair.toString(), 6) : fromWei(token1OutPair.toString());
+        selectedPath = _path0;
+
+      } else {
+
+        console.log('getToken1OutAmount fetching from eth path ', { _path1, token1OutPair: token1OutPair.toString(), token1OutWethBridge: token1OutWethBridge.toString() })
+        resultOut = fromWei(token1OutWethBridge.toString());//DECIMAL_6_ADDRESSES.includes(token1.address) ? fromWei(token1OutWethBridge.toString(), 6) : fromWei(token1OutWethBridge.toString());
+        selectedPath = bridgePath;
+      }
+
+
+
+    }
+
+    return { resultOut, selectedPath }
+
+
+  } catch (error) {
+    console.log('getToken1OutAmount error ', error)
+    // dispatch({
+    //   type: DEX_ERROR,
+    //   payload: "getTokenOutAmount error",
+    // });
+    return '0'
+  }
+}
+
+
+// token0 {input,   }
+export const getToken0InAmount = async (token0, token1, network) => {
+  try {
+
+    const _routerContract = routerContract(network);
+    // calculate price from token0->weth->token path
+    const wethAddress = currentConnection === 'testnet' ? WETH_ADDRESS_TESTNET : WETH_ADDRESS_MAINNET;
+    const usdtAddress = currentConnection === 'testnet' ? usdtTestnetAddress : usdtMainnetAddress;
+
+    const token1Out = token1.amount;
+
+    const _path0 = [token1.address, token0.address]
+    const _path1 = [token1.address, wethAddress, token0.address]
+    const _path2 = [token1.address, usdtAddress, wethAddress, token0.address];
+
+    const bridgePath = (DECIMAL_6_ADDRESSES.includes(token0.address) || DECIMAL_6_ADDRESSES.includes(token1.address))
+      ? _path2 : _path1;
+
+    let amountsInPair;
+    let amountsInWethBridge;
+
+    let selectedPath = [];
+    let resultIn = '0';
+
+    if (token0.symbol === ETH || token1.symbol === ETH || DECIMAL_6_ADDRESSES.includes(token0.address)) {
+      // fetch from pair only
+      amountsInPair = await _routerContract.methods.getAmountsIn(token1Out, _path0.reverse()).call();
+      const token0InPair = new BigNumber(amountsInPair[0])
+
+      resultIn = DECIMAL_6_ADDRESSES.includes(token0.address) ? fromWei(token0InPair.toString(), 6) : fromWei(token0InPair.toString());
+      selectedPath = _path0;
+    } else {
+
+      [amountsInPair, amountsInWethBridge] = await Promise.all([
+        _routerContract.methods.getAmountsOut(token1Out, _path0).call(),
+        _routerContract.methods.getAmountsOut(token1Out, bridgePath).call(),
+      ])
+
+      console.log('getToken1InAmount  fetched ', { amountsInPair, amountsInWethBridge })
+      const token0InPair = new BigNumber(amountsInPair[1])
+      const token1OutWethBridge = new BigNumber(amountsInWethBridge[amountsInWethBridge.length - 1])
+
+      if (token0InPair.gt(token1OutWethBridge)) {
+
+
+        resultIn = fromWei(token0InPair.toString())//DECIMAL_6_ADDRESSES.includes(token0.address) ? fromWei(token0InPair.toString(), 6) : fromWei(token0InPair.toString());
+        selectedPath = _path0.reverse();
+
+        console.log('token0In fetching from direct pair', { token1Out, resultIn: token0InPair.toString() })
+
+      } else {
+
+        console.log('token0In fetching from bridge')
+        resultIn = fromWei(token1OutWethBridge.toString())//DECIMAL_6_ADDRESSES.includes(token0.address) ? fromWei(token1OutWethBridge.toString(), 6) : fromWei(token1OutWethBridge.toString());
+        selectedPath = bridgePath.reverse();
+      }
+
+    }
+
+    return { resultIn, selectedPath }
+
+  } catch (error) {
+    console.log('getToken0InAmount error ', { error, token0, token1 })
+    // dispatch({
+    //   type: DEX_ERROR,
+    //   payload: "getTokenOutAmount error",
+    // });
+    return { resultIn: '0', selectedPath: [] }
+  }
+}
 export const loadPairAddress =
   (token0Symbol, token1Symbol, pairAddress, network) => async (dispatch) => {
     try {
@@ -931,36 +1083,48 @@ const considerUsdcDecimals = (tokenAddress, value) => {
     ? new BigNumber(value).multipliedBy(WEI_UNITS_12).toFixed(0).toString() : value
 }
 
+const fetchPairData = async (token1, token2, _pairContract, account) => {
+  try {
+
+    const [lpBalance, token0Addr, token1Addr, reservesData, totalSupply] =
+      await Promise.all([
+        _pairContract.methods.balanceOf(account).call(),
+        _pairContract.methods.token0().call(),
+        _pairContract.methods.token1().call(),
+        _pairContract.methods.getReserves().call(),
+        _pairContract.methods.totalSupply().call(),
+      ]);
+
+    let reserve = {};
+
+    if (token1.address.toLowerCase() === token0Addr.toLowerCase()) {
+      reserve[token1.symbol] = considerUsdcDecimals(token1.address, reservesData._reserve0);
+      reserve[token2.symbol] = considerUsdcDecimals(token2.address, reservesData._reserve1);
+    } else {
+      reserve[token1.symbol] = considerUsdcDecimals(token1.address, reservesData._reserve1);
+      reserve[token2.symbol] = considerUsdcDecimals(token2.address, reservesData._reserve0);
+    }
+
+    return { reserve, lpBalance, totalSupply }
+
+  } catch (error) {
+    console.log('fetchPairData exeption ', error)
+    return { reserve: '0', lpBalance: '0', totalSupply: '0' }
+
+  }
+}
+
 export const getLpBalance =
   (token1, token2, pairAddress, account, network) => async (dispatch) => {
     // console.log("getting balance", { token1, token2 });
     try {
       const _pairContract = pairContract(pairAddress, network) // pairContract2(pairData, network);
 
-      // console.log("pair contract ", _pairContract._address);
       dispatch({
         type: SHOW_DEX_LOADING,
       });
 
-
-      const [lpBalance, token0Addr, token1Addr, reservesData, totalSupply] =
-        await Promise.all([
-          _pairContract.methods.balanceOf(account).call(),
-          _pairContract.methods.token0().call(),
-          _pairContract.methods.token1().call(),
-          _pairContract.methods.getReserves().call(),
-          _pairContract.methods.totalSupply().call(),
-        ]);
-
-      let reserve = {};
-
-      if (token1.address.toLowerCase() === token0Addr.toLowerCase()) {
-        reserve[token1.symbol] = considerUsdcDecimals(token1.address, reservesData._reserve0);
-        reserve[token2.symbol] = considerUsdcDecimals(token2.address, reservesData._reserve1);
-      } else {
-        reserve[token1.symbol] = considerUsdcDecimals(token1.address, reservesData._reserve1);
-        reserve[token2.symbol] = considerUsdcDecimals(token2.address, reservesData._reserve0);
-      }
+      const { reserve, totalSupply, lpBalance } = await fetchPairData(token1, token2, _pairContract, account);
 
       dispatch({
         type: SET_POOL_RESERVES,
@@ -986,7 +1150,7 @@ export const getLpBalance =
           amount: _lpBalance,
         },
       });
-      // console.log("lpBalance ", { lpBalance, _lpBalance });
+      console.log("lpBalance ", { lpBalance, _lpBalance });
     } catch (error) {
       console.log("lpBalance ", error);
       dispatch({

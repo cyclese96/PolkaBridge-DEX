@@ -348,3 +348,6 @@ export const swapFnConstants = {
   swapExactTokensForTokens: "swapExactTokensForTokens", // case 5
   swapTokensForExactTokens: "swapTokensForExactTokens", // case 6
 };
+
+
+export const THRESOLD_WEI_VALUE = 0.00001

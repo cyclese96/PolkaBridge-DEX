@@ -12,7 +12,7 @@ import etherImg from "../../../assets/ether.png";
 import bnbImg from "../../../assets/binance.png";
 import CustomButton from "../../Buttons/CustomButton";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
-import { ETH, etheriumNetwork, tokens } from "../../../constants";
+import { DECIMAL_6_ADDRESSES, ETH, etheriumNetwork, tokens } from "../../../constants";
 import {
   fromWei,
   getPercentAmountWithFloor,
@@ -443,12 +443,19 @@ const RemoveCard = ({
   const handleClearState = () => {
     handleInputChange("");
   };
-
+  const WEI_UNITS_6 = 1000000;
   const handleRemoveLiquidity = async () => {
+
     const lpAmount = getPercentAmountWithFloor(
       currentLpBalance(),
       liquidityPercent
     );
+
+    // check USDC formatting
+    const _lpAmount = (DECIMAL_6_ADDRESSES.includes(selectedToken1.address)
+      || DECIMAL_6_ADDRESSES.includes(selectedToken2.address))
+      ? new BigNumber(lpAmount).div(WEI_UNITS_6).toFixed(0).toString() : lpAmount;
+
     if (selectedToken1.symbol === ETH || selectedToken2.symbol === ETH) {
       // remove liquidity eth-erc20 || erc20 - eth
       let ethToken, erc20Token;
@@ -464,7 +471,7 @@ const RemoveCard = ({
         ethToken,
         erc20Token,
         currentAccount,
-        lpAmount,
+        _lpAmount,
         swapSettings.deadline,
         currentNetwork
       );
@@ -475,7 +482,7 @@ const RemoveCard = ({
         selectedToken1,
         selectedToken2,
         currentAccount,
-        lpAmount,
+        _lpAmount,
         swapSettings.deadline,
         currentNetwork
       );

@@ -147,6 +147,7 @@ const SwapConfirm = (props) => {
       transaction,
     },
     currentSwapFn,
+    currenSwapPath,
     swapTokens
   } = props;
 
@@ -156,7 +157,7 @@ const SwapConfirm = (props) => {
     // todo swap code
 
     const token1 = {
-      amount: toWei(token1Value.toString()),
+      amount: toWei(token1Value.toString(), 6),
       min: toWei(token1Value.toString()),
       ...selectedToken1,
     };
@@ -172,6 +173,7 @@ const SwapConfirm = (props) => {
       token2,
       swapSettings.deadline,
       currentSwapFn,
+      currenSwapPath,
       currentAccount,
       currentNetwork
     )
@@ -179,10 +181,11 @@ const SwapConfirm = (props) => {
   };
 
   const isValidSlippage = () => {
-    if (new BigNumber(priceImpact).lt(swapSettings.slippage)) {
-      return true;
-    }
-    return false;
+    // if (new BigNumber(priceImpact).lt(swapSettings.slippage)) {
+    //   return true;
+    // }
+    // return false;
+    return true
   };
 
   return (

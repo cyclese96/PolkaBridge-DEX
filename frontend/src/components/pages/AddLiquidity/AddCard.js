@@ -369,7 +369,7 @@ const AddCard = (props) => {
 
   const loadPairReserves = async () => {
 
-    console.log('loading pair reserves after add liquidity')
+    // console.log('loading pair reserves after add liquidity')
     let _pairAddress = currentPairAddress();
 
     if (!_pairAddress) {
@@ -412,36 +412,8 @@ const AddCard = (props) => {
           selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
 
         await getAccountBalance(erc20Token, currentNetwork);
-
-        let _pairAddress = currentPairAddress();
-
         await loadPairReserves()
-        // if (!_pairAddress) {
-        //   _pairAddress = await getPairAddress(
-        //     selectedToken1.address,
-        //     selectedToken2.address,
-        //     currentNetwork
-        //   );
 
-        //   loadPairAddress(
-        //     selectedToken1.symbol,
-        //     selectedToken2.symbol,
-        //     _pairAddress,
-        //     currentNetwork
-        //   );
-        // }
-
-        // if (!_pairAddress) {
-        //   //pair not yet created in the factory
-        // } else {
-        //   await getLpBalance(
-        //     selectedToken1,
-        //     selectedToken2,
-        //     _pairAddress,
-        //     currentAccount,
-        //     currentNetwork
-        //   );
-        // }
 
         await checkAllowance(selectedToken1, currentAccount, currentNetwork);
 
