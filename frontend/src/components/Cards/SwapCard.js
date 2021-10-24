@@ -54,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft: 7,
       paddingRight: 7,
       width: "100%",
+      maxWidth: 400,
     },
   },
   cardContents: {
@@ -224,7 +225,7 @@ const SwapCard = (props) => {
   const [priceImpact, setPriceImpact] = useState(null);
   const [localStateLoading, setLocalStateLoading] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [priceRatio, setPriceRatio] = useState(null)
+  const [priceRatio, setPriceRatio] = useState(null);
 
   const handleTxPoper = (event) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -463,8 +464,8 @@ const SwapCard = (props) => {
 
 
       // update current price ratio based on trade amounts
-      const _ratio = getPriceRatio(_token2Value, tokens)
-      setPriceRatio(_ratio)
+      const _ratio = getPriceRatio(_token2Value, tokens);
+      setPriceRatio(_ratio);
     } else if (selectedToken2.symbol && !tokens) {
       setToken2Value("");
       if (!swapStatus.disabled) {
@@ -527,9 +528,8 @@ const SwapCard = (props) => {
       }
 
       // update current price ratio based on trade amounts
-      const _ratio = getPriceRatio(tokens, _token1Value)
-      setPriceRatio(_ratio)
-
+      const _ratio = getPriceRatio(tokens, _token1Value);
+      setPriceRatio(_ratio);
     } else if (selectedToken1.symbol && !tokens) {
       setToken1Value("");
       if (!swapStatus.disabled) {
@@ -745,11 +745,16 @@ const SwapCard = (props) => {
           {token1Value && token2Value && (
             <div className="mt-1 d-flex justify-content-end">
               <div className={classes.tokenPrice}>
-                {(selectedToken1.symbol && selectedToken2.symbol && !disableStatus()) ? (
+                {selectedToken1.symbol &&
+                selectedToken2.symbol &&
+                !disableStatus() ? (
                   <span>
-                    1 {selectedToken1.symbol} {" = "} {priceRatio}  {selectedToken2.symbol}
+                    1 {selectedToken1.symbol} {" = "} {priceRatio}{" "}
+                    {selectedToken2.symbol}
                   </span>
-                ) : ""}
+                ) : (
+                  ""
+                )}
 
                 <Info
                   className={classes.infoIcon}
