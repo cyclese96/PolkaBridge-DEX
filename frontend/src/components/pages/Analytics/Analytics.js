@@ -65,8 +65,7 @@ const Analytics = () => {
               <div>
                 <span className={classes.cardSpan}>Total value locked</span>
                 <p className={classes.cardP}>
-                  {"$" +
-                    formatCurrency(globalData.totalLiquidityUSD)}
+                  {"$" + formatCurrency(globalData.totalLiquidityUSD)}
                   <small>
                     {formattedPercent(globalData.liquidityChangeUSD)}
                   </small>
@@ -92,12 +91,8 @@ const Analytics = () => {
               <div>
                 <span className={classes.cardSpan}>Volume 24H</span>
                 <p className={classes.cardP}>
-                  {"$" +
-                    formatCurrency(globalData.oneDayVolumeUSD)
-                  }
-                  <small>
-                    {formattedPercent(globalData.volumeChangeUSD)}
-                  </small>
+                  {"$" + formatCurrency(globalData.oneDayVolumeUSD)}
+                  <small>{formattedPercent(globalData.volumeChangeUSD)}</small>
                 </p>
                 <div className={classes.chart}>
                   <BarChart chartData={chartData ? chartData[0] : []} />
@@ -133,10 +128,7 @@ const Analytics = () => {
             <div className={classes.statsGroup}>
               <span className={classes.statLabel}>Fees 24H:</span>
               <span className={classes.statAmount}>
-                ${" "}
-                {formatCurrency(
-                  globalData.oneDayVolumeUSD * 0.02
-                )}
+                $ {formatCurrency(globalData.oneDayVolumeUSD * 0.02)}
               </span>
 
               <PercentLabel
@@ -148,8 +140,7 @@ const Analytics = () => {
             <div className={classes.statsGroup}>
               <span className={classes.statLabel}>TVL</span>
               <span className={classes.statAmount}>
-                {"$" +
-                  formatCurrency(globalData.totalLiquidityUSD)}
+                {"$" + formatCurrency(globalData.totalLiquidityUSD)}
               </span>
 
               <PercentLabel

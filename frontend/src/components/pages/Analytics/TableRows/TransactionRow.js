@@ -6,8 +6,6 @@ import { formatTime } from "../../../../utils/timeUtils";
 const TransactionRow = (props) => {
   const { classes, isItemSelected, labelId, handleClick, row } = props;
 
-  console.log("transaction row", row);
-
   return (
     <>
       <TableRow
@@ -26,8 +24,8 @@ const TransactionRow = (props) => {
             {row.transactionType === "Mint"
               ? "Add"
               : row.transactionType === "Burn"
-                ? "Remove"
-                : "Swap"}{" "}
+              ? "Remove"
+              : "Swap"}{" "}
           </span>{" "}
           <span className={classes.cellText}>
             {row.token0.symbol} And {row.token1.symbol}
@@ -55,8 +53,8 @@ const TransactionRow = (props) => {
             {row.transactionType === "Mint"
               ? "Add"
               : row.transactionType === "Burn"
-                ? "Remove"
-                : "Swap"}{" "}
+              ? "Remove"
+              : "Swap"}{" "}
           </span>{" "}
           <span className={classes.cellText}>
             {row.token0.symbol} And {row.token1.symbol}

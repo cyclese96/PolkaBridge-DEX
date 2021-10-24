@@ -394,7 +394,6 @@ const TopTokens = ({
     return obj;
   };
   const formattedTokens = useMemo(() => {
-    // console.log('all tokens', allTokens)
     return (
       allTokens &&
       Object.keys(allTokens).map((key) =>
@@ -488,6 +487,7 @@ const TopTokens = ({
 
   const CurrenTokenRow = ({ tableType, classes, handleClick }) => {
     if (tableType === "TopTokens") {
+      console.log(formattedTokens);
       return (
         <>
           {formattedTokens.length > 0
