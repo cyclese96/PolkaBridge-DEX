@@ -914,9 +914,15 @@ export const getToken1OutAmount = async (token0, token1, account, network) => {
     const _path0 = [token0.address, token1.address]
     const _path1 = [token0.address, wethAddress, token1.address]
     const _path2 = [token0.address, wethAddress, usdtAddress, token1.address];
+    const _path3 = [token0.address, usdtAddress, token1.address];
 
-    const bridgePath = (DECIMAL_6_ADDRESSES.includes(token0.address) || DECIMAL_6_ADDRESSES.includes(token1.address))
-      ? _path2 : _path1;
+    let bridgePath;
+    if ((DECIMAL_6_ADDRESSES.includes(token0.address) || DECIMAL_6_ADDRESSES.includes(token1.address)) && (token0.symbol === ETH || token1.symbol === ETH)) {
+      bridgePath = _path3;
+    } else {
+      bridgePath = (DECIMAL_6_ADDRESSES.includes(token0.address) || DECIMAL_6_ADDRESSES.includes(token1.address))
+        ? _path2 : _path1;
+    }
 
     // let amountsOutPair;
     let amountsOutBridge;
@@ -1011,9 +1017,15 @@ export const getToken0InAmount = async (token0, token1, account, network) => {
     const _path0 = [token0.address, token1.address]
     const _path1 = [token0.address, wethAddress, token1.address]
     const _path2 = [token0.address, wethAddress, usdtAddress, token1.address];
+    const _path3 = [token0.address, usdtAddress, token1.address];
 
-    const bridgePath = (DECIMAL_6_ADDRESSES.includes(token0.address) || DECIMAL_6_ADDRESSES.includes(token1.address))
-      ? _path2 : _path1;
+    let bridgePath;
+    if ((DECIMAL_6_ADDRESSES.includes(token0.address) || DECIMAL_6_ADDRESSES.includes(token1.address)) && (token0.symbol === ETH || token1.symbol === ETH)) {
+      bridgePath = _path3;
+    } else {
+      bridgePath = (DECIMAL_6_ADDRESSES.includes(token0.address) || DECIMAL_6_ADDRESSES.includes(token1.address))
+        ? _path2 : _path1;
+    }
 
     let amountsInPair;
     let amountsInBridge;
@@ -1060,10 +1072,11 @@ export const getToken0InAmount = async (token0, token1, account, network) => {
 
       amountsInBridge = await _routerContract.methods.getAmountsIn(_token1OutWei, bridgePath).call()
       const token1OutWethBridge = new BigNumber(amountsInBridge[0])
-      console.log('getToken0InAmount fetching from bridge', amountsInBridge)
+
       resultIn = DECIMAL_6_ADDRESSES.includes(token0.address) ? fromWei(token1OutWethBridge.toString(), 6) : fromWei(token1OutWethBridge.toString());
       selectedPath = bridgePath
 
+      // console.log({ bridgePath, _token1OutWei, token1Out })
       //old
       // [amountsInPair, amountsInWethBridge] = await Promise.all([
       //   _routerContract.methods.getAmountsOut(token1Out, _path0).call(),
@@ -1094,7 +1107,7 @@ export const getToken0InAmount = async (token0, token1, account, network) => {
     return { resultIn, selectedPath }
 
   } catch (error) {
-    console.log('getToken0InAmount error ', { error, token0, token1 })
+    console.log('getToken0InAmount error ', { error })
     // dispatch({
     //   type: DEX_ERROR,
     //   payload: "getTokenOutAmount error",

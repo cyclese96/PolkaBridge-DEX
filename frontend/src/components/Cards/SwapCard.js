@@ -409,6 +409,17 @@ const SwapCard = (props) => {
     [] // will be created only once initially
   );
 
+  const debouncedToken1OutCall = useCallback(
+    debounce((...params) => getToken1OutAmount(...params), 1000),
+    [] // will be created only once initially
+  );
+
+  const debouncedToken0InCall = useCallback(
+    debounce((...params) => getToken0InAmount(...params), 1000),
+    [] // will be created only once initially
+  );
+
+
   // token 1 input change
   const onToken1InputChange = async (tokens) => {
     setToken1Value(tokens);
@@ -441,8 +452,9 @@ const SwapCard = (props) => {
         : toWei(tokens);
 
       const result = await getToken1OutAmount(
-        { ...selectedToken1, amount: _tokensInWei },
+        { ...selectedToken1, amount: toWei(tokens) },
         selectedToken2,
+        currentAccount,
         currentNetwork
       );
       console.log("result");
@@ -510,7 +522,8 @@ const SwapCard = (props) => {
 
       const result = await getToken0InAmount(
         selectedToken1,
-        { ...selectedToken2, amount: _tokensInWei },
+        { ...selectedToken2, amount: toWei(tokens) },
+        currentAccount,
         currentNetwork
       );
       _token1Value = result.resultIn;
