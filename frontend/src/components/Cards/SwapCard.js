@@ -31,6 +31,7 @@ import {
   toWei,
 } from "../../utils/helper";
 import {
+  calculatePriceImpact,
   checkAllowance,
   confirmAllowance,
   getLpBalance,
@@ -46,7 +47,7 @@ import { getPairAddress } from "../../utils/connectionUtils";
 import { Info, Settings } from "@material-ui/icons";
 import TabPage from "../TabPage";
 import store from "../../store";
-import { START_TRANSACTION } from "../../actions/types";
+import { HIDE_DEX_LOADING, SHOW_DEX_LOADING, START_TRANSACTION } from "../../actions/types";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -439,13 +440,13 @@ const SwapCard = (props) => {
     const pairAddress = currentPairAddress();
 
     if (selectedToken2.symbol && new BigNumber(tokens).gt(0) && pairAddress) {
-      await debouncedGetLpBalance(
-        selectedToken1,
-        selectedToken2,
-        pairAddress,
-        currentAccount,
-        currentNetwork
-      );
+      // await debouncedGetLpBalance(
+      //   selectedToken1,
+      //   selectedToken2,
+      //   pairAddress,
+      //   currentAccount,
+      //   currentNetwork
+      // );
 
       const _tokensInWei = DECIMAL_6_ADDRESSES.includes(selectedToken1.address)
         ? toWei(tokens, 6)
@@ -508,13 +509,13 @@ const SwapCard = (props) => {
     const pairAddress = currentPairAddress();
 
     if (selectedToken1.symbol && new BigNumber(tokens).gt(0) && pairAddress) {
-      await debouncedGetLpBalance(
-        selectedToken1,
-        selectedToken2,
-        pairAddress,
-        currentAccount,
-        currentNetwork
-      );
+      // await debouncedGetLpBalance(
+      //   selectedToken1,
+      //   selectedToken2,
+      //   pairAddress,
+      //   currentAccount,
+      //   currentNetwork
+      // );
 
       const _tokensInWei = DECIMAL_6_ADDRESSES.includes(selectedToken2.address)
         ? toWei(tokens, 6)
@@ -596,20 +597,39 @@ const SwapCard = (props) => {
     setSwapDialog(true);
   };
 
-  const checkPriceImpact = () => {
+  const checkPriceImpact = async () => {
     let impact;
-    if (selectedToken1.symbol === ETH) {
-      impact = buyPriceImpact(
-        toWei(token2Value),
-        poolReserves[selectedToken2.symbol]
-      );
-    } else {
-      impact = sellPriceImpact(
-        toWei(token1Value),
-        toWei(token2Value),
-        poolReserves[selectedToken1.symbol]
-      );
-    }
+    // if (selectedToken1.symbol === ETH) {
+    //   impact = buyPriceImpact(
+    //     toWei(token2Value),
+    //     poolReserves[selectedToken2.symbol]
+    //   );
+    // } else {
+    //   impact = sellPriceImpact(
+    //     toWei(token1Value),
+    //     toWei(token2Value),
+    //     poolReserves[selectedToken1.symbol]
+    //   );
+    // }
+
+    const _amount0InWei = DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value);
+    const token0 = {
+      amount: _amount0InWei,
+      min: toWei(token1Value.toString()),
+      ...selectedToken1,
+    };
+
+    const _amount1InWei = DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token2Value);
+    const token1 = {
+      amount: _amount1InWei,
+      min: toWei(token2Value.toString()),
+      ...selectedToken2,
+    };
+
+    store.dispatch({ type: SHOW_DEX_LOADING })
+    impact = await calculatePriceImpact(token0, token1, currentAccount, currentNetwork);
+    store.dispatch({ type: HIDE_DEX_LOADING })
+
     setPriceImpact(impact);
   };
 

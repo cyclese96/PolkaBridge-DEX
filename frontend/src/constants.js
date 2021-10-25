@@ -82,6 +82,7 @@ export const BITE = "BITE";
 export const CORGIB = "CORGIB";
 export const PWAR = "PWAR";
 export const USDT = "USDT";
+export const USDC = "USDC";
 
 export const supportedTokens = {
   ethereum: [PBR, ETH, USDT, BITE],

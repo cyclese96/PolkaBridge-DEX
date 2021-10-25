@@ -6,10 +6,13 @@ import {
   ETH,
   etheriumNetwork,
   nullAddress,
+  PBR,
   supportedTokens,
   swapFnConstants,
   THRESOLD_WEI_VALUE,
   tokens,
+  USDC,
+  USDT,
   usdtMainnetAddress,
   usdtTestnetAddress,
   WETH_ADDRESS_MAINNET,
@@ -33,6 +36,7 @@ import {
   cacheImportedToken,
   getCachedTokens,
   fromWei,
+  sellPriceImpact,
 } from "../utils/helper";
 import {
   APPROVE_LP_TOKENS,
@@ -914,6 +918,7 @@ export const getToken1OutAmount = async (token0, token1, account, network) => {
     const _path0 = [token0.address, token1.address]
     const _path1 = [token0.address, wethAddress, token1.address]
     const _path2 = [token0.address, wethAddress, usdtAddress, token1.address];
+    const _path21 = [token0.address, usdtAddress, wethAddress, token1.address]; // when usdc is token0
     const _path3 = [token0.address, usdtAddress, token1.address];
 
     let bridgePath;
@@ -921,7 +926,8 @@ export const getToken1OutAmount = async (token0, token1, account, network) => {
       bridgePath = _path3;
     } else {
       bridgePath = (DECIMAL_6_ADDRESSES.includes(token0.address) || DECIMAL_6_ADDRESSES.includes(token1.address))
-        ? _path2 : _path1;
+        ? DECIMAL_6_ADDRESSES.includes(token0.address) ? _path21 : _path2
+        : _path1;
     }
 
     // let amountsOutPair;
@@ -953,7 +959,7 @@ export const getToken1OutAmount = async (token0, token1, account, network) => {
       resultOut = fromWei(amountsOutPair);
       selectedPath = _path0;
 
-      console.log('getting for pair')
+      console.log('getToken1OutAmount getting from pair')
       //old
       // console.log('getToken1OutAmount fetching from direct pair', _path0)
       // // fetch from pair only
@@ -965,9 +971,11 @@ export const getToken1OutAmount = async (token0, token1, account, network) => {
     } else {
 
       //new
-      amountsOutBridge = await _routerContract.methods.getAmountsOut(token0In, bridgePath).call();
+      //fix if it is bridge swap and token0 is usdc
+      const _token0In = DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0In), 6) : token0In;
+      amountsOutBridge = await _routerContract.methods.getAmountsOut(_token0In, bridgePath).call();
       const token1OutWethBridge = new BigNumber(amountsOutBridge[amountsOutBridge.length - 1])
-      console.log('getToken1OutAmount fetching from bridge ', { amountsOutBridge, _path1, token1OutWethBridge: token1OutWethBridge.toString() })
+      console.log('getToken1OutAmount fetching from bridge ', { amountsOutBridge, bridgePath, token1OutWethBridge: token1OutWethBridge.toString() })
       resultOut = DECIMAL_6_ADDRESSES.includes(token1.address) ? fromWei(token1OutWethBridge.toString(), 6) : fromWei(token1OutWethBridge.toString());
       selectedPath = bridgePath;
 
@@ -1017,6 +1025,7 @@ export const getToken0InAmount = async (token0, token1, account, network) => {
     const _path0 = [token0.address, token1.address]
     const _path1 = [token0.address, wethAddress, token1.address]
     const _path2 = [token0.address, wethAddress, usdtAddress, token1.address];
+    const _path21 = [token0.address, usdtAddress, wethAddress, token1.address]; // when usdc is token0
     const _path3 = [token0.address, usdtAddress, token1.address];
 
     let bridgePath;
@@ -1024,7 +1033,8 @@ export const getToken0InAmount = async (token0, token1, account, network) => {
       bridgePath = _path3;
     } else {
       bridgePath = (DECIMAL_6_ADDRESSES.includes(token0.address) || DECIMAL_6_ADDRESSES.includes(token1.address))
-        ? _path2 : _path1;
+        ? DECIMAL_6_ADDRESSES.includes(token0.address) ? _path21 : _path2
+        : _path1;
     }
 
     let amountsInPair;
@@ -1113,6 +1123,100 @@ export const getToken0InAmount = async (token0, token1, account, network) => {
     //   payload: "getTokenOutAmount error",
     // });
     return { resultIn: '0', selectedPath: [] }
+  }
+}
+
+const getReservesForPriceImpact = async (token0, token1, account, network) => {
+  if ([token0.symbol, token1.symbol].includes(PBR) && [token0.symbol, token1.symbol].includes(USDT)) {
+    // fetch all reserves
+    //pbr-eth
+    const wethAddress = currentConnection === 'testnet' ? WETH_ADDRESS_TESTNET : WETH_ADDRESS_MAINNET;
+    const pair0Address = await getPairAddress(token0.address, wethAddress)
+    const pair0Contract = pairContract(pair0Address, network)
+    const pair0Reserves = await fetchPairData(token0, { address: wethAddress, symbol: ETH }, pair0Contract, account);
+
+    //eth-usdt
+    const pair1Address = await getPairAddress(token1.address, wethAddress)
+    const pair1Contract = pairContract(pair1Address, network)
+    const pair1Reserves = await fetchPairData({ address: wethAddress, symbol: ETH }, token1, pair1Contract, account);
+
+    return { ...pair0Reserves.reserve, ...pair1Reserves.reserve }
+
+
+  } else if ([token0.symbol, token1.symbol].includes(PBR) && [token0.symbol, token1.symbol].includes(USDC)) {
+    //
+    //pbr-eth
+    const wethAddress = currentConnection === 'testnet' ? WETH_ADDRESS_TESTNET : WETH_ADDRESS_MAINNET;
+    const pair0Address = await getPairAddress(token0.address, wethAddress)
+    const pair0Contract = pairContract(pair0Address, network)
+    const pair0Reserves = await fetchPairData(token0, { address: wethAddress, symbol: ETH }, pair0Contract, account);
+
+    //eth-usdt
+    const usdtAddress = currentConnection === 'testnet' ? usdtTestnetAddress : usdtMainnetAddress;
+    const pair1Address = await getPairAddress(usdtAddress, wethAddress)
+    const pair1Contract = pairContract(pair1Address, network)
+    const pair1Reserves = await fetchPairData({ address: wethAddress, symbol: ETH }, { address: usdtAddress, symbol: USDT }, pair1Contract, account);
+
+    //usdt-usdc
+    const pair2Address = await getPairAddress(token1.address, wethAddress)
+    const pair2Contract = pairContract(pair2Address, network)
+    const pair2Reserves = await fetchPairData({ address: usdtAddress, symbol: USDT }, token1, pair2Contract, account);
+
+    return { ...pair0Reserves.reserve, ...pair1Reserves.reserve, ...pair2Reserves.reserve }
+
+  } else if ([token0.symbol, token1.symbol].includes(ETH) && [token0.symbol, token1.symbol].includes(USDC)) {
+    //
+    //eth-usdt
+    const usdtAddress = currentConnection === 'testnet' ? usdtTestnetAddress : usdtMainnetAddress;
+    const pair0Address = await getPairAddress(token0.address, usdtAddress)
+    const pair0Contract = pairContract(pair0Address, network)
+    const pair0Reserves = await fetchPairData(token0, { address: usdtAddress, symbol: USDT }, pair0Contract, account);
+
+    //usdt-usdc
+    const pair1Address = await getPairAddress(token1.address, usdtAddress)
+    const pair1Contract = pairContract(pair1Address, network)
+    const pair1Reserves = await fetchPairData({ address: usdtAddress, symbol: USDT }, token1, pair1Contract, account);
+
+    return { ...pair0Reserves.reserve, ...pair1Reserves.reserve }
+  }
+}
+
+export const calculatePriceImpact = async (token0, token1, account, network) => {
+  try {
+
+    //
+
+    const pairAddress = await getPairAddress(token0.address, token1.address);
+
+    let reserve, totalSupply, lpBalance;
+
+    if (pairAddress) {
+      const _pairContract = pairContract(pairAddress, network)
+      const pairReserveRes = await fetchPairData(token0, token1, _pairContract, account);
+      reserve = pairReserveRes.reserve;
+      totalSupply = pairReserveRes.totalSupply;
+      lpBalance = pairReserveRes.lpBalance;
+    }
+
+    if (pairAddress && (reserve && (new BigNumber(reserve[token0.symbol]).gt(THRESOLD_WEI_VALUE) || new BigNumber(reserve[token1.symbol]).gt(THRESOLD_WEI_VALUE)))) {
+
+
+
+      console.log('checkPriceImpact fetched reserves  ', { reserve })
+      return sellPriceImpact(token0.amount, token1.amount, reserve[token0.symbol])
+
+    } else {
+
+      const reserves = await getReservesForPriceImpact(token0, token1, account, network);
+
+      console.log('checkPriceImpact fetched reserves  ', { reserves })
+      return sellPriceImpact(token0.amount, token1.amount, reserves[token0.symbol])
+
+    }
+
+
+  } catch (error) {
+    console.log("calculatePriceImpact exeption : ", { error })
   }
 }
 export const loadPairAddress =
