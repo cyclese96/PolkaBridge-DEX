@@ -29,7 +29,16 @@ const TransactionRow = (props) => {
               : "Swap"}{" "}
           </span>{" "}
           <span className={classes.cellText}>
-            {row.token0.symbol} And {row.token1.symbol}
+            <a
+              href={
+                currentConnection === "testnet"
+                  ? `https://rinkeby.etherscan.io/tx/${row.id}`
+                  : `https://etherscan.io/tx/${row.id}`
+              }
+              target="_blank"
+            >
+              {row.token0.symbol} And {row.token1.symbol}
+            </a>
           </span>
         </TableCell>
 
