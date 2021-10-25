@@ -1006,7 +1006,7 @@ export const getToken1OutAmount = async (token0, token1, account, network) => {
     //   type: DEX_ERROR,
     //   payload: "getTokenOutAmount error",
     // });
-    return '0'
+    return { resultOut: '0', selectedPath: [] }
   }
 }
 

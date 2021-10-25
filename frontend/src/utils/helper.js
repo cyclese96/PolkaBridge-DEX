@@ -315,7 +315,7 @@ export const getPercentAmountWithFloor = (amount, percent) => {
     .integerValue(BigNumber.ROUND_FLOOR)
     .toString();
 };
-
+// not in use
 export const buyPriceImpact = (yTokenamount, yTokenReserves) => {
   const _yAmount = new BigNumber(yTokenamount ? yTokenamount : 0);
   const _yTokenReserves = yTokenReserves ? yTokenReserves : 0;

@@ -321,10 +321,10 @@ const SwapCard = (props) => {
     }
 
     if (!_pairAddress) {
-      setStatus({
-        disabled: true,
-        message: "No liquidity available for this pair",
-      });
+      // setStatus({
+      //   disabled: true,
+      //   message: "No liquidity available for this pair",
+      // });
     } else {
       // console.log("current pair address ", _pairAddress);
 
@@ -437,9 +437,9 @@ const SwapCard = (props) => {
 
     // calculate resetpective value of token 2 if selected
     let _token2Value = "";
-    const pairAddress = currentPairAddress();
+    // const pairAddress = currentPairAddress();
 
-    if (selectedToken2.symbol && new BigNumber(tokens).gt(0) && pairAddress) {
+    if (selectedToken2.symbol && new BigNumber(tokens).gt(0)) {
       // await debouncedGetLpBalance(
       //   selectedToken1,
       //   selectedToken2,
@@ -506,9 +506,9 @@ const SwapCard = (props) => {
 
     //calculate respective value of token1 if selected
     let _token1Value = "";
-    const pairAddress = currentPairAddress();
+    // const pairAddress = currentPairAddress();
 
-    if (selectedToken1.symbol && new BigNumber(tokens).gt(0) && pairAddress) {
+    if (selectedToken1.symbol && new BigNumber(tokens).gt(0)) {
       // await debouncedGetLpBalance(
       //   selectedToken1,
       //   selectedToken2,
