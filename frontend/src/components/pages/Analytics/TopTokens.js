@@ -150,7 +150,7 @@ const useHeadStyles = makeStyles((theme) => ({
     color: "rgba(255,255,255,0.5)",
   },
   desktop: {
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("xs")]: {
       display: "none",
     },
   },
@@ -308,7 +308,7 @@ const useStyles = makeStyles((theme) => ({
     color: "rgba( 255, 255, 255, 0.4 )",
   },
   tableDesktop: {
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("xs")]: {
       display: "none",
     },
   },
