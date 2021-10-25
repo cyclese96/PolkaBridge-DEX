@@ -22,6 +22,8 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
     address public override token0;
     address public override token1;
     
+    address ownerAddress;
+
     address treasury;
 
     uint112 private reserve0;           // uses single storage slot, accessible via getReserves
@@ -59,10 +61,11 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
     }
 
     // called once by the factory at time of deployment
-    function initialize(address _token0, address _token1, address _treasury) external override {
+    function initialize(address _token0, address _token1, address _owner, address _treasury) external override {
         require(msg.sender == factory, 'PolkaBridge AMM V1: FORBIDDEN'); // sufficient check
         token0 = _token0;
         token1 = _token1;
+        ownerAddress = _owner;
         treasury = _treasury;
     }
 
@@ -84,23 +87,23 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
 
     // if fee is on, mint liquidity equivalent to 1/6th of the growth in sqrt(k)
     function _mintFee(uint112 _reserve0, uint112 _reserve1) private returns (bool feeOn) {
-        // address feeTo = IUniswapV2Factory(factory).feeTo();
-        // feeOn = feeTo != address(0);
-        // uint _kLast = kLast; // gas savings
-        // if (feeOn) {
-        //     if (_kLast != 0) {
-        //         uint rootK = Math.sqrt(uint(_reserve0).mul(_reserve1));
-        //         uint rootKLast = Math.sqrt(_kLast);
-        //         if (rootK > rootKLast) {
-        //             uint numerator = totalSupply.mul(rootK.sub(rootKLast));
-        //             uint denominator = rootK.mul(5).add(rootKLast);
-        //             uint liquidity = numerator / denominator;
-        //             if (liquidity > 0) _mint(feeTo, liquidity);
-        //         }
-        //     }
-        // } else if (_kLast != 0) {
-        //     kLast = 0;
-        // }
+        address feeTo = address(0);//IUniswapV2Factory(factory).feeTo();
+        feeOn = feeTo != address(0);
+        uint _kLast = kLast; // gas savings
+        if (feeOn) {
+            if (_kLast != 0) {
+                uint rootK = Math.sqrt(uint(_reserve0).mul(_reserve1));
+                uint rootKLast = Math.sqrt(_kLast);
+                if (rootK > rootKLast) {
+                    uint numerator = totalSupply.mul(rootK.sub(rootKLast));
+                    uint denominator = rootK.mul(5).add(rootKLast);
+                    uint liquidity = numerator / denominator;
+                    if (liquidity > 0) _mint(feeTo, liquidity);
+                }
+            }
+        } else if (_kLast != 0) {
+            kLast = 0;
+        }
     }
 
     // this low-level function should be called from a contract which performs important safety checks
@@ -209,4 +212,12 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
         _update(IERC20(token0).balanceOf(address(this)), IERC20(token1).balanceOf(address(this)), reserve0, reserve1);
     }
 
+    function setTreasuryAddress(address _treasury) external override {
+        require(msg.sender == ownerAddress, 'Only ownerAddress can set treasury');
+        {
+            require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
+            treasury = _treasury;
+            emit TreasurySet(_treasury);
+        }
+    }    
 }

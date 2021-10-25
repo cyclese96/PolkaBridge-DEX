@@ -15,6 +15,9 @@ interface IUniswapV2Pair is IUniswapV2ERC20 {
         address indexed to
     );
     event Sync(uint112 reserve0, uint112 reserve1);
+    event TreasurySet(address _address);
+
+    function setTreasuryAddress(address _address) external;
 
     function MINIMUM_LIQUIDITY() external pure returns (uint);
     function factory() external view returns (address);
@@ -30,5 +33,5 @@ interface IUniswapV2Pair is IUniswapV2ERC20 {
     function swap(uint amount0Out, uint amount1Out, address to) external;
     function skim(address to) external;
     function sync() external;    
-    function initialize(address, address, address) external;
+    function initialize(address, address, address, address) external;
 }
