@@ -23,6 +23,7 @@ import {
 import CircularProgress from "@material-ui/core/CircularProgress";
 import BigNumber from "bignumber.js";
 import TransactionStatus from "./TransactionStatus";
+import { DECIMAL_6_ADDRESSES } from "../../constants";
 
 const styles = (theme) => ({
   root: {
@@ -156,21 +157,23 @@ const SwapConfirm = (props) => {
   const onConfirmSwap = async () => {
     // todo swap code
 
-    const token1 = {
-      amount: toWei(token1Value.toString(), 6),
+    const _amount0InWei = DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value);
+    const token0 = {
+      amount: _amount0InWei,
       min: toWei(token1Value.toString()),
       ...selectedToken1,
     };
 
-    const token2 = {
-      amount: toWei(token2Value.toString()),
+    const _amount1InWei = DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token2Value);
+    const token1 = {
+      amount: _amount1InWei,
       min: toWei(token2Value.toString()),
       ...selectedToken2,
     };
 
     await swapTokens(
+      token0,
       token1,
-      token2,
       swapSettings.deadline,
       currentSwapFn,
       currenSwapPath,

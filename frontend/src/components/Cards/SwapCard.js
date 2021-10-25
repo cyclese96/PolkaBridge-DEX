@@ -13,7 +13,7 @@ import { useState } from "react";
 import SwapSettings from "../common/SwapSettings";
 import BigNumber from "bignumber.js";
 import CustomSnackBar from "../common/CustomSnackbar";
-import { DECIMAL_6_ADDRESSES, ETH, etheriumNetwork, swapFnConstants, THRESOLD_WEI_VALUE, tokens } from "../../constants";
+import { DECIMAL_6_ADDRESSES, ETH, etheriumNetwork, swapFnConstants, THRES, THRESOLD_VALUE, tokens } from "../../constants";
 import {
   buyPriceImpact,
   getPriceRatio,
@@ -442,7 +442,7 @@ const SwapCard = (props) => {
         ? toWei(tokens, 6)
         : toWei(tokens);
 
-      const result = await getToken1OutAmount({ ...selectedToken1, amount: _tokensInWei }, selectedToken2, currentNetwork)
+      const result = await getToken1OutAmount({ ...selectedToken1, amount: toWei(tokens) }, selectedToken2, currentAccount, currentNetwork)
       _token2Value = result.resultOut;
       setSwapPath(result.selectedPath)
 
@@ -455,7 +455,7 @@ const SwapCard = (props) => {
         );
       }
 
-      if (new BigNumber(_token2Value).lt(THRESOLD_WEI_VALUE)) {
+      if (new BigNumber(_token2Value).lt(THRESOLD_VALUE)) {
         setStatus({
           disabled: true,
           message: "Not enough liquidity for this trade!",
@@ -507,7 +507,7 @@ const SwapCard = (props) => {
         ? toWei(tokens, 6)
         : toWei(tokens);
 
-      const result = await getToken0InAmount(selectedToken1, { ...selectedToken2, amount: _tokensInWei }, currentNetwork)
+      const result = await getToken0InAmount(selectedToken1, { ...selectedToken2, amount: toWei(tokens) }, currentAccount, currentNetwork)
       _token1Value = result.resultIn;
       setSwapPath(result.selectedPath)
 
@@ -520,7 +520,7 @@ const SwapCard = (props) => {
         );
       }
 
-      if (new BigNumber(_token1Value).lt(THRESOLD_WEI_VALUE)) {
+      if (new BigNumber(_token1Value).lt(THRESOLD_VALUE)) {
         setStatus({
           disabled: true,
           message: "Not enough liquidity for this trade!",
@@ -746,8 +746,8 @@ const SwapCard = (props) => {
             <div className="mt-1 d-flex justify-content-end">
               <div className={classes.tokenPrice}>
                 {selectedToken1.symbol &&
-                selectedToken2.symbol &&
-                !disableStatus() ? (
+                  selectedToken2.symbol &&
+                  !disableStatus() ? (
                   <span>
                     1 {selectedToken1.symbol} {" = "} {priceRatio}{" "}
                     {selectedToken2.symbol}

@@ -350,4 +350,5 @@ export const swapFnConstants = {
 };
 
 
-export const THRESOLD_WEI_VALUE = 0.00001
+export const THRESOLD_VALUE = 0.00001
+export const THRESOLD_WEI_VALUE = 100000000000000
