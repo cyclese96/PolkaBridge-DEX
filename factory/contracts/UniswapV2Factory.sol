@@ -7,8 +7,8 @@ import './UniswapV2Pair.sol';
 // import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract UniswapV2Factory is IUniswapV2Factory {
-    address public override feeTo;
-    address public override feeToSetter;
+    // address public override feeTo;
+    address owner;
 
     address treasury;
 
@@ -21,8 +21,8 @@ contract UniswapV2Factory is IUniswapV2Factory {
     uint releaseTime;
     uint lockTime = 2 days;
 
-    constructor(address _feeToSetter, address _treasury) {
-        feeToSetter = _feeToSetter;
+    constructor(address _owner, address _treasury) {
+        owner = _owner;
         treasury = _treasury;
         releaseTime = block.timestamp;
     }
@@ -43,7 +43,7 @@ contract UniswapV2Factory is IUniswapV2Factory {
         assembly {
             pair := create2(0, add(bytecode, 32), mload(bytecode), salt)
         }
-        IUniswapV2Pair(pair).initialize(token0, token1, feeToSetter, treasury);
+        IUniswapV2Pair(pair).initialize(token0, token1, treasury);
         getPair[token0][token1] = pair;
         getPair[token1][token0] = pair; // populate mapping in the reverse direction
         // allPairs.push(pair);
@@ -52,23 +52,13 @@ contract UniswapV2Factory is IUniswapV2Factory {
         emit PairCreated(token0, token1, pair, allPairs);
     }
 
-    function setFeeTo(address _feeTo) external override {
-        require(msg.sender == feeToSetter, 'PolkaBridge AMM V1: FORBIDDEN');
+    function setTreasuryAddress(address _treasury) external override {
+        require(msg.sender == owner, 'Only owner can set treasury');
         {
-            if(feeTo != address(0))
-                require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
-            feeTo = _feeTo;
-            emit SetFeeTo(_feeTo);    
-        }        
+            require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
+            treasury = _treasury;
+            emit TreasurySet(_treasury);
+        }
     }
 
-    function setFeeToSetter(address _feeToSetter) external override {
-        require(msg.sender == feeToSetter, 'PolkaBridge AMM V1: FORBIDDEN');
-        {
-            if(feeToSetter != address(0))
-                require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
-            feeToSetter = _feeToSetter;
-            emit SetFeeToSetter(_feeToSetter);
-        }        
-    }
 }
