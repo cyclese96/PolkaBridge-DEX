@@ -13,7 +13,14 @@ import { useState } from "react";
 import SwapSettings from "../common/SwapSettings";
 import BigNumber from "bignumber.js";
 import CustomSnackBar from "../common/CustomSnackbar";
-import { DECIMAL_6_ADDRESSES, ETH, etheriumNetwork, swapFnConstants, THRESOLD_WEI_VALUE, tokens } from "../../constants";
+import {
+  DECIMAL_6_ADDRESSES,
+  ETH,
+  etheriumNetwork,
+  swapFnConstants,
+  THRESOLD_WEI_VALUE,
+  tokens,
+} from "../../constants";
 import {
   buyPriceImpact,
   getPriceRatio,
@@ -185,12 +192,7 @@ const useStyles = makeStyles((theme) => ({
 const SwapCard = (props) => {
   const {
     account: { currentNetwork, currentAccount, loading },
-    dex: {
-      approvedTokens,
-      poolReserves,
-      pairContractData,
-      transaction,
-    },
+    dex: { approvedTokens, poolReserves, pairContractData, transaction },
     checkAllowance,
     confirmAllowance,
     getLpBalance,
@@ -234,7 +236,7 @@ const SwapCard = (props) => {
   const [currentSwapFn, setCurrentSwapFn] = useState(
     swapFnConstants.swapExactETHForTokens
   );
-  const [swapPath, setSwapPath] = useState([])
+  const [swapPath, setSwapPath] = useState([]);
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popper" : undefined;
@@ -317,7 +319,6 @@ const SwapCard = (props) => {
     }
 
     if (!_pairAddress) {
-
       setStatus({
         disabled: true,
         message: "No liquidity available for this pair",
@@ -333,7 +334,7 @@ const SwapCard = (props) => {
         currentNetwork
       );
     }
-  }
+  };
 
   useEffect(() => {
     async function loadPair() {
@@ -349,8 +350,7 @@ const SwapCard = (props) => {
 
         await getAccountBalance(erc20Token, currentNetwork);
 
-        await loadPairReserves()
-
+        await loadPairReserves();
 
         await checkAllowance(selectedToken1, currentAccount, currentNetwork);
 
@@ -359,7 +359,6 @@ const SwapCard = (props) => {
     }
     loadPair();
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
-
 
   useEffect(() => {
     if (
@@ -409,12 +408,11 @@ const SwapCard = (props) => {
     [] // will be created only once initially
   );
 
-
   // token 1 input change
   const onToken1InputChange = async (tokens) => {
     setToken1Value(tokens);
 
-    setLocalStateLoading(true)
+    setLocalStateLoading(true);
 
     if (selectedToken1.symbol === ETH) {
       setCurrentSwapFn(swapFnConstants.swapExactETHForTokens);
@@ -437,14 +435,19 @@ const SwapCard = (props) => {
         currentNetwork
       );
 
-
       const _tokensInWei = DECIMAL_6_ADDRESSES.includes(selectedToken1.address)
         ? toWei(tokens, 6)
         : toWei(tokens);
 
-      const result = await getToken1OutAmount({ ...selectedToken1, amount: _tokensInWei }, selectedToken2, currentNetwork)
+      const result = await getToken1OutAmount(
+        { ...selectedToken1, amount: _tokensInWei },
+        selectedToken2,
+        currentNetwork
+      );
+      console.log("result");
+      console.log(result);
       _token2Value = result.resultOut;
-      setSwapPath(result.selectedPath)
+      setSwapPath(result.selectedPath);
 
       if (new BigNumber(_token2Value).gt(0)) {
         setToken2Value(_token2Value);
@@ -462,7 +465,6 @@ const SwapCard = (props) => {
         });
       }
 
-
       // update current price ratio based on trade amounts
       const _ratio = getPriceRatio(_token2Value, tokens);
       setPriceRatio(_ratio);
@@ -473,7 +475,7 @@ const SwapCard = (props) => {
       }
     }
 
-    setLocalStateLoading(false)
+    setLocalStateLoading(false);
   };
 
   // token2 input change
@@ -501,15 +503,17 @@ const SwapCard = (props) => {
         currentNetwork
       );
 
-
-
       const _tokensInWei = DECIMAL_6_ADDRESSES.includes(selectedToken2.address)
         ? toWei(tokens, 6)
         : toWei(tokens);
 
-      const result = await getToken0InAmount(selectedToken1, { ...selectedToken2, amount: _tokensInWei }, currentNetwork)
+      const result = await getToken0InAmount(
+        selectedToken1,
+        { ...selectedToken2, amount: _tokensInWei },
+        currentNetwork
+      );
       _token1Value = result.resultIn;
-      setSwapPath(result.selectedPath)
+      setSwapPath(result.selectedPath);
 
       if (new BigNumber(_token1Value).gt(0)) {
         setToken1Value(_token1Value);
@@ -577,7 +581,6 @@ const SwapCard = (props) => {
     checkPriceImpact();
     setSwapDialog(true);
   };
-
 
   const checkPriceImpact = () => {
     let impact;
@@ -651,7 +654,7 @@ const SwapCard = (props) => {
       return;
     }
 
-    loadPairReserves()
+    loadPairReserves();
 
     if (
       transaction.type === "swap" &&

@@ -16,9 +16,7 @@ import {
   getPriceRatio,
   toWei,
 } from "../../utils/helper";
-import {
-  swapTokens
-} from "../../actions/dexActions";
+import { swapTokens } from "../../actions/dexActions";
 // import { ETH, swapFnConstants } from "../../constants";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import BigNumber from "bignumber.js";
@@ -140,15 +138,10 @@ const SwapConfirm = (props) => {
     selectedToken2,
     token1Value,
     token2Value,
-    dex: {
-      swapSettings,
-      poolReserves,
-      dexLoading,
-      transaction,
-    },
+    dex: { swapSettings, poolReserves, dexLoading, transaction },
     currentSwapFn,
     currenSwapPath,
-    swapTokens
+    swapTokens,
   } = props;
 
   const classes = useStyles();
@@ -176,8 +169,7 @@ const SwapConfirm = (props) => {
       currenSwapPath,
       currentAccount,
       currentNetwork
-    )
-
+    );
   };
 
   const isValidSlippage = () => {
@@ -185,7 +177,7 @@ const SwapConfirm = (props) => {
     //   return true;
     // }
     // return false;
-    return true
+    return true;
   };
 
   return (
@@ -288,7 +280,7 @@ const SwapConfirm = (props) => {
                 <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
                   <span className={classes.detailTitle}>Minimum received</span>
                   <span className={classes.detailValue}>
-                    {token2Value} {selectedToken2.symbol}
+                    {parseFloat(token2Value).toFixed(2)} {selectedToken2.symbol}
                   </span>
                 </div>
 
@@ -346,9 +338,7 @@ const SwapConfirm = (props) => {
         <div>
           {transaction.type !== null && (
             <div>
-              <TransactionStatus
-                onClose={() => handleClose()}
-              />
+              <TransactionStatus onClose={() => handleClose()} />
             </div>
           )}
         </div>
