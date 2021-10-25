@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import Chart from "react-apexcharts";
 import { useState } from "react/cjs/react.development";
-import { usePrevious } from 'react-use'
+import { usePrevious } from "react-use";
 
 const chartEvent = (
   event,
@@ -100,37 +100,38 @@ const state = {
   series: [
     {
       name: "TVL USD",
-      data: [
-      ],
+      data: [],
     },
   ],
 };
 
 const AreaChart = ({ chartData }) => {
-
   // pointer to the chart object
-  const [chartCreated, setChartCreated] = useState(false)
-  const dataPrev = usePrevious(chartData)
-  const [currChartData, setChartData] = useState(state.series)
+  const [chartCreated, setChartCreated] = useState(false);
+  const dataPrev = usePrevious(chartData);
+  const [currChartData, setChartData] = useState(state.series);
 
   useEffect(() => {
-
     if (chartData !== dataPrev && chartData) {
-      const _data = chartData.length > 0 ? chartData.map(item => [item.date * 1000, item.totalLiquidityUSD ? parseInt(item.totalLiquidityUSD) : 0]) : []
-      setChartData([{ name: currChartData[0].name, data: _data }])
+      const _data =
+        chartData.length > 0
+          ? chartData.map((item) => [
+              item.date * 1000,
+              item.totalLiquidityUSD ? parseInt(item.totalLiquidityUSD) : 0,
+            ])
+          : [];
+      setChartData([{ name: currChartData[0].name, data: _data }]);
     }
-
-  }, [chartCreated, chartData, dataPrev])
-
+  }, [chartCreated, chartData, dataPrev]);
 
   return (
-    < Chart
+    <Chart
       options={state.options}
       series={currChartData}
       type="area"
-      width="100%"
+      width={"98%"}
     />
-  )
-}
+  );
+};
 
 export default AreaChart;

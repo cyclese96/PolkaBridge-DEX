@@ -16,15 +16,12 @@ import {
   getPriceRatio,
   toWei,
 } from "../../utils/helper";
-import {
-  swapExactEthForTokens,
-  swapExactTokensForEth,
-  swapTokens
-} from "../../actions/dexActions";
-import { ETH, swapFnConstants } from "../../constants";
+import { swapTokens } from "../../actions/dexActions";
+// import { ETH, swapFnConstants } from "../../constants";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import BigNumber from "bignumber.js";
 import TransactionStatus from "./TransactionStatus";
+import { DECIMAL_6_ADDRESSES } from "../../constants";
 
 const styles = (theme) => ({
   root: {
@@ -142,17 +139,10 @@ const SwapConfirm = (props) => {
     selectedToken2,
     token1Value,
     token2Value,
-    dex: {
-      swapSettings,
-      poolReserves,
-      dexLoading,
-      pairContractData,
-      transaction,
-    },
+    dex: { swapSettings, poolReserves, dexLoading, transaction },
     currentSwapFn,
-    swapExactEthForTokens,
-    swapExactTokensForEth,
-    swapTokens
+    currenSwapPath,
+    swapTokens,
   } = props;
 
   const classes = useStyles();
@@ -160,63 +150,37 @@ const SwapConfirm = (props) => {
   const onConfirmSwap = async () => {
     // todo swap code
 
-    const token1 = {
-      amount: toWei(token1Value.toString()),
+    const _amount0InWei = DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value);
+    const token0 = {
+      amount: _amount0InWei,
       min: toWei(token1Value.toString()),
       ...selectedToken1,
     };
 
-    const token2 = {
-      amount: toWei(token2Value.toString()),
+    const _amount1InWei = DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token2Value);
+    const token1 = {
+      amount: _amount1InWei,
       min: toWei(token2Value.toString()),
       ...selectedToken2,
     };
 
     await swapTokens(
+      token0,
       token1,
-      token2,
       swapSettings.deadline,
       currentSwapFn,
+      currenSwapPath,
       currentAccount,
       currentNetwork
-    )
-    // if (currentSwapFn === swapFnConstants.swapExactETHForTokens) {
-    //   //buy trade
-    //   await swapExactEthForTokens(
-    //     token1,
-    //     token2,
-    //     swapSettings.deadline,
-    //     currentAccount,
-    //     currentNetwork
-    //   );
-    // } else if (currentSwapFn === swapFnConstants.swapExactTokensForETH) {
-    //   //sell trade
-    //   await swapExactTokensForEth(
-    //     token1,
-    //     token2,
-    //     swapSettings.deadline,
-    //     currentAccount,
-    //     currentNetwork
-    //   );
-    // } else if (currentSwapFn === swapFnConstants.swapETHforExactTokens) {
-
-
-    // } else if (currentSwapFn === swapFnConstants.swapTokensForExactETH) {
-
-    // } else if (currentSwapFn === swapFnConstants.swapExactTokensForTokens) {
-
-    // } else {// swapTokensForExactTokens
-
-    // }
-
-    //handleClose();
+    );
   };
 
   const isValidSlippage = () => {
-    if (new BigNumber(priceImpact).lt(swapSettings.slippage)) {
-      return true;
-    }
-    return false;
+    // if (new BigNumber(priceImpact).lt(swapSettings.slippage)) {
+    //   return true;
+    // }
+    // return false;
+    return true;
   };
 
   return (
@@ -319,7 +283,7 @@ const SwapConfirm = (props) => {
                 <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
                   <span className={classes.detailTitle}>Minimum received</span>
                   <span className={classes.detailValue}>
-                    {token2Value} {selectedToken2.symbol}
+                    {parseFloat(token2Value).toFixed(2)} {selectedToken2.symbol}
                   </span>
                 </div>
 
@@ -377,9 +341,7 @@ const SwapConfirm = (props) => {
         <div>
           {transaction.type !== null && (
             <div>
-              <TransactionStatus
-                onClose={() => handleClose()}
-              />
+              <TransactionStatus onClose={() => handleClose()} />
             </div>
           )}
         </div>
@@ -393,8 +355,4 @@ const mapStateToProps = (state) => ({
   dex: state.dex,
 });
 
-export default connect(mapStateToProps, {
-  swapExactTokensForEth,
-  swapExactEthForTokens,
-  swapTokens
-})(SwapConfirm);
+export default connect(mapStateToProps, { swapTokens })(SwapConfirm);

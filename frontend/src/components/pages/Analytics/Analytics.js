@@ -17,6 +17,7 @@ import { useAllPairData } from "../../../contexts/PairData";
 import Loader from "../../common/Loader";
 import TabPage from "../../TabPage";
 import { formatCurrency } from "../../../utils/formatters";
+import BigNumber from "bignumber.js";
 
 // globalData ->
 // {
@@ -48,7 +49,7 @@ const Analytics = () => {
   const chartData = useGlobalChartData();
 
   useEffect(() => {
-    console.log("analyticsTest:  globalData ", globalData);
+    console.log("analyticsTest:  globalData load ", globalData);
   }, [globalData]);
   return (
     <div>
@@ -64,8 +65,7 @@ const Analytics = () => {
               <div>
                 <span className={classes.cardSpan}>Total value locked</span>
                 <p className={classes.cardP}>
-                  {"$" +
-                    formatCurrency(globalData.totalLiquidityUSD)}
+                  {"$" + formatCurrency(globalData.totalLiquidityUSD)}
                   <small>
                     {formattedPercent(globalData.liquidityChangeUSD)}
                   </small>
@@ -91,15 +91,8 @@ const Analytics = () => {
               <div>
                 <span className={classes.cardSpan}>Volume 24H</span>
                 <p className={classes.cardP}>
-                  {globalData.oneDayVolumeUSD
-                    ? "$" +
-                    formatCurrency(globalData.oneDayVolumeUSD)
-                    : "-"}
-                  <small>
-                    {globalData.volumeChangeUSD !== null
-                      ? formattedPercent(globalData.volumeChangeUSD)
-                      : "-"}
-                  </small>{" "}
+                  {"$" + formatCurrency(globalData.oneDayVolumeUSD)}
+                  <small>{formattedPercent(globalData.volumeChangeUSD)}</small>
                 </p>
                 <div className={classes.chart}>
                   <BarChart chartData={chartData ? chartData[0] : []} />
@@ -123,7 +116,7 @@ const Analytics = () => {
             <div className={classes.statsGroup}>
               <span className={classes.statLabel}>Volume 24H:</span>
               <span className={classes.statAmount}>
-                $ {formatCurrency(globalData.oneDayVolumeUSD)}
+                $ {formatCurrency(new BigNumber(globalData.oneDayVolumeUSD))}
               </span>
 
               <PercentLabel
@@ -135,10 +128,7 @@ const Analytics = () => {
             <div className={classes.statsGroup}>
               <span className={classes.statLabel}>Fees 24H:</span>
               <span className={classes.statAmount}>
-                ${" "}
-                {formatCurrency(
-                  globalData.oneDayVolumeUSD * 0.02
-                )}
+                $ {formatCurrency(globalData.oneDayVolumeUSD * 0.02)}
               </span>
 
               <PercentLabel
@@ -150,8 +140,7 @@ const Analytics = () => {
             <div className={classes.statsGroup}>
               <span className={classes.statLabel}>TVL</span>
               <span className={classes.statAmount}>
-                {"$" +
-                  formatCurrency(globalData.totalLiquidityUSD)}
+                {"$" + formatCurrency(globalData.totalLiquidityUSD)}
               </span>
 
               <PercentLabel

@@ -159,11 +159,12 @@ export const GLOBAL_CHART = gql`
   }
 `;
 
+
 export const GLOBAL_DATA = (block) => {
-  const queryString = ` query polkabridgeAmmFactories {
-    polkabridgeAmmFactories(
-       ${block ? `block: { number: ${block}}` : ``} 
-       where: { id: "${FACTORY_ADDRESS}" }) {
+
+  if (!block) {
+    const queryString = ` query  polkabridgeAmmFactories{
+      polkabridgeAmmFactories {
         id
         totalVolumeUSD
         totalVolumeETH
@@ -173,8 +174,23 @@ export const GLOBAL_DATA = (block) => {
         txCount
         pairCount
       }
-    }`;
-  return gql(queryString);
+    }`
+    return gql(queryString)
+  }
+
+  const queryString = ` query  polkabridgeAmmFactories{
+    polkabridgeAmmFactories(${block ? `block: { number: ${block}}` : ``}) {
+      id
+      totalVolumeUSD
+      totalVolumeETH
+      untrackedVolumeUSD
+      totalLiquidityUSD
+      totalLiquidityETH
+      txCount
+      pairCount
+    }
+  }`
+  return gql(queryString)
 };
 
 export const GLOBAL_TXNS = gql`
@@ -414,9 +430,8 @@ export const GET_BLOCK = gql`
 export const GET_BLOCKS = (timestamps) => {
   let queryString = "query blocks {";
   queryString += timestamps.map((timestamp) => {
-    return `t${timestamp}:blocks(first: 1, orderBy: timestamp, orderDirection: desc, where: { timestamp_gt: ${timestamp}, timestamp_lt: ${
-      timestamp + 600
-    } }) {
+    return `t${timestamp}:blocks(first: 1, orderBy: timestamp, orderDirection: desc, where: { timestamp_gt: ${timestamp}, timestamp_lt: ${timestamp + 600
+      } }) {
       number
     }`;
   });
@@ -562,9 +577,8 @@ export const PAIR_DATA = (pairAddress, block) => {
   const queryString = `
     ${PairFields}
     query pairs {
-      pairs(${
-        block ? `block: {number: ${block}}` : ``
-      } where: { id: "${pairAddress}"} ) {
+      pairs(${block ? `block: {number: ${block}}` : ``
+    } where: { id: "${pairAddress}"} ) {
         ...PairFields
       }
     }`;
@@ -601,9 +615,8 @@ export const TOKENS_HISTORICAL_BULK = (tokens, block) => {
   tokenString += "]";
   let queryString = `
   query tokens {
-    tokens(first: 50, where: {id_in: ${tokenString}}, ${
-    block ? "block: {number: " + block + "}" : ""
-  }  ) {
+    tokens(first: 50, where: {id_in: ${tokenString}}, ${block ? "block: {number: " + block + "}" : ""
+    }  ) {
       id
       name
       symbol
@@ -658,9 +671,8 @@ export const TOKEN_DATA = (tokenAddress, block) => {
   const queryString = `
     ${TokenFields}
     query tokens {
-      tokens(${
-        block ? `block : {number: ${block}}` : ``
-      } where: {id:"${tokenAddress}"}) {
+      tokens(${block ? `block : {number: ${block}}` : ``
+    } where: {id:"${tokenAddress}"}) {
         ...TokenFields
       }
       pairs0: pairs(where: {token0: "${tokenAddress}"}, first: 50, orderBy: reserveUSD, orderDirection: desc){

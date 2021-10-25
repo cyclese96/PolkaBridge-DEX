@@ -10,6 +10,9 @@ export const biteAddressKoven = "0xA9Bf3904f7216B4cA2BA862Ac27b9469c030C0eA";
 export const usdtTestnetAddress = "0x117e41ec3ec246873D69BFA5659B8eB209e687d8";
 export const usdtMainnetAddress = "0x117e41ec3ec246873D69BFA5659B8eB209e687d8";
 
+// USDC addreses
+export const usdcTestnetAddress = "0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b";
+export const usdcMainnetAddress = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48";
 // corgib
 // export const corgibStakingTestent =
 //   "0xA5c2186CFb734828EE89a4087FD571F12Af1E895";
@@ -79,6 +82,7 @@ export const BITE = "BITE";
 export const CORGIB = "CORGIB";
 export const PWAR = "PWAR";
 export const USDT = "USDT";
+export const USDC = "USDC";
 
 export const supportedTokens = {
   ethereum: [PBR, ETH, USDT, BITE],
@@ -181,7 +185,8 @@ export const tokens = [
   {
     name: "USD Coin",
     symbol: "USDC",
-    address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    address:
+      currentConnection === "testnet" ? usdcTestnetAddress : usdcMainnetAddress,
   },
   // {
   //   name: "1INCH Token",
@@ -318,6 +323,11 @@ export const tokens = [
   },
 ];
 
+export const DECIMAL_6_ADDRESSES = [
+  usdcTestnetAddress,
+  usdcMainnetAddress
+]
+
 export const nullAddress = "0x0000000000000000000000000000000000000000";
 
 export const timeframeOptions = {
@@ -332,10 +342,14 @@ export const timeframeOptions = {
 export const BUNDLE_ID = "1";
 
 export const swapFnConstants = {
-  swapExactETHForTokens: "swapExactETHForTokens",
-  swapETHforExactTokens: "swapETHforExactTokens",
-  swapExactTokensForETH: "swapExactTokensForETH",
-  swapTokensForExactETH: "swapTokensForExactETH",
-  swapExactTokensForTokens: "swapExactTokensForTokens",
-  swapTokensForExactTokens: "swapTokensForExactTokens"
+  swapExactETHForTokens: "swapExactETHForTokens", // case 1
+  swapETHforExactTokens: "swapETHforExactTokens", // case2
+  swapExactTokensForETH: "swapExactTokensForETH", // case3
+  swapTokensForExactETH: "swapTokensForExactETH", // case 4
+  swapExactTokensForTokens: "swapExactTokensForTokens", // case 5
+  swapTokensForExactTokens: "swapTokensForExactTokens", // case 6
 };
+
+
+export const THRESOLD_VALUE = 0.00001
+export const THRESOLD_WEI_VALUE = 100000000000000

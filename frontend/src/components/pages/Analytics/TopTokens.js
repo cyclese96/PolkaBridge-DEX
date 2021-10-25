@@ -150,7 +150,7 @@ const useHeadStyles = makeStyles((theme) => ({
     color: "rgba(255,255,255,0.5)",
   },
   desktop: {
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("xs")]: {
       display: "none",
     },
   },
@@ -308,7 +308,7 @@ const useStyles = makeStyles((theme) => ({
     color: "rgba( 255, 255, 255, 0.4 )",
   },
   tableDesktop: {
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("xs")]: {
       display: "none",
     },
   },
@@ -394,7 +394,6 @@ const TopTokens = ({
     return obj;
   };
   const formattedTokens = useMemo(() => {
-    // console.log('all tokens', allTokens)
     return (
       allTokens &&
       Object.keys(allTokens).map((key) =>
@@ -488,6 +487,7 @@ const TopTokens = ({
 
   const CurrenTokenRow = ({ tableType, classes, handleClick }) => {
     if (tableType === "TopTokens") {
+      console.log(formattedTokens);
       return (
         <>
           {formattedTokens.length > 0

@@ -1,12 +1,11 @@
 import { TableCell, TableRow } from "@material-ui/core";
+import { currentConnection } from "../../../../constants";
 import { formatCurrency } from "../../../../utils/formatters";
 // import { formatCurrency } from "../../../../utils/helper";
 import { formatTime } from "../../../../utils/timeUtils";
 
 const TransactionRow = (props) => {
   const { classes, isItemSelected, labelId, handleClick, row } = props;
-
-  console.log("transaction row", row);
 
   return (
     <>
@@ -26,11 +25,20 @@ const TransactionRow = (props) => {
             {row.transactionType === "Mint"
               ? "Add"
               : row.transactionType === "Burn"
-                ? "Remove"
-                : "Swap"}{" "}
+              ? "Remove"
+              : "Swap"}{" "}
           </span>{" "}
           <span className={classes.cellText}>
-            {row.token0.symbol} And {row.token1.symbol}
+            <a
+              href={
+                currentConnection === "testnet"
+                  ? `https://rinkeby.etherscan.io/tx/${row.id}`
+                  : `https://etherscan.io/tx/${row.id}`
+              }
+              target="_blank"
+            >
+              {row.token0.symbol} And {row.token1.symbol}
+            </a>
           </span>
         </TableCell>
 
@@ -55,11 +63,20 @@ const TransactionRow = (props) => {
             {row.transactionType === "Mint"
               ? "Add"
               : row.transactionType === "Burn"
-                ? "Remove"
-                : "Swap"}{" "}
+              ? "Remove"
+              : "Swap"}{" "}
           </span>{" "}
           <span className={classes.cellText}>
-            {row.token0.symbol} And {row.token1.symbol}
+            <a
+              href={
+                currentConnection === "testnet"
+                  ? `https://rinkeby.etherscan.io/tx/${row.id}`
+                  : `https://etherscan.io/tx/${row.id}`
+              }
+              target="_blank"
+            >
+              {row.token0.symbol} And {row.token1.symbol}
+            </a>
           </span>
         </TableCell>
         <TableCell align="right">

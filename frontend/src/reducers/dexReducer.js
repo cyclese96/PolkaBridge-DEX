@@ -37,8 +37,9 @@ const initalState = {
   dexError: null,
   dexLoading: false,
   recentSwaps: [],
-  token0Price: null,
-  token1Price: null,
+  token0In: null,
+  token1Out: null,
+  priceLoading: false,
   swapSettings: {
     swapFee: exchangeFee,
     slippage: defaultSlippage,

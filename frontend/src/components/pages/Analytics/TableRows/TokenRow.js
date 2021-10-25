@@ -41,6 +41,7 @@ const TokenRow = (props) => {
           {formatCurrency(row.vol_24_h, true)}
         </TableCell>
       </TableRow>
+
       <TableRow
         hover
         onClick={(event) => handleClick(event, row.name)}
@@ -75,7 +76,7 @@ const TokenRow = (props) => {
           {formatCurrency(row.vol_24_h, true)}
         </TableCell>
         <TableCell align="right" className={classes.cellText}>
-          {formatCurrency(row.tvl, true)}
+          {formatCurrency(row.totalLiquidity, true)}
         </TableCell>
       </TableRow>
     </>

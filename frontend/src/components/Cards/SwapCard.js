@@ -1,10 +1,7 @@
 import React, { useCallback, useEffect } from "react";
 import {
-  Box,
   Button,
   Card,
-  CircularProgress,
-  Divider,
   IconButton,
   makeStyles,
   Popper,
@@ -16,19 +13,30 @@ import { useState } from "react";
 import SwapSettings from "../common/SwapSettings";
 import BigNumber from "bignumber.js";
 import CustomSnackBar from "../common/CustomSnackbar";
-import { ETH, etheriumNetwork, swapFnConstants, tokens } from "../../constants";
+import {
+  DECIMAL_6_ADDRESSES,
+  ETH,
+  etheriumNetwork,
+  swapFnConstants,
+  THRESOLD_WEI_VALUE,
+  THRESOLD_VALUE,
+  tokens,
+} from "../../constants";
 import {
   buyPriceImpact,
-  formatFloat,
-  getPercentageAmount,
-  getTokenOut,
+  getPriceRatio,
+  getToken1Out,
+  getToken2Out,
   sellPriceImpact,
   toWei,
 } from "../../utils/helper";
 import {
+  calculatePriceImpact,
   checkAllowance,
   confirmAllowance,
   getLpBalance,
+  getToken0InAmount,
+  getToken1OutAmount,
   loadPairAddress,
 } from "../../actions/dexActions";
 import { getAccountBalance } from "../../actions/accountActions";
@@ -36,11 +44,10 @@ import SwapConfirm from "../common/SwapConfirm";
 import debounce from "lodash.debounce";
 import { getPairAddress } from "../../utils/connectionUtils";
 
-import { Info, Settings, SwapCalls, SwapHoriz } from "@material-ui/icons";
+import { Info, Settings } from "@material-ui/icons";
 import TabPage from "../TabPage";
-import TransactionStatus from "../common/TransactionStatus";
 import store from "../../store";
-import { START_TRANSACTION } from "../../actions/types";
+import { HIDE_DEX_LOADING, SHOW_DEX_LOADING, START_TRANSACTION } from "../../actions/types";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -56,6 +63,7 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft: 7,
       paddingRight: 7,
       width: "100%",
+      maxWidth: 400,
     },
   },
   cardContents: {
@@ -175,29 +183,20 @@ const useStyles = makeStyles((theme) => ({
     color: "#bdbdbd",
     fontSize: 12,
   },
-  txDetailsTitle: {
-    color: "#f9f9f9",
-    fontSize: 12,
-  },
+
   txDetailsValue: {
     color: "#ffffff",
-    fontSize: 12,
+    fontSize: 14,
+    paddingBottom: 5,
   },
 }));
 
 const SwapCard = (props) => {
   const {
     account: { currentNetwork, currentAccount, loading },
-    dex: {
-      approvedTokens,
-      poolReserves,
-      pairContractData,
-      transaction,
-      swapSettings,
-    },
+    dex: { approvedTokens, poolReserves, pairContractData, transaction },
     checkAllowance,
     confirmAllowance,
-    tokenType,
     getLpBalance,
     getAccountBalance,
     loadPairAddress,
@@ -228,18 +227,18 @@ const SwapCard = (props) => {
   const [swapDialogOpen, setSwapDialog] = useState(false);
 
   const [priceImpact, setPriceImpact] = useState(null);
-  const [liquidityStatus, setLiquidityStatus] = useState(false);
   const [localStateLoading, setLocalStateLoading] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const [swapTransactionStatus, setSwapTransactionStatus] =
-    useState(transaction);
+  const [priceRatio, setPriceRatio] = useState(null);
 
   const handleTxPoper = (event) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
   };
 
-  const [currentSwapFn, setCurrentSwapFn] = useState(swapFnConstants.swapExactETHForTokens);
+  const [currentSwapFn, setCurrentSwapFn] = useState(
+    swapFnConstants.swapExactETHForTokens
+  );
+  const [swapPath, setSwapPath] = useState([]);
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popper" : undefined;
@@ -272,9 +271,6 @@ const SwapCard = (props) => {
       setToken2({});
       setToken2Value("");
       // updateTokenPrices();
-
-      // check selected from token allowance
-      // await checkAllowance(_token, currentAccount, currentNetwork);
     }
     initSelection();
   }, [currentNetwork, currentAccount]);
@@ -307,6 +303,41 @@ const SwapCard = (props) => {
     setStatus({ disabled: true, message: "Enter Amounts" });
   };
 
+  const loadPairReserves = async () => {
+    let _pairAddress = currentPairAddress();
+    if (!_pairAddress) {
+      _pairAddress = await getPairAddress(
+        selectedToken1.address,
+        selectedToken2.address,
+        currentNetwork
+      );
+
+      loadPairAddress(
+        selectedToken1.symbol,
+        selectedToken2.symbol,
+        _pairAddress,
+        currentNetwork
+      );
+    }
+
+    if (!_pairAddress) {
+      // setStatus({
+      //   disabled: true,
+      //   message: "No liquidity available for this pair",
+      // });
+    } else {
+      // console.log("current pair address ", _pairAddress);
+
+      await getLpBalance(
+        selectedToken1,
+        selectedToken2,
+        _pairAddress,
+        currentAccount,
+        currentNetwork
+      );
+    }
+  };
+
   useEffect(() => {
     async function loadPair() {
       if (selectedToken1.symbol && selectedToken2.symbol) {
@@ -321,40 +352,7 @@ const SwapCard = (props) => {
 
         await getAccountBalance(erc20Token, currentNetwork);
 
-        let _pairAddress = currentPairAddress();
-        if (!_pairAddress) {
-          _pairAddress = await getPairAddress(
-            selectedToken1.address,
-            selectedToken2.address,
-            currentNetwork
-          );
-
-          loadPairAddress(
-            selectedToken1.symbol,
-            selectedToken2.symbol,
-            _pairAddress,
-            currentNetwork
-          );
-        }
-
-        if (!_pairAddress) {
-          setLiquidityStatus(true);
-          setStatus({
-            disabled: true,
-            message: "No liquidity available for this pair",
-          });
-        } else {
-          console.log("current pair address ", _pairAddress);
-          // setLiquidityStatus(false);
-
-          await getLpBalance(
-            selectedToken1,
-            selectedToken2,
-            _pairAddress,
-            currentAccount,
-            currentNetwork
-          );
-        }
+        await loadPairReserves();
 
         await checkAllowance(selectedToken1, currentAccount, currentNetwork);
 
@@ -370,7 +368,6 @@ const SwapCard = (props) => {
       (new BigNumber(poolReserves[selectedToken1.symbol]).eq(0) ||
         new BigNumber(poolReserves[selectedToken2.symbol]).eq(0))
     ) {
-      setLiquidityStatus(true);
       setStatus({
         disabled: true,
         message: "No liquidity available for this pair",
@@ -413,36 +410,59 @@ const SwapCard = (props) => {
     [] // will be created only once initially
   );
 
+  const debouncedToken1OutCall = useCallback(
+    debounce((...params) => getToken1OutAmount(...params), 1000),
+    [] // will be created only once initially
+  );
+
+  const debouncedToken0InCall = useCallback(
+    debounce((...params) => getToken0InAmount(...params), 1000),
+    [] // will be created only once initially
+  );
+
+
+  // token 1 input change
   const onToken1InputChange = async (tokens) => {
     setToken1Value(tokens);
 
-    if (selectedToken1.symbol === ETH) {
-      setCurrentSwapFn(swapFnConstants.swapExactETHForTokens)
-    } else if (selectedToken2.symbol && selectedToken2.symbol === ETH) {
-      setCurrentSwapFn(swapFnConstants.swapExactTokensForETH)
-    } else {
-      setCurrentSwapFn(swapFnConstants.swapExactTokensForTokens)
-    }
+    setLocalStateLoading(true);
 
+    if (selectedToken1.symbol === ETH) {
+      setCurrentSwapFn(swapFnConstants.swapExactETHForTokens);
+    } else if (selectedToken2.symbol && selectedToken2.symbol === ETH) {
+      setCurrentSwapFn(swapFnConstants.swapExactTokensForETH);
+    } else {
+      setCurrentSwapFn(swapFnConstants.swapExactTokensForTokens);
+    }
 
     // calculate resetpective value of token 2 if selected
     let _token2Value = "";
-    const pairAddress = currentPairAddress();
+    // const pairAddress = currentPairAddress();
 
-    if (selectedToken2.symbol && new BigNumber(tokens).gt(0) && pairAddress) {
-      await debouncedGetLpBalance(
-        selectedToken1,
+    if (selectedToken2.symbol && new BigNumber(tokens).gt(0)) {
+      // await debouncedGetLpBalance(
+      //   selectedToken1,
+      //   selectedToken2,
+      //   pairAddress,
+      //   currentAccount,
+      //   currentNetwork
+      // );
+
+      const _tokensInWei = DECIMAL_6_ADDRESSES.includes(selectedToken1.address)
+        ? toWei(tokens, 6)
+        : toWei(tokens);
+
+      const result = await getToken1OutAmount(
+        { ...selectedToken1, amount: toWei(tokens) },
         selectedToken2,
-        pairAddress,
         currentAccount,
         currentNetwork
       );
+      console.log("result");
+      console.log(result);
+      _token2Value = result.resultOut;
+      setSwapPath(result.selectedPath);
 
-      _token2Value = getTokenOut(
-        toWei(tokens),
-        poolReserves[selectedToken1.symbol],
-        poolReserves[selectedToken2.symbol]
-      );
       if (new BigNumber(_token2Value).gt(0)) {
         setToken2Value(_token2Value);
         // verify swap status with current inputs
@@ -451,44 +471,65 @@ const SwapCard = (props) => {
           { value: _token2Value, selected: selectedToken2 }
         );
       }
+
+      if (new BigNumber(_token2Value).lt(THRESOLD_VALUE)) {
+        setStatus({
+          disabled: true,
+          message: "Not enough liquidity for this trade!",
+        });
+      }
+
+      // update current price ratio based on trade amounts
+      const _ratio = getPriceRatio(_token2Value, tokens);
+      setPriceRatio(_ratio);
     } else if (selectedToken2.symbol && !tokens) {
       setToken2Value("");
       if (!swapStatus.disabled) {
         setStatus({ disabled: true, message: "Enter Amounts" });
       }
     }
+
+    setLocalStateLoading(false);
   };
 
+  // token2 input change
   const onToken2InputChange = async (tokens) => {
     setToken2Value(tokens);
 
     if (selectedToken1.symbol === ETH) {
-      setCurrentSwapFn(swapFnConstants.swapETHforExactTokens)
+      setCurrentSwapFn(swapFnConstants.swapETHforExactTokens);
     } else if (selectedToken2.symbol && selectedToken2.symbol === ETH) {
-      setCurrentSwapFn(swapFnConstants.swapTokensForExactETH)
+      setCurrentSwapFn(swapFnConstants.swapTokensForExactETH);
     } else {
-      setCurrentSwapFn(swapFnConstants.swapTokensForExactTokens)
+      setCurrentSwapFn(swapFnConstants.swapTokensForExactTokens);
     }
 
     //calculate respective value of token1 if selected
     let _token1Value = "";
-    const pairAddress = currentPairAddress();
+    // const pairAddress = currentPairAddress();
 
-    if (selectedToken1.symbol && new BigNumber(tokens).gt(0) && pairAddress) {
-      await debouncedGetLpBalance(
+    if (selectedToken1.symbol && new BigNumber(tokens).gt(0)) {
+      // await debouncedGetLpBalance(
+      //   selectedToken1,
+      //   selectedToken2,
+      //   pairAddress,
+      //   currentAccount,
+      //   currentNetwork
+      // );
+
+      const _tokensInWei = DECIMAL_6_ADDRESSES.includes(selectedToken2.address)
+        ? toWei(tokens, 6)
+        : toWei(tokens);
+
+      const result = await getToken0InAmount(
         selectedToken1,
-        selectedToken2,
-        pairAddress,
+        { ...selectedToken2, amount: toWei(tokens) },
         currentAccount,
         currentNetwork
       );
+      _token1Value = result.resultIn;
+      setSwapPath(result.selectedPath);
 
-      _token1Value = getTokenOut(
-        toWei(tokens).toString(),
-        poolReserves[selectedToken2.symbol],
-        poolReserves[selectedToken1.symbol]
-      );
-      console.log('token out ', _token1Value)
       if (new BigNumber(_token1Value).gt(0)) {
         setToken1Value(_token1Value);
         // verify swap status with current inputs
@@ -497,6 +538,17 @@ const SwapCard = (props) => {
           { value: tokens, selected: selectedToken2 }
         );
       }
+
+      if (new BigNumber(_token1Value).lt(THRESOLD_VALUE)) {
+        setStatus({
+          disabled: true,
+          message: "Not enough liquidity for this trade!",
+        });
+      }
+
+      // update current price ratio based on trade amounts
+      const _ratio = getPriceRatio(tokens, _token1Value);
+      setPriceRatio(_ratio);
     } else if (selectedToken1.symbol && !tokens) {
       setToken1Value("");
       if (!swapStatus.disabled) {
@@ -542,36 +594,42 @@ const SwapCard = (props) => {
 
   const handleSwapToken = async () => {
     checkPriceImpact();
-
-    // verifySlippage(
-    //   swapSettings.slippage,
-
-    //   { ...selectedToken1, amount: token1Value },
-    //   { ...selectedToken2, amount: token2Value },
-    //   currentAccount,
-    //   currentNetwork
-    // );
     setSwapDialog(true);
   };
 
-  const handleSwapConfirm = () => {
-    //todo
-  };
-
-  const checkPriceImpact = () => {
+  const checkPriceImpact = async () => {
     let impact;
-    if (selectedToken1.symbol === ETH) {
-      impact = buyPriceImpact(
-        toWei(token2Value),
-        poolReserves[selectedToken2.symbol]
-      );
-    } else {
-      impact = sellPriceImpact(
-        toWei(token1Value),
-        toWei(token2Value),
-        poolReserves[selectedToken1.symbol]
-      );
-    }
+    // if (selectedToken1.symbol === ETH) {
+    //   impact = buyPriceImpact(
+    //     toWei(token2Value),
+    //     poolReserves[selectedToken2.symbol]
+    //   );
+    // } else {
+    //   impact = sellPriceImpact(
+    //     toWei(token1Value),
+    //     toWei(token2Value),
+    //     poolReserves[selectedToken1.symbol]
+    //   );
+    // }
+
+    const _amount0InWei = DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value);
+    const token0 = {
+      amount: _amount0InWei,
+      min: toWei(token1Value.toString()),
+      ...selectedToken1,
+    };
+
+    const _amount1InWei = DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token2Value);
+    const token1 = {
+      amount: _amount1InWei,
+      min: toWei(token2Value.toString()),
+      ...selectedToken2,
+    };
+
+    store.dispatch({ type: SHOW_DEX_LOADING })
+    impact = await calculatePriceImpact(token0, token1, currentAccount, currentNetwork);
+    store.dispatch({ type: HIDE_DEX_LOADING })
+
     setPriceImpact(impact);
   };
 
@@ -630,32 +688,31 @@ const SwapCard = (props) => {
       return;
     }
 
-    if (transaction.type === 'swap' && (transaction.status === 'success' || transaction.status === 'failed') && !swapDialogOpen) {
-      setSwapDialog(true)
+    loadPairReserves();
+
+    if (
+      transaction.type === "swap" &&
+      (transaction.status === "success" || transaction.status === "failed") &&
+      !swapDialogOpen
+    ) {
+      setSwapDialog(true);
     }
   }, [transaction]);
 
   const handleConfirmSwapClose = (value) => {
     setSwapDialog(value);
-    if (transaction.type === 'swap' && (transaction.status === 'success')) {
-      store.dispatch({ type: START_TRANSACTION })
-      clearInputState()
-      debouncedGetLpBalance(
-        selectedToken1,
-        selectedToken2,
-        currentPairAddress(),
-        currentAccount,
-        currentNetwork
-      );
-    } else if (transaction.type === 'swap' && transaction.status === 'failed') {
-      store.dispatch({ type: START_TRANSACTION })
-      debouncedGetLpBalance(
-        selectedToken1,
-        selectedToken2,
-        currentPairAddress(),
-        currentAccount,
-        currentNetwork
-      );
+    debouncedGetLpBalance(
+      selectedToken1,
+      selectedToken2,
+      currentPairAddress(),
+      currentAccount,
+      currentNetwork
+    );
+    if (transaction.type === "swap" && transaction.status === "success") {
+      store.dispatch({ type: START_TRANSACTION });
+      clearInputState();
+    } else if (transaction.type === "swap" && transaction.status === "failed") {
+      store.dispatch({ type: START_TRANSACTION });
     }
   };
 
@@ -677,6 +734,7 @@ const SwapCard = (props) => {
         token2Value={token2Value}
         priceImpact={priceImpact}
         currentSwapFn={currentSwapFn}
+        currenSwapPath={swapPath}
       />
       <SwapSettings open={settingOpen} handleClose={close} />
       <Card elevation={20} className={classes.card}>
@@ -724,12 +782,17 @@ const SwapCard = (props) => {
           {token1Value && token2Value && (
             <div className="mt-1 d-flex justify-content-end">
               <div className={classes.tokenPrice}>
-                <span>
-                  {" "}
-                  1 {selectedToken1.symbol && selectedToken1.symbol} ={" "}
-                  {(token2Value / token1Value).toFixed(2)}{" "}
-                  {selectedToken2.symbol && selectedToken2.symbol}
-                </span>{" "}
+                {selectedToken1.symbol &&
+                  selectedToken2.symbol &&
+                  !disableStatus() ? (
+                  <span>
+                    1 {selectedToken1.symbol} {" = "} {priceRatio}{" "}
+                    {selectedToken2.symbol}
+                  </span>
+                ) : (
+                  ""
+                )}
+
                 <Info
                   className={classes.infoIcon}
                   style={{ marginTop: -3 }}
@@ -760,36 +823,16 @@ const SwapCard = (props) => {
 
         <Popper id={id} open={open} anchorEl={anchorEl}>
           <div className={classes.txDetailsCard}>
-            <h6>Transaction Details</h6>
-            <hr style={{ color: "grey", width: "100%", height: 1 }} />
-            <div>
-              <div className="mt-1 d-flex justify-content-between">
-                <div className={classes.txDetailsTitle}>
-                  Liquidity Provider Fee
-                </div>
-                <div className={classes.txDetailsValue}>
-                  {" "}
-                  {getPercentageAmount(token1Value, "0.2 ")}{" "}
-                  {selectedToken1.symbol}
-                </div>
+            <h6 className={classes.txDetailsValue}>
+              For each trade a 0.2% fee is paid
+            </h6>
+
+            <div className="mt-2">
+              <div className={classes.txDetailsValue}>
+                - 80% to LP token holders
               </div>
-              <div className="mt-1 d-flex justify-content-between">
-                <div className={classes.txDetailsTitle}>Price Impact</div>
-                <div className={classes.txDetailsValue}>
-                  {formatFloat(priceImpact)} %
-                </div>
-              </div>
-              <div className="mt-1 d-flex justify-content-between">
-                <div className={classes.txDetailsTitle}>Allowed Slippage</div>
-                <div className={classes.txDetailsValue}>
-                  {swapSettings.slippage} %
-                </div>
-              </div>
-              <div className="mt-1 d-flex justify-content-between">
-                <div className={classes.txDetailsTitle}>Minimum received</div>
-                <div className={classes.txDetailsValue}>
-                  {token2Value} {selectedToken2.symbol}
-                </div>
+              <div className={classes.txDetailsValue}>
+                - 20% to the Treasury, for buyback PBR and burn
               </div>
             </div>
           </div>

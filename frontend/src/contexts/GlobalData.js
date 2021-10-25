@@ -254,32 +254,36 @@ async function getGlobalData(ethPrice, oldEthPrice) {
       query: GLOBAL_DATA(),
       fetchPolicy: "cache-first",
     });
-    data = result.data.polkabridgeAmmFactories[0];
+
+    data = !result.data.polkabridgeAmmFactories[0] ? {} : result.data.polkabridgeAmmFactories[0];
 
     // fetch the historical data
     let oneDayResult = await client.query({
       query: GLOBAL_DATA(oneDayBlock?.number),
       fetchPolicy: "cache-first",
     });
-    oneDayData = oneDayResult.data.polkabridgeAmmFactories[0];
+
+    oneDayData = !oneDayResult.data.polkabridgeAmmFactories[0] ? {} : oneDayResult.data.polkabridgeAmmFactories[0];
 
     let twoDayResult = await client.query({
       query: GLOBAL_DATA(twoDayBlock?.number),
       fetchPolicy: "cache-first",
     });
-    twoDayData = twoDayResult.data.polkabridgeAmmFactories[0];
+
+    twoDayData = !twoDayResult.data.polkabridgeAmmFactories[0] ? {} : twoDayResult.data.polkabridgeAmmFactories[0];
 
     let oneWeekResult = await client.query({
       query: GLOBAL_DATA(oneWeekBlock?.number),
       fetchPolicy: "cache-first",
     });
-    const oneWeekData = oneWeekResult.data.polkabridgeAmmFactories[0];
+    const oneWeekData = !oneWeekResult.data.polkabridgeAmmFactories[0] ? {} : oneWeekResult.data.polkabridgeAmmFactories[0];
 
     let twoWeekResult = await client.query({
       query: GLOBAL_DATA(twoWeekBlock?.number),
       fetchPolicy: "cache-first",
     });
-    const twoWeekData = twoWeekResult.data.polkabridgeAmmFactories[0];
+
+    const twoWeekData = !twoWeekResult.data.polkabridgeAmmFactories[0] ? {} : twoWeekResult.data.polkabridgeAmmFactories[0];
 
     if (data && oneDayData && twoDayData && twoWeekData) {
       let [oneDayVolumeUSD, volumeChangeUSD] = get2DayPercentChange(
@@ -317,7 +321,7 @@ async function getGlobalData(ethPrice, oldEthPrice) {
       data.txnChange = txnChange;
     }
   } catch (e) {
-    console.log("getGlobalData", e);
+    console.log("analyticsTest global data exeption ", e);
   }
 
   return data;
@@ -591,11 +595,11 @@ export function useGlobalData() {
   // const combinedVolume = useTokenDataCombined(offsetVolumes)
 
   useEffect(() => {
-    console.log("loading global data...");
     async function fetchData() {
+      console.log("analyticsTest: fetching global data...", { ethPrice, oldEthPrice });
       let globalData = await getGlobalData(ethPrice, oldEthPrice);
 
-      // console.log('fetched global data ', globalData)
+      console.log('analyticsTest: fetched global data ', globalData)
       globalData && update(globalData);
 
       let allPairs = await getAllPairsOnUniswap();

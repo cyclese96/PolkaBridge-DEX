@@ -12,11 +12,13 @@ import SwapSettings from "../../common/SwapSettings";
 import etherImg from "../../../assets/ether.png";
 import SwapCardItem from "../../Cards/SwapCardItem";
 import AddIcon from "@material-ui/icons/Add";
-import { ETH, etheriumNetwork, tokens } from "../../../constants";
+import { DECIMAL_6_ADDRESSES, ETH, etheriumNetwork, tokens } from "../../../constants";
 import {
   getPercentage,
   getPriceRatio,
-  getTokenOut,
+  getToken1Out,
+  getToken2Out,
+  getTokenOutWithReserveRatio,
   toWei,
 } from "../../../utils/helper";
 import {
@@ -365,6 +367,40 @@ const AddCard = (props) => {
     setStatus({ disabled: true, message: "Enter Amounts" });
   };
 
+  const loadPairReserves = async () => {
+
+    // console.log('loading pair reserves after add liquidity')
+    let _pairAddress = currentPairAddress();
+
+    if (!_pairAddress) {
+      _pairAddress = await getPairAddress(
+        selectedToken1.address,
+        selectedToken2.address,
+        currentNetwork
+      );
+
+      loadPairAddress(
+        selectedToken1.symbol,
+        selectedToken2.symbol,
+        _pairAddress,
+        currentNetwork
+      );
+    }
+
+    if (!_pairAddress) {
+      //pair not yet created in the factory
+    } else {
+      await getLpBalance(
+        selectedToken1,
+        selectedToken2,
+        _pairAddress,
+        currentAccount,
+        currentNetwork
+      );
+    }
+  }
+
+
   // new use effect
   useEffect(() => {
     async function loadPair() {
@@ -376,35 +412,8 @@ const AddCard = (props) => {
           selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
 
         await getAccountBalance(erc20Token, currentNetwork);
+        await loadPairReserves()
 
-        let _pairAddress = currentPairAddress();
-
-        if (!_pairAddress) {
-          _pairAddress = await getPairAddress(
-            selectedToken1.address,
-            selectedToken2.address,
-            currentNetwork
-          );
-
-          loadPairAddress(
-            selectedToken1.symbol,
-            selectedToken2.symbol,
-            _pairAddress,
-            currentNetwork
-          );
-        }
-
-        if (!_pairAddress) {
-          //pair not yet created in the factory
-        } else {
-          await getLpBalance(
-            selectedToken1,
-            selectedToken2,
-            _pairAddress,
-            currentAccount,
-            currentNetwork
-          );
-        }
 
         await checkAllowance(selectedToken1, currentAccount, currentNetwork);
 
@@ -496,10 +505,10 @@ const AddCard = (props) => {
         currentNetwork
       );
 
-      _token2Value = getTokenOut(
+      _token2Value = getTokenOutWithReserveRatio(
         toWei(tokens),
+        poolReserves[selectedToken2.symbol],
         poolReserves[selectedToken1.symbol],
-        poolReserves[selectedToken2.symbol]
       );
       if (new BigNumber(_token2Value).gt(0)) {
         setToken2Value(_token2Value);
@@ -537,10 +546,10 @@ const AddCard = (props) => {
         currentNetwork
       );
 
-      _token1Value = getTokenOut(
-        tokens,
+      _token1Value = getTokenOutWithReserveRatio(
+        toWei(tokens),
+        poolReserves[selectedToken1.symbol],
         poolReserves[selectedToken2.symbol],
-        poolReserves[selectedToken1.symbol]
       );
       if (new BigNumber(_token1Value).eq(0)) {
         verifySwapStatus(
@@ -608,20 +617,26 @@ const AddCard = (props) => {
       if (selectedToken1.symbol === ETH) {
         etherToken = {
           ...selectedToken1,
-          amount: token1Value.toString(),
+          amount: token1Value,
         };
+
+        const _amount = DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token2Value)
         erc20Token = {
           ...selectedToken2,
-          amount: toWei(token2Value.toString()),
+          amount: _amount,
         };
+
       } else {
+
         etherToken = {
           ...selectedToken2,
-          amount: token2Value.toString(),
+          amount: token2Value,
         };
+
+        const _amount = DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value)
         erc20Token = {
           ...selectedToken1,
-          amount: toWei(token1Value.toString()),
+          amount: _amount,
         };
       }
 
@@ -635,14 +650,18 @@ const AddCard = (props) => {
     } else {
       // addLiquidity
 
+      const _amount1 = DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value)
+      const _amount2 = DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token1Value)
       await addLiquidity(
-        { ...selectedToken1, amount: toWei(token1Value) },
-        { ...selectedToken2, amount: toWei(token2Value) },
+        { ...selectedToken1, amount: _amount1 },
+        { ...selectedToken2, amount: _amount2 },
         currentAccount,
         swapSettings.deadline,
         currentNetwork
       );
     }
+
+    await loadPairReserves()
   };
 
   const currentPoolShare = () => {
@@ -701,10 +720,12 @@ const AddCard = (props) => {
     setSwapDialog(value);
     if (
       transaction.type === "add" &&
-      (transaction.status === "success" || transaction.status === "failed")
+      transaction.status === "success"
     ) {
       store.dispatch({ type: START_TRANSACTION });
       clearInputState();
+    } else if (transaction.type === "add" && transaction.status === "failed") {
+      store.dispatch({ type: START_TRANSACTION });
     }
   };
 

@@ -16,7 +16,6 @@ const chartEvent = (
   }
 };
 
-
 // const state = {
 //   options: {
 //     chart: {
@@ -137,35 +136,37 @@ const state = {
   series: [
     {
       name: "Volume USD",
-      data: [
-      ],
+      data: [],
     },
   ],
 };
 const BarChart = ({ chartData }) => {
-
   // pointer to the chart object
-  const [chartCreated, setChartCreated] = useState(false)
-  const dataPrev = usePrevious(chartData)
-  const [currChartData, setChartData] = useState(state.series)
+  const [chartCreated, setChartCreated] = useState(false);
+  const dataPrev = usePrevious(chartData);
+  const [currChartData, setChartData] = useState(state.series);
 
   useEffect(() => {
     if (chartData !== dataPrev && chartData) {
-      const _series = chartData.length > 0 ? chartData.map(item => [item.date * 1000, item.dailyVolumeUSD ? parseInt(item.dailyVolumeUSD) : 0]) : []
-      setChartData([{ name: currChartData[0].name, data: _series }])
+      const _series =
+        chartData.length > 0
+          ? chartData.map((item) => [
+              item.date * 1000,
+              item.dailyVolumeUSD ? parseInt(item.dailyVolumeUSD) : 0,
+            ])
+          : [];
+      setChartData([{ name: currChartData[0].name, data: _series }]);
     }
-
-  }, [chartCreated, chartData, dataPrev])
+  }, [chartCreated, chartData, dataPrev]);
 
   return (
     <Chart
       options={state.options}
       series={currChartData}
       type="bar"
-      width="
-    100%"
+      width={"98%"}
     />
-  )
-}
+  );
+};
 
 export default BarChart;

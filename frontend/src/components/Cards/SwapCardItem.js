@@ -125,7 +125,11 @@ const SwapCardItem = (props) => {
   };
 
   const handleMax = () => {
-    onInputChange(balance ? fromWei(balance[currentToken.symbol]) : "0");
+    if (currentToken.symbol === "USDC") {
+      onInputChange(balance ? fromWei(balance[currentToken.symbol], 6) : "0");
+    } else {
+      onInputChange(balance ? fromWei(balance[currentToken.symbol]) : "0");
+    }
   };
 
   return (
@@ -142,7 +146,10 @@ const SwapCardItem = (props) => {
             )}
             <p className={classes.labelFont}>
               Balance:
-              {" " + formatCurrency(fromWei(balance[currentToken.symbol]))}
+              {currentToken.symbol === "USDC" &&
+                formatCurrency(fromWei(balance[currentToken.symbol], 6))}
+              {currentToken.symbol !== "USDC" &&
+                formatCurrency(fromWei(balance[currentToken.symbol], 18))}
             </p>
           </div>
           <div className={classes.inputRow}>
