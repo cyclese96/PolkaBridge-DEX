@@ -193,13 +193,15 @@ const useStyles = makeStyles((theme) => ({
 
 const SwapCard = (props) => {
   const {
-    account: { currentNetwork, currentAccount, loading },
-    dex: { approvedTokens, poolReserves, pairContractData, transaction },
+    account: { currentNetwork, currentAccount, loading, balance },
+    dex: { approvedTokens, poolReserves, pairContractData, transaction, token0In, token1Out, priceLoading },
     checkAllowance,
     confirmAllowance,
     getLpBalance,
     getAccountBalance,
     loadPairAddress,
+    getToken0InAmount,
+    getToken1OutAmount
   } = props;
 
   const classes = useStyles();
@@ -425,8 +427,6 @@ const SwapCard = (props) => {
   const onToken1InputChange = async (tokens) => {
     setToken1Value(tokens);
 
-    setLocalStateLoading(true);
-
     if (selectedToken1.symbol === ETH) {
       setCurrentSwapFn(swapFnConstants.swapExactETHForTokens);
     } else if (selectedToken2.symbol && selectedToken2.symbol === ETH) {
@@ -440,48 +440,16 @@ const SwapCard = (props) => {
     // const pairAddress = currentPairAddress();
 
     if (selectedToken2.symbol && new BigNumber(tokens).gt(0)) {
-      // await debouncedGetLpBalance(
-      //   selectedToken1,
-      //   selectedToken2,
-      //   pairAddress,
-      //   currentAccount,
-      //   currentNetwork
-      // );
 
-      const _tokensInWei = DECIMAL_6_ADDRESSES.includes(selectedToken1.address)
-        ? toWei(tokens, 6)
-        : toWei(tokens);
 
-      const result = await getToken1OutAmount(
+      debouncedToken1OutCall(
         { ...selectedToken1, amount: toWei(tokens) },
         selectedToken2,
         currentAccount,
         currentNetwork
-      );
-      console.log("result");
-      console.log(result);
-      _token2Value = result.resultOut;
-      setSwapPath(result.selectedPath);
+      )
 
-      if (new BigNumber(_token2Value).gt(0)) {
-        setToken2Value(_token2Value);
-        // verify swap status with current inputs
-        verifySwapStatus(
-          { value: tokens, selected: selectedToken1 },
-          { value: _token2Value, selected: selectedToken2 }
-        );
-      }
 
-      if (new BigNumber(_token2Value).lt(THRESOLD_VALUE)) {
-        setStatus({
-          disabled: true,
-          message: "Not enough liquidity for this trade!",
-        });
-      }
-
-      // update current price ratio based on trade amounts
-      const _ratio = getPriceRatio(_token2Value, tokens);
-      setPriceRatio(_ratio);
     } else if (selectedToken2.symbol && !tokens) {
       setToken2Value("");
       if (!swapStatus.disabled) {
@@ -489,7 +457,6 @@ const SwapCard = (props) => {
       }
     }
 
-    setLocalStateLoading(false);
   };
 
   // token2 input change
@@ -505,57 +472,100 @@ const SwapCard = (props) => {
     }
 
     //calculate respective value of token1 if selected
-    let _token1Value = "";
-    // const pairAddress = currentPairAddress();
 
     if (selectedToken1.symbol && new BigNumber(tokens).gt(0)) {
-      // await debouncedGetLpBalance(
-      //   selectedToken1,
-      //   selectedToken2,
-      //   pairAddress,
-      //   currentAccount,
-      //   currentNetwork
-      // );
 
-      const _tokensInWei = DECIMAL_6_ADDRESSES.includes(selectedToken2.address)
-        ? toWei(tokens, 6)
-        : toWei(tokens);
-
-      const result = await getToken0InAmount(
+      debouncedToken0InCall(
         selectedToken1,
         { ...selectedToken2, amount: toWei(tokens) },
         currentAccount,
         currentNetwork
-      );
-      _token1Value = result.resultIn;
-      setSwapPath(result.selectedPath);
+      )
 
-      if (new BigNumber(_token1Value).gt(0)) {
-        setToken1Value(_token1Value);
-        // verify swap status with current inputs
-        verifySwapStatus(
-          { value: _token1Value, selected: selectedToken1 },
-          { value: tokens, selected: selectedToken2 }
-        );
-      }
 
-      if (new BigNumber(_token1Value).lt(THRESOLD_VALUE)) {
-        setStatus({
-          disabled: true,
-          message: "Not enough liquidity for this trade!",
-        });
-      }
-
-      // update current price ratio based on trade amounts
-      const _ratio = getPriceRatio(tokens, _token1Value);
-      setPriceRatio(_ratio);
     } else if (selectedToken1.symbol && !tokens) {
       setToken1Value("");
       if (!swapStatus.disabled) {
         setStatus({ disabled: true, message: "Enter Amounts" });
       }
     }
+
   };
+
+  // token out updates
+
+  useEffect(() => {
+
+    if (!token1Out) {
+      return
+    }
+
+    const _tokenAmount = token1Out.tokenAmount;
+    setSwapPath(token1Out.selectedPath);
+
+    if (new BigNumber(_tokenAmount).gt(0)) {
+      setToken2Value(_tokenAmount);
+      // verify swap status with current inputs
+      verifySwapStatus(
+        { value: token1Value, selected: selectedToken1 },
+        { value: _tokenAmount, selected: selectedToken2 }
+      );
+    }
+
+    if (new BigNumber(_tokenAmount).lt(THRESOLD_VALUE)) {
+      setStatus({
+        disabled: true,
+        message: "Not enough liquidity for this trade!",
+      });
+    }
+
+    // update current price ratio based on trade amounts
+    const _ratio = getPriceRatio(_tokenAmount, token1Value);
+    setPriceRatio(_ratio);
+
+  }, [token1Out])
+
+  useEffect(() => {
+
+    if (!token0In) {
+      return
+    }
+
+    console.log('handling token0IN')
+
+    const _tokenAmount = token0In.tokenAmount;
+    setSwapPath(token0In.selectedPath);
+
+    if (new BigNumber(_tokenAmount).gt(0)) {
+      setToken1Value(_tokenAmount);
+      // verify swap status with current inputs
+      verifySwapStatus(
+        { value: _tokenAmount, selected: selectedToken1 },
+        { value: token2Value, selected: selectedToken2 }
+      );
+    }
+
+    if (new BigNumber(_tokenAmount).lt(THRESOLD_VALUE)) {
+      setStatus({
+        disabled: true,
+        message: "Not enough liquidity for this trade!",
+      });
+    }
+
+    //todo: pending test
+    // if (new BigNumber(_tokenAmount).gt(balance[selectedToken1.symbol])  ){
+    //   setStatus({
+    //     disabled: true,
+    //     message: "Not enough balance for this trade!",
+    //   });
+    // }
+
+    // update current price ratio based on trade amounts
+    const _ratio = getPriceRatio(token2Value, _tokenAmount);
+    setPriceRatio(_ratio);
+
+  }, [token0In])
+
 
   const onToken1Select = async (token) => {
     setToken1(token);
@@ -656,7 +666,7 @@ const SwapCard = (props) => {
   };
 
   const disableStatus = () => {
-    return swapStatus.disabled || localStateLoading;
+    return swapStatus.disabled || localStateLoading || priceLoading;
   };
 
   const handleAction = () => {
@@ -668,7 +678,7 @@ const SwapCard = (props) => {
   };
   // const handleTokenPriceRatio = () => {};
   const currentButton = () => {
-    if (localStateLoading) {
+    if (localStateLoading || priceLoading) {
       return "Please wait...";
     } else if (swapStatus.disabled) {
       return swapStatus.message;
@@ -853,4 +863,6 @@ export default connect(mapStateToProps, {
   getLpBalance,
   getAccountBalance,
   loadPairAddress,
+  getToken0InAmount,
+  getToken1OutAmount
 })(SwapCard);

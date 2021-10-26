@@ -5,6 +5,8 @@ import {
   DISAPPROVE_TOKEN,
   GET_PAIR_RESERVES,
   GET_POOL_SHARE,
+  GET_TOKEN_1_OUT,
+  GET_TOKEN_O_IN,
   HIDE_DEX_LOADING,
   IMPORT_TOKEN,
   LOAD_FROM_TOKEN,
@@ -21,7 +23,9 @@ import {
   SET_TOKEN1_PRICE,
   SET_TOKEN_ABI,
   SHOW_DEX_LOADING,
+  START_PRICE_LOADING,
   START_TRANSACTION,
+  STOP_PRICE_LOADING,
   SWAP_TOKEN_SELECTION,
   UPDATE_SETTINGS,
   UPDATE_TRANSACTION_STATUS,
@@ -37,8 +41,8 @@ const initalState = {
   dexError: null,
   dexLoading: false,
   recentSwaps: [],
-  token0In: null,
-  token1Out: null,
+  token0In: null,// { tokenAmount, selectedPath }
+  token1Out: null,// { tokenAmount, selectedPath }
   priceLoading: false,
   swapSettings: {
     swapFee: exchangeFee,
@@ -236,6 +240,32 @@ export default function (state = initalState, action) {
           ...state.transaction,
           ...action.payload
         }
+      }
+    case GET_TOKEN_O_IN:
+      return {
+        ...state,
+        token0In: {
+          ...state.token0In,
+          ...action.payload
+        }
+      }
+    case GET_TOKEN_1_OUT:
+      return {
+        ...state,
+        token1Out: {
+          ...state.token1Out,
+          ...action.payload
+        }
+      }
+    case START_PRICE_LOADING:
+      return {
+        ...state,
+        priceLoading: true
+      }
+    case STOP_PRICE_LOADING:
+      return {
+        ...state,
+        priceLoading: false
       }
     default:
       return state;
