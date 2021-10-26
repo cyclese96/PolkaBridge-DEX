@@ -44,6 +44,8 @@ import {
   DEX_ERROR,
   GET_PAIR_RESERVES,
   GET_POOL_SHARE,
+  GET_TOKEN_1_OUT,
+  GET_TOKEN_O_IN,
   HIDE_DEX_LOADING,
   HIDE_LOADING,
   IMPORT_TOKEN,
@@ -56,7 +58,9 @@ import {
   SET_TOKEN1_PRICE,
   SHOW_DEX_LOADING,
   SHOW_LOADING,
+  START_PRICE_LOADING,
   START_TRANSACTION,
+  STOP_PRICE_LOADING,
   UPDATE_TRANSACTION_STATUS,
   VERIFY_SLIPPAGE,
 } from "./types";
@@ -904,7 +908,8 @@ export const importToken = (address, account, network) => async (dispatch) => {
 };
 
 // token0 {input, address, symbol  }
-export const getToken1OutAmount = async (token0, token1, account, network) => {
+export const getToken1OutAmount = (token0, token1, account, network) => async (dispatch) => {
+  dispatch({ type: START_PRICE_LOADING })
   try {
 
     const _routerContract = routerContract(network);
@@ -952,67 +957,48 @@ export const getToken1OutAmount = async (token0, token1, account, network) => {
 
 
     if (pairAddress && (reserve && (new BigNumber(reserve[token0.symbol]).gt(THRESOLD_WEI_VALUE) || new BigNumber(reserve[token1.symbol]).gt(THRESOLD_WEI_VALUE)))) {
-      //new 
 
       const amountsOutPair = await _routerContract.methods.getAmountOut(token0In, reserve[token0.symbol], reserve[token1.symbol]).call();
-      console.log({ amountsOutPair })
+      // console.log({ amountsOutPair })
       resultOut = fromWei(amountsOutPair);
       selectedPath = _path0;
 
-      console.log('getToken1OutAmount getting from pair')
-      //old
-      // console.log('getToken1OutAmount fetching from direct pair', _path0)
-      // // fetch from pair only
-      // amountsOutPair = await _routerContract.methods.getAmountsOut(token0In, _path0).call();
-      // const token1OutPair = new BigNumber(amountsOutPair[1])
-      // resultOut = DECIMAL_6_ADDRESSES.includes(token1.address) ? fromWei(token1OutPair.toString(), 6) : fromWei(token1OutPair.toString());
-      // selectedPath = _path0;
-
+      // console.log('getToken1OutAmount getting from pair')
     } else {
-
-      //new
       //fix if it is bridge swap and token0 is usdc
       const _token0In = DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0In), 6) : token0In;
+
       amountsOutBridge = await _routerContract.methods.getAmountsOut(_token0In, bridgePath).call();
-      const token1OutWethBridge = new BigNumber(amountsOutBridge[amountsOutBridge.length - 1])
-      console.log('getToken1OutAmount fetching from bridge ', { amountsOutBridge, bridgePath, token1OutWethBridge: token1OutWethBridge.toString() })
-      resultOut = DECIMAL_6_ADDRESSES.includes(token1.address) ? fromWei(token1OutWethBridge.toString(), 6) : fromWei(token1OutWethBridge.toString());
+
+      const token1OutBridge = new BigNumber(amountsOutBridge[amountsOutBridge.length - 1])
+      // console.log('getToken1OutAmount fetching from bridge ', { amountsOutBridge, bridgePath, token1OutBridge: token1OutBridge.toString() })
+      resultOut = DECIMAL_6_ADDRESSES.includes(token1.address) ? fromWei(token1OutBridge.toString(), 6) : fromWei(token1OutBridge.toString());
       selectedPath = bridgePath;
-
-
-      //old
-      // if (token1OutPair.gt(token1OutWethBridge)) {
-
-      //   console.log('fetching from direct  pair ', _path0, { token1OutPair: token1OutPair.toString(), token1OutWethBridge: token1OutWethBridge.toString() })
-
-      //   resultOut = DECIMAL_6_ADDRESSES.includes(token1.address) ? fromWei(token1OutPair.toString(), 6) : fromWei(token1OutPair.toString());
-      //   selectedPath = _path0;
-
-      // } else {
-
-      //   console.log('getToken1OutAmount fetching from eth path ', { _path1, token1OutPair: token1OutPair.toString(), token1OutWethBridge: token1OutWethBridge.toString() })
-      //   resultOut = fromWei(token1OutWethBridge.toString());//DECIMAL_6_ADDRESSES.includes(token1.address) ? fromWei(token1OutWethBridge.toString(), 6) : fromWei(token1OutWethBridge.toString());
-      //   selectedPath = bridgePath;
-      // }
 
     }
 
-    return { resultOut, selectedPath }
+    dispatch({
+      type: GET_TOKEN_1_OUT,
+      payload: { tokenAmount: resultOut, selectedPath }
+    })
 
 
   } catch (error) {
     console.log('getToken1OutAmount error ', error)
-    // dispatch({
-    //   type: DEX_ERROR,
-    //   payload: "getTokenOutAmount error",
-    // });
-    return { resultOut: '0', selectedPath: [] }
+    dispatch({
+      type: GET_TOKEN_1_OUT,
+      payload: { tokenAmount: '0', selectedPath: [] }
+    });
+
   }
+
+  dispatch({ type: STOP_PRICE_LOADING })
 }
 
 
 // token0 {input,   }
-export const getToken0InAmount = async (token0, token1, account, network) => {
+export const getToken0InAmount = (token0, token1, account, network) => async (dispatch) => {
+  dispatch({ type: START_PRICE_LOADING })
   try {
 
     const _routerContract = routerContract(network);
@@ -1054,10 +1040,7 @@ export const getToken0InAmount = async (token0, token1, account, network) => {
       totalSupply = pairReserveRes.totalSupply;
       lpBalance = pairReserveRes.lpBalance;
     }
-    console.log({ reserve, totalSupply, lpBalance })
-
-
-
+    // console.log({ reserve, totalSupply, lpBalance })
 
     if (pairAddress && (reserve && (new BigNumber(reserve[token0.symbol]).gt(THRESOLD_WEI_VALUE) || new BigNumber(reserve[token1.symbol]).gt(THRESOLD_WEI_VALUE)))) {
       // new  
@@ -1066,14 +1049,6 @@ export const getToken0InAmount = async (token0, token1, account, network) => {
       resultIn = fromWei(amountsInPair);
       selectedPath = _path0
 
-
-      //old implementation
-      // fetch from pair only
-      // amountsInPair = await _routerContract.methods.getAmountsIn(token1Out, _path0.reverse()).call();
-      // const token0InPair = new BigNumber(amountsInPair[0])
-
-      // resultIn = DECIMAL_6_ADDRESSES.includes(token0.address) ? fromWei(token0InPair.toString(), 6) : fromWei(token0InPair.toString());
-      // selectedPath = _path0;
     } else {
       //Note: token1Out should be in usdc decimals if we are fetching amount from path,
       // in normal wei if fetching from pair reserves
@@ -1086,44 +1061,28 @@ export const getToken0InAmount = async (token0, token1, account, network) => {
       resultIn = DECIMAL_6_ADDRESSES.includes(token0.address) ? fromWei(token1OutWethBridge.toString(), 6) : fromWei(token1OutWethBridge.toString());
       selectedPath = bridgePath
 
-      // console.log({ bridgePath, _token1OutWei, token1Out })
-      //old
-      // [amountsInPair, amountsInWethBridge] = await Promise.all([
-      //   _routerContract.methods.getAmountsOut(token1Out, _path0).call(),
-      //   _routerContract.methods.getAmountsOut(token1Out, bridgePath).call(),
-      // ])
-
-      // console.log('getToken1InAmount  fetched ', { amountsInPair, amountsInWethBridge })
-      // const token0InPair = new BigNumber(amountsInPair[1])
-      // const token1OutWethBridge = new BigNumber(amountsInWethBridge[amountsInWethBridge.length - 1])
-
-      // if (token0InPair.gt(token1OutWethBridge)) {
-
-
-      //   resultIn = fromWei(token0InPair.toString())//DECIMAL_6_ADDRESSES.includes(token0.address) ? fromWei(token0InPair.toString(), 6) : fromWei(token0InPair.toString());
-      //   selectedPath = _path0.reverse();
-
-      //   console.log('token0In fetching from direct pair', { token1Out, resultIn: token0InPair.toString() })
-
-      // } else {
-
-      //   console.log('token0In fetching from bridge')
-      //   resultIn = fromWei(token1OutWethBridge.toString())//DECIMAL_6_ADDRESSES.includes(token0.address) ? fromWei(token1OutWethBridge.toString(), 6) : fromWei(token1OutWethBridge.toString());
-      //   selectedPath = bridgePath.reverse();
-      // }
-
     }
 
-    return { resultIn, selectedPath }
+    dispatch({
+      type: GET_TOKEN_O_IN,
+      payload: { tokenAmount: resultIn, selectedPath }
+    })
 
   } catch (error) {
     console.log('getToken0InAmount error ', { error })
-    // dispatch({
-    //   type: DEX_ERROR,
-    //   payload: "getTokenOutAmount error",
-    // });
-    return { resultIn: '0', selectedPath: [] }
+    dispatch({
+      type: GET_TOKEN_O_IN,
+      payload: { tokenAmount: '0', selectedPath: [] }
+    })
+
+    dispatch({
+      type: DEX_ERROR,
+      payload: "getTokenOutAmount error",
+    });
+
   }
+
+  dispatch({ type: STOP_PRICE_LOADING })
 }
 
 const getReservesForPriceImpact = async (token0, token1, account, network) => {
@@ -1202,14 +1161,14 @@ export const calculatePriceImpact = async (token0, token1, account, network) => 
 
 
 
-      console.log('checkPriceImpact fetched reserves  ', { reserve })
+      // console.log('checkPriceImpact fetched reserves  ', { reserve })
       return sellPriceImpact(token0.amount, token1.amount, reserve[token0.symbol])
 
     } else {
 
       const reserves = await getReservesForPriceImpact(token0, token1, account, network);
 
-      console.log('checkPriceImpact fetched reserves  ', { reserves })
+      // console.log('checkPriceImpact fetched reserves  ', { reserves })
       return sellPriceImpact(token0.amount, token1.amount, reserves[token0.symbol])
 
     }
