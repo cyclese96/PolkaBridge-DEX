@@ -3,6 +3,7 @@ import {
   BigInt,
 } from "@graphprotocol/graph-ts"
 
+// depricated file !!
 // Initialize a Token Definition with the attributes
 export class TokenDefinition {
   address: Address
