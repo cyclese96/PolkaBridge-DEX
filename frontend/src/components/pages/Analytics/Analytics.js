@@ -18,6 +18,9 @@ import Loader from "../../common/Loader";
 import TabPage from "../../TabPage";
 import { formatCurrency } from "../../../utils/formatters";
 import BigNumber from "bignumber.js";
+import TopTokensTable from "./components/Tables/TopTokensTable";
+import TopPoolsTable from "./components/Tables/TopPoolsTable";
+import Transactions from "./components/Tables/TransactionsTable";
 
 // globalData ->
 // {
@@ -152,17 +155,28 @@ const Analytics = () => {
         )}
       </div>
 
-      <div className={classes.tokenList}>
-        <div style={{ padding: 10 }}>
-          <div className={classes.tokenListHeading}>Top Tokens</div>
-          <TopTokens
-            tableType="TopTokens"
-            allTokens={allTokens ? allTokens : {}}
-          />
+      <div>
+        <div className={classes.tokenListHeading}>Top Tokens</div>
+        <div className="d-flex justify-content-center">
+          <TopTokensTable data={allTokens} />
         </div>
       </div>
 
-      <div className={classes.tokenList}>
+      <div>
+        <div className={classes.tokenListHeading}>Top Pools</div>
+        <div className="d-flex justify-content-center">
+          <TopPoolsTable data={allPairs} />
+        </div>
+      </div>
+
+      <div>
+        <div className={classes.tokenListHeading}>Transactions</div>
+        <div className="d-flex justify-content-center">
+          <Transactions data={allTokens} />
+        </div>
+      </div>
+
+      {/* <div className={classes.tokenList}>
         <div style={{ padding: 10 }}>
           <div className={classes.tokenListHeading}>Top Pools</div>
           <TopTokens tableType="TopPools" allPairs={allPairs ? allPairs : {}} />
@@ -178,10 +192,6 @@ const Analytics = () => {
           />
         </div>
       </div>
-      <div className="mb-5"></div>
-      {/* 
-
-    
     */}
     </div>
   );
