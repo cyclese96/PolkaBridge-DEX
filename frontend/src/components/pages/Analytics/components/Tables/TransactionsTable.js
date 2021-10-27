@@ -10,12 +10,15 @@ import { Button, makeStyles } from "@material-ui/core";
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import Loader from "../../../../common/Loader";
 import { useState } from "react/cjs/react.development";
+import { formatTime } from "../../../../../utils/timeUtils";
 
 const useStyles = makeStyles((theme) => ({
   table: {
     background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+
     color: "white",
     width: "100%",
+    marginBottom: 10,
     [theme.breakpoints.down("sm")]: {
       width: "96vw",
     },
@@ -59,23 +62,43 @@ export default function TransactionsTable({ data }) {
   const classes = useStyles();
   const [rows, setRows] = useState([]);
   const [skipIndex, setSkipIndex] = useState(0);
+  const [sortedTime, setSortedTime] = useState(true);
 
   let styles = {
     tableHeading: {
-      fontSize: window.innerWidth < 500 ? 12 : 14,
+      fontSize: window.innerWidth < 500 ? 11 : 14,
       color: "white",
       fontWeight: 700,
     },
   };
-
   useEffect(() => {
-    let result = Object.keys(data).map((key) => data[key]);
-    if (result.length > 0) {
-      setRows(result);
-      console.log(result);
+    if (data) {
+      let result = Object.keys(data).map((key) => data[key]);
+      if (result.length > 0) {
+        let tempRows = [...result[0], ...result[1], ...result[2]];
+        tempRows.sort(
+          (a, b) => b.transaction.timestamp - a.transaction.timestamp
+        );
+        setRows([...tempRows]);
+        console.log(result);
+      }
     }
   }, [data]);
 
+  const sortByTime = () => {
+    let tempRows = [...rows];
+    if (sortedTime) {
+      tempRows.sort(
+        (a, b) => a.transaction.timestamp - b.transaction.timestamp
+      );
+    } else {
+      tempRows.sort(
+        (a, b) => b.transaction.timestamp - a.transaction.timestamp
+      );
+    }
+    setSortedTime(!sortedTime);
+    setRows([...tempRows]);
+  };
   return (
     <Paper elevation={10} className={classes.table}>
       <TableContainer
@@ -96,22 +119,29 @@ export default function TransactionsTable({ data }) {
         >
           <TableHead>
             <TableRow style={{ color: "white" }}>
-              <TableCell style={styles.tableHeading}>Name</TableCell>
+              <TableCell style={styles.tableHeading}>Transaction</TableCell>
               <TableCell align="right" style={styles.tableHeading}>
-                Symbol
+                Total value
               </TableCell>
               <TableCell align="right" style={styles.tableHeading}>
-                TVL
+                Token Amount
               </TableCell>
 
               <TableCell align="right" style={styles.tableHeading}>
-                Volume(24hrs) <ArrowUpward className={classes.arrowIcon} />
+                Token Amount
               </TableCell>
               <TableCell align="right" style={styles.tableHeading}>
-                Price
+                Account
               </TableCell>
-              <TableCell align="right" style={styles.tableHeading}>
-                Change(24hrs) <ArrowUpward className={classes.arrowIcon} />
+              <TableCell
+                align="right"
+                style={styles.tableHeading}
+                onClick={sortByTime}
+              >
+                <span style={{ cursor: "pointer" }}>
+                  {" "}
+                  Time <ArrowUpward className={classes.arrowIcon} />
+                </span>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -123,7 +153,7 @@ export default function TransactionsTable({ data }) {
             )}
 
             {data &&
-              rows.slice(skipIndex * 5).map((row) => (
+              rows.slice(skipIndex * 5, skipIndex * 5 + 5).map((row, index) => (
                 <TableRow
                   key={row.name}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -133,48 +163,56 @@ export default function TransactionsTable({ data }) {
                     scope="row"
                     style={{ color: "white", fontSize: 12 }}
                   >
-                    <span>
-                      {"1"}
-                      <img
-                        src="http://localhost:3000/static/media/usdt.006177e6.png"
-                        className={classes.tokenImage}
-                      />
+                    <span style={{ marginRight: 10 }}>
+                      {skipIndex * 5 + index + 1}
                     </span>
                     <a href="https://google.com" className={classes.link}>
                       {" "}
-                      {row.name}
+                      <span
+                        style={{
+                          backgroundColor: "#3a2b2d",
+                          padding: "5px 5px 5px 5px",
+                          borderRadius: 7,
+                          fontWeight: 500,
+                        }}
+                      >
+                        {" "}
+                        {row.__typename.toUpperCase()}
+                      </span>{" "}
+                      {" " + row.pair.token0.symbol} -{row.pair.token1.symbol}
                     </a>
                   </TableCell>
                   <TableCell
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
-                    {row.symbol}
+                    {parseFloat(row.amountUSD).toFixed(2)}
                   </TableCell>
                   <TableCell
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
-                    {parseInt(row.totalLiquidity)}
+                    {parseFloat(row.amount0).toFixed(2)}
                   </TableCell>
                   <TableCell
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
-                    {row.oneDayVolumeUSD}
+                    {parseFloat(row.amount1).toFixed(2)}
                   </TableCell>
                   <TableCell
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
-                    ${row.priceUSD}
+                    {[...row.sender].splice(0, 3)} {"..."}
+                    {[...row.sender].splice([...row.sender].length - 5, 5)}
                   </TableCell>
                   <TableCell
                     align="right"
                     className={classes.tableText}
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
-                    {row.priceChangeUSD}
+                    {formatTime(row.transaction.timestamp)}
                   </TableCell>
                 </TableRow>
               ))}

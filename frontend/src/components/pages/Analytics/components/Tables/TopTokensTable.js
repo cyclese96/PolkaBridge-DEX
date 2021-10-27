@@ -62,7 +62,7 @@ export default function TopTokensTable({ data }) {
 
   let styles = {
     tableHeading: {
-      fontSize: window.innerWidth < 500 ? 12 : 14,
+      fontSize: window.innerWidth < 500 ? 11 : 14,
       color: "white",
       fontWeight: 700,
     },
@@ -123,7 +123,7 @@ export default function TopTokensTable({ data }) {
             )}
 
             {data &&
-              rows.slice(skipIndex * 5).map((row) => (
+              rows.slice(skipIndex * 5).map((row, index) => (
                 <TableRow
                   key={row.name}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -134,7 +134,7 @@ export default function TopTokensTable({ data }) {
                     style={{ color: "white", fontSize: 12 }}
                   >
                     <span>
-                      {"1"}
+                      {skipIndex * 5 + index + 1}
                       <img
                         src="http://localhost:3000/static/media/usdt.006177e6.png"
                         className={classes.tokenImage}
@@ -190,7 +190,7 @@ export default function TopTokensTable({ data }) {
           </Button>
           <Button
             className={classes.paginationButton}
-            disabled={skipIndex === parseInt(rows.length / 5)}
+            disabled={skipIndex === parseInt(rows.length / 5 - 1)}
             onClick={() => setSkipIndex(skipIndex + 1)}
           >
             Next{" >>"}

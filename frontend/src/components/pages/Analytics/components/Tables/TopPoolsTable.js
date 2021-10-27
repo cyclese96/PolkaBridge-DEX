@@ -10,6 +10,7 @@ import { Button, makeStyles } from "@material-ui/core";
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import Loader from "../../../../common/Loader";
 import { useState } from "react/cjs/react.development";
+import TokenIcon from "../../../../common/TokenIcon";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -64,7 +65,7 @@ export default function TopPoolsTable({ data }) {
 
   let styles = {
     tableHeading: {
-      fontSize: window.innerWidth < 500 ? 12 : 14,
+      fontSize: window.innerWidth < 500 ? 11 : 14,
       color: "white",
       fontWeight: 700,
     },

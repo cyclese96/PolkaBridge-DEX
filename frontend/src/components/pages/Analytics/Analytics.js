@@ -155,24 +155,24 @@ const Analytics = () => {
         )}
       </div>
 
-      <div>
+      <div className="p-2">
         <div className={classes.tokenListHeading}>Top Tokens</div>
-        <div className="d-flex justify-content-center">
+        <div className="d-flex justify-content-center ">
           <TopTokensTable data={allTokens} />
         </div>
       </div>
 
-      <div>
+      <div className="p-2">
         <div className={classes.tokenListHeading}>Top Pools</div>
         <div className="d-flex justify-content-center">
           <TopPoolsTable data={allPairs} />
         </div>
       </div>
 
-      <div>
+      <div className="p-2">
         <div className={classes.tokenListHeading}>Transactions</div>
         <div className="d-flex justify-content-center">
-          <Transactions data={allTokens} />
+          <Transactions data={transactions} />
         </div>
       </div>
 
