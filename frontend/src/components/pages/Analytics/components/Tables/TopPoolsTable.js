@@ -11,6 +11,7 @@ import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import Loader from "../../../../common/Loader";
 import { useState } from "react/cjs/react.development";
 import TokenIcon from "../../../../common/TokenIcon";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -148,10 +149,14 @@ export default function TopPoolsTable({ data }) {
                         />
                       </span>
                     </span>
-                    <a href="https://google.com" className={classes.link}>
-                      {" "}
-                      {row.token0.symbol} - {row.token1.symbol}
-                    </a>
+                    <Link to={`pair/${row.id}`} className={classes.link}>
+                      <span className={classes.cellText}>
+                        {row.token0.symbol} - {row.token1.symbol}
+                      </span>
+                      <small className={classes.cellTextSecondary}>
+                        {" (" + "0.02" + "%)"}
+                      </small>
+                    </Link>
                   </TableCell>
 
                   <TableCell

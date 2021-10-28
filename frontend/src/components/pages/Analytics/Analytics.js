@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import useStyles from "./styles";
-import TopTokens from "./TopTokens";
 import BarChart from "./components/Charts/BarChart";
 import AreaChart from "./components/Charts/AreaChart";
 import PercentLabel from "../../common/PercentLabel";
@@ -13,7 +12,6 @@ import {
 import { formattedPercent } from "../../../utils/timeUtils";
 import { useAllTokenData } from "../../../contexts/TokenData";
 import { useAllPairData } from "../../../contexts/PairData";
-// import { formatCurrency } from "../../../utils/helper";
 import Loader from "../../common/Loader";
 import TabPage from "../../TabPage";
 import { formatCurrency } from "../../../utils/formatters";
@@ -175,24 +173,6 @@ const Analytics = () => {
           <Transactions data={transactions} />
         </div>
       </div>
-
-      {/* <div className={classes.tokenList}>
-        <div style={{ padding: 10 }}>
-          <div className={classes.tokenListHeading}>Top Pools</div>
-          <TopTokens tableType="TopPools" allPairs={allPairs ? allPairs : {}} />
-        </div>
-      </div>
-
-      <div className={classes.tokenList}>
-        <div style={{ padding: 10 }}>
-          <div className={classes.tokenListHeading}>Transactions</div>
-          <TopTokens
-            tableType="Transactions"
-            allTransactions={transactions ? transactions : {}}
-          />
-        </div>
-      </div>
-    */}
     </div>
   );
 };

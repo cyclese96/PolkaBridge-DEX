@@ -16,7 +16,7 @@ import Footer from "./components/common/Footer";
 import PoolDetail from "./components/pages/Analytics/components/DetailsPage/PoolDetail";
 import SwapCard from "./components/Cards/SwapCard";
 import AddLiquidity from "./components/pages/AddLiquidity";
-import Analytics from "./components/pages/Analytics";
+import Analytics from "./components/pages/Analytics/Analytics";
 
 const useStyles = makeStyles((theme) => ({
   navbar: {
