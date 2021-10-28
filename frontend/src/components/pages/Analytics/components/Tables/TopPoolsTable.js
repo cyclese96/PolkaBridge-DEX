@@ -118,7 +118,7 @@ export default function TopPoolsTable({ data }) {
           </TableHead>
           <TableBody>
             {!data && (
-              <div>
+              <div className="text-center">
                 <Loader />
               </div>
             )}
@@ -138,24 +138,23 @@ export default function TopPoolsTable({ data }) {
                       {skipIndex * 5 + index + 1}
                       <span className={classes.tokenImageWrapper}>
                         {" "}
-                        <img
-                          src="http://localhost:3000/static/media/usdt.006177e6.png"
-                          className={classes.tokenImage}
-                        />{" "}
-                        <img
-                          src="https://v2.info.uniswap.org/static/media/eth.5fc0c9bd.png"
-                          className={classes.tokenImage}
-                          style={{ marginLeft: -10 }}
+                        <TokenIcon
+                          symbol={row.token0.symbol}
+                          className={classes.tokenIcon}
                         />
+                        <span style={{ marginLeft: -10 }}>
+                          <TokenIcon
+                            symbol={row.token1.symbol}
+                            className={classes.tokenIcon}
+                          />
+                        </span>
                       </span>
                     </span>
                     <Link to={`pair/${row.id}`} className={classes.link}>
                       <span className={classes.cellText}>
                         {row.token0.symbol} - {row.token1.symbol}
                       </span>
-                      <small className={classes.cellTextSecondary}>
-                        {" (" + "0.02" + "%)"}
-                      </small>
+                      <small className={classes.cellTextSecondary}></small>
                     </Link>
                   </TableCell>
 
@@ -163,13 +162,13 @@ export default function TopPoolsTable({ data }) {
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
-                    {parseInt(row.reserveUSD)}
+                    ${parseInt(row.reserveUSD)}
                   </TableCell>
                   <TableCell
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
-                    {row.oneDayVolumeUSD}
+                    ${parseFloat(row.oneDayVolumeUSD).toFixed(2)}
                   </TableCell>
                   <TableCell
                     align="right"
@@ -182,7 +181,7 @@ export default function TopPoolsTable({ data }) {
                     className={classes.tableText}
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
-                    $ ---
+                    ${(parseFloat(row.oneDayVolumeUSD) * 0.02).toFixed(2)}
                   </TableCell>
                 </TableRow>
               ))}

@@ -11,6 +11,7 @@ import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import Loader from "../../../../common/Loader";
 import { useState } from "react/cjs/react.development";
 import { formatTime } from "../../../../../utils/timeUtils";
+import { currentConnection } from "../../../../../constants";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -145,13 +146,13 @@ export default function TransactionsTable({ data }) {
               </TableCell>
             </TableRow>
           </TableHead>
+
           <TableBody>
             {!data && (
               <div>
                 <Loader />
               </div>
             )}
-
             {data &&
               rows.slice(skipIndex * 5, skipIndex * 5 + 5).map((row, index) => (
                 <TableRow
@@ -166,7 +167,15 @@ export default function TransactionsTable({ data }) {
                     <span style={{ marginRight: 10 }}>
                       {skipIndex * 5 + index + 1}
                     </span>
-                    <a href="https://google.com" className={classes.link}>
+                    <a
+                      href={
+                        currentConnection === "testnet"
+                          ? `https://rinkeby.etherscan.io/tx/${row.transaction.id}`
+                          : `https://etherscan.io/tx/${row.transaction.id}`
+                      }
+                      target="_blank"
+                      className={classes.link}
+                    >
                       {" "}
                       <span
                         style={{
@@ -192,13 +201,22 @@ export default function TransactionsTable({ data }) {
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
-                    {parseFloat(row.amount0).toFixed(2)}
+                    {row.amount0
+                      ? row.amount0
+                      : row.amount0Out !== "0"
+                      ? parseFloat(row.amount0Out).toFixed(2)
+                      : parseFloat(row.amount0In).toFixed(2)}
                   </TableCell>
                   <TableCell
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
-                    {parseFloat(row.amount1).toFixed(2)}
+                    {row.amount1
+                      ? row.amount1
+                      : row.amount1Out !== "0"
+                      ? parseFloat(row.amount1Out).toFixed(2)
+                      : parseFloat(row.amount1In).toFixed(2)}
+                    {}
                   </TableCell>
                   <TableCell
                     align="right"
