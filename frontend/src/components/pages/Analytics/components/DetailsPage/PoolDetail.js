@@ -386,10 +386,10 @@ function PoolDetail({ pairAddress }) {
                 tableType="Transactions"
                 allTransactions={!transactions ? {} : transactions}
               /> */}
-              <PairTransactionsTable
-                tableType="Transactions"
-                allTransactions={!transactions ? {} : transactions}
-              />
+
+              <div className="d-flex justify-content-center">
+                <PairTransactionsTable />
+              </div>
             </div>
           </div>
         </div>
