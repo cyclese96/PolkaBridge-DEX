@@ -1,12 +1,8 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  useTokenChartData,
-  useTokenData,
-  useTokenPriceData,
-} from "../../../../../contexts/TokenData";
+
 import { useEffect } from "react/cjs/react.development";
-import { usePrevious } from "react-use";
+
 import {
   usePairData,
   usePairTransactions,
@@ -20,10 +16,10 @@ import { Button, Card } from "@material-ui/core";
 import TokenIcon from "../../../../common/TokenIcon";
 // import { formatCurrency } from "../../../utils/helper";
 import TokenChart from "../../components/Charts/TokenChart";
-import TopTokens from "../../TopTokens";
 import { formatCurrency } from "../../../../../utils/formatters";
 import { currentConnection } from "../../../../../constants";
 import { FileCopy, FileCopyOutlined, OpenInNew } from "@material-ui/icons";
+import PairTransactionsTable from "../Tables/PairTransactionsTable";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -386,7 +382,11 @@ function PoolDetail({ pairAddress }) {
           <h6 className={classes.sectionTitle}>Transactions</h6>
           <div>
             <div className={classes.tokenList}>
-              <TopTokens
+              {/* <TopTokens
+                tableType="Transactions"
+                allTransactions={!transactions ? {} : transactions}
+              /> */}
+              <PairTransactionsTable
                 tableType="Transactions"
                 allTransactions={!transactions ? {} : transactions}
               />

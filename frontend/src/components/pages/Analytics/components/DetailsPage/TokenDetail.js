@@ -21,7 +21,6 @@ import { Link } from "react-router-dom";
 // import { formatCurrency } from "../../../utils/helper";
 import TokenChart from "../../components/Charts/TokenChart";
 import { Button, Card } from "@material-ui/core";
-import TopTokens from "../../TopTokens";
 import { FileCopyOutlined, OpenInNew } from "@material-ui/icons";
 import { currentConnection } from "../../../../../constants";
 
