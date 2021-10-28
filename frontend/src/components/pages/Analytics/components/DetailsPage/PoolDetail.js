@@ -3,24 +3,27 @@ import { makeStyles } from "@material-ui/core/styles";
 import {
   useTokenChartData,
   useTokenData,
-  useTokenPairs,
   useTokenPriceData,
-  useTokenTransactions,
-} from "../../../contexts/TokenData";
+} from "../../../../../contexts/TokenData";
 import { useEffect } from "react/cjs/react.development";
 import { usePrevious } from "react-use";
-import { useAllPairData, useDataForList } from "../../../contexts/PairData";
-import { formatCurrency, formattedNum } from "../../../utils/formatters";
-import { formattedPercent } from "../../../utils/timeUtils";
-import TokenLogo from "../../common/Styled/TokenLogo";
-import TokenIcon from "../../common/TokenIcon";
-import { Link } from "react-router-dom";
-// import { formatCurrency } from "../../../utils/helper";
-import TokenChart from "./TokenChart";
+import {
+  usePairData,
+  usePairTransactions,
+} from "../../../../../contexts/PairData";
+import { formattedNum, formattedPercent } from "../../../../../utils/timeUtils";
+import {
+  useEthPrice,
+  useGlobalTransactions,
+} from "../../../../../contexts/GlobalData";
 import { Button, Card } from "@material-ui/core";
-import TopTokens from "./TopTokens";
-import { FileCopyOutlined, OpenInNew } from "@material-ui/icons";
-import { currentConnection } from "../../../constants";
+import TokenIcon from "../../../../common/TokenIcon";
+// import { formatCurrency } from "../../../utils/helper";
+import TokenChart from "../../components/Charts/TokenChart";
+import TopTokens from "../../TopTokens";
+import { formatCurrency } from "../../../../../utils/formatters";
+import { currentConnection } from "../../../../../constants";
+import { FileCopy, FileCopyOutlined, OpenInNew } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -30,11 +33,14 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   breadcrumbs: {
-    paddingBottom: 20,
+    paddingBottom: 10,
+    [theme.breakpoints.down("sm")]: {
+      paddingBottom: 10,
+    },
   },
   breadcrumbsTitle: {
     color: "white",
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 400,
   },
   tokenDetails: {
@@ -44,17 +50,31 @@ const useStyles = makeStyles((theme) => ({
       paddingTop: 5,
     },
   },
+  ratioCard: {
+    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+
+    border: "0.5px solid #616161",
+    borderRadius: 15,
+    color: "white",
+    padding: "5px 10px 5px 10px",
+    marginRight: 10,
+  },
   tokenTitle: {
     color: "white",
-
-    fontSize: 32,
+    fontSize: "2rem",
     [theme.breakpoints.down("sm")]: {
-      fontSize: 18,
+      fontSize: 17,
     },
   },
   tokenImage: {
     height: 30,
     marginRight: 10,
+  },
+  tokenImage2: {
+    height: 30,
+    marginRight: 10,
+    marginLeft: -20,
+    zIndex: -100,
   },
   changeIndicator: {
     background: "green",
@@ -142,7 +162,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   detailsBox: {
-    marginRight: 20,
+    marginRight: 30,
     [theme.breakpoints.down("sm")]: {
       marginRight: 10,
     },
@@ -162,25 +182,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function TokenPage({ address }) {
+function PoolDetail({ pairAddress }) {
   const {
-    id,
-    name,
-    symbol,
-    priceUSD,
+    token0,
+    token1,
+    reserve0,
+    reserve1,
+    reserveUSD,
+    trackedReserveUSD,
     oneDayVolumeUSD,
-    totalLiquidityUSD,
     volumeChangeUSD,
-    oneDayVolumeUT,
-    volumeChangeUT,
-    priceChangeUSD,
+    oneDayVolumeUntracked,
+    volumeChangeUntracked,
     liquidityChangeUSD,
-    oneDayTxns,
-    txnChange,
-  } = useTokenData(address);
+  } = usePairData(pairAddress);
 
-  // const allPairs = useTokenPairs(address); // todo: fix api
-  const allPairs = useAllPairData(); // testing
+  // const transactions = usePairTransactions(pairAddress);// todo fix api for pair transactions
+  const transactions = useGlobalTransactions();
+
+  useEffect(() => {
+    console.log("alltransaction", transactions);
+  }, [transactions]);
 
   useEffect(() => {
     // console.log("allPairs", allPairs);
@@ -194,34 +216,58 @@ function TokenPage({ address }) {
     });
   }, []);
 
-  // pairs to show in pair list
-  const fetchedPairsList = useDataForList(allPairs);
-
-  // all transactions with this token
-  const transactions = useTokenTransactions(address);
-
-  // price
-  const price = priceUSD ? formattedNum(priceUSD, true) : "";
-  const priceChange = priceChangeUSD ? formattedPercent(priceChangeUSD) : "";
-
-  // volume
-  const volume = formattedNum(
-    !!oneDayVolumeUSD ? oneDayVolumeUSD : oneDayVolumeUT,
-    true
-  );
-
-  const usingUtVolume = oneDayVolumeUSD === 0 && !!oneDayVolumeUT;
-  const volumeChange = formattedPercent(
-    !usingUtVolume ? volumeChangeUSD : volumeChangeUT
-  );
-
-  // liquidity
-  const liquidity = formattedNum(totalLiquidityUSD, true);
+  const formattedLiquidity = reserveUSD
+    ? formattedNum(reserveUSD, true)
+    : formattedNum(trackedReserveUSD, true);
+  const usingUntrackedLiquidity = !trackedReserveUSD && !!reserveUSD;
   const liquidityChange = formattedPercent(liquidityChangeUSD);
 
-  const fee = formattedNum(oneDayVolumeUSD * 0.025, true);
-  // transactions
-  const txnChangeFormatted = formattedPercent(txnChange);
+  // volume
+  const volume = !!oneDayVolumeUSD
+    ? formattedNum(oneDayVolumeUSD, true)
+    : formattedNum(oneDayVolumeUntracked, true);
+  const usingUtVolume = oneDayVolumeUSD === 0 && !!oneDayVolumeUntracked;
+  const volumeChange = formattedPercent(
+    !usingUtVolume ? volumeChangeUSD : volumeChangeUntracked
+  );
+
+  const showUSDWaning = usingUntrackedLiquidity | usingUtVolume;
+
+  // get fees	  // get fees
+  const fees =
+    oneDayVolumeUSD || oneDayVolumeUSD === 0
+      ? usingUtVolume
+        ? formattedNum(oneDayVolumeUntracked * 0.003, true)
+        : formattedNum(oneDayVolumeUSD * 0.003, true)
+      : "-";
+
+  // token data for usd
+  const [ethPrice] = useEthPrice();
+  const token0USD =
+    token0?.derivedETH && ethPrice
+      ? formattedNum(parseFloat(token0.derivedETH) * parseFloat(ethPrice), true)
+      : "";
+
+  const token1USD =
+    token1?.derivedETH && ethPrice
+      ? formattedNum(parseFloat(token1.derivedETH) * parseFloat(ethPrice), true)
+      : "";
+
+  // rates
+  const token0Rate =
+    reserve0 && reserve1 ? formattedNum(reserve1 / reserve0) : "-";
+  const token1Rate =
+    reserve0 && reserve1 ? formattedNum(reserve0 / reserve1) : "-";
+
+  // formatted symbols for overflow
+  const formattedSymbol0 =
+    token0?.symbol.length > 6
+      ? token0?.symbol.slice(0, 5) + "..."
+      : token0?.symbol;
+  const formattedSymbol1 =
+    token1?.symbol.length > 6
+      ? token1?.symbol.slice(0, 5) + "..."
+      : token1?.symbol;
 
   const classes = useStyles();
   return (
@@ -229,15 +275,15 @@ function TokenPage({ address }) {
       <div className={classes.background}>
         <div for="breadcrumbs" className={classes.breadcrumbs}>
           <h6 className={classes.breadcrumbsTitle}>
-            Tokens →{" "}
+            Pair →{" "}
             <span>
-              {symbol}
+              {token0?.symbol} - {token1?.symbol}
               <a
                 style={{ color: "#DF097C", paddingLeft: 5 }}
                 target="_blank"
-                href={`https://rinkeby.etherscan.io/address/${id}`}
+                href={`https://rinkeby.etherscan.io/address/${pairAddress}`}
               >
-                ({id && id.slice(0, 8)})
+                ({pairAddress && pairAddress.slice(0, 8)})
               </a>
             </span>
           </h6>
@@ -245,18 +291,50 @@ function TokenPage({ address }) {
         <div for="token-details" className={classes.tokenDetails}>
           <h1 className={classes.tokenTitle}>
             <TokenIcon
-              symbol={symbol}
-              address={id}
+              symbol={token0?.symbol}
+              address={token0?.address}
               className={classes.tokenImage}
             />
-            <span style={{ paddingRight: 3 }}>{name}</span>
-            <span style={{ paddingRight: 15 }}>({symbol})</span>
-            <span>${formatCurrency(priceUSD)}</span>
+            <TokenIcon
+              symbol={token1?.symbol}
+              address={token1?.address}
+              className={classes.tokenImage2}
+            />
+            <span style={{ paddingRight: 3 }}>
+              {token0?.symbol} - {token1?.symbol}
+            </span>
+            {/* <span style={{ paddingRight: 15 }}>({symbol})</span> */}
+            <span>${formatCurrency(token1USD)}</span>
             <span className={classes.changeIndicator}>
-              ${formatCurrency(priceUSD)}
+              ${formatCurrency(token1Rate)}
             </span>
           </h1>
         </div>
+        <div
+          for="tokenRatioCards"
+          className="d-flex justify-content-start mb-4"
+        >
+          <div className={classes.ratioCard}>
+            {" "}
+            <TokenIcon
+              symbol={token0?.symbol}
+              address={token0?.address}
+              className={classes.tokenImage}
+              size={20}
+            />{" "}
+            {token0?.symbol} = 3,849 {token1?.symbol} (US$3,849)
+          </div>
+          <div className={classes.ratioCard}>
+            {" "}
+            <TokenIcon
+              symbol={token1?.symbol}
+              address={token1?.address}
+              className={classes.tokenImage}
+              size={20}
+            />{" "}
+            {token1?.symbol} = 3,849 {token0?.symbol} (US$3,849)
+          </div>
+        </div>{" "}
         <div for="token-stats">
           <h6 className={classes.sectionTitle}>Token Statistics</h6>
           <div className="row">
@@ -265,7 +343,7 @@ function TokenPage({ address }) {
                 <h6 className={classes.cardTitle}>Total Liquidity</h6>
                 <div className="d-flex justify-content-between">
                   <h6 className={classes.cardValue}>
-                    {formatCurrency(totalLiquidityUSD)}
+                    {formatCurrency(trackedReserveUSD)}
                   </h6>
                   <p className={classes.cardChangeIndicator}>
                     {liquidityChangeUSD}%
@@ -275,7 +353,7 @@ function TokenPage({ address }) {
               <Card elevation={10} className={classes.liquidityCard}>
                 <h6 className={classes.cardTitle}>Volume (24Hrs)</h6>
                 <div className="d-flex justify-content-between">
-                  <h6 className={classes.cardValue}>{volume}</h6>
+                  <h6 className={classes.cardValue}>{oneDayVolumeUSD}</h6>
                   <p className={classes.cardChangeIndicator}>
                     {volumeChangeUSD}%
                   </p>
@@ -284,7 +362,7 @@ function TokenPage({ address }) {
               <Card elevation={10} className={classes.liquidityCard}>
                 <h6 className={classes.cardTitle}>Fees (24hrs)</h6>
                 <div className="d-flex justify-content-between">
-                  <h6 className={classes.cardValue}>{fee}</h6>
+                  <h6 className={classes.cardValue}>{fees}</h6>
                   <p className={classes.cardChangeIndicator}>
                     {volumeChangeUSD}%
                   </p>
@@ -293,51 +371,76 @@ function TokenPage({ address }) {
             </div>
             <div className="col-md-8">
               <Card elevation={10} className={classes.chartsCard}>
-                {/* <div> */}
-                <TokenChart
-                  address={address}
-                  color={"#E0077D"}
-                  base={priceUSD}
-                />
-                {/* </div> */}
+                <div>
+                  <TokenChart
+                    address={pairAddress}
+                    color={"#E0077D"}
+                    base={0}
+                  />
+                </div>
               </Card>
             </div>
           </div>
         </div>
         <div for="transaction-table" className="mt-5">
-          <h6 className={classes.sectionTitle}>Top Pairs</h6>
+          <h6 className={classes.sectionTitle}>Transactions</h6>
           <div>
             <div className={classes.tokenList}>
               <TopTokens
-                tableType="TopPools"
-                allPairs={!allPairs ? {} : allPairs}
+                tableType="Transactions"
+                allTransactions={!transactions ? {} : transactions}
               />
             </div>
           </div>
         </div>
         <div for="token-information" className="mt-5">
-          <h6 className={classes.sectionTitle}>Token Information </h6>
+          <h6 className={classes.sectionTitle}>Pair Information </h6>
           <div>
             <div className={classes.tokenList}>
               <Card elevetation={10} className={classes.tokenInfo}>
                 <div className="d-flex justify-content-start align-items-center">
                   <div className={classes.detailsBox}>
-                    <h5 className={classes.detailTitle}>Symbol</h5>
-                    <h6 className={classes.detailValue}>{symbol}</h6>
-                  </div>
-                  <div className={classes.detailsBox}>
-                    <h5 className={classes.detailTitle}>Name</h5>
-                    <h6 className={classes.detailValue}>{name}</h6>
-                  </div>
-                  <div className={classes.detailsBox}>
-                    <h5 className={classes.detailTitle}>Address</h5>
+                    <h5 className={classes.detailTitle}>Pair Name</h5>
                     <h6 className={classes.detailValue}>
-                      {!id ? "" : id}{" "}
+                      {token0?.symbol}-{token1?.symbol}
+                    </h6>
+                  </div>
+
+                  <div className={classes.detailsBox}>
+                    <h5 className={classes.detailTitle}>Pair Address</h5>
+                    <h6 className={classes.detailValue}>
+                      {pairAddress?.slice(0, 8)}
+                    </h6>
+                  </div>
+
+                  <div className={classes.detailsBox}>
+                    <h5 className={classes.detailTitle}>
+                      {token0?.symbol} Address
+                    </h5>
+                    <h6 className={classes.detailValue}>
+                      {token0?.id?.slice(0, 8)}{" "}
                       <span>
                         <FileCopyOutlined
                           className={classes.copyIcon}
                           onClick={() =>
-                            navigator.clipboard.writeText(!id ? "" : id)
+                            navigator.clipboard.writeText(token0?.id)
+                          }
+                        />
+                      </span>
+                    </h6>
+                  </div>
+
+                  <div className={classes.detailsBox}>
+                    <h5 className={classes.detailTitle}>
+                      {token1?.symbol} Address
+                    </h5>
+                    <h6 className={classes.detailValue}>
+                      {token1?.id?.slice(0, 8)}{" "}
+                      <span>
+                        <FileCopyOutlined
+                          className={classes.copyIcon}
+                          onClick={() =>
+                            navigator.clipboard.writeText(token1?.id)
                           }
                         />
                       </span>
@@ -348,8 +451,8 @@ function TokenPage({ address }) {
                   <a
                     href={
                       currentConnection === "testnet"
-                        ? `https://rinkeby.etherscan.io/address/${id}`
-                        : `https://etherscan.io/address/${id}`
+                        ? `https://rinkeby.etherscan.io/address/${pairAddress}`
+                        : `https://etherscan.io/address/${pairAddress}`
                     }
                     target="_blank"
                   >
@@ -366,4 +469,4 @@ function TokenPage({ address }) {
     </div>
   );
 }
-export default TokenPage;
+export default PoolDetail;

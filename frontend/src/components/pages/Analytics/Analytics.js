@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import useStyles from "./styles";
 import TopTokens from "./TopTokens";
-import BarChart from "./BarChart";
-import AreaChart from "./AreaChart";
+import BarChart from "./components/Charts/BarChart";
+import AreaChart from "./components/Charts/AreaChart";
 import PercentLabel from "../../common/PercentLabel";
 import { Card } from "@material-ui/core";
 import {

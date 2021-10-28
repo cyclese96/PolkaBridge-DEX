@@ -10,6 +10,8 @@ import { Button, makeStyles } from "@material-ui/core";
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import Loader from "../../../../common/Loader";
 import { useState } from "react/cjs/react.development";
+import { Link } from "react-router-dom";
+import TokenIcon from "../../../../common/TokenIcon";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -135,15 +137,15 @@ export default function TopTokensTable({ data }) {
                   >
                     <span>
                       {skipIndex * 5 + index + 1}
-                      <img
-                        src="http://localhost:3000/static/media/usdt.006177e6.png"
+
+                      <TokenIcon
+                        symbol={row.symbol}
                         className={classes.tokenImage}
                       />
                     </span>
-                    <a href="https://google.com" className={classes.link}>
-                      {" "}
-                      {row.name}
-                    </a>
+                    <Link to={`token/${row.id}`} className={classes.link}>
+                      <span className={classes.cellText}>{row.name}</span>
+                    </Link>
                   </TableCell>
                   <TableCell
                     align="right"
