@@ -45,7 +45,6 @@ type Token @entity {
 
   # derived prices
   derivedETH: BigDecimal
-  derivedUSD: BigDecimal
 
   # derived fields
   tokenDayData: [TokenDayData!]! @derivedFrom(field: "token")
