@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     marginBottom: 10,
     [theme.breakpoints.down("sm")]: {
-      width: "96vw",
+      width: "94vw",
     },
   },
   arrowIcon: {

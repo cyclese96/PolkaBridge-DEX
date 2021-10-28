@@ -380,17 +380,8 @@ function PoolDetail({ pairAddress }) {
         </div>
         <div for="transaction-table" className="mt-5">
           <h6 className={classes.sectionTitle}>Transactions</h6>
-          <div>
-            <div className={classes.tokenList}>
-              {/* <TopTokens
-                tableType="Transactions"
-                allTransactions={!transactions ? {} : transactions}
-              /> */}
-
-              <div className="d-flex justify-content-center">
-                <PairTransactionsTable />
-              </div>
-            </div>
+          <div className="d-flex justify-content-center p-2">
+            <PairTransactionsTable />
           </div>
         </div>
         <div for="token-information" className="mt-5">
