@@ -182,6 +182,8 @@ export default function Provider({ children }) {
   }, [])
 
   const updatePriceData = useCallback((address, data, timeWindow, interval) => {
+
+    console.log('useAllTokenData  updating price data ', { address, data, timeWindow, interval })
     dispatch({
       type: UPDATE_PRICE_DATA,
       payload: { address, data, timeWindow, interval },
@@ -237,7 +239,7 @@ const getTopTokens = async (ethPrice, ethPriceOld) => {
       variables: { date: currentDate },
     })
 
-    console.log('fetched top tokens', tokenids)
+    console.log('analyticsTest fetched top tokens', tokenids)
     const ids = tokenids?.data?.tokenDayDatas?.reduce((accum, entry) => {
       accum.push(entry.id.slice(0, 42))
       return accum
@@ -248,23 +250,34 @@ const getTopTokens = async (ethPrice, ethPriceOld) => {
       fetchPolicy: 'cache-first',
     })
 
+    console.log("useAllTokenData current  ", current)
+
     let oneDayResult = await client.query({
       query: TOKENS_HISTORICAL_BULK(ids, oneDayBlock),
       fetchPolicy: 'cache-first',
     })
+
+    console.log("useAllTokenData oneDayResult  ", oneDayResult)
 
     let twoDayResult = await client.query({
       query: TOKENS_HISTORICAL_BULK(ids, twoDayBlock),
       fetchPolicy: 'cache-first',
     })
 
+    console.log("useAllTokenData twoDayResult  ", twoDayResult)
+
     let oneDayData = oneDayResult?.data?.tokens.reduce((obj, cur, i) => {
       return { ...obj, [cur.id]: cur }
     }, {})
 
+    console.log("useAllTokenData oneDayData  ", oneDayData)
+
     let twoDayData = twoDayResult?.data?.tokens.reduce((obj, cur, i) => {
       return { ...obj, [cur.id]: cur }
     }, {})
+
+
+    console.log("useAllTokenData twoDayData  ", twoDayData)
 
     let bulkResults = await Promise.all(
       current &&
@@ -862,6 +875,7 @@ export function useTokenPriceData(tokenAddress, timeWindow, interval = 3600) {
 export function useAllTokenData() {
   const [state] = useTokenDataContext()
 
+  console.log('analyticsTest: tokenData state ', state)
   // filter out for only addresses
   return Object.keys(state)
     .filter((key) => key !== 'combinedVol')

@@ -48,9 +48,36 @@ const Analytics = () => {
 
   const chartData = useGlobalChartData();
 
-  useEffect(() => {
-    console.log("analyticsTest:  globalData load ", globalData);
-  }, [globalData]);
+  // useEffect(() => {
+  //   console.log("analyticsTest:  globalData load ", chartData);
+  // }, [chartData]);
+
+  // validator to display info when chart is not available
+
+  const isValidGlobalChart = (_chartData, _globalData) => {
+
+    let areaChartPrepared = false;
+    let barChartPrepared = false;
+    let globalDataLoaded = false;
+
+    if (_chartData && chartData[0].length === 7) {
+      areaChartPrepared = true
+    }
+
+    if (_chartData && chartData[0].length === 7) {
+      barChartPrepared = true
+    }
+
+
+    if (globalData) {
+      globalDataLoaded = true
+    }
+
+    return { areaChartPrepared, barChartPrepared, globalDataLoaded };
+  }
+
+
+
   return (
     <div>
       <div className="mb-3">
@@ -65,9 +92,9 @@ const Analytics = () => {
               <div>
                 <span className={classes.cardSpan}>Total value locked</span>
                 <p className={classes.cardP}>
-                  {"$" + formatCurrency(globalData.totalLiquidityUSD)}
+                  {"$" + formatCurrency(!globalData ? "0" : globalData.totalLiquidityUSD)}
                   <small>
-                    {formattedPercent(globalData.liquidityChangeUSD)}
+                    {formattedPercent(!globalData ? '0' : globalData.liquidityChangeUSD)}
                   </small>
                 </p>
                 <div className={classes.chart}>
@@ -91,8 +118,8 @@ const Analytics = () => {
               <div>
                 <span className={classes.cardSpan}>Volume 24H</span>
                 <p className={classes.cardP}>
-                  {"$" + formatCurrency(globalData.oneDayVolumeUSD)}
-                  <small>{formattedPercent(globalData.volumeChangeUSD)}</small>
+                  {"$" + formatCurrency(!globalData ? '0' : globalData.oneDayVolumeUSD)}
+                  <small>{formattedPercent(!globalData ? '0' : globalData.volumeChangeUSD)}</small>
                 </p>
                 <div className={classes.chart}>
                   <BarChart chartData={chartData ? chartData[0] : []} />

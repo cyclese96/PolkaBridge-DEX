@@ -16,6 +16,10 @@ import { Card } from "@material-ui/core";
 import { useMemo } from "react";
 
 function descendingComparator(a, b, orderBy) {
+  if (!a || !b) {
+    return 0;
+  }
+
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -189,7 +193,7 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            // style={{ color: "#E0077D" }}s
+          // style={{ color: "#E0077D" }}s
           >
             <TableSortLabel
               // active={orderBy === headCell.id}
@@ -221,7 +225,7 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-            // style={{ color: "#E0077D" }}s
+          // style={{ color: "#E0077D" }}s
           >
             <TableSortLabel
               // active={orderBy === headCell.id}
@@ -332,7 +336,7 @@ const TopTokens = ({
 }) => {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [orderBy, setOrderBy] = React.useState("vol_24_h");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -361,7 +365,7 @@ const TopTokens = ({
       token0: rawObject.token0,
       token1: rawObject.token1,
       fee: 0.02,
-      tvl: rawObject.volumeUSD,
+      tvl: rawObject.trackedReserveUSD,
       vol_24_h: rawObject.oneDayVolumeUSD,
       vol_7_d: rawObject.oneWeekVolumeUSD,
     };
@@ -397,7 +401,7 @@ const TopTokens = ({
     return (
       allTokens &&
       Object.keys(allTokens).map((key) =>
-        getFormattedTokenObject(allTokens[key])
+        allTokens[key].id && getFormattedTokenObject(allTokens[key])
       )
     );
   }, [allTokens]);
@@ -492,21 +496,21 @@ const TopTokens = ({
         <>
           {formattedTokens.length > 0
             ? stableSort(formattedTokens, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row, index) => {
+                const isItemSelected = row ? isSelected(row.name) : false;
+                const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TokenRow
-                      row={row}
-                      classes={classes}
-                      isItemSelected={isItemSelected}
-                      labelId={labelId}
-                      handleClick={handleClick}
-                    />
-                  );
-                })
+                return (
+                  <TokenRow
+                    row={!row ? {} : row}
+                    classes={classes}
+                    isItemSelected={isItemSelected}
+                    labelId={labelId}
+                    handleClick={handleClick}
+                  />
+                );
+              })
             : ""}
           {emptyRows > 0 && (
             <TableRow
@@ -531,7 +535,7 @@ const TopTokens = ({
 
                 return (
                   <PoolRow
-                    row={row}
+                    row={!row ? {} : row}
                     classes={classes}
                     isItemSelected={isItemSelected}
                     labelId={labelId}
@@ -557,12 +561,12 @@ const TopTokens = ({
             stableSort(formattedTransactions, getComparator(order, orderBy))
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, index) => {
-                const isItemSelected = isSelected(row.name);
+                const isItemSelected = row ? isSelected(row.name) : false;
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
                   <TransactionRow
-                    row={row}
+                    row={!row ? {} : row}
                     classes={classes}
                     isItemSelected={isItemSelected}
                     labelId={labelId}
