@@ -166,12 +166,15 @@ const useStyles = makeStyles((theme) => ({
   },
   detailTitle: {
     fontSize: 14,
+
     color: "#bdbdbd",
     fontWeight: 500,
   },
   detailValue: {
     fontSize: 18,
-    fontWeight: 600,
+    fontWeight: 500,
+    letterSpacing: 0.5,
+    color: "#f7f7f7",
   },
   copyIcon: {
     fontSize: 14,
@@ -181,37 +184,42 @@ const useStyles = makeStyles((theme) => ({
 
 function PoolDetail({ pairAddress }) {
   const [poolInfo, setPoolInfo] = useState(null);
+  const [pairTransactions, setPairTransactions] = useState(null);
+
   const {
     token0,
     token1,
-    reserve0,
-    reserve1,
-    reserveUSD,
-    trackedReserveUSD,
     oneDayVolumeUSD,
     volumeChangeUSD,
     oneDayVolumeUntracked,
-    volumeChangeUntracked,
     liquidityChangeUSD,
   } = usePairData(pairAddress);
 
-  // const transactions = usePairTransactions(pairAddress);// todo fix api for pair transactions
-  const transactions = useGlobalTransactions();
+  const transactions = usePairTransactions(pairAddress); // todo fix api for pair transactions
+  // const transactions = useGlobalTransactions();
   const poolData = usePairData(pairAddress);
 
   useEffect(() => {
     console.log("alltransaction", transactions);
-  }, [transactions]);
+  }, []);
 
   useEffect(() => {
-    console.log("poolData", poolData);
-    if (poolData) {
+    if (Object.keys(poolData).length !== 0 || !poolData) {
       setPoolInfo(poolData);
     }
   }, [poolData]);
 
   useEffect(() => {
-    // console.log("allPairs", allPairs);
+    if (transactions !== null && transactions !== undefined) {
+      let result = Object.keys(transactions).map((key) => transactions[key]);
+      if (result.length > 0) {
+        setPairTransactions(transactions);
+        console.log(transactions);
+      }
+    }
+  }, [transactions]);
+
+  useEffect(() => {
     document.querySelector("body").scrollTo(0, 0);
   }, []);
 
@@ -232,57 +240,16 @@ function PoolDetail({ pairAddress }) {
         : formattedNum(oneDayVolumeUSD * 0.003, true)
       : "-";
 
-  const formattedLiquidity = reserveUSD
-    ? formattedNum(reserveUSD, true)
-    : formattedNum(trackedReserveUSD, true);
-  const usingUntrackedLiquidity = !trackedReserveUSD && !!reserveUSD;
-  const liquidityChange = formattedPercent(liquidityChangeUSD);
-
-  // volume
-  const volume = !!oneDayVolumeUSD
-    ? formattedNum(oneDayVolumeUSD, true)
-    : formattedNum(oneDayVolumeUntracked, true);
-
-  const volumeChange = formattedPercent(
-    !usingUtVolume ? volumeChangeUSD : volumeChangeUntracked
-  );
-
-  const showUSDWaning = usingUntrackedLiquidity | usingUtVolume;
-
   // token data for usd
   const [ethPrice] = useEthPrice();
-  const token0USD =
-    token0?.derivedETH && ethPrice
-      ? formattedNum(parseFloat(token0.derivedETH) * parseFloat(ethPrice), true)
-      : "";
-
-  const token1USD =
-    token1?.derivedETH && ethPrice
-      ? formattedNum(parseFloat(token1.derivedETH) * parseFloat(ethPrice), true)
-      : "";
-
-  // rates
-  const token0Rate =
-    reserve0 && reserve1 ? formattedNum(reserve1 / reserve0) : "-";
-  const token1Rate =
-    reserve0 && reserve1 ? formattedNum(reserve0 / reserve1) : "-";
-
-  // formatted symbols for overflow
-  const formattedSymbol0 =
-    token0?.symbol.length > 6
-      ? token0?.symbol.slice(0, 5) + "..."
-      : token0?.symbol;
-  const formattedSymbol1 =
-    token1?.symbol.length > 6
-      ? token1?.symbol.slice(0, 5) + "..."
-      : token1?.symbol;
 
   const classes = useStyles();
   return (
     <div className="container">
       {!poolInfo && (
-        <div>
+        <div className="text-center mt-4">
           <Loader />
+          <h6>Fetching data...</h6>
         </div>
       )}
       {poolInfo && (
@@ -351,7 +318,7 @@ function PoolDetail({ pairAddress }) {
             </div>
           </div>{" "}
           <div for="token-stats">
-            <h6 className={classes.sectionTitle}>Token Statistics</h6>
+            <h6 className={classes.sectionTitle}>Pair Stats</h6>
             <div className="row">
               <div className="col-md-4">
                 <Card elevation={10} className={classes.liquidityCard}>
@@ -388,21 +355,28 @@ function PoolDetail({ pairAddress }) {
               </div>
               <div className="col-md-8">
                 <Card elevation={10} className={classes.chartsCard}>
-                  <div>
-                    <TokenChart
-                      address={pairAddress}
-                      color={"#E0077D"}
-                      base={0}
-                    />
-                  </div>
+                  {/* <div
+                    style={{
+                      marginTop: 140,
+                      color: "#DF097C",
+                      textAlign: "center",
+                    }}
+                  >
+                    Insufficient data to display chart.
+                  </div> */}
+                  <TokenChart
+                    address={pairAddress}
+                    color={"#E0077D"}
+                    base={0}
+                  />
                 </Card>
               </div>
             </div>
           </div>
           <div for="transaction-table" className="mt-5">
-            <h6 className={classes.sectionTitle}>Transactions</h6>
+            <h6 className={classes.sectionTitle}>Pair Transactions</h6>
             <div className="d-flex justify-content-center p-2">
-              <PairTransactionsTable />
+              <PairTransactionsTable data={pairTransactions} />
             </div>
           </div>
           <div for="token-information" className="mt-5">
@@ -421,7 +395,15 @@ function PoolDetail({ pairAddress }) {
                     <div className={classes.detailsBox}>
                       <h5 className={classes.detailTitle}>Pair Address</h5>
                       <h6 className={classes.detailValue}>
-                        {pairAddress?.slice(0, 8)}
+                        {pairAddress?.slice(0, 7)}
+                        <span>
+                          <FileCopyOutlined
+                            className={classes.copyIcon}
+                            onClick={() =>
+                              navigator.clipboard.writeText(pairAddress)
+                            }
+                          />
+                        </span>
                       </h6>
                     </div>
 

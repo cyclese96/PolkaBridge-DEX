@@ -175,9 +175,7 @@ function TokenPage({ address }) {
     volumeChangeUSD,
     oneDayVolumeUT,
     volumeChangeUT,
-    priceChangeUSD,
     liquidityChangeUSD,
-    oneDayTxns,
     txnChange,
   } = useTokenData(address);
 
@@ -198,13 +196,6 @@ function TokenPage({ address }) {
 
   // pairs to show in pair list
   const fetchedPairsList = useDataForList(allPairs);
-
-  // all transactions with this token
-  const transactions = useTokenTransactions(address);
-
-  // price
-  const price = priceUSD ? formattedNum(priceUSD, true) : "";
-  const priceChange = priceChangeUSD ? formattedPercent(priceChangeUSD) : "";
 
   // volume
   const volume = formattedNum(

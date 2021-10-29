@@ -12,6 +12,8 @@ import Loader from "../../../../common/Loader";
 import { useState } from "react/cjs/react.development";
 import TokenIcon from "../../../../common/TokenIcon";
 import { Link } from "react-router-dom";
+import { ArrowDown } from "react-feather";
+import { ArrowDownward } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -62,6 +64,8 @@ const useStyles = makeStyles((theme) => ({
 export default function TopPoolsTable({ data }) {
   const classes = useStyles();
   const [rows, setRows] = useState([]);
+  const [sortedFees, setSortedFees] = useState(false);
+  const [sortedVolume7d, setSortedVolume7d] = useState(false);
   const [skipIndex, setSkipIndex] = useState(0);
 
   let styles = {
@@ -69,6 +73,7 @@ export default function TopPoolsTable({ data }) {
       fontSize: window.innerWidth < 500 ? 11 : 14,
       color: "white",
       fontWeight: 700,
+      cursor: "pointer",
     },
   };
 
@@ -79,6 +84,27 @@ export default function TopPoolsTable({ data }) {
       console.log(result);
     }
   }, [data]);
+
+  const sortByFees = () => {
+    let tempRows = [...rows];
+    if (sortedFees) {
+      tempRows.sort((a, b) => a.oneDayVolumeUSD - b.oneDayVolumeUSD);
+    } else {
+      tempRows.sort((a, b) => b.oneDayVolumeUSD - a.oneDayVolumeUSD);
+    }
+    setSortedFees(!sortedFees);
+    setRows([...tempRows]);
+  };
+  const sortByVolume7D = () => {
+    let tempRows = [...rows];
+    if (sortedVolume7d) {
+      tempRows.sort((a, b) => a.oneWeekVolumeUSD - b.oneWeekVolumeUSD);
+    } else {
+      tempRows.sort((a, b) => b.oneWeekVolumeUSD - a.oneWeekVolumeUSD);
+    }
+    setSortedVolume7d(!sortedVolume7d);
+    setRows([...tempRows]);
+  };
 
   return (
     <Paper elevation={10} className={classes.table}>
@@ -105,24 +131,63 @@ export default function TopPoolsTable({ data }) {
                 TVL
               </TableCell>
 
-              <TableCell align="right" style={styles.tableHeading}>
-                Volume(24hrs) <ArrowUpward className={classes.arrowIcon} />
+              <TableCell
+                align="right"
+                style={styles.tableHeading}
+                onClick={sortByFees}
+              >
+                Volume(24hrs){" "}
+                <span>
+                  {sortedFees ? (
+                    <ArrowUpward className={classes.arrowIcon} />
+                  ) : (
+                    <ArrowDownward className={classes.arrowIcon} />
+                  )}
+                </span>
               </TableCell>
-              <TableCell align="right" style={styles.tableHeading}>
-                Volume(7d) <ArrowUpward className={classes.arrowIcon} />
+              <TableCell
+                align="right"
+                style={styles.tableHeading}
+                onClick={sortByVolume7D}
+              >
+                Volume(7d){" "}
+                <span>
+                  {sortedVolume7d ? (
+                    <ArrowUpward className={classes.arrowIcon} />
+                  ) : (
+                    <ArrowDownward className={classes.arrowIcon} />
+                  )}
+                </span>
               </TableCell>
-              <TableCell align="right" style={styles.tableHeading}>
-                Fees(24hrs)
+              <TableCell
+                align="right"
+                style={styles.tableHeading}
+                onClick={sortByFees}
+              >
+                Fees(24hrs){" "}
+                <span>
+                  {sortedFees ? (
+                    <ArrowUpward className={classes.arrowIcon} />
+                  ) : (
+                    <ArrowDownward className={classes.arrowIcon} />
+                  )}
+                </span>
               </TableCell>
             </TableRow>
           </TableHead>
+
           <TableBody>
             {!data && (
-              <div className="text-center">
+              <TableRow className="text-center">
                 <Loader />
-              </div>
+                <div className="text-center">Fetching informations...</div>
+              </TableRow>
             )}
-
+            {data && rows.length === 0 && (
+              <TableRow>
+                <div className="text-center my-3">No data to display</div>
+              </TableRow>
+            )}
             {data &&
               rows.slice(skipIndex * 5, skipIndex * 5 + 5).map((row, index) => (
                 <TableRow
@@ -133,6 +198,7 @@ export default function TopPoolsTable({ data }) {
                     component="th"
                     scope="row"
                     style={{ color: "#e5e5e5", fontSize: 12 }}
+                    sortDirection="asc"
                   >
                     <span>
                       {skipIndex * 5 + index + 1}
