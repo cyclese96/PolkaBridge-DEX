@@ -78,8 +78,8 @@ const styles = {
 };
 const TokenChart = ({ address, color, base }) => {
   // settings for the window and candle width
-  const [chartFilter, setChartFilter] = useState(CHART_VIEW.PRICE);
-  const [frequency, setFrequency] = useState(DATA_FREQUENCY.HOUR);
+  const [chartFilter, setChartFilter] = useState(CHART_VIEW.LIQUIDITY);
+  const [frequency, setFrequency] = useState(DATA_FREQUENCY.LINE);
 
   const [darkMode, setDarkMode] = useState(true);
   const textColor = darkMode ? "white" : "black";
@@ -93,6 +93,7 @@ const TokenChart = ({ address, color, base }) => {
   }, [address, addressPrev]);
 
   let chartData = useTokenChartData(address);
+
 
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.WEEK);
   const prevWindow = usePrevious(timeWindow);
@@ -108,18 +109,18 @@ const TokenChart = ({ address, color, base }) => {
   const priceData =
     timeWindow === timeframeOptions.MONTH
       ? // monthly selected
-        frequency === DATA_FREQUENCY.DAY
+      frequency === DATA_FREQUENCY.DAY
         ? dailyMonth
         : hourlyMonth
       : // weekly selected
       timeWindow === timeframeOptions.WEEK
-      ? frequency === DATA_FREQUENCY.DAY
-        ? dailyWeek
-        : hourlyWeek
-      : // all time selected
-      frequency === DATA_FREQUENCY.DAY
-      ? dailyAll
-      : hourlyAll;
+        ? frequency === DATA_FREQUENCY.DAY
+          ? dailyWeek
+          : hourlyWeek
+        : // all time selected
+        frequency === DATA_FREQUENCY.DAY
+          ? dailyAll
+          : hourlyAll;
 
   // switch to hourly data when switched to week window
   useEffect(() => {
@@ -177,6 +178,15 @@ const TokenChart = ({ address, color, base }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, [isClient, width]); // Empty array ensures that effect is only run on mount and unmount
 
+
+  useEffect(() => {
+    console.log('tokenPage  chart data  ', { chartData, address, frequency, chartFilter, priceData })
+
+
+  }, [chartData])
+
+
+
   return (
     <ChartWrapper>
       {below600 ? (
@@ -198,16 +208,16 @@ const TokenChart = ({ address, color, base }) => {
         <RowBetween
           mb={
             chartFilter === CHART_VIEW.LIQUIDITY ||
-            chartFilter === CHART_VIEW.VOLUME ||
-            (chartFilter === CHART_VIEW.PRICE &&
-              frequency === DATA_FREQUENCY.LINE)
+              chartFilter === CHART_VIEW.VOLUME ||
+              (chartFilter === CHART_VIEW.PRICE &&
+                frequency === DATA_FREQUENCY.LINE)
               ? 40
               : 0
           }
           align="flex-start"
         >
-          <AutoColumn gap="8px">
-            <RowFixed>
+          <div >
+            <div className="d-flex justify-content-center ">
               <Button
                 active={chartFilter === CHART_VIEW.LIQUIDITY}
                 onClick={() => setChartFilter(CHART_VIEW.LIQUIDITY)}
@@ -232,7 +242,7 @@ const TokenChart = ({ address, color, base }) => {
               >
                 Price
               </Button>
-            </RowFixed>
+            </div>
             {chartFilter === CHART_VIEW.PRICE && (
               <AutoRow gap="4px">
                 {/* <Button
@@ -261,8 +271,8 @@ const TokenChart = ({ address, color, base }) => {
                 </Button>
               </AutoRow>
             )}
-          </AutoColumn>
-          <AutoRow justify="flex-end" gap="6px" align="flex-start">
+          </div>
+          {/* <AutoRow justify="flex-end" gap="6px" align="flex-start">
             <Button
               active={timeWindow === timeframeOptions.WEEK}
               onClick={() => setTimeWindow(timeframeOptions.WEEK)}
@@ -284,7 +294,7 @@ const TokenChart = ({ address, color, base }) => {
             >
               All
             </Button>
-          </AutoRow>
+          </AutoRow> */}
         </RowBetween>
       )}
       {chartFilter === CHART_VIEW.LIQUIDITY && chartData && (

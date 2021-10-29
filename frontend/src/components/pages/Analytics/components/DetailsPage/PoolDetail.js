@@ -21,6 +21,7 @@ import { currentConnection } from "../../../../../constants";
 import { FileCopy, FileCopyOutlined, OpenInNew } from "@material-ui/icons";
 import PairTransactionsTable from "../Tables/PairTransactionsTable";
 import Loader from "../../../../common/Loader";
+import PairChart from "../Charts/PairChart";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -189,11 +190,16 @@ function PoolDetail({ pairAddress }) {
   const {
     token0,
     token1,
+    reserve0,
+    reserve1,
+    reserveUSD,
+    trackedReserveUSD,
     oneDayVolumeUSD,
     volumeChangeUSD,
     oneDayVolumeUntracked,
+    volumeChangeUntracked,
     liquidityChangeUSD,
-  } = usePairData(pairAddress);
+  } = usePairData(pairAddress)
 
   const transactions = usePairTransactions(pairAddress); // todo fix api for pair transactions
   // const transactions = useGlobalTransactions();
@@ -364,10 +370,11 @@ function PoolDetail({ pairAddress }) {
                   >
                     Insufficient data to display chart.
                   </div> */}
-                  <TokenChart
+                  <PairChart
                     address={pairAddress}
                     color={"#E0077D"}
-                    base={0}
+                    base0={reserve1 / reserve0}
+                    base1={reserve0 / reserve1}
                   />
                 </Card>
               </div>

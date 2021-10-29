@@ -620,6 +620,8 @@ const getTokenChartData = async (tokenAddress) => {
       data = data.concat(result.data.tokenDayDatas)
     }
 
+    // console.log('tokenPage:  token chart query result ', data)
+
     let dayIndexSet = new Set()
     let dayIndexArray = []
     const oneDay = 24 * 60 * 60
