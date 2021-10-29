@@ -56,6 +56,14 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 10,
     fontSize: 13,
   },
+  changeIndicator: {
+    background: "green",
+    color: "white",
+    fontSize: 12,
+    marginLeft: 10,
+    borderRadius: 7,
+    padding: "4px 8px 4px 8px",
+  },
 }));
 
 export default function TopTokensTable({ data }) {
@@ -243,7 +251,16 @@ export default function TopTokensTable({ data }) {
                     className={classes.tableText}
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
-                    {row.priceChangeUSD}
+                    {parseFloat(row.priceChangeUSD) < 0 ? (
+                      <span style={{ color: "red" }}>
+                        {" "}
+                        {parseFloat(row.priceChangeUSD).toFixed(2)} %
+                      </span>
+                    ) : (
+                      <span style={{ color: "green" }}>
+                        {parseFloat(row.priceChangeUSD).toFixed(2)} %
+                      </span>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}

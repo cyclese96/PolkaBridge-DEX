@@ -58,7 +58,7 @@ const state = {
           yAxisIndex: 0,
           label: {
             show: true,
-            text: "Volume",
+            // text: "Volume",
             style: {
               color: "#fff",
               background: "#775DD0",

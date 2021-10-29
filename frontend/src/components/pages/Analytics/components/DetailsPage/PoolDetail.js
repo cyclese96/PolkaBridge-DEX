@@ -22,6 +22,7 @@ import { FileCopy, FileCopyOutlined, OpenInNew } from "@material-ui/icons";
 import PairTransactionsTable from "../Tables/PairTransactionsTable";
 import Loader from "../../../../common/Loader";
 import PairChart from "../Charts/PairChart";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -114,7 +115,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardChangeIndicator: {
     color: "green",
-    fontSize: 12,
+    fontSize: 13,
   },
   chartsCard: {
     height: "100%",
@@ -150,7 +151,7 @@ const useStyles = makeStyles((theme) => ({
     width: 200,
     height: 40,
     textTransform: "none",
-    fontSize: 16,
+    fontSize: 15,
     borderRadius: 10,
 
     [theme.breakpoints.down("sm")]: {
@@ -199,7 +200,7 @@ function PoolDetail({ pairAddress }) {
     oneDayVolumeUntracked,
     volumeChangeUntracked,
     liquidityChangeUSD,
-  } = usePairData(pairAddress)
+  } = usePairData(pairAddress);
 
   const transactions = usePairTransactions(pairAddress); // todo fix api for pair transactions
   // const transactions = useGlobalTransactions();
@@ -262,7 +263,7 @@ function PoolDetail({ pairAddress }) {
         <div className={classes.background}>
           <div for="breadcrumbs" className={classes.breadcrumbs}>
             <h6 className={classes.breadcrumbsTitle}>
-              Pair →{" "}
+              <Link to="/charts">Pair</Link>→{" "}
               <span>
                 {poolInfo.token0?.symbol} - {poolInfo.token1?.symbol}
                 <a
@@ -334,7 +335,16 @@ function PoolDetail({ pairAddress }) {
                       {parseFloat(poolInfo.trackedReserveUSD).toFixed(2)}
                     </h6>
                     <p className={classes.cardChangeIndicator}>
-                      {parseFloat(liquidityChangeUSD).toFixed(2)}%
+                      {liquidityChangeUSD < 0 ? (
+                        <span style={{ color: "red" }}>
+                          {" "}
+                          {parseFloat(liquidityChangeUSD).toFixed(2)}%
+                        </span>
+                      ) : (
+                        <span>
+                          {parseFloat(liquidityChangeUSD).toFixed(2)}%
+                        </span>
+                      )}
                     </p>
                   </div>
                 </Card>
@@ -345,7 +355,14 @@ function PoolDetail({ pairAddress }) {
                       {parseFloat(oneDayVolumeUSD).toFixed(2)}
                     </h6>
                     <p className={classes.cardChangeIndicator}>
-                      {parseFloat(volumeChangeUSD).toFixed(2)}%
+                      {volumeChangeUSD < 0 ? (
+                        <span style={{ color: "red" }}>
+                          {" "}
+                          {parseFloat(volumeChangeUSD).toFixed(2)}%
+                        </span>
+                      ) : (
+                        <span>{parseFloat(volumeChangeUSD).toFixed(2)}%</span>
+                      )}
                     </p>
                   </div>
                 </Card>
@@ -354,7 +371,14 @@ function PoolDetail({ pairAddress }) {
                   <div className="d-flex justify-content-between">
                     <h6 className={classes.cardValue}>{fees}</h6>
                     <p className={classes.cardChangeIndicator}>
-                      {volumeChangeUSD}%{/* Todo: */}
+                      {volumeChangeUSD < 0 ? (
+                        <span style={{ color: "red" }}>
+                          {" "}
+                          {parseFloat(volumeChangeUSD).toFixed(2)}%
+                        </span>
+                      ) : (
+                        <span>{parseFloat(volumeChangeUSD).toFixed(2)}%</span>
+                      )}
                     </p>
                   </div>
                 </Card>
@@ -458,7 +482,8 @@ function PoolDetail({ pairAddress }) {
                       target="_blank"
                     >
                       <Button className={classes.openButton}>
-                        View On Explorer <OpenInNew />
+                        View on explorer{" "}
+                        <OpenInNew style={{ fontSize: 20, marginLeft: 5 }} />
                       </Button>
                     </a>
                   </div>
