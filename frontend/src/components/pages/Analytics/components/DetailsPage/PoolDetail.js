@@ -301,27 +301,30 @@ function PoolDetail({ pairAddress }) {
           >
             <div className={classes.ratioCard}>
               {" "}
-              <TokenIcon
-                symbol={token0?.symbol}
-                address={token0?.address}
-                className={classes.tokenImage}
-                size={20}
-              />{" "}
-              {poolInfo.token0?.symbol} ={" "}
-              {parseFloat(poolInfo.token0Price).toFixed(6)}{" "}
-              {poolInfo.token1?.symbol}
+              <Link to={`/token/${token0?.id}`}>
+                <TokenIcon
+                  symbol={token0?.symbol}
+                  address={token0?.address}
+                  className={classes.tokenImage}
+                  size={20}
+                />{" "}
+                {poolInfo.token0?.symbol} ={" "}
+                {parseFloat(poolInfo.token0Price).toFixed(6)}{" "}
+                {poolInfo.token1?.symbol}
+              </Link>
             </div>
             <div className={classes.ratioCard}>
-              {" "}
-              <TokenIcon
-                symbol={token1?.symbol}
-                address={token1?.address}
-                className={classes.tokenImage}
-                size={20}
-              />{" "}
-              {poolInfo.token1?.symbol} ={" "}
-              {parseFloat(poolInfo.token1Price).toFixed(6)}{" "}
-              {poolInfo.token0?.symbol}
+              <Link to={`/token/${token1?.id}`}>
+                <TokenIcon
+                  symbol={token1?.symbol}
+                  address={token1?.address}
+                  className={classes.tokenImage}
+                  size={20}
+                />{" "}
+                {poolInfo.token1?.symbol} ={" "}
+                {parseFloat(poolInfo.token1Price).toFixed(6)}{" "}
+                {poolInfo.token0?.symbol}
+              </Link>
             </div>
           </div>{" "}
           <div for="token-stats">

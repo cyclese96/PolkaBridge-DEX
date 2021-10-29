@@ -14,15 +14,13 @@ import {
   useDataForList,
 } from "../../../../../contexts/PairData";
 import { formatCurrency, formattedNum } from "../../../../../utils/formatters";
-import { formattedPercent } from "../../../../../utils/timeUtils";
-import TokenLogo from "../../../../common/Styled/TokenLogo";
 import TokenIcon from "../../../../common/TokenIcon";
 import { Link } from "react-router-dom";
-// import { formatCurrency } from "../../../utils/helper";
 import TokenChart from "../../components/Charts/TokenChart";
 import { Button, Card } from "@material-ui/core";
 import { FileCopyOutlined, OpenInNew } from "@material-ui/icons";
 import { currentConnection } from "../../../../../constants";
+import TokenTopPairsTable from "../Tables/TokenPairsTable";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -178,8 +176,6 @@ function TokenPage({ address }) {
     priceChangeUSD,
   } = useTokenData(address);
 
-  let hello = useTokenData(address);
-  console.log(hello);
   useEffect(() => {
     document.querySelector("body").scrollTo(0, 0);
   }, []);
@@ -283,6 +279,12 @@ function TokenPage({ address }) {
             </div>
           </div>
         </div>
+        {/* <div for="token-pairs-table" className="mt-5">
+          <h6 className={classes.sectionTitle}>Pair Transactions</h6>
+          <div className="d-flex justify-content-center p-2">
+            <TokenTopPairsTable data={pairTransactions} />
+          </div>
+        </div> */}
 
         <div for="token-information" className="mt-5">
           <h6 className={classes.sectionTitle}>Token Information </h6>
