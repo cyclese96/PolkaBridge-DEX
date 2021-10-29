@@ -202,7 +202,7 @@ export default function PairTransactionsTable({ data }) {
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
                     {row.amount0
-                      ? row.amount0
+                      ? parseFloat(row.amount0).toFixed(3)
                       : row.amount0Out !== "0"
                       ? parseFloat(row.amount0Out).toFixed(2)
                       : parseFloat(row.amount0In).toFixed(2)}
@@ -212,7 +212,7 @@ export default function PairTransactionsTable({ data }) {
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
                     {row.amount1
-                      ? row.amount1
+                      ? parseFloat(row.amount1).toFixed(3)
                       : row.amount1Out !== "0"
                       ? parseFloat(row.amount1Out).toFixed(2)
                       : parseFloat(row.amount1In).toFixed(2)}
