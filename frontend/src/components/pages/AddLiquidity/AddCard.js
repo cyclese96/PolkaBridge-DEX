@@ -16,8 +16,6 @@ import { DECIMAL_6_ADDRESSES, ETH, etheriumNetwork, tokens } from "../../../cons
 import {
   getPercentage,
   getPriceRatio,
-  getToken1Out,
-  getToken2Out,
   getTokenOutWithReserveRatio,
   toWei,
 } from "../../../utils/helper";
@@ -36,11 +34,10 @@ import BigNumber from "bignumber.js";
 import store from "../../../store";
 import {
   RESET_POOL_SHARE,
-  SET_TOKEN_ABI,
   START_TRANSACTION,
 } from "../../../actions/types";
 import debounce from "lodash.debounce";
-import { getPairAddress, getTokenAbi } from "../../../utils/connectionUtils";
+import { getPairAddress } from "../../../utils/connectionUtils";
 import { Settings } from "@material-ui/icons";
 import SwapConfirm from "../../common/SwapConfirm";
 
@@ -256,7 +253,7 @@ const useStyles = makeStyles((theme) => ({
 
 const AddCard = (props) => {
   const {
-    account: { balance, loading, currentNetwork, currentAccount },
+    account: { balance, loading, currentNetwork, currentAccount, connected },
     dex: {
       swapSettings,
       approvedTokens,
@@ -681,6 +678,11 @@ const AddCard = (props) => {
   };
 
   const disableStatus = () => {
+
+    if (!connected) {
+      return true
+    }
+
     return addStatus.disabled || loading || localStateLoading;
   };
 
@@ -693,6 +695,11 @@ const AddCard = (props) => {
   };
   // const handleTokenPriceRatio = () => {};
   const currentButton = () => {
+
+    if (!connected) {
+      return "Connect Wallet"
+    }
+
     if (localStateLoading) {
       return "Please wait...";
     } else if (addStatus.disabled) {

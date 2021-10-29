@@ -27,7 +27,7 @@ export const connectWallet =
     async (dispatch) => {
       try {
         const accountAddress = await getCurrentAccount();
-        console.log("connect wallet", accountAddress);
+        // console.log("connect wallet", accountAddress);
         if (
           localStorage.getItem(`logout${accountAddress}`) === accountAddress &&
           !connect
@@ -41,15 +41,17 @@ export const connectWallet =
           connect
         ) {
           localStorage.removeItem(`logout${accountAddress}`);
-          console.log("removing logged out user");
+          // console.log("removing logged out user");
         }
-
+        // console.log('connect wallet is here')
         if (!accountAddress) {
           dispatch({
             type: DISCONNECT_WALLET,
           });
           return;
         }
+
+        // console.log('connect wallet is running  ', accountAddress)
         dispatch({
           type: CONNECT_WALLET,
           payload: accountAddress,
@@ -59,12 +61,12 @@ export const connectWallet =
         });
 
         if (network === etheriumNetwork) {
-          console.log("connectWallet: fetching from", network);
+          // console.log("connectWallet: fetching from", network);
           const [pbrWei, ethWei] = await Promise.all([
             pbrContract(network).methods.balanceOf(accountAddress).call(),
             getNetworkBalance(accountAddress),
           ]);
-          console.log("curr network bal ", ethWei);
+          // console.log("curr network bal ", ethWei);
 
           dispatch({
             type: LOAD_TOKEN_BALANCE,
@@ -80,7 +82,7 @@ export const connectWallet =
             pwarCoinContract(network).methods.balanceOf(accountAddress).call(),
             getNetworkBalance(accountAddress),
           ]);
-          console.log("curr network bal ", bnbWei);
+          // console.log("curr network bal ", bnbWei);
 
           dispatch({
             type: LOAD_TOKEN_BALANCE,
@@ -116,12 +118,12 @@ export const getAccountBalance = (token, network) => async (dispatch) => {
     );
 
     if (network === etheriumNetwork) {
-      console.log("connectWallet: fetching from", network);
+      // console.log("connectWallet: fetching from", network);
       const [tokenWei, ethWei] = await Promise.all([
         _tokenContract.methods.balanceOf(accountAddress).call(),
         getNetworkBalance(accountAddress),
       ]);
-      console.log("curr network bal ", ethWei);
+      // console.log("curr network bal ", ethWei);
       const balanceObject = {};
       balanceObject[token.symbol] = tokenWei;
       dispatch({
@@ -134,7 +136,7 @@ export const getAccountBalance = (token, network) => async (dispatch) => {
         pwarCoinContract(network).methods.balanceOf(accountAddress).call(),
         getNetworkBalance(accountAddress),
       ]);
-      console.log("curr network bal ", bnbWei);
+      // console.log("curr network bal ", bnbWei);
 
       dispatch({
         type: LOAD_TOKEN_BALANCE,
