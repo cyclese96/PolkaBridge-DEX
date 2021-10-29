@@ -240,8 +240,12 @@ export function handleSync(event: Sync): void {
   bundle.ethPrice = getEthPriceInUSD()
   bundle.save()
 
-  token0.derivedETH = findEthPerToken(token0 as Token)
-  token1.derivedETH = findEthPerToken(token1 as Token)
+  let token0DerivedETH = findEthPerToken(token0 as Token)
+  token0.derivedETH = token0DerivedETH
+
+  let token1DerivedETH = findEthPerToken(token1 as Token)
+  token1.derivedETH =token1DerivedETH
+
   token0.save()
   token1.save()
 

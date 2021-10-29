@@ -4,19 +4,25 @@ import { BigDecimal, Address, BigInt } from '@graphprotocol/graph-ts/index'
 import { ZERO_BD, factoryContract, ADDRESS_ZERO, ONE_BD, UNTRACKED_PAIRS } from './helpers'
 
 const WETH_ADDRESS = '0xc778417e063141139fce010982780140aa0cd5ab'
-const USDC_WETH_PAIR = '0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc' // created 10008355
-const DAI_WETH_PAIR = '0xa478c2975ab1ea89e8196811f51a7b7ade33eb11' // created block 10042267
-const USDT_WETH_PAIR = '0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852' // created block 10093341
-const USDT_WETH_PAIR_TEST = '0x117e41ec3ec246873d69bfa5659b8eb209e687d8' // 
+// const USDC_WETH_PAIR = '0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc' // created 10008355
+// const DAI_WETH_PAIR = '0xa478c2975ab1ea89e8196811f51a7b7ade33eb11' // created block 10042267
+const USDT_WETH_PAIR = '0xf0c8C846Fe1Ff60084F0c8fb03310Ea02e57Ed30' //'0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852' // created block 10093341
+
 
 export function getEthPriceInUSD(): BigDecimal {
   // fetch eth prices for each stablecoin
   // let daiPair = Pair.load(DAI_WETH_PAIR) // dai is token0
   // let usdcPair = Pair.load(USDC_WETH_PAIR) // usdc is token0
-  // let usdtPair = Pair.load(USDT_WETH_PAIR) // usdt is token1
+  let usdtPair = Pair.load( Address.fromString(USDT_WETH_PAIR).toHexString() ) // usdt is token1
 
-  // let usdtPairTest = Pair.load(USDT_WETH_PAIR_TEST) // token0 is usdt
 
+
+  //eth price only from usdt eth pair
+   if (usdtPair !== null) {
+    return usdtPair.token0Price
+  } else {
+    return BigDecimal.fromString('0') ;
+  }
 
   // all 3 have been created
   // if (daiPair !== null && usdcPair !== null && usdtPair !== null) {
@@ -45,14 +51,15 @@ export function getEthPriceInUSD(): BigDecimal {
   // } else {
   //   return ZERO_BD;
   // }
-  return BigDecimal.fromString('3500')
 }
 
 // token where amounts should contribute to tracked volume and liquidity
 let WHITELIST: string[] = [
   "0xc778417e063141139fce010982780140aa0cd5ab", //WETH_ADDRESS_TESTNET
-  "0x117e41ec3ec246873D69BFA5659B8eB209e687d8", // usdt testnet
-  "0xf6c9FF0543f932178262DF8C81A12A3132129b51"
+  "0x117e41ec3ec246873d69bfa5659b8eb209e687d8", // usdt testnet
+  "0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b", // usdc testnet
+  "0xcc521406C8F796169DCe1D10bDe6AaA60847FB63", // 1INCH testnet
+  "0xf6c9FF0543f932178262DF8C81A12A3132129b51" // pbr address testnet
   // '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', // WETH
   // '0x6b175474e89094c44da98b954eedeac495271d0f', // DAI
   // '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', // USDC
@@ -85,15 +92,15 @@ let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString('0')
  * Search through graph to find derived Eth per token.
  * @todo update to be derived ETH (add stablecoin estimates)
  **/
-export function findEthPerToken(token: Token): BigDecimal {
+ export function findEthPerToken(token: Token): BigDecimal {
   if (token.id == WETH_ADDRESS) {
     return ONE_BD
   }
   // loop through whitelist and check if paired with any
   for (let i = 0; i < WHITELIST.length; ++i) {
     let pairAddress = factoryContract.getPair(Address.fromString(token.id), Address.fromString(WHITELIST[i]))
-    if (pairAddress.toHex() != ADDRESS_ZERO) {
-      let pair = Pair.load(pairAddress.toHex())
+    if (pairAddress.toHexString() != ADDRESS_ZERO) {
+      let pair = Pair.load(pairAddress.toHexString())
       if (pair.token0 == token.id && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
         let token1 = Token.load(pair.token1)
         return pair.token1Price.times(token1.derivedETH as BigDecimal) // return token1 per our token * Eth per token 1
@@ -104,7 +111,7 @@ export function findEthPerToken(token: Token): BigDecimal {
       }
     }
   }
-  return ZERO_BD // nothing was found return 0
+  return BigDecimal.fromString('0') // nothing was found return 0
 }
 
 /**

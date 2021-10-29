@@ -10,7 +10,7 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-import { AutoRow, RowBetween, RowFixed } from "../../common/Styled/Row";
+import { AutoRow, RowBetween, RowFixed } from "../../../../common/Styled/Row";
 
 import {
   toK,
@@ -18,26 +18,26 @@ import {
   toNiceDateYear,
   formattedNum,
   getTimeframe,
-} from "../../../utils/timeUtils";
-import { OptionButton } from "../../common/Styled/ButtonStyled";
+} from "../../../../../utils/timeUtils";
+import { OptionButton } from "../../../../common/Styled/ButtonStyled";
 import { darken } from "polished";
 import { useMedia, usePrevious } from "react-use";
-import { timeframeOptions } from "../../../constants";
+import { timeframeOptions } from "../../../../../constants";
 import {
   useTokenChartData,
   useTokenPriceData,
-} from "../../../contexts/TokenData";
-import DropdownSelect from "../../common/Styled/DropdownSelect";
-import CandleStickChart from "../../common/Styled/CandleChart";
+} from "../../../../../contexts/TokenData";
+import DropdownSelect from "../../../../common/Styled/DropdownSelect";
+import CandleStickChart from "../../../../common/Styled/CandleChart";
 // import LocalLoader from '../LocalLoader'
-import { AutoColumn } from "../../common/Styled/Column";
+import { AutoColumn } from "../../../../common/Styled/Column";
 import { Activity } from "react-feather";
-import Loader from "../../common/Loader";
+import Loader from "../../../../common/Loader";
 import { Button } from "@material-ui/core";
 // import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 const ChartWrapper = styled.div`
-    height: 100%;
+  height: 100%;
   // height: 300px;
 
   @media screen and (max-width: 600px) {
@@ -72,14 +72,14 @@ const styles = {
     paddingBottom: 5,
     marginBottom: 10,
     border: "1px solid #616161",
-    color: 'white',
+    color: "white",
     background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
   },
 };
 const TokenChart = ({ address, color, base }) => {
   // settings for the window and candle width
-  const [chartFilter, setChartFilter] = useState(CHART_VIEW.PRICE);
-  const [frequency, setFrequency] = useState(DATA_FREQUENCY.HOUR);
+  const [chartFilter, setChartFilter] = useState(CHART_VIEW.LIQUIDITY);
+  const [frequency, setFrequency] = useState(DATA_FREQUENCY.LINE);
 
   const [darkMode, setDarkMode] = useState(true);
   const textColor = darkMode ? "white" : "black";
@@ -93,6 +93,7 @@ const TokenChart = ({ address, color, base }) => {
   }, [address, addressPrev]);
 
   let chartData = useTokenChartData(address);
+
 
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.WEEK);
   const prevWindow = usePrevious(timeWindow);
@@ -177,6 +178,15 @@ const TokenChart = ({ address, color, base }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, [isClient, width]); // Empty array ensures that effect is only run on mount and unmount
 
+
+  useEffect(() => {
+    console.log('tokenPage  chart data  ', { chartData, address, frequency, chartFilter, priceData })
+
+
+  }, [chartData])
+
+
+
   return (
     <ChartWrapper>
       {below600 ? (
@@ -206,8 +216,8 @@ const TokenChart = ({ address, color, base }) => {
           }
           align="flex-start"
         >
-          <AutoColumn gap="8px">
-            <RowFixed>
+          <div >
+            <div className="d-flex justify-content-center ">
               <Button
                 active={chartFilter === CHART_VIEW.LIQUIDITY}
                 onClick={() => setChartFilter(CHART_VIEW.LIQUIDITY)}
@@ -225,14 +235,14 @@ const TokenChart = ({ address, color, base }) => {
               <Button
                 active={chartFilter === CHART_VIEW.PRICE}
                 onClick={() => {
-                  console.log('analyticsTest: filter', CHART_VIEW.PRICE)
+                  console.log("analyticsTest: filter", CHART_VIEW.PRICE);
                   setChartFilter(CHART_VIEW.PRICE);
                 }}
                 style={styles.button}
               >
                 Price
               </Button>
-            </RowFixed>
+            </div>
             {chartFilter === CHART_VIEW.PRICE && (
               <AutoRow gap="4px">
                 {/* <Button
@@ -261,8 +271,8 @@ const TokenChart = ({ address, color, base }) => {
                 </Button>
               </AutoRow>
             )}
-          </AutoColumn>
-          <AutoRow justify="flex-end" gap="6px" align="flex-start">
+          </div>
+          {/* <AutoRow justify="flex-end" gap="6px" align="flex-start">
             <Button
               active={timeWindow === timeframeOptions.WEEK}
               onClick={() => setTimeWindow(timeframeOptions.WEEK)}
@@ -284,7 +294,7 @@ const TokenChart = ({ address, color, base }) => {
             >
               All
             </Button>
-          </AutoRow>
+          </AutoRow> */}
         </RowBetween>
       )}
       {chartFilter === CHART_VIEW.LIQUIDITY && chartData && (

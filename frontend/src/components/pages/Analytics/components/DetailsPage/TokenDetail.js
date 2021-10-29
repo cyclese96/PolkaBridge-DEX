@@ -6,21 +6,23 @@ import {
   useTokenPairs,
   useTokenPriceData,
   useTokenTransactions,
-} from "../../../contexts/TokenData";
+} from "../../../../../contexts/TokenData";
 import { useEffect } from "react/cjs/react.development";
 import { usePrevious } from "react-use";
-import { useAllPairData, useDataForList } from "../../../contexts/PairData";
-import { formatCurrency, formattedNum } from "../../../utils/formatters";
-import { formattedPercent } from "../../../utils/timeUtils";
-import TokenLogo from "../../common/Styled/TokenLogo";
-import TokenIcon from "../../common/TokenIcon";
+import {
+  useAllPairData,
+  useDataForList,
+} from "../../../../../contexts/PairData";
+import { formatCurrency, formattedNum } from "../../../../../utils/formatters";
+import { formattedPercent } from "../../../../../utils/timeUtils";
+import TokenLogo from "../../../../common/Styled/TokenLogo";
+import TokenIcon from "../../../../common/TokenIcon";
 import { Link } from "react-router-dom";
 // import { formatCurrency } from "../../../utils/helper";
-import TokenChart from "./TokenChart";
+import TokenChart from "../../components/Charts/TokenChart";
 import { Button, Card } from "@material-ui/core";
-import TopTokens from "./TopTokens";
 import { FileCopyOutlined, OpenInNew } from "@material-ui/icons";
-import { currentConnection } from "../../../constants";
+import { currentConnection } from "../../../../../constants";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -96,7 +98,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardChangeIndicator: {
     color: "green",
-    fontSize: 12,
+    fontSize: 13,
   },
   chartsCard: {
     height: "100%",
@@ -132,7 +134,7 @@ const useStyles = makeStyles((theme) => ({
     width: 200,
     height: 40,
     textTransform: "none",
-    fontSize: 16,
+    fontSize: 15,
     borderRadius: 10,
 
     [theme.breakpoints.down("sm")]: {
@@ -172,18 +174,13 @@ function TokenPage({ address }) {
     totalLiquidityUSD,
     volumeChangeUSD,
     oneDayVolumeUT,
-    volumeChangeUT,
-    priceChangeUSD,
     liquidityChangeUSD,
-    oneDayTxns,
-    txnChange,
+    priceChangeUSD,
   } = useTokenData(address);
 
-  // const allPairs = useTokenPairs(address); // todo: fix api
-  const allPairs = useAllPairData(); // testing
-
+  let hello = useTokenData(address);
+  console.log(hello);
   useEffect(() => {
-    // console.log("allPairs", allPairs);
     document.querySelector("body").scrollTo(0, 0);
   }, []);
 
@@ -194,16 +191,6 @@ function TokenPage({ address }) {
     });
   }, []);
 
-  // pairs to show in pair list
-  const fetchedPairsList = useDataForList(allPairs);
-
-  // all transactions with this token
-  const transactions = useTokenTransactions(address);
-
-  // price
-  const price = priceUSD ? formattedNum(priceUSD, true) : "";
-  const priceChange = priceChangeUSD ? formattedPercent(priceChangeUSD) : "";
-
   // volume
   const volume = formattedNum(
     !!oneDayVolumeUSD ? oneDayVolumeUSD : oneDayVolumeUT,
@@ -211,17 +198,8 @@ function TokenPage({ address }) {
   );
 
   const usingUtVolume = oneDayVolumeUSD === 0 && !!oneDayVolumeUT;
-  const volumeChange = formattedPercent(
-    !usingUtVolume ? volumeChangeUSD : volumeChangeUT
-  );
-
-  // liquidity
-  const liquidity = formattedNum(totalLiquidityUSD, true);
-  const liquidityChange = formattedPercent(liquidityChangeUSD);
 
   const fee = formattedNum(oneDayVolumeUSD * 0.025, true);
-  // transactions
-  const txnChangeFormatted = formattedPercent(txnChange);
 
   const classes = useStyles();
   return (
@@ -229,7 +207,7 @@ function TokenPage({ address }) {
       <div className={classes.background}>
         <div for="breadcrumbs" className={classes.breadcrumbs}>
           <h6 className={classes.breadcrumbsTitle}>
-            Tokens →{" "}
+            <Link to="/charts">Tokens </Link>→{" "}
             <span>
               {symbol}
               <a
@@ -253,10 +231,11 @@ function TokenPage({ address }) {
             <span style={{ paddingRight: 15 }}>({symbol})</span>
             <span>${formatCurrency(priceUSD)}</span>
             <span className={classes.changeIndicator}>
-              ${formatCurrency(priceUSD)}
+              {parseFloat(priceChangeUSD).toFixed(0)} %
             </span>
           </h1>
         </div>
+
         <div for="token-stats">
           <h6 className={classes.sectionTitle}>Token Statistics</h6>
           <div className="row">
@@ -268,7 +247,7 @@ function TokenPage({ address }) {
                     {formatCurrency(totalLiquidityUSD)}
                   </h6>
                   <p className={classes.cardChangeIndicator}>
-                    {liquidityChangeUSD}%
+                    {parseFloat(liquidityChangeUSD).toFixed(2)}%
                   </p>
                 </div>
               </Card>
@@ -277,7 +256,7 @@ function TokenPage({ address }) {
                 <div className="d-flex justify-content-between">
                   <h6 className={classes.cardValue}>{volume}</h6>
                   <p className={classes.cardChangeIndicator}>
-                    {volumeChangeUSD}%
+                    {parseFloat(volumeChangeUSD).toFixed(2)}%
                   </p>
                 </div>
               </Card>
@@ -286,7 +265,7 @@ function TokenPage({ address }) {
                 <div className="d-flex justify-content-between">
                   <h6 className={classes.cardValue}>{fee}</h6>
                   <p className={classes.cardChangeIndicator}>
-                    {volumeChangeUSD}%
+                    {parseFloat(volumeChangeUSD).toFixed(2)}%
                   </p>
                 </div>
               </Card>
@@ -304,17 +283,7 @@ function TokenPage({ address }) {
             </div>
           </div>
         </div>
-        <div for="transaction-table" className="mt-5">
-          <h6 className={classes.sectionTitle}>Top Pairs</h6>
-          <div>
-            <div className={classes.tokenList}>
-              <TopTokens
-                tableType="TopPools"
-                allPairs={!allPairs ? {} : allPairs}
-              />
-            </div>
-          </div>
-        </div>
+
         <div for="token-information" className="mt-5">
           <h6 className={classes.sectionTitle}>Token Information </h6>
           <div>
@@ -332,7 +301,8 @@ function TokenPage({ address }) {
                   <div className={classes.detailsBox}>
                     <h5 className={classes.detailTitle}>Address</h5>
                     <h6 className={classes.detailValue}>
-                      {!id ? "" : id}{" "}
+                      {!id ? "" : [...id].splice(0, 3)}...
+                      {!id ? "" : [...id].splice(id.length - 6, 6)}{" "}
                       <span>
                         <FileCopyOutlined
                           className={classes.copyIcon}
@@ -354,7 +324,8 @@ function TokenPage({ address }) {
                     target="_blank"
                   >
                     <Button className={classes.openButton}>
-                      View On Explorer <OpenInNew />
+                      View on explorer{" "}
+                      <OpenInNew style={{ fontSize: 20, marginLeft: 5 }} />
                     </Button>
                   </a>
                 </div>

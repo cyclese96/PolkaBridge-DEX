@@ -1,12 +1,16 @@
-import { ApolloClient } from 'apollo-client'
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import { HttpLink } from 'apollo-link-http'
+import { ApolloClient } from "apollo-client";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import { HttpLink } from "apollo-link-http";
 // import { HttpLink } from 'apollo-link-http'
 // const APIURL =
 // "https://gateway.thegraph.com/api/584823fe20b487773537ceae7d79941b/subgraphs/id/0x4bb4c1b0745ef7b4642feeccd0740dec417ca0a0-0";
-const APIURL = "https://api.studio.thegraph.com/query/2992/pbr-dex/2.3";
-const BLOCKS_API_TESTNET = "https://api.studio.thegraph.com/query/8207/rinkeby-blocks/0.0.1";
-const BLOCKS_API_MAINNET = 'https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks';
+// const APIURL = "https://api.studio.thegraph.com/query/8207/amm/0.8.1.2"; // oldsubgraph working price api
+// const APIURL = "https://api.studio.thegraph.com/query/2992/pbr-dex/2.3"//last recent factory
+const APIURL = "https://api.studio.thegraph.com/query/8207/amm/0.9.8"; // current latest subgraph
+const BLOCKS_API_TESTNET =
+  "https://api.studio.thegraph.com/query/8207/rinkeby-blocks/0.0.1";
+const BLOCKS_API_MAINNET =
+  "https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks";
 // const tokensQuery = `
 //   query {
 //     tokens {
@@ -31,21 +35,18 @@ const BLOCKS_API_MAINNET = 'https://api.thegraph.com/subgraphs/name/blocklytics/
 
 export const healthClient = new ApolloClient({
   link: new HttpLink({
-    uri: 'https://api.thegraph.com/index-node/graphql',
+    uri: "https://api.thegraph.com/index-node/graphql",
   }),
   cache: new InMemoryCache(),
   shouldBatch: true,
-})
-
+});
 
 export const blockClient = new ApolloClient({
   link: new HttpLink({
     uri: BLOCKS_API_TESTNET,
   }),
   cache: new InMemoryCache(),
-})
-
-
+});
 
 export const client = new ApolloClient({
   link: new HttpLink({
@@ -53,6 +54,6 @@ export const client = new ApolloClient({
   }),
   cache: new InMemoryCache(),
   shouldBatch: true,
-})
+});
 
 // export default client;

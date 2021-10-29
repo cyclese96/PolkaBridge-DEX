@@ -6,10 +6,8 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import SwapCard from "./Cards/SwapCard";
 import AddLiquidity from "./pages/AddLiquidity";
-import Analytics from "./pages/Analytics";
+import Analytics from "./pages/Analytics/Analytics";
 import { Link } from "react-router-dom";
-
-
 
 const useStyles = makeStyles((theme) => ({
   tabs: {
@@ -53,19 +51,13 @@ function TabPanel(props) {
   );
 }
 
-
-
-
 export default function TabPage({ data = 1 }) {
   const classes = useStyles();
-
-
 
   return (
     <>
       <Tabs
         value={data}
-
         TabIndicatorProps={{
           style: {
             backgroundColor: "#E0077D",
@@ -74,7 +66,7 @@ export default function TabPage({ data = 1 }) {
         centered
         className={classes.tabs}
       >
-        <Link to='/'>
+        <Link to="/">
           <Tab
             className={
               data === 0 ? classes.active_tabStyle : classes.default_tabStyle
@@ -82,7 +74,7 @@ export default function TabPage({ data = 1 }) {
             label="Swap"
           />
         </Link>
-        <Link to='/liquidity'>
+        <Link to="/liquidity">
           <Tab
             className={
               data === 1 ? classes.active_tabStyle : classes.default_tabStyle
@@ -90,7 +82,7 @@ export default function TabPage({ data = 1 }) {
             label="Pool"
           />
         </Link>
-        <Link to='/charts'>
+        <Link to="/charts">
           <Tab
             className={
               data === 2 ? classes.active_tabStyle : classes.default_tabStyle
@@ -98,9 +90,6 @@ export default function TabPage({ data = 1 }) {
             label="Charts"
           />
         </Link>
-
-
-
       </Tabs>
 
       <TabPanel data={0} index={0}>
@@ -110,9 +99,7 @@ export default function TabPage({ data = 1 }) {
         <AddLiquidity />
       </TabPanel>
       <TabPanel data={2} index={2}>
-
         <Analytics />
-
       </TabPanel>
     </>
   );

@@ -1,8 +1,7 @@
 import React, { useEffect } from "react";
 import useStyles from "./styles";
-import TopTokens from "./TopTokens";
-import BarChart from "./BarChart";
-import AreaChart from "./AreaChart";
+import BarChart from "./components/Charts/BarChart";
+import AreaChart from "./components/Charts/AreaChart";
 import PercentLabel from "../../common/PercentLabel";
 import { Card } from "@material-ui/core";
 import {
@@ -13,31 +12,14 @@ import {
 import { formattedPercent } from "../../../utils/timeUtils";
 import { useAllTokenData } from "../../../contexts/TokenData";
 import { useAllPairData } from "../../../contexts/PairData";
-// import { formatCurrency } from "../../../utils/helper";
 import Loader from "../../common/Loader";
 import TabPage from "../../TabPage";
 import { formatCurrency } from "../../../utils/formatters";
 import BigNumber from "bignumber.js";
+import TopTokensTable from "./components/Tables/TopTokensTable";
+import TopPoolsTable from "./components/Tables/TopPoolsTable";
+import Transactions from "./components/Tables/TransactionsTable";
 
-// globalData ->
-// {
-//   "id": "0xA1853078D1447C0060c71a672E6D13882f61A0a6",
-//   "totalVolumeUSD": "25990.233499252762817",
-//   "totalVolumeETH": "7.425780999786503662",
-//   "untrackedVolumeUSD": "28387.02699820012448427415396166343",
-//   "totalLiquidityUSD": 113078.18050507178,
-//   "totalLiquidityETH": "32.30805157287764869",
-//   "txCount": "59",
-//   "pairCount": 5,
-//   "__typename": "PolkabridgeAmmFactory",
-//   "oneDayVolumeUSD": 437.8250777427784,
-//   "oneWeekVolume": 2611.150077742779,
-//   "weeklyVolumeChange": -85.87440846623471,
-//   "volumeChangeUSD": 0,
-//   "liquidityChangeUSD": 5.726158284194191,
-//   "oneDayTxns": 2,
-//   "txnChange": 0
-// }
 const Analytics = () => {
   const classes = useStyles();
 
@@ -48,9 +30,26 @@ const Analytics = () => {
 
   const chartData = useGlobalChartData();
 
-  useEffect(() => {
-    console.log("analyticsTest:  globalData load ", globalData);
-  }, [globalData]);
+  const isValidGlobalChart = (_chartData, _globalData) => {
+    let areaChartPrepared = false;
+    let barChartPrepared = false;
+    let globalDataLoaded = false;
+
+    if (_chartData && chartData[0].length === 7) {
+      areaChartPrepared = true;
+    }
+
+    if (_chartData && chartData[0].length === 7) {
+      barChartPrepared = true;
+    }
+
+    if (globalData) {
+      globalDataLoaded = true;
+    }
+
+    return { areaChartPrepared, barChartPrepared, globalDataLoaded };
+  };
+
   return (
     <div>
       <div className="mb-3">
@@ -65,9 +64,14 @@ const Analytics = () => {
               <div>
                 <span className={classes.cardSpan}>Total value locked</span>
                 <p className={classes.cardP}>
-                  {"$" + formatCurrency(globalData.totalLiquidityUSD)}
+                  {"$" +
+                    formatCurrency(
+                      !globalData ? "0" : globalData.totalLiquidityUSD
+                    )}
                   <small>
-                    {formattedPercent(globalData.liquidityChangeUSD)}
+                    {formattedPercent(
+                      !globalData ? "0" : globalData.liquidityChangeUSD
+                    )}
                   </small>
                 </p>
                 <div className={classes.chart}>
@@ -91,8 +95,15 @@ const Analytics = () => {
               <div>
                 <span className={classes.cardSpan}>Volume 24H</span>
                 <p className={classes.cardP}>
-                  {"$" + formatCurrency(globalData.oneDayVolumeUSD)}
-                  <small>{formattedPercent(globalData.volumeChangeUSD)}</small>
+                  {"$" +
+                    formatCurrency(
+                      !globalData ? "0" : globalData.oneDayVolumeUSD
+                    )}
+                  <small>
+                    {formattedPercent(
+                      !globalData ? "0" : globalData.volumeChangeUSD
+                    )}
+                  </small>
                 </p>
                 <div className={classes.chart}>
                   <BarChart chartData={chartData ? chartData[0] : []} />
@@ -152,37 +163,26 @@ const Analytics = () => {
         )}
       </div>
 
-      <div className={classes.tokenList}>
-        <div style={{ padding: 10 }}>
-          <div className={classes.tokenListHeading}>Top Tokens</div>
-          <TopTokens
-            tableType="TopTokens"
-            allTokens={allTokens ? allTokens : {}}
-          />
+      <div className="p-2">
+        <div className={classes.tokenListHeading}>Top Tokens</div>
+        <div className="d-flex justify-content-center ">
+          <TopTokensTable data={allTokens} />
         </div>
       </div>
 
-      <div className={classes.tokenList}>
-        <div style={{ padding: 10 }}>
-          <div className={classes.tokenListHeading}>Top Pools</div>
-          <TopTokens tableType="TopPools" allPairs={allPairs ? allPairs : {}} />
+      <div className="p-2">
+        <div className={classes.tokenListHeading}>Top Pools</div>
+        <div className="d-flex justify-content-center">
+          <TopPoolsTable data={allPairs} />
         </div>
       </div>
 
-      <div className={classes.tokenList}>
-        <div style={{ padding: 10 }}>
-          <div className={classes.tokenListHeading}>Transactions</div>
-          <TopTokens
-            tableType="Transactions"
-            allTransactions={transactions ? transactions : {}}
-          />
+      <div className="p-2">
+        <div className={classes.tokenListHeading}>Transactions</div>
+        <div className="d-flex justify-content-center">
+          <Transactions data={transactions} />
         </div>
       </div>
-      <div className="mb-5"></div>
-      {/* 
-
-    
-    */}
     </div>
   );
 };
