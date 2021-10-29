@@ -259,7 +259,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const RemoveCard = ({
-  account: { balance, loading, currentNetwork, currentAccount },
+  account: { balance, loading, currentNetwork, currentAccount, connected },
   dex: {
     lpApproved,
     lpBalance,
@@ -658,9 +658,9 @@ const RemoveCard = ({
               <div className="d-flex justify-content-center">
                 <CircularProgress className={classes.spinner} size={30} />
               </div>
-            ) : new BigNumber(priceRatio1()).eq(0) ? (
+            ) : new BigNumber(priceRatio1()).eq(0) && !connected ? (
               <div className="d-flex justify-content-center">
-                <span>No liquidity available for selected pool</span>
+                <span>{connected ? "No liquidity available for selected pool" : "Connect wallet first"}</span>
               </div>
             ) : (
               <>

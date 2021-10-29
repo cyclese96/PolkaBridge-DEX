@@ -39,7 +39,7 @@ import {
   getToken1OutAmount,
   loadPairAddress,
 } from "../../actions/dexActions";
-import { getAccountBalance } from "../../actions/accountActions";
+import { connectWallet, getAccountBalance } from "../../actions/accountActions";
 import SwapConfirm from "../common/SwapConfirm";
 import debounce from "lodash.debounce";
 import { getPairAddress } from "../../utils/connectionUtils";
@@ -193,7 +193,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SwapCard = (props) => {
   const {
-    account: { currentNetwork, currentAccount, loading, balance },
+    account: { currentNetwork, currentAccount, loading, balance, connected },
     dex: { approvedTokens, poolReserves, pairContractData, transaction, token0In, token1Out, priceLoading },
     checkAllowance,
     confirmAllowance,
@@ -666,6 +666,11 @@ const SwapCard = (props) => {
   };
 
   const disableStatus = () => {
+
+    if (!connected) {
+      return true;
+    }
+
     return swapStatus.disabled || localStateLoading || priceLoading;
   };
 
@@ -678,6 +683,11 @@ const SwapCard = (props) => {
   };
   // const handleTokenPriceRatio = () => {};
   const currentButton = () => {
+
+    if (!connected) {
+      return "Connect Wallet"
+    }
+
     if (localStateLoading || priceLoading) {
       return "Please wait...";
     } else if (swapStatus.disabled) {

@@ -70,7 +70,7 @@ import {
 export const swapTokens =
   (token0, token1, deadline, currentSwapFn, currenSwapPath, account, network) => async (dispatch) => {
     try {
-      console.log("swapExactEthForTokens");
+      // console.log("swapExactEthForTokens");
       const _routerContract = routerContract(network);
 
       const token0In = token0.amount;
@@ -87,12 +87,12 @@ export const swapTokens =
       });
       dispatch({ type: START_TRANSACTION })
 
-      console.log("swapTokens:  inputs -->", { token0In, token1In, token0Min, token1Min, path, toAddress, _deadlineUnix, currentSwapFn })
+      // console.log("swapTokens:  inputs -->", { token0In, token1In, token0Min, token1Min, path, toAddress, _deadlineUnix, currentSwapFn })
 
 
       let swapPromise;
       if (currentSwapFn === swapFnConstants.swapExactETHForTokens) {//case 1
-        console.log('swapTokens:  case 1 swapExactETHForTokens')
+        // console.log('swapTokens:  case 1 swapExactETHForTokens')
         swapPromise = _routerContract.methods
           .swapExactETHForTokens(
             token1Min,
@@ -101,7 +101,7 @@ export const swapTokens =
             _deadlineUnix
           ).send({ from: account, value: token0In }, function (error, transactionHash) {
 
-            console.log('swapTokens: UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+            // console.log('swapTokens: UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
               dispatch({
                 type: UPDATE_TRANSACTION_STATUS,
@@ -117,7 +117,7 @@ export const swapTokens =
           })
 
       } else if (currentSwapFn === swapFnConstants.swapETHforExactTokens) { // case 2
-        console.log('swapTokens:  case 2 swapETHforExactTokens')
+        // console.log('swapTokens:  case 2 swapETHforExactTokens')
         swapPromise = _routerContract.methods
           .swapExactETHForTokens(
             token1Min,
@@ -126,7 +126,7 @@ export const swapTokens =
             _deadlineUnix
           ).send({ from: account, value: token0In }, function (error, transactionHash) {
 
-            console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+            // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
               dispatch({
                 type: UPDATE_TRANSACTION_STATUS,
@@ -142,7 +142,7 @@ export const swapTokens =
           })
 
       } else if (currentSwapFn === swapFnConstants.swapExactTokensForETH) { // case 3
-        console.log('swapTokens:  case 3 swapExactTokensForETH')
+        // console.log('swapTokens:  case 3 swapExactTokensForETH')
 
         swapPromise = _routerContract.methods
           .swapExactTokensForETH(
@@ -153,7 +153,7 @@ export const swapTokens =
             _deadlineUnix
           ).send({ from: account }, function (error, transactionHash) {
 
-            console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+            // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
               dispatch({
                 type: UPDATE_TRANSACTION_STATUS,
@@ -169,7 +169,7 @@ export const swapTokens =
           })
 
       } else if (currentSwapFn === swapFnConstants.swapTokensForExactETH) { // case 4
-        console.log('swapTokens:  case 4 swapTokensForExactETH')
+        // console.log('swapTokens:  case 4 swapTokensForExactETH')
 
         swapPromise = _routerContract.methods
           .swapExactTokensForETH(
@@ -180,7 +180,7 @@ export const swapTokens =
             _deadlineUnix
           ).send({ from: account }, function (error, transactionHash) {
 
-            console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+            // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
               dispatch({
                 type: UPDATE_TRANSACTION_STATUS,
@@ -196,7 +196,7 @@ export const swapTokens =
           })
 
       } else if (currentSwapFn === swapFnConstants.swapExactTokensForTokens) { // case 5
-        console.log('swapTokens:  case 5 swapExactTokensForTokens')
+        // console.log('swapTokens:  case 5 swapExactTokensForTokens')
 
         swapPromise = _routerContract.methods
           .swapExactTokensForTokens(
@@ -207,7 +207,7 @@ export const swapTokens =
             _deadlineUnix
           ).send({ from: account }, function (error, transactionHash) {
 
-            console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+            // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
               dispatch({
                 type: UPDATE_TRANSACTION_STATUS,
@@ -223,7 +223,7 @@ export const swapTokens =
           })
 
       } else { // case 6 swapTokensForExactTokens
-        console.log('swapTokens:  case 6 swapTokensForExactTokens')
+        // console.log('swapTokens:  case 6 swapTokensForExactTokens')
 
         swapPromise = _routerContract.methods
           .swapExactTokensForTokens(
@@ -234,7 +234,7 @@ export const swapTokens =
             _deadlineUnix
           ).send({ from: account }, function (error, transactionHash) {
 
-            console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+            // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
               dispatch({
                 type: UPDATE_TRANSACTION_STATUS,
@@ -262,7 +262,7 @@ export const swapTokens =
 
         }).on("error", async function (error) {
 
-          console.log('UPDATE_TRANSACTION_STATUS error', error)
+          // console.log('UPDATE_TRANSACTION_STATUS error', error)
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: { type: 'swap', status: 'failed' }
@@ -378,7 +378,7 @@ export const addLiquidity =
         )
         .send({ from: account }, function (error, transactionHash) {
 
-          console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+          // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
           if (error) {
             dispatch({
               type: UPDATE_TRANSACTION_STATUS,
@@ -393,7 +393,7 @@ export const addLiquidity =
 
         }).on('receipt', async function (receipt) {
 
-          console.log('UPDATE_TRANSACTION_STATUS', receipt)
+          // console.log('UPDATE_TRANSACTION_STATUS', receipt)
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: { type: 'add', status: 'success', result: { token0, token1 } }
@@ -401,7 +401,7 @@ export const addLiquidity =
 
         }).on("error", async function (error) {
 
-          console.log('UPDATE_TRANSACTION_STATUS error', error)
+          // console.log('UPDATE_TRANSACTION_STATUS error', error)
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: { type: 'add', status: 'failed' }
@@ -432,7 +432,7 @@ export const addLiquidityEth =
       // console.log({ token0: ethToken, token1: erc20Token });
       // const _tokenContract = getTokenContract(network, erc20Token.symbol);
       const _routerContract = routerContract(network);
-      console.log('addLiquidityEth')
+      // console.log('addLiquidityEth')
       dispatch({
         type: SHOW_LOADING,
       });
@@ -466,7 +466,7 @@ export const addLiquidityEth =
         )
         .send({ from: account, value: toWei(etherAmount) }, function (error, transactionHash) {
 
-          console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+          // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
           if (error) {
             dispatch({
               type: UPDATE_TRANSACTION_STATUS,
@@ -481,7 +481,7 @@ export const addLiquidityEth =
 
         }).on('receipt', async function (receipt) {
 
-          console.log('UPDATE_TRANSACTION_STATUS', receipt)
+          // console.log('UPDATE_TRANSACTION_STATUS', receipt)
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: { type: 'add', status: 'success', result: { token0: ethToken, token1: erc20Token } }
@@ -489,7 +489,7 @@ export const addLiquidityEth =
 
         }).on("error", async function (error) {
 
-          console.log('UPDATE_TRANSACTION_STATUS error', error)
+          // console.log('UPDATE_TRANSACTION_STATUS error', error)
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: { type: 'add', status: 'failed' }
@@ -554,7 +554,7 @@ export const removeLiquidity =
           )
           .send({ from: account }, function (error, transactionHash) {
 
-            console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+            // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
               dispatch({
                 type: UPDATE_TRANSACTION_STATUS,
@@ -569,7 +569,7 @@ export const removeLiquidity =
 
           }).on('receipt', async function (receipt) {
 
-            console.log('UPDATE_TRANSACTION_STATUS', receipt)
+            // console.log('UPDATE_TRANSACTION_STATUS', receipt)
             dispatch({
               type: UPDATE_TRANSACTION_STATUS,
               payload: { type: 'remove', status: 'success', result: { token0, token1, lpAmount } }
@@ -577,7 +577,7 @@ export const removeLiquidity =
 
           }).on("error", async function (error) {
 
-            console.log('UPDATE_TRANSACTION_STATUS error', error)
+            // console.log('UPDATE_TRANSACTION_STATUS error', error)
             dispatch({
               type: UPDATE_TRANSACTION_STATUS,
               payload: { type: 'remove', status: 'failed' }
@@ -619,7 +619,7 @@ export const removeLiquidityEth =
         const tokenAmountMin = "0";
         const lpTokenAmount = lpAmount;
 
-        console.log({ ethToken, erc20Token, lpAmount })
+        // console.log({ ethToken, erc20Token, lpAmount })
         // deadline should be passed in minites in calculation
         const _deadlineUnix = getUnixTime(deadline);
 
@@ -635,7 +635,7 @@ export const removeLiquidityEth =
           )
           .send({ from: account }, function (error, transactionHash) {
 
-            console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
+            // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
               dispatch({
                 type: UPDATE_TRANSACTION_STATUS,
@@ -650,7 +650,7 @@ export const removeLiquidityEth =
 
           }).on('receipt', async function (receipt) {
 
-            console.log('UPDATE_TRANSACTION_STATUS', receipt)
+            // console.log('UPDATE_TRANSACTION_STATUS', receipt)
             dispatch({
               type: UPDATE_TRANSACTION_STATUS,
               payload: { type: 'remove', status: 'success', result: { token0: ethToken, token1: erc20Token, lpToken: lpTokenAmount } }
@@ -658,7 +658,7 @@ export const removeLiquidityEth =
 
           }).on("error", async function (error) {
 
-            console.log('UPDATE_TRANSACTION_STATUS error', error)
+            // console.log('UPDATE_TRANSACTION_STATUS error', error)
             dispatch({
               type: UPDATE_TRANSACTION_STATUS,
               payload: { type: 'remove', status: 'failed' }
@@ -666,7 +666,7 @@ export const removeLiquidityEth =
 
           });
 
-        console.log(rmLiquidity);
+        // console.log(rmLiquidity);
       } catch (error) {
         console.log("removeLiquidityEth: ", error);
       }
@@ -679,7 +679,7 @@ export const removeLiquidityEth =
 // token: { symbol, name, address, abi }
 export const checkAllowance = (token, account, network) => async (dispatch) => {
   try {
-    console.log("checking allowance", token);
+    // console.log("checking allowance", token);
     // const _tokenContract = token.imported
     //   ? tokenContract(token.address, token.abi, network)
     //   : getTokenContract(network, token.symbol);
@@ -700,7 +700,7 @@ export const checkAllowance = (token, account, network) => async (dispatch) => {
       .allowance(account, _routerContract._address)
       .call();
 
-    console.log("allowance ", tokenAllowance);
+    // console.log("allowance ", tokenAllowance);
     if (new BigNumber(tokenAllowance).gt(0)) {
       dispatch({
         type: APPROVE_TOKEN,
@@ -730,7 +730,7 @@ export const confirmAllowance =
       // const _tokenContract = token.imported
       //   ? tokenContract(token.address, token.abi, network)
       //   : getTokenContract(network, token.symbol);
-      console.log("token", token);
+      // console.log("token", token);
       const _tokenContract = tokenContract(token.address, network);
 
       const _routerContract = routerContract(network);
@@ -746,7 +746,7 @@ export const confirmAllowance =
         type: APPROVE_TOKEN,
         payload: { symbol: token.symbol, status: true },
       });
-      console.log("allowance confirmed ", tokenAllowance);
+      // console.log("allowance confirmed ", tokenAllowance);
     } catch (error) {
       console.log("confirmAllowance ", error);
       dispatch({
@@ -785,7 +785,7 @@ export const checkLpAllowance =
           payload: { pair: `${token1.symbol}_${token2.symbol}`, status: false },
         });
       }
-      console.log("lp allowance ", lpAllowance);
+      // console.log("lp allowance ", lpAllowance);
     } catch (error) {
       console.log("checkLpAllowance ", error);
       dispatch({
@@ -815,7 +815,7 @@ export const confirmLPAllowance =
         type: APPROVE_LP_TOKENS,
         payload: { pair: `${token1.symbol}_${token2.symbol}`, status: true },
       });
-      console.log("allowance confirmed ", lpAllowance);
+      // console.log("allowance confirmed ", lpAllowance);
     } catch (error) {
       console.log("confirmAllowance ", error);
       dispatch({
@@ -870,7 +870,7 @@ export const importToken = (address, account, network) => async (dispatch) => {
       fetchTokenInfo(address),
     ]);
 
-    console.log("token info received ", tokenInfoData);
+    // console.log("token info received ", tokenInfoData);
     let tokenInfo = {};
     if (tokenInfoData.status === '0') {
       tokenInfo = {
@@ -951,7 +951,7 @@ export const getToken1OutAmount = (token0, token1, account, network) => async (d
       totalSupply = pairReserveRes.totalSupply;
       lpBalance = pairReserveRes.lpBalance;
     }
-    console.log({ reserve, totalSupply, lpBalance })
+    // console.log({ reserve, totalSupply, lpBalance })
 
     // { reserve, totalSupply, lpBalance } = {pairReserveRes}
 
@@ -1283,7 +1283,7 @@ export const getLpBalance =
           amount: _lpBalance,
         },
       });
-      console.log("lpBalance ", { lpBalance, _lpBalance });
+      // console.log("lpBalance ", { lpBalance, _lpBalance });
     } catch (error) {
       console.log("lpBalance ", error);
       dispatch({
