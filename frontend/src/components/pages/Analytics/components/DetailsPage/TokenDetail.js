@@ -179,11 +179,7 @@ function TokenPage({ address }) {
     txnChange,
   } = useTokenData(address);
 
-  // const allPairs = useTokenPairs(address); // todo: fix api
-  const allPairs = useAllPairData(); // testing
-
   useEffect(() => {
-    // console.log("allPairs", allPairs);
     document.querySelector("body").scrollTo(0, 0);
   }, []);
 
@@ -193,9 +189,6 @@ function TokenPage({ address }) {
       top: 0,
     });
   }, []);
-
-  // pairs to show in pair list
-  const fetchedPairsList = useDataForList(allPairs);
 
   // volume
   const volume = formattedNum(
@@ -250,6 +243,7 @@ function TokenPage({ address }) {
             </span>
           </h1>
         </div>
+
         <div for="token-stats">
           <h6 className={classes.sectionTitle}>Token Statistics</h6>
           <div className="row">

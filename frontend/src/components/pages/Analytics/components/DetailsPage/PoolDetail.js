@@ -301,7 +301,7 @@ function PoolDetail({ pairAddress }) {
                 size={20}
               />{" "}
               {poolInfo.token0?.symbol} ={" "}
-              {parseFloat(poolInfo.token0Price).toFixed(2)}{" "}
+              {parseFloat(poolInfo.token0Price).toFixed(6)}{" "}
               {poolInfo.token1?.symbol}
             </div>
             <div className={classes.ratioCard}>
@@ -313,7 +313,7 @@ function PoolDetail({ pairAddress }) {
                 size={20}
               />{" "}
               {poolInfo.token1?.symbol} ={" "}
-              {parseFloat(poolInfo.token1Price).toFixed(2)}{" "}
+              {parseFloat(poolInfo.token1Price).toFixed(6)}{" "}
               {poolInfo.token0?.symbol}
             </div>
           </div>{" "}
