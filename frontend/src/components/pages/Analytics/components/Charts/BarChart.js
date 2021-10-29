@@ -16,42 +16,6 @@ const chartEvent = (
   }
 };
 
-// const state = {
-//   options: {
-//     chart: {
-//       id: "basic-bar",
-//       toolbar: {
-//         show: false,
-//       },
-//     },
-//     dataLabels: {
-//       enabled: false,
-//     },
-//     colors: ["#E0077D"],
-//     xaxis: {
-//       type: "datetime",
-//       // min: 1,
-//       // tickAmount: 5,
-//       // categories: [
-//       //   // 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 16, 17, 18, 19,
-//       //   // 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
-//       // ],
-//     },
-//     tooltip: {
-//       theme: "dark",
-//     },
-//   },
-//   series: [
-//     {
-//       name: "Volume",
-//       data: [
-//         // 30, 40, 45, 50, 49, 60, 70, 91, 30, 40, 45, 50, 49, 60, 70, 91, 30, 40,
-//         // 45, 50, 49, 60, 70, 91,
-//       ],
-//     },
-//   ],
-// };
-
 const state = {
   options: {
     chart: {
@@ -94,7 +58,7 @@ const state = {
           yAxisIndex: 0,
           label: {
             show: true,
-            // text: "Rally",
+            text: "Volume",
             style: {
               color: "#fff",
               background: "#775DD0",
@@ -112,7 +76,7 @@ const state = {
     },
     xaxis: {
       type: "datetime",
-      // min: new Date("01 Mar 2012").getTime(),
+      // min: new Date("10 Aug 2021").getTime(),
       // tickAmount: 4,
     },
     tooltip: {
@@ -135,7 +99,7 @@ const state = {
   selection: "all",
   series: [
     {
-      name: "Volume USD",
+      name: "Volume(USD)",
       data: [],
     },
   ],
@@ -148,6 +112,7 @@ const BarChart = ({ chartData }) => {
 
   useEffect(() => {
     if (chartData !== dataPrev && chartData) {
+      console.log(chartData);
       const _series =
         chartData.length > 0
           ? chartData.map((item) => [

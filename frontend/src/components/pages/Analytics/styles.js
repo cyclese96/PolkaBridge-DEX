@@ -140,28 +140,18 @@ const useStyles = makeStyles((theme) => ({
       fontSize: 11,
     },
   },
-  // statPercentageGreen: {
-  //   display: "flex",
-  //   justifyContent: "center",
-  //   color: "#4caf50",
-  // },
-  // statPercentageRed: {
-  //   display: "flex",
-  //   justifyContent: "center",
-  //   color: "#ff1744",
-  // },
-  // arrowIcon: {
-  //   margin: 0,
-  //   padding: 0,
-  // },
+
   tokenListHeading: {
     width: "100%",
     color: "#bdbdbd",
     marginTop: 35,
     marginBottom: 10,
-    marginLeft: 2,
+    paddingLeft: 2,
     fontWeight: 500,
     letterSpacing: 0.7,
+    [theme.breakpoints.down("sm")]: {
+      paddingLeft: 10,
+    },
   },
   tokenList: {
     width: "100%",

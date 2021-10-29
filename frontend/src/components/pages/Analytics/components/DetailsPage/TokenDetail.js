@@ -6,21 +6,23 @@ import {
   useTokenPairs,
   useTokenPriceData,
   useTokenTransactions,
-} from "../../../contexts/TokenData";
+} from "../../../../../contexts/TokenData";
 import { useEffect } from "react/cjs/react.development";
 import { usePrevious } from "react-use";
-import { useAllPairData, useDataForList } from "../../../contexts/PairData";
-import { formatCurrency, formattedNum } from "../../../utils/formatters";
-import { formattedPercent } from "../../../utils/timeUtils";
-import TokenLogo from "../../common/Styled/TokenLogo";
-import TokenIcon from "../../common/TokenIcon";
+import {
+  useAllPairData,
+  useDataForList,
+} from "../../../../../contexts/PairData";
+import { formatCurrency, formattedNum } from "../../../../../utils/formatters";
+import { formattedPercent } from "../../../../../utils/timeUtils";
+import TokenLogo from "../../../../common/Styled/TokenLogo";
+import TokenIcon from "../../../../common/TokenIcon";
 import { Link } from "react-router-dom";
 // import { formatCurrency } from "../../../utils/helper";
-import TokenChart from "./TokenChart";
+import TokenChart from "../../components/Charts/TokenChart";
 import { Button, Card } from "@material-ui/core";
-import TopTokens from "./TopTokens";
 import { FileCopyOutlined, OpenInNew } from "@material-ui/icons";
-import { currentConnection } from "../../../constants";
+import { currentConnection } from "../../../../../constants";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -173,9 +175,7 @@ function TokenPage({ address }) {
     volumeChangeUSD,
     oneDayVolumeUT,
     volumeChangeUT,
-    priceChangeUSD,
     liquidityChangeUSD,
-    oneDayTxns,
     txnChange,
   } = useTokenData(address);
 
@@ -196,13 +196,6 @@ function TokenPage({ address }) {
 
   // pairs to show in pair list
   const fetchedPairsList = useDataForList(allPairs);
-
-  // all transactions with this token
-  const transactions = useTokenTransactions(address);
-
-  // price
-  const price = priceUSD ? formattedNum(priceUSD, true) : "";
-  const priceChange = priceChangeUSD ? formattedPercent(priceChangeUSD) : "";
 
   // volume
   const volume = formattedNum(
@@ -304,17 +297,7 @@ function TokenPage({ address }) {
             </div>
           </div>
         </div>
-        <div for="transaction-table" className="mt-5">
-          <h6 className={classes.sectionTitle}>Top Pairs</h6>
-          <div>
-            <div className={classes.tokenList}>
-              <TopTokens
-                tableType="TopPools"
-                allPairs={!allPairs ? {} : allPairs}
-              />
-            </div>
-          </div>
-        </div>
+
         <div for="token-information" className="mt-5">
           <h6 className={classes.sectionTitle}>Token Information </h6>
           <div>
