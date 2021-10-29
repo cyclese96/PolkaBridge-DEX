@@ -12,6 +12,7 @@ import Loader from "../../../../common/Loader";
 import { useState } from "react/cjs/react.development";
 import { Link } from "react-router-dom";
 import TokenIcon from "../../../../common/TokenIcon";
+import { ArrowDownward } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -60,6 +61,9 @@ const useStyles = makeStyles((theme) => ({
 export default function TopTokensTable({ data }) {
   const classes = useStyles();
   const [rows, setRows] = useState([]);
+  const [sortedChange, setSortedChange] = useState(false);
+  const [sortedVolume, setSortedVolume] = useState(false);
+  const [sortedTvl, setSortedTvl] = useState(false);
   const [skipIndex, setSkipIndex] = useState(0);
 
   let styles = {
@@ -74,9 +78,39 @@ export default function TopTokensTable({ data }) {
     let result = Object.keys(data).map((key) => data[key]);
     if (result.length > 0) {
       setRows(result);
-      console.log(result);
     }
   }, [data]);
+
+  const sortByChange = () => {
+    let tempRows = [...rows];
+    if (sortedChange) {
+      tempRows.sort((a, b) => a.priceChangeUSD - b.priceChangeUSD);
+    } else {
+      tempRows.sort((a, b) => b.priceChangeUSD - a.priceChangeUSD);
+    }
+    setSortedChange(!sortedChange);
+    setRows([...tempRows]);
+  };
+  const sortByVolume = () => {
+    let tempRows = [...rows];
+    if (sortedVolume) {
+      tempRows.sort((a, b) => a.tradeVolume - b.tradeVolume);
+    } else {
+      tempRows.sort((a, b) => b.tradeVolume - a.tradeVolume);
+    }
+    setSortedVolume(!sortedVolume);
+    setRows([...tempRows]);
+  };
+  const sortByTvl = () => {
+    let tempRows = [...rows];
+    if (sortedTvl) {
+      tempRows.sort((a, b) => a.totalLiquidityUSD - b.totalLiquidityUSD);
+    } else {
+      tempRows.sort((a, b) => b.totalLiquidityUSD - a.totalLiquidityUSD);
+    }
+    setSortedTvl(!sortedTvl);
+    setRows([...tempRows]);
+  };
 
   return (
     <Paper elevation={10} className={classes.table}>
@@ -102,18 +136,51 @@ export default function TopTokensTable({ data }) {
               <TableCell align="right" style={styles.tableHeading}>
                 Symbol
               </TableCell>
-              <TableCell align="right" style={styles.tableHeading}>
+              <TableCell
+                align="right"
+                style={styles.tableHeading}
+                onClick={sortByTvl}
+              >
                 TVL
+                <span>
+                  {sortedTvl ? (
+                    <ArrowUpward className={classes.arrowIcon} />
+                  ) : (
+                    <ArrowDownward className={classes.arrowIcon} />
+                  )}
+                </span>
               </TableCell>
 
-              <TableCell align="right" style={styles.tableHeading}>
-                Volume(24hrs) <ArrowUpward className={classes.arrowIcon} />
+              <TableCell
+                align="right"
+                style={styles.tableHeading}
+                onClick={sortByVolume}
+              >
+                Volume(24hrs){" "}
+                <span>
+                  {sortedVolume ? (
+                    <ArrowUpward className={classes.arrowIcon} />
+                  ) : (
+                    <ArrowDownward className={classes.arrowIcon} />
+                  )}
+                </span>
               </TableCell>
               <TableCell align="right" style={styles.tableHeading}>
                 Price
               </TableCell>
-              <TableCell align="right" style={styles.tableHeading}>
-                Change(24hrs) <ArrowUpward className={classes.arrowIcon} />
+              <TableCell
+                align="right"
+                style={styles.tableHeading}
+                onClick={sortByChange}
+              >
+                Change(24hrs){" "}
+                <span>
+                  {sortedChange ? (
+                    <ArrowUpward className={classes.arrowIcon} />
+                  ) : (
+                    <ArrowDownward className={classes.arrowIcon} />
+                  )}
+                </span>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -157,19 +224,19 @@ export default function TopTokensTable({ data }) {
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
-                    {parseInt(row.totalLiquidity)}
+                    {parseInt(row.totalLiquidityUSD)}
                   </TableCell>
                   <TableCell
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
-                    {row.oneDayVolumeUSD}
+                    ${parseFloat(row.tradeVolumeUSD).toFixed(2)}
                   </TableCell>
                   <TableCell
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
-                    ${row.priceUSD}
+                    ${parseFloat(row.priceUSD).toFixed(3)}
                   </TableCell>
                   <TableCell
                     align="right"

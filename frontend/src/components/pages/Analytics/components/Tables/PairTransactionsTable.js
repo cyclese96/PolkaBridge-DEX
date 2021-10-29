@@ -222,6 +222,7 @@ export default function PairTransactionsTable({ data }) {
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
+                    ---
                     {/* ToDo */}
                     {/* {[...row.sender].splice(0, 3)} {"..."}
                     {[...row.sender].splice([...row.sender].length - 5, 5)} */}
