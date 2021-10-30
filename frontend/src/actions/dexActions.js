@@ -870,31 +870,43 @@ export const importToken = (address, account, network) => async (dispatch) => {
       fetchTokenInfo(address),
     ]);
 
-    // console.log("token info received ", tokenInfoData);
-    let tokenInfo = {};
+    console.log("token info received ", tokenInfoData);
+
     if (tokenInfoData.status === '0') {
-      tokenInfo = {
-        tokenName: "Test erc20 token",
-        symbol: "TEST"
+
+      if (currentConnection === 'testnet') {
+        const tokenObj = {
+          tokenName: "Test erc20 token",
+          symbol: "TEST",
+          address: address
+        }
+        cacheImportedToken(tokenObj);
+        dispatch({
+          type: IMPORT_TOKEN,
+          payload: {
+            listData: tokenObj,
+          },
+        });
       }
-      // tokenInfo.tokenName = "Test token";
-      // tokenInfo.symbol = "TEST";
+      console.log('token not found')
+
     } else {
-      tokenInfo = tokenInfoData.result[0];
+      const tokenInfo = tokenInfoData.result[0];
+      const tokenObj = {
+        name: tokenInfo.tokenName,
+        symbol: tokenInfo.symbol,
+        address: address,
+      };
+      cacheImportedToken(tokenObj);
+      dispatch({
+        type: IMPORT_TOKEN,
+        payload: {
+          listData: tokenObj,
+        },
+      });
+
     }
 
-    const tokenObj = {
-      name: tokenInfo.tokenName,
-      symbol: tokenInfo.symbol,
-      address: address,
-    };
-    cacheImportedToken(tokenObj);
-    dispatch({
-      type: IMPORT_TOKEN,
-      payload: {
-        listData: tokenObj,
-      },
-    });
   } catch (error) {
     console.log("importToken ", error);
     dispatch({

@@ -5,7 +5,7 @@ import BigNumber from "bignumber.js";
 
 const useStyles = makeStyles((theme) => ({
   statPercentageGreen: {
-    color: "#4caf50",
+    color: "#9ccc65",
     fontSize: 14,
 
     [theme.breakpoints.down("sm")]: {
@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   statPercentageRed: {
-    color: "#ff1744",
+    color: "#ef5350",
     fontSize: 14,
 
     [theme.breakpoints.down("sm")]: {

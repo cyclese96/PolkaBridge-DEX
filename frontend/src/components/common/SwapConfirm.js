@@ -204,7 +204,7 @@ const SwapConfirm = (props) => {
               <div className="d-flex justify-content-between w-100">
                 <div>
                   <span className={classes.subheading}> From : </span>
-                  <TokenIcon symbol={selectedToken1.symbol} />
+                  <TokenIcon symbol={selectedToken1.symbol} address={selectedToken1.address} />
                   <span style={{ marginLeft: 2 }}>
                     {" "}
                     {selectedToken1.symbol}
@@ -222,7 +222,7 @@ const SwapConfirm = (props) => {
               <div className="d-flex justify-content-between w-100">
                 <div>
                   <span className={classes.subheading}>To : </span>
-                  <TokenIcon symbol={selectedToken2.symbol} />
+                  <TokenIcon symbol={selectedToken2.symbol} address={selectedToken2.address} />
                   <span style={{ marginLeft: 2 }}>
                     {" "}
                     {selectedToken2.symbol}

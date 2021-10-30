@@ -342,8 +342,18 @@ export default function TokenTxTable({ data }) {
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
-                    {[...row.sender].splice(0, 3)} {"..."}
-                    {[...row.sender].splice([...row.sender].length - 5, 5)}
+                    <a
+                      style={{ color: "#df097c" }}
+                      href={
+                        currentConnection === "testnet"
+                          ? `https://rinkeby.etherscan.io/address/${row.sender}`
+                          : `https://etherscan.io/address/${row.sender}`
+                      }
+                    >
+                      {" "}
+                      {[...row.sender].splice(0, 3)} {"..."}
+                      {[...row.sender].splice([...row.sender].length - 5, 5)}
+                    </a>
                   </TableCell>
                   <TableCell
                     align="right"

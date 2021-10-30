@@ -7,7 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { makeStyles } from "@material-ui/core";
-import Button from "@mui/material/Button";
+import Button from "@material-ui/core/Button";
 import Stack from "@mui/material/Stack";
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import Loader from "../../../../common/Loader";
@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     borderTop: "1px solid #616161",
   },
   paginationButton: {
-    color: "#DF097C",
+    color: "rgb(223, 9, 124)",
     padding: 5,
     paddingRight: 10,
     paddingLeft: 10,
@@ -313,13 +313,13 @@ export default function TransactionsTable({ data }) {
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
                     {parseFloat(row.amountUSD).toFixed(2)}
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
                     {row.amount0
                       ? parseFloat(row.amount0).toFixed(3)
@@ -329,7 +329,7 @@ export default function TransactionsTable({ data }) {
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
                     {row.amount1
                       ? parseFloat(row.amount1).toFixed(3)
@@ -340,10 +340,20 @@ export default function TransactionsTable({ data }) {
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
-                    {[...row.sender].splice(0, 3)} {"..."}
-                    {[...row.sender].splice([...row.sender].length - 5, 5)}
+                    <a
+                      style={{ color: "rgb(223, 9, 124)" }}
+                      href={
+                        currentConnection === "testnet"
+                          ? `https://rinkeby.etherscan.io/address/${row.sender}`
+                          : `https://etherscan.io/address/${row.sender}`
+                      }
+                    >
+                      {" "}
+                      {[...row.sender].splice(0, 3)} {"..."}
+                      {[...row.sender].splice([...row.sender].length - 5, 5)}
+                    </a>
                   </TableCell>
                   <TableCell
                     align="right"

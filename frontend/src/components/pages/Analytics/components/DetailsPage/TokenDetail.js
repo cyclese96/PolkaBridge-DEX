@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 10,
   },
   liquidityCard: {
-    height: 120,
+    height: 130,
     width: "100%",
     borderRadius: 15,
     paddingLeft: 10,
@@ -103,6 +103,7 @@ const useStyles = makeStyles((theme) => ({
   },
   chartsCard: {
     height: "100%",
+
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 15,
@@ -162,6 +163,14 @@ const useStyles = makeStyles((theme) => ({
   copyIcon: {
     fontSize: 14,
     cursor: "pointer",
+  },
+  wrapper: {
+    position: "relative",
+    // background: "#000524",
+    // border: "1px solid #000",
+    // boxShadow: ` 0 22px 35px -16px rgba(0, 0, 0, 0.71)`,
+    maxWidth: "850px",
+    margin: "0 auto",
   },
 }));
 
@@ -334,13 +343,11 @@ function TokenPage({ address }) {
               </div>
               <div className="col-md-8">
                 <Card elevation={10} className={classes.chartsCard}>
-                  {/* <div> */}
                   <TokenChart
                     address={address}
                     color={"#E0077D"}
                     base={priceUSD}
                   />
-                  {/* </div> */}
                 </Card>
               </div>
             </div>

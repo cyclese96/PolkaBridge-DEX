@@ -206,11 +206,13 @@ export default function TokenPairsTable({ data }) {
                         {" "}
                         <TokenIcon
                           symbol={row.token0.symbol}
+                          address={row?.token0?.id}
                           className={classes.tokenIcon}
                         />
                         <span style={{ marginLeft: -10 }}>
                           <TokenIcon
                             symbol={row.token1.symbol}
+                            address={row?.token1?.id}
                             className={classes.tokenIcon}
                           />
                         </span>

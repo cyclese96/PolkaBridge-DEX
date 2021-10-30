@@ -21,12 +21,9 @@ const state = {
     chart: {
       id: "chart2",
       type: "area",
-      height: 180,
-
+      height: 300,
       foreColor: "#ccc",
-      zoom: {
-        autoScaleYaxis: true,
-      },
+
       toolbar: {
         show: false,
       },
@@ -44,7 +41,7 @@ const state = {
       clipMarkers: false,
       yaxis: {
         lines: {
-          show: true,
+          show: false,
         },
       },
     },
@@ -58,11 +55,9 @@ const state = {
     },
     xaxis: {
       type: "datetime",
-      // min: new Date("27 Oct 2021").getTime(),
-      // tickAmount: 20,
     },
     yaxis: {
-      tickAmount: 5,
+      tickAmount: 3,
     },
     tooltip: {
       x: {
@@ -117,7 +112,7 @@ const AreaChart = ({ chartData }) => {
       options={state.options}
       series={currChartData}
       type="area"
-      style={{ maxWidth: 700, margin: "0 auto" }}
+      height="100%"
     />
   );
 };
