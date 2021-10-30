@@ -449,7 +449,7 @@ export function formattedPercent(percent, useBrackets = false) {
 
   if (percent < 0.0001 && percent > 0) {
     return (
-      <Text fontWeight={400} color="green">
+      <Text fontWeight={400} color="#ef5350">
         {"< 0.0001%"}
       </Text>
     );
@@ -457,7 +457,7 @@ export function formattedPercent(percent, useBrackets = false) {
 
   if (percent < 0 && percent > -0.0001) {
     return (
-      <Text fontWeight={400} color="red">
+      <Text fontWeight={400} color="#9ccc65">
         {"< 0.0001%"}
       </Text>
     );
