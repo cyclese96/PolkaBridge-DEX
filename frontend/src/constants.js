@@ -27,7 +27,7 @@ export const corgibMemeCoinMainnet =
 export const facotryAddressTestnet =
   "0xcbD7EbEB972731D66F4113cD6d7025C72ED938e5";
 export const factoryAddresMainnet =
-  "0xA1853078D1447C0060c71a672E6D13882f61A0a6";
+  "0x8395901148d18a47CA4c2421f042d6ca49219eD8";
 
 // factory bsc address
 export const facotryAddressBscTestnet =
@@ -39,7 +39,7 @@ export const factoryAddresBscMainnet =
 export const routerAddressTestnet =
   "0xdAA330261bB94F121Dd3645420FF7E92c735406D";
 export const routerAddressMainnet =
-  "0x050aAC21096e027142E3f5d089a9251FcCf191b9";
+  "0xD96882C855582B0C6D0aE12F9d36cD93Ba811E45";
 
 // router bsc addresses
 export const routerAddressBscTestnet =
