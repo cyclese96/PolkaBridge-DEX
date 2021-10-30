@@ -170,7 +170,7 @@ const TokenChart = ({ address, color, base }) => {
     (dataMin) => (dataMin > utcStartTime ? dataMin : utcStartTime),
     "dataMax",
   ];
-  const aspect = below1080 ? 60 / 320 : below600 ? 60 / 42 : 60 / 22;
+  const aspect = below1080 ? 60 / 32 : below600 ? 60 / 42 : 60 / 22;
 
   chartData = chartData?.filter((entry) => entry.date >= utcStartTime);
 
@@ -326,69 +326,7 @@ const TokenChart = ({ address, color, base }) => {
         </RowBetween>
       )}
       {chartFilter === CHART_VIEW.LIQUIDITY && chartData && (
-        <ResponsiveContainer aspect={aspect}>
-          {/* <AreaChart
-            margin={{ top: 0, right: 10, bottom: 6, left: 0 }}
-            barCategoryGap={1}
-            data={chartData}
-          >
-            <defs>
-              <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={color} stopOpacity={0.35} />
-                <stop offset="95%" stopColor={color} stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <XAxis
-              tickLine={false}
-              axisLine={false}
-              interval="preserveEnd"
-              tickMargin={16}
-              minTickGap={120}
-              tickFormatter={(tick) => toNiceDate(tick)}
-              dataKey="date"
-              tick={{ fill: textColor }}
-              type={"number"}
-              domain={["dataMin", "dataMax"]}
-            />
-            <YAxis
-              type="number"
-              orientation="right"
-              tickFormatter={(tick) => "$" + toK(tick)}
-              axisLine={false}
-              tickLine={false}
-              interval="preserveEnd"
-              minTickGap={80}
-              yAxisId={0}
-              tick={{ fill: textColor }}
-            />
-            <Tooltip
-              cursor={true}
-              formatter={(val) => formattedNum(val, true)}
-              labelFormatter={(label) => toNiceDateYear(label)}
-              labelStyle={{ paddingTop: 4 }}
-              contentStyle={{
-                padding: "10px 14px",
-                borderRadius: 10,
-                borderColor: color,
-                color: "black",
-              }}
-              wrapperStyle={{ top: -70, left: -10 }}
-            />
-            <Area
-              key={"other"}
-              dataKey={"totalLiquidityUSD"}
-              stackId="2"
-              strokeWidth={2}
-              dot={false}
-              type="monotone"
-              name={"Liquidity"}
-              yAxisId={0}
-              stroke={darken(0.12, color)}
-              fill="url(#colorUv)"
-            />
-          </AreaChart> */}
-          <AreaChart chartData={chartData} />
-        </ResponsiveContainer>
+        <AreaChart chartData={chartData} />
       )}
       {chartFilter === CHART_VIEW.PRICE &&
         (frequency === DATA_FREQUENCY.LINE ? (
