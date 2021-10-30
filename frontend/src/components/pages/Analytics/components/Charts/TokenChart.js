@@ -6,11 +6,11 @@ import {
   YAxis,
   ResponsiveContainer,
   Tooltip,
-  AreaChart,
-  BarChart,
-  Bar,
+  AreaChart as AreaChartNative
 } from "recharts";
 import { AutoRow, RowBetween, RowFixed } from "../../../../common/Styled/Row";
+import BarChart from "../Charts/BarChart";
+import AreaChart from "../Charts/AreaChart";
 
 import {
   toK,
@@ -299,7 +299,7 @@ const TokenChart = ({ address, color, base }) => {
       )}
       {chartFilter === CHART_VIEW.LIQUIDITY && chartData && (
         <ResponsiveContainer aspect={aspect}>
-          <AreaChart
+          {/* <AreaChart
             margin={{ top: 0, right: 10, bottom: 6, left: 0 }}
             barCategoryGap={1}
             data={chartData}
@@ -358,13 +358,14 @@ const TokenChart = ({ address, color, base }) => {
               stroke={darken(0.12, color)}
               fill="url(#colorUv)"
             />
-          </AreaChart>
+          </AreaChart> */}
+          <AreaChart chartData={chartData} />
         </ResponsiveContainer>
       )}
       {chartFilter === CHART_VIEW.PRICE &&
         (frequency === DATA_FREQUENCY.LINE ? (
           <ResponsiveContainer aspect={below1080 ? 60 / 32 : 60 / 16}>
-            <AreaChart
+            <AreaChartNative
               margin={{ top: 0, right: 10, bottom: 6, left: 0 }}
               barCategoryGap={1}
               data={chartData}
@@ -423,7 +424,7 @@ const TokenChart = ({ address, color, base }) => {
                 stroke={darken(0.12, color)}
                 fill="url(#colorUv)"
               />
-            </AreaChart>
+            </AreaChartNative>
           </ResponsiveContainer>
         ) : priceData ? (
           <ResponsiveContainer aspect={aspect} ref={ref}>
@@ -437,7 +438,7 @@ const TokenChart = ({ address, color, base }) => {
 
       {chartFilter === CHART_VIEW.VOLUME && (
         <ResponsiveContainer aspect={aspect}>
-          <BarChart
+          {/* <BarChart
             margin={{ top: 0, right: 10, bottom: 6, left: 10 }}
             barCategoryGap={1}
             data={chartData}
@@ -488,7 +489,8 @@ const TokenChart = ({ address, color, base }) => {
               yAxisId={0}
               stroke={color}
             />
-          </BarChart>
+          </BarChart> */}
+          <BarChart chartData={chartData} />
         </ResponsiveContainer>
       )}
     </ChartWrapper>

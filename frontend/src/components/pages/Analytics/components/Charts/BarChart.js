@@ -32,6 +32,26 @@ const state = {
         mouseMove: chartEvent,
       },
     },
+    plotOptions: {
+      bar: {
+        borderRadius: 10,
+        dataLabels: {
+          position: 'top', // top, center, bottom
+        },
+      }
+    },
+    crosshairs: {
+      fill: {
+        type: 'gradient',
+        gradient: {
+          colorFrom: '#D8E3F0',
+          colorTo: '#BED1E6',
+          stops: [0, 100],
+          opacityFrom: 0.4,
+          opacityTo: 0.5,
+        }
+      }
+    },
     legend: {
       show: false,
     },
@@ -116,9 +136,9 @@ const BarChart = ({ chartData }) => {
       const _series =
         chartData.length > 0
           ? chartData.map((item) => [
-              item.date * 1000,
-              item.dailyVolumeUSD ? parseInt(item.dailyVolumeUSD) : 0,
-            ])
+            item.date * 1000,
+            item.dailyVolumeUSD ? parseInt(item.dailyVolumeUSD) : 0,
+          ])
           : [];
       setChartData([{ name: currChartData[0].name, data: _series }]);
     }

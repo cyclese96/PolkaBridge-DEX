@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
-import { Area, XAxis, YAxis, ResponsiveContainer, Tooltip, AreaChart, BarChart, Bar } from 'recharts'
+import { Area, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts'
 import { AutoRow, RowBetween, RowFixed } from "../../../../common/Styled/Row";
+import BarChart from "../Charts/BarChart";
+import AreaChart from "../Charts/AreaChart";
 
 import {
   toK,
@@ -77,6 +79,9 @@ const PairChart = ({ address, color, base0, base1 }) => {
   const hourlyRate0 = hourlyData && hourlyData[0]
   const hourlyRate1 = hourlyData && hourlyData[1]
 
+  useEffect(() => {
+    console.log('pair chart data page', chartData)
+  }, [chartData])
   // formatted symbols for overflow
   const formattedSymbol0 =
     pairData?.token0?.symbol.length > 6 ? pairData?.token0?.symbol.slice(0, 5) + '...' : pairData?.token0?.symbol
@@ -189,9 +194,9 @@ const PairChart = ({ address, color, base0, base1 }) => {
           </AutoRow>
         </OptionsRow>
       )}
-      {chartFilter === CHART_VIEW.LIQUIDITY && (
+      {chartFilter === CHART_VIEW.LIQUIDITY && chartData && (
         <ResponsiveContainer aspect={aspect}>
-          <AreaChart margin={{ top: 0, right: 10, bottom: 6, left: 0 }} barCategoryGap={1} data={chartData}>
+          {/* <AreaChart margin={{ top: 0, right: 10, bottom: 6, left: 0 }} barCategoryGap={1} data={chartData}>
             <defs>
               <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={color} stopOpacity={0.35} />
@@ -245,7 +250,8 @@ const PairChart = ({ address, color, base0, base1 }) => {
               stroke={darken(0.12, color)}
               fill="url(#colorUv)"
             />
-          </AreaChart>
+          </AreaChart> */}
+          <AreaChart chartData={chartData} />
         </ResponsiveContainer>
       )}
 
@@ -281,7 +287,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
 
       {chartFilter === CHART_VIEW.VOLUME && (
         <ResponsiveContainer aspect={aspect}>
-          <BarChart
+          {/* <BarChart
             margin={{ top: 0, right: 0, bottom: 6, left: below1080 ? 0 : 10 }}
             barCategoryGap={1}
             data={chartData}
@@ -332,7 +338,11 @@ const PairChart = ({ address, color, base0, base1 }) => {
               yAxisId={0}
               stroke={color}
             />
-          </BarChart>
+          </BarChart> */}
+
+
+          <BarChart chartData={chartData} />
+
         </ResponsiveContainer>
       )}
     </ChartWrapper>
