@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   useTokenChartData,
@@ -7,7 +7,6 @@ import {
   useTokenPriceData,
   useTokenTransactions,
 } from "../../../../../contexts/TokenData";
-import { useEffect } from "react/cjs/react.development";
 import { usePrevious } from "react-use";
 import {
   useAllPairData,
@@ -20,8 +19,9 @@ import TokenChart from "../../components/Charts/TokenChart";
 import { Button, Card } from "@material-ui/core";
 import { FileCopyOutlined, OpenInNew } from "@material-ui/icons";
 import { currentConnection } from "../../../../../constants";
-import TokenTopPairsTable from "../Tables/TokenPairsTable";
 import Loader from "../../../../common/Loader";
+import TokenTxTable from "../Tables/TokenTxTable";
+
 const useStyles = makeStyles((theme) => ({
   background: {
     padding: 30,
@@ -200,16 +200,17 @@ function TokenPage({ address }) {
   const classes = useStyles();
 
   const isLoaded = () => {
-    return name || symbol || priceUSD || oneDayVolumeUSD || totalLiquidityUSD
-  }
-
+    return name || symbol || priceUSD || oneDayVolumeUSD || totalLiquidityUSD;
+  };
 
   return (
     <div className="container">
-      {!isLoaded() && <div className="text-center mt-4">
-        <Loader />
-        <h6>Fetching data...</h6>
-      </div>}
+      {!isLoaded() && (
+        <div className="text-center mt-4">
+          <Loader />
+          <h6>Fetching data...</h6>
+        </div>
+      )}
       {isLoaded() && (
         <div className={classes.background}>
           <div for="breadcrumbs" className={classes.breadcrumbs}>
@@ -293,7 +294,7 @@ function TokenPage({ address }) {
           {/* <div for="token-pairs-table" className="mt-5">
           <h6 className={classes.sectionTitle}>Pair Transactions</h6>
           <div className="d-flex justify-content-center p-2">
-            <TokenTopPairsTable data={pairTransactions} />
+            <TokenTxTable data={pairTransactions} />
           </div>
         </div> */}
 
@@ -348,7 +349,6 @@ function TokenPage({ address }) {
           </div>
         </div>
       )}
-
     </div>
   );
 }
