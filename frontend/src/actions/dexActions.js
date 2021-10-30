@@ -870,14 +870,14 @@ export const importToken = (address, account, network) => async (dispatch) => {
       fetchTokenInfo(address),
     ]);
 
-    console.log("token info received ", tokenInfoData);
+    // console.log("token info received ", tokenInfoData);
 
     if (tokenInfoData.status === '0') {
 
       if (currentConnection === 'testnet') {
         const tokenObj = {
           tokenName: "Test erc20 token",
-          symbol: "TEST",
+          symbol: address && address.slice(0, 6),
           address: address
         }
         cacheImportedToken(tokenObj);
