@@ -180,6 +180,7 @@ function TokenPage({ address }) {
   } = useTokenData(address);
 
   const [rows, setRows] = useState([]);
+  const [tokenPairRows, setTokenPairRows] = useState([])
 
   useEffect(() => {
     document.querySelector("body").scrollTo(0, 0);
@@ -202,6 +203,21 @@ function TokenPage({ address }) {
 
   const fee = formattedNum(oneDayVolumeUSD * 0.025, true);
 
+
+
+  const allPairs = useAllPairData()
+
+  useEffect(() => {
+    if (!allPairs || allPairs.length === 0) {
+      return
+    }
+    let pairObjects = {};
+    const tokenPairs = Object.keys(allPairs).filter(key => allPairs[key].token0.id === address || allPairs[key].token1.id === address)
+
+    tokenPairs.map(key => pairObjects[key] = allPairs[key])
+    setTokenPairRows(pairObjects)
+
+  }, [allPairs])
   // all transactions with this token
   const allTransactions = useGlobalTransactions();
 
@@ -331,7 +347,7 @@ function TokenPage({ address }) {
           <div for="token-pairs-table" className="mt-5">
             <h6 className={classes.sectionTitle}>Token Pairs</h6>
             <div className="d-flex justify-content-center p-2">
-              <TokenPairsTable data={[]} />
+              <TokenPairsTable data={tokenPairRows} />
             </div>
           </div>
           <div for="token-tx-table" className="mt-5">
