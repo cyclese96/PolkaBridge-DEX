@@ -104,7 +104,9 @@ export const infuraMainnetApi = `https://mainnet.infura.io/v3/${process.env.REAC
  *    'testnet'  BSC testnet testing
  *    'mainnet'  BSC/ETH mainent deployment
  */
-export const currentConnection = "testnet";
+const testing = true;
+
+export const currentConnection = testing ? "testnet" : "mainnet";
 // export const currentConnection = "mainnet";
 
 export const etheriumNetwork = "ethereum";
@@ -266,11 +268,11 @@ export const tokens = [
     symbol: "SAND",
     address: "0x3845badAde8e6dFF049820680d1F14bD3903a5d0",
   },
-  {
-    name: "Uniswap",
-    symbol: "UNI",
-    address: "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
-  },
+  // {
+  //   name: "Uniswap",
+  //   symbol: "UNI",
+  //   address: "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+  // },
   {
     name: "Balancer",
     symbol: "BAL",

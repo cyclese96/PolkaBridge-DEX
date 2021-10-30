@@ -60,7 +60,7 @@ const TokenList = ({
           }
         >
           <ListItemAvatar>
-            <TokenIcon symbol={token.symbol} className={classes.tokenIcon} />
+            <TokenIcon symbol={token.symbol} address={token.address} className={classes.tokenIcon} />
           </ListItemAvatar>
           <ListItemText
             primary={<p className={classes.tokenTitle}>{token.symbol}</p>}

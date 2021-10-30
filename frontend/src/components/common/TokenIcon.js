@@ -17,13 +17,17 @@ const TokenIcon = ({ symbol, styles, className, address, size }) => {
   const path = `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/${isAddress(
     address
   )}/logo.png`;
-  // const path = `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x298d492e8c1d909D3F63Bc4A36C66c64ACB3d695/logo.png`
-  const _path = currentConnection === "testnet" ? tokenThumbnail(symbol) : path;
+
+  const _path = currentConnection === "testnet"
+    ? !symbol ? path : tokenThumbnail(symbol)
+    : path;
 
   return (
     <img
       className={[ownClasses.root, className, styles].join(" ")}
       src={_path}
+      onError={(e) => { e.target.onerror = null; e.target.src = tokenThumbnail(symbol ? symbol : '') }}
+
       alt={""}
       style={{ height: size }}
     />
