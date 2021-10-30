@@ -116,12 +116,14 @@ const AreaChart = ({ chartData }) => {
       const _data =
         chartData.length > 0
           ? chartData.map((item) => [
-            item.date * 1000,
-            (item.totalLiquidityUSD || item.reserveUSD) ? parseInt(item.totalLiquidityUSD || item.reserveUSD) : 0,
-          ])
+              item.date * 1000,
+              item.totalLiquidityUSD || item.reserveUSD
+                ? parseInt(item.totalLiquidityUSD || item.reserveUSD)
+                : 0,
+            ])
           : [];
 
-      console.log('area chart data  ', currChartData)
+      console.log("area chart data  ", currChartData);
       setChartData([{ name: currChartData[0].name, data: _data }]);
     }
   }, [chartCreated, chartData, dataPrev]);

@@ -6,7 +6,7 @@ import {
   YAxis,
   ResponsiveContainer,
   Tooltip,
-  AreaChart as AreaChartNative
+  AreaChart as AreaChartNative,
 } from "recharts";
 import { AutoRow, RowBetween, RowFixed } from "../../../../common/Styled/Row";
 import BarChart from "../Charts/BarChart";
@@ -75,6 +75,18 @@ const styles = {
     color: "white",
     background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
   },
+  buttonActive: {
+    marginRight: 5,
+    borderRadius: 7,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 5,
+    paddingBottom: 5,
+    marginBottom: 10,
+    border: "1px solid #616161",
+    color: "white",
+    background: `#263238`,
+  },
 };
 const TokenChart = ({ address, color, base }) => {
   // settings for the window and candle width
@@ -94,7 +106,6 @@ const TokenChart = ({ address, color, base }) => {
 
   let chartData = useTokenChartData(address);
 
-
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.WEEK);
   const prevWindow = usePrevious(timeWindow);
 
@@ -109,18 +120,18 @@ const TokenChart = ({ address, color, base }) => {
   const priceData =
     timeWindow === timeframeOptions.MONTH
       ? // monthly selected
-      frequency === DATA_FREQUENCY.DAY
+        frequency === DATA_FREQUENCY.DAY
         ? dailyMonth
         : hourlyMonth
       : // weekly selected
       timeWindow === timeframeOptions.WEEK
-        ? frequency === DATA_FREQUENCY.DAY
-          ? dailyWeek
-          : hourlyWeek
-        : // all time selected
-        frequency === DATA_FREQUENCY.DAY
-          ? dailyAll
-          : hourlyAll;
+      ? frequency === DATA_FREQUENCY.DAY
+        ? dailyWeek
+        : hourlyWeek
+      : // all time selected
+      frequency === DATA_FREQUENCY.DAY
+      ? dailyAll
+      : hourlyAll;
 
   // switch to hourly data when switched to week window
   useEffect(() => {
@@ -159,7 +170,7 @@ const TokenChart = ({ address, color, base }) => {
     (dataMin) => (dataMin > utcStartTime ? dataMin : utcStartTime),
     "dataMax",
   ];
-  const aspect = below1080 ? 60 / 32 : below600 ? 60 / 42 : 60 / 22;
+  const aspect = below1080 ? 60 / 320 : below600 ? 60 / 42 : 60 / 22;
 
   chartData = chartData?.filter((entry) => entry.date >= utcStartTime);
 
@@ -178,14 +189,15 @@ const TokenChart = ({ address, color, base }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, [isClient, width]); // Empty array ensures that effect is only run on mount and unmount
 
-
   useEffect(() => {
-    console.log('tokenPage  chart data  ', { chartData, address, frequency, chartFilter, priceData })
-
-
-  }, [chartData])
-
-
+    console.log("tokenPage  chart data  ", {
+      chartData,
+      address,
+      frequency,
+      chartFilter,
+      priceData,
+    });
+  }, [chartData]);
 
   return (
     <ChartWrapper>
@@ -208,27 +220,35 @@ const TokenChart = ({ address, color, base }) => {
         <RowBetween
           mb={
             chartFilter === CHART_VIEW.LIQUIDITY ||
-              chartFilter === CHART_VIEW.VOLUME ||
-              (chartFilter === CHART_VIEW.PRICE &&
-                frequency === DATA_FREQUENCY.LINE)
+            chartFilter === CHART_VIEW.VOLUME ||
+            (chartFilter === CHART_VIEW.PRICE &&
+              frequency === DATA_FREQUENCY.LINE)
               ? 40
               : 0
           }
           align="flex-start"
         >
-          <div >
+          <div>
             <div className="d-flex justify-content-center ">
               <Button
                 active={chartFilter === CHART_VIEW.LIQUIDITY}
                 onClick={() => setChartFilter(CHART_VIEW.LIQUIDITY)}
-                style={styles.button}
+                style={
+                  chartFilter === CHART_VIEW.LIQUIDITY
+                    ? styles.buttonActive
+                    : styles.button
+                }
               >
                 Liquidity
               </Button>
               <Button
                 active={chartFilter === CHART_VIEW.VOLUME}
                 onClick={() => setChartFilter(CHART_VIEW.VOLUME)}
-                style={styles.button}
+                style={
+                  chartFilter === CHART_VIEW.VOLUME
+                    ? styles.buttonActive
+                    : styles.button
+                }
               >
                 Volume
               </Button>
@@ -238,7 +258,11 @@ const TokenChart = ({ address, color, base }) => {
                   console.log("analyticsTest: filter", CHART_VIEW.PRICE);
                   setChartFilter(CHART_VIEW.PRICE);
                 }}
-                style={styles.button}
+                style={
+                  chartFilter === CHART_VIEW.PRICE
+                    ? styles.buttonActive
+                    : styles.button
+                }
               >
                 Price
               </Button>
@@ -265,7 +289,11 @@ const TokenChart = ({ address, color, base }) => {
                 <Button
                   active={frequency === DATA_FREQUENCY.LINE}
                   onClick={() => setFrequency(DATA_FREQUENCY.LINE)}
-                  style={styles.button}
+                  style={
+                    frequency === DATA_FREQUENCY.LINE
+                      ? styles.buttonActive
+                      : styles.button
+                  }
                 >
                   <Activity size={14} />
                 </Button>

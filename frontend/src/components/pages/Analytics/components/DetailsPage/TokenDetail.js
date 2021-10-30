@@ -23,6 +23,7 @@ import Loader from "../../../../common/Loader";
 import TokenTxTable from "../Tables/TokenTxTable";
 import { useGlobalTransactions } from "../../../../../contexts/GlobalData";
 import { useState } from "react/cjs/react.development";
+import TokenPairsTable from "../Tables/TokenPairsTable";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -178,7 +179,7 @@ function TokenPage({ address }) {
     priceChangeUSD,
   } = useTokenData(address);
 
-  const [rows, setRows] = useState([])
+  const [rows, setRows] = useState([]);
 
   useEffect(() => {
     document.querySelector("body").scrollTo(0, 0);
@@ -205,29 +206,33 @@ function TokenPage({ address }) {
   const allTransactions = useGlobalTransactions();
 
   useEffect(() => {
-
     if (!allTransactions || !address) {
-      return
+      return;
     }
 
-    LoadtokenTransactions(address)
-
-  }, [allTransactions])
-
+    LoadtokenTransactions(address);
+  }, [allTransactions]);
 
   const LoadtokenTransactions = (address) => {
-
     let _burns = allTransactions ? allTransactions.burns : [];
     let _swaps = allTransactions ? allTransactions.swaps : [];
     let _mints = allTransactions ? allTransactions.mints : [];
 
-    _burns = _burns.filter(item => item.pair.token0.id === address || item.pair.token1.id === address)
-    _swaps = _swaps.filter(item => item.pair.token0.id === address || item.pair.token1.id === address)
-    _mints = _mints.filter(item => item.pair.token0.id === address || item.pair.token1.id === address)
+    _burns = _burns.filter(
+      (item) =>
+        item.pair.token0.id === address || item.pair.token1.id === address
+    );
+    _swaps = _swaps.filter(
+      (item) =>
+        item.pair.token0.id === address || item.pair.token1.id === address
+    );
+    _mints = _mints.filter(
+      (item) =>
+        item.pair.token0.id === address || item.pair.token1.id === address
+    );
 
-    setRows({ mints: _mints, swaps: _swaps, burns: _burns })
-
-  }
+    setRows({ mints: _mints, swaps: _swaps, burns: _burns });
+  };
 
   const classes = useStyles();
 
@@ -324,6 +329,12 @@ function TokenPage({ address }) {
             </div>
           </div>
           <div for="token-pairs-table" className="mt-5">
+            <h6 className={classes.sectionTitle}>Token Pairs</h6>
+            <div className="d-flex justify-content-center p-2">
+              <TokenPairsTable data={[]} />
+            </div>
+          </div>
+          <div for="token-tx-table" className="mt-5">
             <h6 className={classes.sectionTitle}>Token Transactions</h6>
             <div className="d-flex justify-content-center p-2">
               <TokenTxTable data={rows} />
