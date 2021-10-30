@@ -180,7 +180,7 @@ function TokenPage({ address }) {
   } = useTokenData(address);
 
   const [rows, setRows] = useState([]);
-  const [tokenPairRows, setTokenPairRows] = useState([])
+  const [tokenPairRows, setTokenPairRows] = useState([]);
 
   useEffect(() => {
     document.querySelector("body").scrollTo(0, 0);
@@ -203,21 +203,22 @@ function TokenPage({ address }) {
 
   const fee = formattedNum(oneDayVolumeUSD * 0.025, true);
 
-
-
-  const allPairs = useAllPairData()
+  const allPairs = useAllPairData();
 
   useEffect(() => {
     if (!allPairs || allPairs.length === 0) {
-      return
+      return;
     }
     let pairObjects = {};
-    const tokenPairs = Object.keys(allPairs).filter(key => allPairs[key].token0.id === address || allPairs[key].token1.id === address)
+    const tokenPairs = Object.keys(allPairs).filter(
+      (key) =>
+        allPairs[key].token0.id === address ||
+        allPairs[key].token1.id === address
+    );
 
-    tokenPairs.map(key => pairObjects[key] = allPairs[key])
-    setTokenPairRows(pairObjects)
-
-  }, [allPairs])
+    tokenPairs.map((key) => (pairObjects[key] = allPairs[key]));
+    setTokenPairRows(pairObjects);
+  }, [allPairs]);
   // all transactions with this token
   const allTransactions = useGlobalTransactions();
 

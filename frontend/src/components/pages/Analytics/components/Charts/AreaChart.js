@@ -19,9 +19,11 @@ const chartEvent = (
 const state = {
   options: {
     chart: {
-      id: "area-datetime",
+      id: "chart2",
       type: "area",
-      height: 350,
+      height: 180,
+
+      foreColor: "#ccc",
       zoom: {
         autoScaleYaxis: true,
       },
@@ -32,41 +34,21 @@ const state = {
         mouseMove: chartEvent,
       },
     },
-    legend: {
-      show: false,
+    stroke: {
+      curve: "smooth",
+      width: 2,
     },
     colors: ["#E0077D"],
-    annotations: {
-      yaxis: [
-        {
-          y: 30,
-          borderColor: "#999",
-          label: {
-            show: true,
-            // text: "Support",
-            style: {
-              color: "#fff",
-              background: "#00E396",
-            },
-          },
+    grid: {
+      borderColor: "#212121",
+      clipMarkers: false,
+      yaxis: {
+        lines: {
+          show: true,
         },
-      ],
-      xaxis: [
-        {
-          x: new Date().getTime(),
-          borderColor: "#999",
-          yAxisIndex: 0,
-          label: {
-            show: true,
-            // text: "Rally",
-            style: {
-              color: "#fff",
-              background: "#775DD0",
-            },
-          },
-        },
-      ],
+      },
     },
+
     dataLabels: {
       enabled: false,
     },
@@ -76,8 +58,11 @@ const state = {
     },
     xaxis: {
       type: "datetime",
-      // min: new Date("01 Mar 2012").getTime(),
-      // tickAmount: 4,
+      // min: new Date("27 Oct 2021").getTime(),
+      // tickAmount: 20,
+    },
+    yaxis: {
+      tickAmount: 5,
     },
     tooltip: {
       x: {
@@ -87,15 +72,14 @@ const state = {
       theme: "dark",
     },
     fill: {
-      type: "gradient",
       gradient: {
-        shadeIntensity: 1,
-        opacityFrom: 0.7,
-        opacityTo: 0.9,
-        stops: [0, 100],
+        enabled: true,
+        opacityFrom: 0.55,
+        opacityTo: 0,
       },
     },
   },
+
   selection: "all",
   series: [
     {
@@ -133,7 +117,7 @@ const AreaChart = ({ chartData }) => {
       options={state.options}
       series={currChartData}
       type="area"
-      width={"98%"}
+      style={{ maxWidth: 700, margin: "0 auto" }}
     />
   );
 };

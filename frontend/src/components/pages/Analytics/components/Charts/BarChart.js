@@ -36,26 +36,35 @@ const state = {
       bar: {
         borderRadius: 10,
         dataLabels: {
-          position: 'top', // top, center, bottom
+          position: "top", // top, center, bottom
         },
-      }
+      },
     },
     crosshairs: {
       fill: {
-        type: 'gradient',
+        type: "gradient",
         gradient: {
-          colorFrom: '#D8E3F0',
-          colorTo: '#BED1E6',
+          colorFrom: "#D8E3F0",
+          colorTo: "#BED1E6",
           stops: [0, 100],
           opacityFrom: 0.4,
           opacityTo: 0.5,
-        }
-      }
+        },
+      },
     },
     legend: {
       show: false,
     },
     colors: ["#E0077D"],
+    grid: {
+      borderColor: "#212121",
+      clipMarkers: false,
+      yaxis: {
+        lines: {
+          show: true,
+        },
+      },
+    },
     annotations: {
       yaxis: [
         {
@@ -97,7 +106,7 @@ const state = {
     xaxis: {
       type: "datetime",
       // min: new Date("10 Aug 2021").getTime(),
-      // tickAmount: 4,
+      tickAmount: 20,
     },
     tooltip: {
       x: {
@@ -106,15 +115,13 @@ const state = {
       y: {},
       theme: "dark",
     },
-    // fill: {
-    //   type: "gradient",
-    //   gradient: {
-    //     shadeIntensity: 1,
-    //     opacityFrom: 0.7,
-    //     opacityTo: 0.9,
-    //     stops: [0, 100],
-    //   },
-    // },
+    fill: {
+      gradient: {
+        enabled: true,
+        opacityFrom: 0.55,
+        opacityTo: 0,
+      },
+    },
   },
   selection: "all",
   series: [
@@ -136,9 +143,9 @@ const BarChart = ({ chartData }) => {
       const _series =
         chartData.length > 0
           ? chartData.map((item) => [
-            item.date * 1000,
-            item.dailyVolumeUSD ? parseInt(item.dailyVolumeUSD) : 0,
-          ])
+              item.date * 1000,
+              item.dailyVolumeUSD ? parseInt(item.dailyVolumeUSD) : 0,
+            ])
           : [];
       setChartData([{ name: currChartData[0].name, data: _series }]);
     }
