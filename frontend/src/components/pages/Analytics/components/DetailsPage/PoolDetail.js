@@ -23,6 +23,7 @@ import PairTransactionsTable from "../Tables/PairTransactionsTable";
 import Loader from "../../../../common/Loader";
 import PairChart from "../Charts/PairChart";
 import { Link } from "react-router-dom";
+import CurrencyFormat from "react-currency-format";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -110,8 +111,18 @@ const useStyles = makeStyles((theme) => ({
   },
   cardValue: {
     color: "white",
-    fontSize: 26,
+    fontSize: 25,
     textAlign: "left",
+  },
+  cardTokenValue: {
+    color: "white",
+    fontSize: 20,
+    textAlign: "left",
+  },
+  tokenAvatarPooled: {
+    height: 25,
+    width: 25,
+    marginRight: 10,
   },
   cardChangeIndicator: {
     color: "green",
@@ -247,19 +258,23 @@ function PoolDetail({ pairAddress }) {
         : formattedNum(oneDayVolumeUSD * 0.003, true)
       : "-";
 
+  const isLoaded = () => {
+    return (poolInfo && poolInfo.token1?.symbol) || (token0 && token0.address)
+  }
+
   // token data for usd
   const [ethPrice] = useEthPrice();
 
   const classes = useStyles();
   return (
     <div className="container">
-      {!poolInfo && (
+      {!isLoaded() && (
         <div className="text-center mt-4">
           <Loader />
           <h6>Fetching data...</h6>
         </div>
       )}
-      {poolInfo && (
+      {isLoaded() && (
         <div className={classes.background}>
           <div for="breadcrumbs" className={classes.breadcrumbs}>
             <h6 className={classes.breadcrumbsTitle}>
@@ -383,6 +398,41 @@ function PoolDetail({ pairAddress }) {
                         <span>{parseFloat(volumeChangeUSD).toFixed(2)}%</span>
                       )}
                     </p>
+                  </div>
+                </Card>
+                <Card elevation={10} className={classes.liquidityCard}>
+                  <h6 className={classes.cardTitle}>Pooled tokens</h6>
+                  <div className="d-flex justify-content-start">
+                    <TokenIcon
+                      address={poolInfo.token0?.address}
+                      className={classes.tokenAvatarPooled}
+                    />
+                    <h6 className={classes.cardTokenValue}>
+                      <CurrencyFormat
+                        value={poolInfo.reserve0}
+                        displayType={"text"}
+                        thousandSeparator={true}
+                        decimalScale={1}
+                        fixedDecimalScale={0}
+                      />{" "}
+                      {poolInfo.token0?.symbol}
+                    </h6>
+                  </div>
+                  <div className="d-flex justify-content-start">
+                    <TokenIcon
+                      address={poolInfo.token1?.address}
+                      className={classes.tokenAvatarPooled}
+                    />
+                    <h6 className={classes.cardTokenValue}>
+                      <CurrencyFormat
+                        value={poolInfo.reserve1}
+                        displayType={"text"}
+                        thousandSeparator={true}
+                        decimalScale={1}
+                        fixedDecimalScale={0}
+                      />{" "}
+                      {poolInfo.token1?.symbol}
+                    </h6>
                   </div>
                 </Card>
               </div>

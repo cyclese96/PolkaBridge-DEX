@@ -6,11 +6,11 @@ import {
   YAxis,
   ResponsiveContainer,
   Tooltip,
-  AreaChart,
-  BarChart,
-  Bar,
+  AreaChart as AreaChartNative,
 } from "recharts";
 import { AutoRow, RowBetween, RowFixed } from "../../../../common/Styled/Row";
+import BarChart from "../Charts/BarChart";
+import AreaChart from "../Charts/AreaChart";
 
 import {
   toK,
@@ -75,6 +75,18 @@ const styles = {
     color: "white",
     background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
   },
+  buttonActive: {
+    marginRight: 5,
+    borderRadius: 7,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 5,
+    paddingBottom: 5,
+    marginBottom: 10,
+    border: "1px solid #616161",
+    color: "white",
+    background: `#263238`,
+  },
 };
 const TokenChart = ({ address, color, base }) => {
   // settings for the window and candle width
@@ -94,7 +106,6 @@ const TokenChart = ({ address, color, base }) => {
 
   let chartData = useTokenChartData(address);
 
-
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.WEEK);
   const prevWindow = usePrevious(timeWindow);
 
@@ -109,18 +120,18 @@ const TokenChart = ({ address, color, base }) => {
   const priceData =
     timeWindow === timeframeOptions.MONTH
       ? // monthly selected
-      frequency === DATA_FREQUENCY.DAY
+        frequency === DATA_FREQUENCY.DAY
         ? dailyMonth
         : hourlyMonth
       : // weekly selected
       timeWindow === timeframeOptions.WEEK
-        ? frequency === DATA_FREQUENCY.DAY
-          ? dailyWeek
-          : hourlyWeek
-        : // all time selected
-        frequency === DATA_FREQUENCY.DAY
-          ? dailyAll
-          : hourlyAll;
+      ? frequency === DATA_FREQUENCY.DAY
+        ? dailyWeek
+        : hourlyWeek
+      : // all time selected
+      frequency === DATA_FREQUENCY.DAY
+      ? dailyAll
+      : hourlyAll;
 
   // switch to hourly data when switched to week window
   useEffect(() => {
@@ -178,14 +189,15 @@ const TokenChart = ({ address, color, base }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, [isClient, width]); // Empty array ensures that effect is only run on mount and unmount
 
-
   useEffect(() => {
-    console.log('tokenPage  chart data  ', { chartData, address, frequency, chartFilter, priceData })
-
-
-  }, [chartData])
-
-
+    console.log("tokenPage  chart data  ", {
+      chartData,
+      address,
+      frequency,
+      chartFilter,
+      priceData,
+    });
+  }, [chartData]);
 
   return (
     <ChartWrapper>
@@ -208,27 +220,35 @@ const TokenChart = ({ address, color, base }) => {
         <RowBetween
           mb={
             chartFilter === CHART_VIEW.LIQUIDITY ||
-              chartFilter === CHART_VIEW.VOLUME ||
-              (chartFilter === CHART_VIEW.PRICE &&
-                frequency === DATA_FREQUENCY.LINE)
+            chartFilter === CHART_VIEW.VOLUME ||
+            (chartFilter === CHART_VIEW.PRICE &&
+              frequency === DATA_FREQUENCY.LINE)
               ? 40
               : 0
           }
           align="flex-start"
         >
-          <div >
+          <div>
             <div className="d-flex justify-content-center ">
               <Button
                 active={chartFilter === CHART_VIEW.LIQUIDITY}
                 onClick={() => setChartFilter(CHART_VIEW.LIQUIDITY)}
-                style={styles.button}
+                style={
+                  chartFilter === CHART_VIEW.LIQUIDITY
+                    ? styles.buttonActive
+                    : styles.button
+                }
               >
                 Liquidity
               </Button>
               <Button
                 active={chartFilter === CHART_VIEW.VOLUME}
                 onClick={() => setChartFilter(CHART_VIEW.VOLUME)}
-                style={styles.button}
+                style={
+                  chartFilter === CHART_VIEW.VOLUME
+                    ? styles.buttonActive
+                    : styles.button
+                }
               >
                 Volume
               </Button>
@@ -238,7 +258,11 @@ const TokenChart = ({ address, color, base }) => {
                   console.log("analyticsTest: filter", CHART_VIEW.PRICE);
                   setChartFilter(CHART_VIEW.PRICE);
                 }}
-                style={styles.button}
+                style={
+                  chartFilter === CHART_VIEW.PRICE
+                    ? styles.buttonActive
+                    : styles.button
+                }
               >
                 Price
               </Button>
@@ -265,7 +289,11 @@ const TokenChart = ({ address, color, base }) => {
                 <Button
                   active={frequency === DATA_FREQUENCY.LINE}
                   onClick={() => setFrequency(DATA_FREQUENCY.LINE)}
-                  style={styles.button}
+                  style={
+                    frequency === DATA_FREQUENCY.LINE
+                      ? styles.buttonActive
+                      : styles.button
+                  }
                 >
                   <Activity size={14} />
                 </Button>
@@ -298,73 +326,12 @@ const TokenChart = ({ address, color, base }) => {
         </RowBetween>
       )}
       {chartFilter === CHART_VIEW.LIQUIDITY && chartData && (
-        <ResponsiveContainer aspect={aspect}>
-          <AreaChart
-            margin={{ top: 0, right: 10, bottom: 6, left: 0 }}
-            barCategoryGap={1}
-            data={chartData}
-          >
-            <defs>
-              <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={color} stopOpacity={0.35} />
-                <stop offset="95%" stopColor={color} stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <XAxis
-              tickLine={false}
-              axisLine={false}
-              interval="preserveEnd"
-              tickMargin={16}
-              minTickGap={120}
-              tickFormatter={(tick) => toNiceDate(tick)}
-              dataKey="date"
-              tick={{ fill: textColor }}
-              type={"number"}
-              domain={["dataMin", "dataMax"]}
-            />
-            <YAxis
-              type="number"
-              orientation="right"
-              tickFormatter={(tick) => "$" + toK(tick)}
-              axisLine={false}
-              tickLine={false}
-              interval="preserveEnd"
-              minTickGap={80}
-              yAxisId={0}
-              tick={{ fill: textColor }}
-            />
-            <Tooltip
-              cursor={true}
-              formatter={(val) => formattedNum(val, true)}
-              labelFormatter={(label) => toNiceDateYear(label)}
-              labelStyle={{ paddingTop: 4 }}
-              contentStyle={{
-                padding: "10px 14px",
-                borderRadius: 10,
-                borderColor: color,
-                color: "black",
-              }}
-              wrapperStyle={{ top: -70, left: -10 }}
-            />
-            <Area
-              key={"other"}
-              dataKey={"totalLiquidityUSD"}
-              stackId="2"
-              strokeWidth={2}
-              dot={false}
-              type="monotone"
-              name={"Liquidity"}
-              yAxisId={0}
-              stroke={darken(0.12, color)}
-              fill="url(#colorUv)"
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+        <AreaChart chartData={chartData} />
       )}
       {chartFilter === CHART_VIEW.PRICE &&
         (frequency === DATA_FREQUENCY.LINE ? (
           <ResponsiveContainer aspect={below1080 ? 60 / 32 : 60 / 16}>
-            <AreaChart
+            <AreaChartNative
               margin={{ top: 0, right: 10, bottom: 6, left: 0 }}
               barCategoryGap={1}
               data={chartData}
@@ -423,7 +390,7 @@ const TokenChart = ({ address, color, base }) => {
                 stroke={darken(0.12, color)}
                 fill="url(#colorUv)"
               />
-            </AreaChart>
+            </AreaChartNative>
           </ResponsiveContainer>
         ) : priceData ? (
           <ResponsiveContainer aspect={aspect} ref={ref}>
@@ -437,7 +404,7 @@ const TokenChart = ({ address, color, base }) => {
 
       {chartFilter === CHART_VIEW.VOLUME && (
         <ResponsiveContainer aspect={aspect}>
-          <BarChart
+          {/* <BarChart
             margin={{ top: 0, right: 10, bottom: 6, left: 10 }}
             barCategoryGap={1}
             data={chartData}
@@ -488,7 +455,8 @@ const TokenChart = ({ address, color, base }) => {
               yAxisId={0}
               stroke={color}
             />
-          </BarChart>
+          </BarChart> */}
+          <BarChart chartData={chartData} />
         </ResponsiveContainer>
       )}
     </ChartWrapper>

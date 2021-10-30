@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TransactionsTable({ data }) {
+export default function TokenTxTable({ data }) {
   const classes = useStyles();
   const [rows, setRows] = useState([]);
 

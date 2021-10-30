@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TokenTopPairsTable({ data }) {
+export default function TokenPairsTable({ data }) {
   const classes = useStyles();
   const [rows, setRows] = useState([]);
   const [sortedFees, setSortedFees] = useState(false);

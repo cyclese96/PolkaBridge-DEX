@@ -285,6 +285,7 @@ async function getGlobalData(ethPrice, oldEthPrice) {
 
     const twoWeekData = !twoWeekResult.data.polkabridgeAmmFactories[0] ? {} : twoWeekResult.data.polkabridgeAmmFactories[0];
 
+    // console.log('ApiTest:  data  --> ', { data, oneDayData, twoDayData, twoWeekData })
     if (data && oneDayData && twoDayData && twoWeekData) {
       let [oneDayVolumeUSD, volumeChangeUSD] = get2DayPercentChange(
         data.totalVolumeUSD,
@@ -596,10 +597,10 @@ export function useGlobalData() {
 
   useEffect(() => {
     async function fetchData() {
-      console.log("analyticsTest: fetching global data...", { ethPrice, oldEthPrice });
+      // console.log("analyticsTest: fetching global data...", { ethPrice, oldEthPrice });
       let globalData = await getGlobalData(ethPrice, oldEthPrice);
 
-      console.log('analyticsTest: fetched global data ', globalData)
+      // console.log('analyticsTest: fetched global data ', globalData)
       globalData && update(globalData);
 
       let allPairs = await getAllPairsOnUniswap();

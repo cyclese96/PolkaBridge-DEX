@@ -32,10 +32,39 @@ const state = {
         mouseMove: chartEvent,
       },
     },
+    plotOptions: {
+      bar: {
+        borderRadius: 10,
+        dataLabels: {
+          position: "top", // top, center, bottom
+        },
+      },
+    },
+    crosshairs: {
+      fill: {
+        type: "gradient",
+        gradient: {
+          colorFrom: "#D8E3F0",
+          colorTo: "#BED1E6",
+          stops: [0, 100],
+          opacityFrom: 0.4,
+          opacityTo: 0.5,
+        },
+      },
+    },
     legend: {
       show: false,
     },
     colors: ["#E0077D"],
+    grid: {
+      borderColor: "#212121",
+      clipMarkers: false,
+      yaxis: {
+        lines: {
+          show: true,
+        },
+      },
+    },
     annotations: {
       yaxis: [
         {
@@ -77,7 +106,7 @@ const state = {
     xaxis: {
       type: "datetime",
       // min: new Date("10 Aug 2021").getTime(),
-      // tickAmount: 4,
+      tickAmount: 20,
     },
     tooltip: {
       x: {
@@ -86,15 +115,13 @@ const state = {
       y: {},
       theme: "dark",
     },
-    // fill: {
-    //   type: "gradient",
-    //   gradient: {
-    //     shadeIntensity: 1,
-    //     opacityFrom: 0.7,
-    //     opacityTo: 0.9,
-    //     stops: [0, 100],
-    //   },
-    // },
+    fill: {
+      gradient: {
+        enabled: true,
+        opacityFrom: 0.55,
+        opacityTo: 0,
+      },
+    },
   },
   selection: "all",
   series: [

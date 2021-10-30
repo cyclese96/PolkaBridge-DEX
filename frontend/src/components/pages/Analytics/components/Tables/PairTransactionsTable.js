@@ -64,6 +64,7 @@ export default function PairTransactionsTable({ data }) {
   const [rows, setRows] = useState([]);
   const [skipIndex, setSkipIndex] = useState(0);
   const [sortedTime, setSortedTime] = useState(true);
+  const [txFilterType, setTxFilterType] = useState("all");
 
   let styles = {
     tableHeading: {
@@ -100,6 +101,36 @@ export default function PairTransactionsTable({ data }) {
     setSortedTime(!sortedTime);
     setRows([...tempRows]);
   };
+  const filterTx = (filter) => {
+    let result = Object.keys(data).map((key) => data[key]);
+    let tempRows;
+    if (filter === "all") {
+      tempRows = [...result[0], ...result[1], ...result[2]];
+      tempRows.sort(
+        (a, b) => b.transaction.timestamp - a.transaction.timestamp
+      );
+    }
+    if (filter === "swap") {
+      tempRows = [...result[2]];
+      tempRows.sort(
+        (a, b) => b.transaction.timestamp - a.transaction.timestamp
+      );
+    }
+    if (filter === "add") {
+      tempRows = [...result[0]];
+      tempRows.sort(
+        (a, b) => b.transaction.timestamp - a.transaction.timestamp
+      );
+    }
+    if (filter === "remove") {
+      tempRows = [...result[1]];
+      tempRows.sort(
+        (a, b) => b.transaction.timestamp - a.transaction.timestamp
+      );
+    }
+    setRows([...tempRows]);
+    setTxFilterType(filter);
+  };
   return (
     <Paper elevation={10} className={classes.table}>
       <TableContainer
@@ -120,7 +151,84 @@ export default function PairTransactionsTable({ data }) {
         >
           <TableHead>
             <TableRow style={{ color: "white" }}>
-              <TableCell style={styles.tableHeading}>Transaction</TableCell>
+              <TableCell style={styles.tableHeading}>
+                {" "}
+                <div className="d-flex justify-content-start">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      filterTx("all");
+                    }}
+                    style={{
+                      color: txFilterType === "all" ? "white" : "grey",
+                      textTransform: "none",
+                      backgroundColor: "transparent",
+                      textDecoration: "none",
+                      width: 35,
+                      fontWeight: 500,
+                      outline: "none",
+                      border: "none",
+                    }}
+                  >
+                    All
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      filterTx("swap");
+                    }}
+                    style={{
+                      color: txFilterType === "swap" ? "white" : "grey",
+                      backgroundColor: "transparent",
+                      textDecoration: "none",
+                      width: 60,
+                      fontWeight: 500,
+                      border: "none",
+                      outline: "none",
+                      textTransform: "none",
+                    }}
+                  >
+                    Swaps
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      filterTx("add");
+                    }}
+                    style={{
+                      color: txFilterType === "add" ? "white" : "grey",
+
+                      textTransform: "none",
+                      backgroundColor: "transparent",
+                      textDecoration: "none",
+                      outline: "none",
+                      width: 50,
+                      fontWeight: 500,
+                      border: "none",
+                    }}
+                  >
+                    Adds
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      filterTx("remove");
+                    }}
+                    style={{
+                      color: txFilterType === "remove" ? "white" : "grey",
+                      outline: "none",
+                      textTransform: "none",
+                      backgroundColor: "transparent",
+                      textDecoration: "none",
+                      width: 60,
+                      border: "none",
+                      fontWeight: 500,
+                    }}
+                  >
+                    Removes
+                  </button>
+                </div>
+              </TableCell>
               <TableCell align="right" style={styles.tableHeading}>
                 Total value
               </TableCell>
