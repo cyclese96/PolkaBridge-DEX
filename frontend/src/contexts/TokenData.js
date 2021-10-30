@@ -499,6 +499,8 @@ const getTokenTransactions = async (allPairsFormatted) => {
     transactions.mints = result.data.mints
     transactions.burns = result.data.burns
     transactions.swaps = result.data.swaps
+
+    // console.log('token transactions query', transactions)
   } catch (e) {
     console.log(e)
   }

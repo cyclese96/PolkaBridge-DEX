@@ -30,6 +30,10 @@ const Analytics = () => {
 
   const chartData = useGlobalChartData();
 
+  useEffect(() => {
+    console.log('transactions  ', transactions)
+  }, [transactions])
+
   const isValidGlobalChart = (_chartData, _globalData) => {
     let areaChartPrepared = false;
     let barChartPrepared = false;
