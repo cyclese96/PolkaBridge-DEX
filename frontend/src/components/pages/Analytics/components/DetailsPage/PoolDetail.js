@@ -247,19 +247,23 @@ function PoolDetail({ pairAddress }) {
         : formattedNum(oneDayVolumeUSD * 0.003, true)
       : "-";
 
+  const isLoaded = () => {
+    return (poolInfo && poolInfo.token1?.symbol) || (token0 && token0.address)
+  }
+
   // token data for usd
   const [ethPrice] = useEthPrice();
 
   const classes = useStyles();
   return (
     <div className="container">
-      {!poolInfo && (
+      {!isLoaded() && (
         <div className="text-center mt-4">
           <Loader />
           <h6>Fetching data...</h6>
         </div>
       )}
-      {poolInfo && (
+      {isLoaded() && (
         <div className={classes.background}>
           <div for="breadcrumbs" className={classes.breadcrumbs}>
             <h6 className={classes.breadcrumbsTitle}>
