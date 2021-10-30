@@ -1,14 +1,16 @@
 specVersion: 0.0.2
+description: PolkaBridge is a Multichain and Cross Chain AMM built on Polkadot.
+repository: https://github.com/cyclese96/PolkaBridge-DEX
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
     name: Factory
-    network: rinkeby
+    network: mainnet
     source:
-      address: '0xcbD7EbEB972731D66F4113cD6d7025C72ED938e5'
+      address: '0x8395901148d18a47CA4c2421f042d6ca49219eD8'
       abi: Factory
-      startBlock: 9540394
+      startBlock: 13517515
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -32,7 +34,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Pair
-    network: rinkeby
+    network: mainnet
     source:
       abi: Pair
     mapping:
