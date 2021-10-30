@@ -313,13 +313,13 @@ export default function TransactionsTable({ data }) {
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
                     {parseFloat(row.amountUSD).toFixed(2)}
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
                     {row.amount0
                       ? parseFloat(row.amount0).toFixed(3)
@@ -329,7 +329,7 @@ export default function TransactionsTable({ data }) {
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
                     {row.amount1
                       ? parseFloat(row.amount1).toFixed(3)
@@ -340,7 +340,7 @@ export default function TransactionsTable({ data }) {
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
                     <a
                       style={{ color: "rgb(223, 9, 124)" }}
