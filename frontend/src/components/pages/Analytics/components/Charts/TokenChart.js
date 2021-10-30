@@ -36,19 +36,6 @@ import Loader from "../../../../common/Loader";
 import { Button } from "@material-ui/core";
 // import { useDarkModeManager } from '../../contexts/LocalStorage'
 
-const ChartWrapper = styled.div`
-  height: 100%;
-  // height: 300px;
-
-  @media screen and (max-width: 600px) {
-    min-height: 200px;
-  }
-`;
-
-const PriceOption = styled(OptionButton)`
-  border-radius: 2px;
-`;
-
 const CHART_VIEW = {
   VOLUME: "Volume",
   LIQUIDITY: "Liquidity",
@@ -87,6 +74,7 @@ const styles = {
     color: "white",
     background: `#263238`,
   },
+  chartContainer: {},
 };
 const TokenChart = ({ address, color, base }) => {
   // settings for the window and candle width
@@ -200,76 +188,60 @@ const TokenChart = ({ address, color, base }) => {
   }, [chartData]);
 
   return (
-    <ChartWrapper>
-      {below600 ? (
-        <RowBetween mb={40}>
-          <DropdownSelect
-            options={CHART_VIEW}
-            active={chartFilter}
-            setActive={setChartFilter}
-            color={color}
-          />
-          <DropdownSelect
-            options={timeframeOptions}
-            active={timeWindow}
-            setActive={setTimeWindow}
-            color={color}
-          />
-        </RowBetween>
-      ) : (
-        <RowBetween
-          mb={
-            chartFilter === CHART_VIEW.LIQUIDITY ||
-            chartFilter === CHART_VIEW.VOLUME ||
-            (chartFilter === CHART_VIEW.PRICE &&
-              frequency === DATA_FREQUENCY.LINE)
-              ? 40
-              : 0
-          }
-          align="flex-start"
-        >
-          <div>
-            <div className="d-flex justify-content-center ">
-              <Button
-                active={chartFilter === CHART_VIEW.LIQUIDITY}
-                onClick={() => setChartFilter(CHART_VIEW.LIQUIDITY)}
-                style={
-                  chartFilter === CHART_VIEW.LIQUIDITY
-                    ? styles.buttonActive
-                    : styles.button
-                }
-              >
-                Liquidity
-              </Button>
-              <Button
-                active={chartFilter === CHART_VIEW.VOLUME}
-                onClick={() => setChartFilter(CHART_VIEW.VOLUME)}
-                style={
-                  chartFilter === CHART_VIEW.VOLUME
-                    ? styles.buttonActive
-                    : styles.button
-                }
-              >
-                Volume
-              </Button>
-              <Button
-                active={chartFilter === CHART_VIEW.PRICE}
-                onClick={() => {
-                  console.log("analyticsTest: filter", CHART_VIEW.PRICE);
-                  setChartFilter(CHART_VIEW.PRICE);
-                }}
-                style={
-                  chartFilter === CHART_VIEW.PRICE
-                    ? styles.buttonActive
-                    : styles.button
-                }
-              >
-                Price
-              </Button>
-            </div>
-            {chartFilter === CHART_VIEW.PRICE && (
-              <AutoRow gap="4px">
-                {/* <Button
+    <div style={{ maxHeight: 300, height: "100%" }}>
+      <RowBetween
+        mb={
+          chartFilter === CHART_VIEW.LIQUIDITY ||
+          chartFilter === CHART_VIEW.VOLUME ||
+          (chartFilter === CHART_VIEW.PRICE &&
+            frequency === DATA_FREQUENCY.LINE)
+            ? 40
+            : 0
+        }
+        align="flex-start"
+      >
+        <div>
+          <div className="d-flex justify-content-center ">
+            <Button
+              active={chartFilter === CHART_VIEW.LIQUIDITY}
+              onClick={() => setChartFilter(CHART_VIEW.LIQUIDITY)}
+              style={
+                chartFilter === CHART_VIEW.LIQUIDITY
+                  ? styles.buttonActive
+                  : styles.button
+              }
+            >
+              Liquidity
+            </Button>
+            <Button
+              active={chartFilter === CHART_VIEW.VOLUME}
+              onClick={() => setChartFilter(CHART_VIEW.VOLUME)}
+              style={
+                chartFilter === CHART_VIEW.VOLUME
+                  ? styles.buttonActive
+                  : styles.button
+              }
+            >
+              Volume
+            </Button>
+            <Button
+              active={chartFilter === CHART_VIEW.PRICE}
+              onClick={() => {
+                console.log("analyticsTest: filter", CHART_VIEW.PRICE);
+                setChartFilter(CHART_VIEW.PRICE);
+              }}
+              style={
+                chartFilter === CHART_VIEW.PRICE
+                  ? styles.buttonActive
+                  : styles.button
+              }
+            >
+              Price
+            </Button>
+          </div>
+          {chartFilter === CHART_VIEW.PRICE && (
+            <AutoRow gap="4px">
+              {/* <Button
                   active={frequency === DATA_FREQUENCY.DAY}
                   onClick={() => {
                     setTimeWindow(timeframeOptions.MONTH);
@@ -279,28 +251,28 @@ const TokenChart = ({ address, color, base }) => {
                 >
                   D
                 </Button> */}
-                {/* <Button
+              {/* <Button
                   active={frequency === DATA_FREQUENCY.HOUR}
                   onClick={() => setFrequency(DATA_FREQUENCY.HOUR)}
                   style={styles.button}
                 >
                   H
                 </Button> */}
-                <Button
-                  active={frequency === DATA_FREQUENCY.LINE}
-                  onClick={() => setFrequency(DATA_FREQUENCY.LINE)}
-                  style={
-                    frequency === DATA_FREQUENCY.LINE
-                      ? styles.buttonActive
-                      : styles.button
-                  }
-                >
-                  <Activity size={14} />
-                </Button>
-              </AutoRow>
-            )}
-          </div>
-          {/* <AutoRow justify="flex-end" gap="6px" align="flex-start">
+              <Button
+                active={frequency === DATA_FREQUENCY.LINE}
+                onClick={() => setFrequency(DATA_FREQUENCY.LINE)}
+                style={
+                  frequency === DATA_FREQUENCY.LINE
+                    ? styles.buttonActive
+                    : styles.button
+                }
+              >
+                <Activity size={14} />
+              </Button>
+            </AutoRow>
+          )}
+        </div>
+        {/* <AutoRow justify="flex-end" gap="6px" align="flex-start">
             <Button
               active={timeWindow === timeframeOptions.WEEK}
               onClick={() => setTimeWindow(timeframeOptions.WEEK)}
@@ -323,8 +295,8 @@ const TokenChart = ({ address, color, base }) => {
               All
             </Button>
           </AutoRow> */}
-        </RowBetween>
-      )}
+      </RowBetween>
+
       {chartFilter === CHART_VIEW.LIQUIDITY && chartData && (
         <AreaChart chartData={chartData} />
       )}
@@ -402,64 +374,8 @@ const TokenChart = ({ address, color, base }) => {
           </div>
         ))}
 
-      {chartFilter === CHART_VIEW.VOLUME && (
-        <ResponsiveContainer aspect={aspect}>
-          {/* <BarChart
-            margin={{ top: 0, right: 10, bottom: 6, left: 10 }}
-            barCategoryGap={1}
-            data={chartData}
-          >
-            <XAxis
-              tickLine={false}
-              axisLine={false}
-              interval="preserveEnd"
-              minTickGap={80}
-              tickMargin={14}
-              tickFormatter={(tick) => toNiceDate(tick)}
-              dataKey="date"
-              tick={{ fill: textColor }}
-              type={"number"}
-              domain={["dataMin", "dataMax"]}
-            />
-            <YAxis
-              type="number"
-              axisLine={false}
-              tickMargin={16}
-              tickFormatter={(tick) => "$" + toK(tick)}
-              tickLine={false}
-              orientation="right"
-              interval="preserveEnd"
-              minTickGap={80}
-              yAxisId={0}
-              tick={{ fill: textColor }}
-            />
-            <Tooltip
-              cursor={{ fill: color, opacity: 0.1 }}
-              formatter={(val) => formattedNum(val, true)}
-              labelFormatter={(label) => toNiceDateYear(label)}
-              labelStyle={{ paddingTop: 4 }}
-              contentStyle={{
-                padding: "10px 14px",
-                borderRadius: 10,
-                borderColor: color,
-                color: "black",
-              }}
-              wrapperStyle={{ top: -70, left: -10 }}
-            />
-            <Bar
-              type="monotone"
-              name={"Volume"}
-              dataKey={"dailyVolumeUSD"}
-              fill={color}
-              opacity={"0.4"}
-              yAxisId={0}
-              stroke={color}
-            />
-          </BarChart> */}
-          <BarChart chartData={chartData} />
-        </ResponsiveContainer>
-      )}
-    </ChartWrapper>
+      {chartFilter === CHART_VIEW.VOLUME && <BarChart chartData={chartData} />}
+    </div>
   );
 };
 

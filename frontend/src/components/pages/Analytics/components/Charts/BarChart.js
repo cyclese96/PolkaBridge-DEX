@@ -56,58 +56,42 @@ const state = {
       show: false,
     },
     colors: ["#E0077D"],
+
     grid: {
-      borderColor: "#212121",
       clipMarkers: false,
       yaxis: {
         lines: {
-          show: true,
+          show: false,
         },
       },
     },
-    annotations: {
-      yaxis: [
-        {
-          y: 30,
-          borderColor: "#999",
-          label: {
-            show: true,
-            // text: "Support",
-            style: {
-              color: "#fff",
-              background: "#00E396",
-            },
-          },
-        },
-      ],
-      xaxis: [
-        {
-          x: new Date().getTime(),
-          borderColor: "#999",
-          yAxisIndex: 0,
-          label: {
-            show: true,
-            // text: "Volume",
-            style: {
-              color: "#fff",
-              background: "#775DD0",
-            },
-          },
-        },
-      ],
-    },
+
     dataLabels: {
       enabled: false,
     },
-    markers: {
-      size: 0,
-      style: "hollow",
-    },
     xaxis: {
       type: "datetime",
+      labels: {
+        style: {
+          colors: "#bdbdbd",
+        },
+      },
+      style: {
+        colors: "white",
+      },
       // min: new Date("10 Aug 2021").getTime(),
-      tickAmount: 20,
+      tickAmount: 8,
+      color: "white",
     },
+    yaxis: {
+      tickAmount: 3,
+      labels: {
+        style: {
+          colors: "#bdbdbd",
+        },
+      },
+    },
+
     tooltip: {
       x: {
         format: "dd MMM yyyy",
@@ -126,7 +110,7 @@ const state = {
   selection: "all",
   series: [
     {
-      name: "Volume(USD)",
+      name: "Volume(US$)",
       data: [],
     },
   ],
@@ -156,7 +140,7 @@ const BarChart = ({ chartData }) => {
       options={state.options}
       series={currChartData}
       type="bar"
-      width={"98%"}
+      height="100%"
     />
   );
 };

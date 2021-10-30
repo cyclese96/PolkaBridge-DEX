@@ -31,8 +31,8 @@ const Analytics = () => {
   const chartData = useGlobalChartData();
 
   useEffect(() => {
-    console.log('transactions  ', transactions)
-  }, [transactions])
+    console.log("transactions  ", transactions);
+  }, [transactions]);
 
   const isValidGlobalChart = (_chartData, _globalData) => {
     let areaChartPrepared = false;
@@ -67,17 +67,22 @@ const Analytics = () => {
             {chartData && globalData && (
               <div>
                 <span className={classes.cardSpan}>Total value locked</span>
-                <p className={classes.cardP}>
-                  {"$" +
-                    formatCurrency(
-                      !globalData ? "0" : globalData.totalLiquidityUSD
-                    )}
-                  <small>
+                <div className="d-flex justify-content-start align-items-center">
+                  <p className={classes.cardP}>
+                    {"$" +
+                      formatCurrency(
+                        !globalData ? "0" : globalData.totalLiquidityUSD
+                      )}
+                  </p>
+                  <p
+                    className={classes.cardP}
+                    style={{ fontSize: 17, paddingLeft: 12 }}
+                  >
                     {formattedPercent(
                       !globalData ? "0" : globalData.liquidityChangeUSD
                     )}
-                  </small>
-                </p>
+                  </p>
+                </div>
                 <div className={classes.chart}>
                   <AreaChart chartData={chartData ? chartData[0] : []} />
                 </div>
@@ -98,17 +103,23 @@ const Analytics = () => {
             {globalData !== null && (
               <div>
                 <span className={classes.cardSpan}>Volume 24H</span>
-                <p className={classes.cardP}>
-                  {"$" +
-                    formatCurrency(
-                      !globalData ? "0" : globalData.oneDayVolumeUSD
-                    )}
-                  <small>
+                <div className="d-flex justify-content-start align-items-center">
+                  <p className={classes.cardP}>
+                    {"$" +
+                      formatCurrency(
+                        !globalData ? "0" : globalData.oneDayVolumeUSD
+                      )}
+                  </p>
+                  <p
+                    className={classes.cardP}
+                    style={{ fontSize: 17, paddingLeft: 12 }}
+                  >
                     {formattedPercent(
                       !globalData ? "0" : globalData.volumeChangeUSD
                     )}
-                  </small>
-                </p>
+                  </p>
+                </div>
+
                 <div className={classes.chart}>
                   <BarChart chartData={chartData ? chartData[0] : []} />
                 </div>
@@ -127,7 +138,7 @@ const Analytics = () => {
       </div>
       <div style={{ padding: 10 }}>
         {globalData && (
-          <Card elevetation={10} className={classes.priceStatContainer}>
+          <Card elevation={10} className={classes.priceStatContainer}>
             <div className={classes.statsGroup}>
               <span className={classes.statLabel}>Volume 24H:</span>
               <span className={classes.statAmount}>

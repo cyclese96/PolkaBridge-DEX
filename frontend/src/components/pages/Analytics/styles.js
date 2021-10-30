@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
   chart: {
     width: 440,
+    height: 260,
     [theme.breakpoints.down("sm")]: {
       width: "100%",
     },
@@ -60,10 +61,10 @@ const useStyles = makeStyles((theme) => ({
   },
 
   cardSpan: {
-    color: "#757575",
-    fontSize: 16,
-    fontWeight: 500,
-    letterSpacing: 0.8,
+    color: "#eeeeee",
+    fontSize: 15,
+    fontWeight: 400,
+    letterSpacing: -0.5,
     [theme.breakpoints.down("sm")]: {
       fontSize: 14,
     },
@@ -72,9 +73,11 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
     padding: 0,
     paddingTop: 5,
-    fontSize: 26,
-    fontWeight: 600,
-    color: "#eeeeee",
+    fontSize: 22,
+    fontWeight: 400,
+    color: "#f9f9f9",
+
+    letterSpacing: -0.5,
     [theme.breakpoints.down("sm")]: {
       fontSize: 18,
       paddingTop: 0,
@@ -96,12 +99,15 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "space-evenly",
     border: "1px solid #616161",
+    height: "100%",
+    border: "1px solid #616161",
     background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
     borderRadius: 15,
     paddingLeft: 10,
     paddingRight: 10,
     paddingTop: 15,
     paddingBottom: 15,
+
     [theme.breakpoints.down("xs")]: {
       height: "100%",
       marginTop: 30,
@@ -125,7 +131,7 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: 10,
     fontSize: 15,
 
-    color: "rgba(255,255,255,0.5)",
+    color: "#eeeeee",
     [theme.breakpoints.down("sm")]: {
       fontSize: 12,
       paddingRight: 5,
