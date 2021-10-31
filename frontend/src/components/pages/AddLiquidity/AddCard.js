@@ -14,6 +14,7 @@ import SwapCardItem from "../../Cards/SwapCardItem";
 import AddIcon from "@material-ui/icons/Add";
 import { DECIMAL_6_ADDRESSES, ETH, etheriumNetwork, tokens } from "../../../constants";
 import {
+  fromWei,
   getPercentage,
   getPriceRatio,
   getTokenOutWithReserveRatio,
@@ -405,14 +406,16 @@ const AddCard = (props) => {
         setLocalStateLoading(true);
         clearInputState();
         // load erc20 token abi and balance
-        const erc20Token =
-          selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
+        // const erc20Token =
+        //   selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
 
-        await getAccountBalance(erc20Token, currentNetwork);
-        await loadPairReserves()
+        await Promise.all([
+          getAccountBalance(selectedToken1, currentNetwork),
+          getAccountBalance(selectedToken2, currentNetwork),
+          loadPairReserves(),
+          checkAllowance(selectedToken1, currentAccount, currentNetwork)
+        ])
 
-
-        await checkAllowance(selectedToken1, currentAccount, currentNetwork);
 
         setLocalStateLoading(false);
       }
@@ -458,6 +461,20 @@ const AddCard = (props) => {
       message = "Add liquidity ";
       disabled = false;
     }
+
+    // balance check before trade
+    const _bal0 = Object.keys(balance).includes(selectedToken1.symbol) ? balance[selectedToken1.symbol] : 0
+    const bal0Wei = DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? fromWei(_bal0, 6) : fromWei(_bal0)
+
+    // balance check before trade
+    const _bal1 = Object.keys(balance).includes(selectedToken2.symbol) ? balance[selectedToken2.symbol] : 0
+    const bal1Wei = DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? fromWei(_bal1, 6) : fromWei(_bal1)
+
+    if (new BigNumber(_token1).gt(bal0Wei) || new BigNumber(_token2).gt(bal1Wei)) {
+      disabled = true
+      message = "Insufficient funds!"
+    }
+
 
     setStatus({ message, disabled });
 

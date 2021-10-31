@@ -218,7 +218,7 @@ export default function TokenPairsTable({ data }) {
                         </span>
                       </span>
                     </span>
-                    <Link to={`pair/${row.id}`} className={classes.link}>
+                    <Link to={`/pair/${row.id}`} className={classes.link}>
                       <span className={classes.cellText}>
                         {row.token0.symbol} - {row.token1.symbol}
                       </span>

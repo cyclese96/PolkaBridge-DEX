@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import Chart from "react-apexcharts";
 import { usePrevious } from "react-use";
 import { useState } from "react/cjs/react.development";
+import { formatCurrency } from "../../../../../utils/formatters";
 
 const chartEvent = (
   event,
@@ -90,6 +91,11 @@ const state = {
           colors: "#bdbdbd",
         },
       },
+      labels: {
+        formatter: function (value) {
+          return formatCurrency(value)
+        },
+      },
     },
 
     tooltip: {
@@ -127,9 +133,9 @@ const BarChart = ({ chartData }) => {
       const _series =
         chartData.length > 0
           ? chartData.map((item) => [
-              item.date * 1000,
-              item.dailyVolumeUSD ? parseInt(item.dailyVolumeUSD) : 0,
-            ])
+            item.date * 1000,
+            item.dailyVolumeUSD ? parseInt(item.dailyVolumeUSD) : 0,
+          ])
           : [];
       setChartData([{ name: currChartData[0].name, data: _series }]);
     }

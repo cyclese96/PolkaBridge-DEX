@@ -294,7 +294,9 @@ export default function PairTransactionsTable({ data }) {
                         }}
                       >
                         {" "}
-                        {row.__typename.toUpperCase()}
+                        {row.__typename.toLowerCase() === "mint" && "ADD"}
+                        {row.__typename.toLowerCase() === "burn" && "REMOVE"}
+                        {row.__typename.toLowerCase() === "swap" && "SWAP"}
                       </span>{" "}
                       {" " + row.pair.token0.symbol} -{row.pair.token1.symbol}
                     </a>
@@ -312,8 +314,8 @@ export default function PairTransactionsTable({ data }) {
                     {row.amount0
                       ? parseFloat(row.amount0).toFixed(3)
                       : row.amount0Out !== "0"
-                      ? parseFloat(row.amount0Out).toFixed(2)
-                      : parseFloat(row.amount0In).toFixed(2)}
+                        ? parseFloat(row.amount0Out).toFixed(2)
+                        : parseFloat(row.amount0In).toFixed(2)}
                   </TableCell>
                   <TableCell
                     align="right"
@@ -322,9 +324,9 @@ export default function PairTransactionsTable({ data }) {
                     {row.amount1
                       ? parseFloat(row.amount1).toFixed(3)
                       : row.amount1Out !== "0"
-                      ? parseFloat(row.amount1Out).toFixed(2)
-                      : parseFloat(row.amount1In).toFixed(2)}
-                    {}
+                        ? parseFloat(row.amount1Out).toFixed(2)
+                        : parseFloat(row.amount1In).toFixed(2)}
+                    { }
                   </TableCell>
                   <TableCell
                     align="right"
