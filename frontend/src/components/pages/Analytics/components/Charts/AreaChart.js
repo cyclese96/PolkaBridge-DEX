@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import Chart from "react-apexcharts";
 import { useState } from "react/cjs/react.development";
 import { usePrevious } from "react-use";
+import CurrencyFormat from "react-currency-format";
+import { formatCurrency } from "../../../../../utils/formatters";
 
 const chartEvent = (
   event,
@@ -58,6 +60,11 @@ const state = {
     },
     yaxis: {
       tickAmount: 3,
+      labels: {
+        formatter: function (value) {
+          return formatCurrency(value)
+        },
+      },
     },
     tooltip: {
       x: {
@@ -95,11 +102,11 @@ const AreaChart = ({ chartData }) => {
       const _data =
         chartData.length > 0
           ? chartData.map((item) => [
-              item.date * 1000,
-              item.totalLiquidityUSD || item.reserveUSD
-                ? parseInt(item.totalLiquidityUSD || item.reserveUSD)
-                : 0,
-            ])
+            item.date * 1000,
+            item.totalLiquidityUSD || item.reserveUSD
+              ? parseInt(item.totalLiquidityUSD || item.reserveUSD)
+              : 0,
+          ])
           : [];
 
       console.log("area chart data  ", currChartData);
