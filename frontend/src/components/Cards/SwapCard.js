@@ -24,6 +24,7 @@ import {
 } from "../../constants";
 import {
   buyPriceImpact,
+  fromWei,
   getPriceRatio,
   getToken1Out,
   getToken2Out,
@@ -512,6 +513,16 @@ const SwapCard = (props) => {
       );
     }
 
+    // balance check before trade
+    const _bal0 = Object.keys(balance).includes(selectedToken1.symbol) ? balance[selectedToken1.symbol] : 0
+    const bal0Wei = DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? fromWei(_bal0, 6) : fromWei(_bal0)
+    if (new BigNumber(token1Value).gt(bal0Wei)) {
+      setStatus({
+        disabled: true,
+        message: "Insufficient funds!",
+      });
+    }
+
     if (new BigNumber(_tokenAmount).lt(THRESOLD_VALUE)) {
       setStatus({
         disabled: true,
@@ -545,6 +556,18 @@ const SwapCard = (props) => {
       );
     }
 
+    // balance check before trade
+    const _bal0 = Object.keys(balance).includes(selectedToken1.symbol) ? balance[selectedToken1.symbol] : 0
+    const bal0Wei = DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? fromWei(_bal0, 6) : fromWei(_bal0)
+    if (new BigNumber(_tokenAmount).gt(bal0Wei)) {
+      setStatus({
+        disabled: true,
+        message: "Insufficient funds!",
+      });
+    }
+
+
+
     if (new BigNumber(_tokenAmount).lt(THRESOLD_VALUE)) {
       setStatus({
         disabled: true,
@@ -552,13 +575,6 @@ const SwapCard = (props) => {
       });
     }
 
-    //todo: pending test
-    // if (new BigNumber(_tokenAmount).gt(balance[selectedToken1.symbol])  ){
-    //   setStatus({
-    //     disabled: true,
-    //     message: "Not enough balance for this trade!",
-    //   });
-    // }
 
     // update current price ratio based on trade amounts
     const _ratio = getPriceRatio(token2Value, _tokenAmount);
