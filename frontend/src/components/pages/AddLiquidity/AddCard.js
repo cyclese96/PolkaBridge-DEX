@@ -468,8 +468,9 @@ const AddCard = (props) => {
 
     // balance check before trade
     const _bal1 = Object.keys(balance).includes(selectedToken2.symbol) ? balance[selectedToken2.symbol] : 0
-    const bal1Wei = DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? fromWei(_bal1, 6) : fromWei(_bal1)
+    const bal1Wei = DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? fromWei(_bal1, 6) : fromWei(_bal1)
 
+    // console.log('Test: ', { _token1, bal0Wei, _token2, bal1Wei })
     if (new BigNumber(_token1).gt(bal0Wei) || new BigNumber(_token2).gt(bal1Wei)) {
       disabled = true
       message = "Insufficient funds!"
