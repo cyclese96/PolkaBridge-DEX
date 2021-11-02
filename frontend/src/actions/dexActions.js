@@ -970,12 +970,39 @@ export const getToken1OutAmount = (token0, token1, account, network) => async (d
 
     if (pairAddress && (reserve && (new BigNumber(reserve[token0.symbol]).gt(THRESOLD_WEI_VALUE) || new BigNumber(reserve[token1.symbol]).gt(THRESOLD_WEI_VALUE)))) {
 
-      const amountsOutPair = await _routerContract.methods.getAmountOut(token0In, reserve[token0.symbol], reserve[token1.symbol]).call();
+      let amountsOutPair;
+      try {
+        amountsOutPair = await _routerContract.methods.getAmountOut(token0In, reserve[token0.symbol], reserve[token1.symbol]).call();
+      } catch (error) {
+        amountsOutPair = '0';
+      }
+
       // console.log({ amountsOutPair })
       resultOut = fromWei(amountsOutPair);
       selectedPath = _path0;
 
       // console.log('getToken1OutAmount getting from pair')
+
+      if ([token0.symbol, token1.symbol].includes(USDT) && [token0.symbol, token1.symbol].includes(PBR)) {
+        //pbr-usdt fix if pair exist and not enough liquidity
+        const _token0In = DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0In), 6) : token0In;
+
+        amountsOutBridge = await _routerContract.methods.getAmountsOut(_token0In, bridgePath).call();
+
+        const token1OutBridge = new BigNumber(amountsOutBridge[amountsOutBridge.length - 1])
+        // console.log('getToken1OutAmount fetching from bridge ', { amountsOutBridge, bridgePath, token1OutBridge: token1OutBridge.toString() })
+        const _resultOutBridge = DECIMAL_6_ADDRESSES.includes(token1.address) ? fromWei(token1OutBridge.toString(), 6) : fromWei(token1OutBridge.toString());
+
+        if (new BigNumber(resultOut).lt(_resultOutBridge)) {
+          //consider swap from bridge instead of pair
+          resultOut = _resultOutBridge;
+          selectedPath = bridgePath;
+          // console.log('getToken1OutAmount swap using bridge out amount')
+        }
+
+      }
+
+
     } else {
       //fix if it is bridge swap and token0 is usdc
       const _token0In = DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0In), 6) : token0In;
@@ -1055,11 +1082,36 @@ export const getToken0InAmount = (token0, token1, account, network) => async (di
     // console.log({ reserve, totalSupply, lpBalance })
 
     if (pairAddress && (reserve && (new BigNumber(reserve[token0.symbol]).gt(THRESOLD_WEI_VALUE) || new BigNumber(reserve[token1.symbol]).gt(THRESOLD_WEI_VALUE)))) {
-      // new  
-      const amountsInPair = await _routerContract.methods.getAmountIn(token1Out, reserve[token0.symbol], reserve[token1.symbol]).call();
+      // new 
+      let amountsInPair;
+      try {
+        amountsInPair = await _routerContract.methods.getAmountIn(token1Out, reserve[token0.symbol], reserve[token1.symbol]).call();
+      } catch (error) {
+        amountsInPair = '0';
+      }
       console.log({ amountsInPair })
       resultIn = fromWei(amountsInPair);
       selectedPath = _path0
+
+      // temp fix for pbr-usdt pair with low liquidity
+      if ([token0.symbol, token1.symbol].includes(USDT) && [token0.symbol, token1.symbol].includes(PBR)) {
+
+        const _token1OutWei = DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1Out), 6) : token1Out;
+
+        amountsInBridge = await _routerContract.methods.getAmountsIn(_token1OutWei, bridgePath).call()
+        const token1OutWethBridge = new BigNumber(amountsInBridge[0])
+
+        const _resultInBridge = DECIMAL_6_ADDRESSES.includes(token0.address) ? fromWei(token1OutWethBridge.toString(), 6) : fromWei(token1OutWethBridge.toString());
+
+        if (new BigNumber(resultIn).lt(_resultInBridge)) {
+          //consider swap from bridge instead of pair
+          resultIn = _resultInBridge;
+          selectedPath = bridgePath;
+          // console.log('getToken0InAmount swap using bridge out amount')
+        }
+
+      }
+
 
     } else {
       //Note: token1Out should be in usdc decimals if we are fetching amount from path,
