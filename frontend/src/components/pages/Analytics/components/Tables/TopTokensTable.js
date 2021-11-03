@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -9,7 +9,6 @@ import Paper from "@mui/material/Paper";
 import { Button, makeStyles } from "@material-ui/core";
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import Loader from "../../../../common/Loader";
-import { useState } from "react/cjs/react.development";
 import { Link } from "react-router-dom";
 import TokenIcon from "../../../../common/TokenIcon";
 import { ArrowDownward } from "@material-ui/icons";
@@ -208,7 +207,7 @@ export default function TopTokensTable({ data }) {
                   <TableCell
                     component="th"
                     scope="row"
-                    style={{ color: "white", fontSize: 12 }}
+                    style={{ color: "white", fontSize: 13 }}
                   >
                     <span>
                       {skipIndex * 5 + index + 1}
@@ -219,45 +218,50 @@ export default function TopTokensTable({ data }) {
                       />
                     </span>
                     <Link to={`token/${row.id}`} className={classes.link}>
-                      <span className={classes.cellText}>{row.name}</span>
+                      <span
+                        className={classes.cellText}
+                        style={{ fontSize: 13 }}
+                      >
+                        {row.name}
+                      </span>
                     </Link>
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
                     {row.symbol}
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
                     {parseInt(row.totalLiquidityUSD)}
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
                     ${parseFloat(row.tradeVolumeUSD).toFixed(2)}
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
                     ${parseFloat(row.priceUSD).toFixed(3)}
                   </TableCell>
                   <TableCell
                     align="right"
                     className={classes.tableText}
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
                     {parseFloat(row.priceChangeUSD) < 0 ? (
-                      <span style={{ color: "red" }}>
+                      <span style={{ color: "#ef5350" }}>
                         {" "}
                         {parseFloat(row.priceChangeUSD).toFixed(2)} %
                       </span>
                     ) : (
-                      <span style={{ color: "green" }}>
+                      <span style={{ color: "#9ccc65" }}>
                         {parseFloat(row.priceChangeUSD).toFixed(2)} %
                       </span>
                     )}

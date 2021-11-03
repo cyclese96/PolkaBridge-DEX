@@ -25,9 +25,9 @@ export const corgibMemeCoinMainnet =
 
 // factory ethereum
 export const facotryAddressTestnet =
-  "0xcbD7EbEB972731D66F4113cD6d7025C72ED938e5";
+  "0x3AEa11900f8a35597520608a407c4B4E0141BC16";
 export const factoryAddresMainnet =
-  "0xA1853078D1447C0060c71a672E6D13882f61A0a6";
+  "0x8395901148d18a47CA4c2421f042d6ca49219eD8";
 
 // factory bsc address
 export const facotryAddressBscTestnet =
@@ -37,9 +37,9 @@ export const factoryAddresBscMainnet =
 
 // router ethereum addresses
 export const routerAddressTestnet =
-  "0xdAA330261bB94F121Dd3645420FF7E92c735406D";
+  "0x882724bee0a91190fc923e40A22807B2B71Bc817";
 export const routerAddressMainnet =
-  "0x050aAC21096e027142E3f5d089a9251FcCf191b9";
+  "0xD96882C855582B0C6D0aE12F9d36cD93Ba811E45";
 
 // router bsc addresses
 export const routerAddressBscTestnet =
@@ -104,7 +104,9 @@ export const infuraMainnetApi = `https://mainnet.infura.io/v3/${process.env.REAC
  *    'testnet'  BSC testnet testing
  *    'mainnet'  BSC/ETH mainent deployment
  */
-export const currentConnection = "testnet";
+const testing = true;
+
+export const currentConnection = testing ? "testnet" : "mainnet";
 // export const currentConnection = "mainnet";
 
 export const etheriumNetwork = "ethereum";
@@ -266,11 +268,11 @@ export const tokens = [
     symbol: "SAND",
     address: "0x3845badAde8e6dFF049820680d1F14bD3903a5d0",
   },
-  {
-    name: "Uniswap",
-    symbol: "UNI",
-    address: "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
-  },
+  // {
+  //   name: "Uniswap",
+  //   symbol: "UNI",
+  //   address: "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+  // },
   {
     name: "Balancer",
     symbol: "BAL",

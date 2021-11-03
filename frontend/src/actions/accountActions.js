@@ -19,7 +19,7 @@ import {
   pwarCoinContract,
   tokenContract,
 } from "../contracts/connections";
-import { CORGIB, etheriumNetwork } from "../constants";
+import { CORGIB, ETH, etheriumNetwork, WETH_ADDRESS_MAINNET } from "../constants";
 
 //GET user authenticated
 export const connectWallet =
@@ -119,10 +119,13 @@ export const getAccountBalance = (token, network) => async (dispatch) => {
 
     if (network === etheriumNetwork) {
       // console.log("connectWallet: fetching from", network);
-      const [tokenWei, ethWei] = await Promise.all([
-        _tokenContract.methods.balanceOf(accountAddress).call(),
-        getNetworkBalance(accountAddress),
-      ]);
+      let tokenWei = 0
+      if (token.symbol === ETH) {
+        tokenWei = await getNetworkBalance(accountAddress)
+      } else {
+        tokenWei = await _tokenContract.methods.balanceOf(accountAddress).call()
+      }
+
       // console.log("curr network bal ", ethWei);
       const balanceObject = {};
       balanceObject[token.symbol] = tokenWei;

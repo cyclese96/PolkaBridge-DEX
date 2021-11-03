@@ -1,8 +1,8 @@
 // import React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import { usePrevious } from "react-use";
-import { useState } from "react/cjs/react.development";
+import { formatCurrency } from "../../../../../utils/formatters";
 
 const chartEvent = (
   event,
@@ -56,58 +56,47 @@ const state = {
       show: false,
     },
     colors: ["#E0077D"],
+
     grid: {
-      borderColor: "#212121",
       clipMarkers: false,
       yaxis: {
         lines: {
-          show: true,
+          show: false,
         },
       },
     },
-    annotations: {
-      yaxis: [
-        {
-          y: 30,
-          borderColor: "#999",
-          label: {
-            show: true,
-            // text: "Support",
-            style: {
-              color: "#fff",
-              background: "#00E396",
-            },
-          },
-        },
-      ],
-      xaxis: [
-        {
-          x: new Date().getTime(),
-          borderColor: "#999",
-          yAxisIndex: 0,
-          label: {
-            show: true,
-            // text: "Volume",
-            style: {
-              color: "#fff",
-              background: "#775DD0",
-            },
-          },
-        },
-      ],
-    },
+
     dataLabels: {
       enabled: false,
     },
-    markers: {
-      size: 0,
-      style: "hollow",
-    },
     xaxis: {
       type: "datetime",
+      labels: {
+        style: {
+          colors: "#bdbdbd",
+        },
+      },
+      style: {
+        colors: "white",
+      },
       // min: new Date("10 Aug 2021").getTime(),
-      tickAmount: 20,
+      tickAmount: 8,
+      color: "white",
     },
+    yaxis: {
+      tickAmount: 3,
+      labels: {
+        style: {
+          colors: "#bdbdbd",
+        },
+      },
+      labels: {
+        formatter: function (value) {
+          return formatCurrency(value)
+        },
+      },
+    },
+
     tooltip: {
       x: {
         format: "dd MMM yyyy",
@@ -126,7 +115,7 @@ const state = {
   selection: "all",
   series: [
     {
-      name: "Volume(USD)",
+      name: "Volume(US$)",
       data: [],
     },
   ],
@@ -143,9 +132,9 @@ const BarChart = ({ chartData }) => {
       const _series =
         chartData.length > 0
           ? chartData.map((item) => [
-              item.date * 1000,
-              item.dailyVolumeUSD ? parseInt(item.dailyVolumeUSD) : 0,
-            ])
+            item.date * 1000,
+            item.dailyVolumeUSD ? parseInt(item.dailyVolumeUSD) : 0,
+          ])
           : [];
       setChartData([{ name: currChartData[0].name, data: _series }]);
     }
@@ -156,7 +145,7 @@ const BarChart = ({ chartData }) => {
       options={state.options}
       series={currChartData}
       type="bar"
-      width={"98%"}
+      height="100%"
     />
   );
 };

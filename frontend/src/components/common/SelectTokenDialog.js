@@ -153,8 +153,11 @@ const SelectTokenDialog = ({
   };
 
   useEffect(() => {
-    setTokens(tokenList);
-  }, [tokenList]);
+    if (open) {
+
+      setTokens(tokenList);
+    }
+  }, [tokenList, open]);
 
   // useEffect(() => {
   //   if (open) {
@@ -186,15 +189,18 @@ const SelectTokenDialog = ({
   };
 
   const handleTokenFilter = async (value) => {
+
     setFilterInput(value)
     if (!value) {
       value = "";
     }
-    const filteredList = applyFilter(tokenList, value);
+
+    const _value = value.split(' ').join('');
+    const filteredList = applyFilter(tokenList, _value);
     setTokens(filteredList);
-    if (value.length === 42 && filteredList.length === 0) {
+    if (_value.length >= 42 && filteredList.length === 0) {
       setShowImported(true);
-      await importToken(value, currentAccount, currentNetwork);
+      await importToken(_value, currentAccount, currentNetwork);
     } else {
       setShowImported(false);
     }

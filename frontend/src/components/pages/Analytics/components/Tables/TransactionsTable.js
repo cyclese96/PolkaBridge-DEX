@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -7,11 +7,10 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { makeStyles } from "@material-ui/core";
-import Button from "@mui/material/Button";
+import Button from "@material-ui/core/Button";
 import Stack from "@mui/material/Stack";
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import Loader from "../../../../common/Loader";
-import { useState } from "react/cjs/react.development";
 import { formatTime } from "../../../../../utils/timeUtils";
 import { currentConnection } from "../../../../../constants";
 
@@ -53,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
     borderTop: "1px solid #616161",
   },
   paginationButton: {
-    color: "#DF097C",
+    color: "rgb(223, 9, 124)",
     padding: 5,
     paddingRight: 10,
     paddingLeft: 10,
@@ -305,45 +304,56 @@ export default function TransactionsTable({ data }) {
                           fontWeight: 500,
                         }}
                       >
-                        {" "}
-                        {row.__typename.toUpperCase()}
+                        {row.__typename.toLowerCase() === "mint" && "ADD"}
+                        {row.__typename.toLowerCase() === "burn" && "REMOVE"}
+                        {row.__typename.toLowerCase() === "swap" && "SWAP"}
                       </span>{" "}
                       {" " + row.pair.token0.symbol} -{row.pair.token1.symbol}
                     </a>
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
                     {parseFloat(row.amountUSD).toFixed(2)}
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
                     {row.amount0
                       ? parseFloat(row.amount0).toFixed(3)
                       : row.amount0Out !== "0"
-                      ? parseFloat(row.amount0Out).toFixed(3)
-                      : parseFloat(row.amount0In).toFixed(3)}
+                        ? parseFloat(row.amount0Out).toFixed(3)
+                        : parseFloat(row.amount0In).toFixed(3)}
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
                     {row.amount1
                       ? parseFloat(row.amount1).toFixed(3)
                       : row.amount1Out !== "0"
-                      ? parseFloat(row.amount1Out).toFixed(3)
-                      : parseFloat(row.amount1In).toFixed(3)}
-                    {}
+                        ? parseFloat(row.amount1Out).toFixed(3)
+                        : parseFloat(row.amount1In).toFixed(3)}
+                    { }
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
-                    {[...row.sender].splice(0, 3)} {"..."}
-                    {[...row.sender].splice([...row.sender].length - 5, 5)}
+                    <a
+                      style={{ color: "rgb(223, 9, 124)" }}
+                      href={
+                        currentConnection === "testnet"
+                          ? `https://rinkeby.etherscan.io/address/${row.sender}`
+                          : `https://etherscan.io/address/${row.sender}`
+                      }
+                    >
+                      {" "}
+                      {[...row.sender].splice(0, 3)} {"..."}
+                      {[...row.sender].splice([...row.sender].length - 5, 5)}
+                    </a>
                   </TableCell>
                   <TableCell
                     align="right"

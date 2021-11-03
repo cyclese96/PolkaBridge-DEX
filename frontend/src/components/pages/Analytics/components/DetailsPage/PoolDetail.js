@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { useEffect, useState } from "react/cjs/react.development";
 
 import {
   usePairData,
@@ -405,6 +404,7 @@ function PoolDetail({ pairAddress }) {
                   <div className="d-flex justify-content-start">
                     <TokenIcon
                       address={poolInfo.token0?.address}
+                      symbol={token0?.symbol}
                       className={classes.tokenAvatarPooled}
                     />
                     <h6 className={classes.cardTokenValue}>
@@ -421,6 +421,7 @@ function PoolDetail({ pairAddress }) {
                   <div className="d-flex justify-content-start">
                     <TokenIcon
                       address={poolInfo.token1?.address}
+                      symbol={token1?.symbol}
                       className={classes.tokenAvatarPooled}
                     />
                     <h6 className={classes.cardTokenValue}>

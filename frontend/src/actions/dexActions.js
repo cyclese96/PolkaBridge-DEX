@@ -785,7 +785,7 @@ export const checkLpAllowance =
           payload: { pair: `${token1.symbol}_${token2.symbol}`, status: false },
         });
       }
-      // console.log("lp allowance ", lpAllowance);
+      // console.log("Test: lp allowance ", lpAllowance);
     } catch (error) {
       console.log("checkLpAllowance ", error);
       dispatch({
@@ -871,30 +871,42 @@ export const importToken = (address, account, network) => async (dispatch) => {
     ]);
 
     // console.log("token info received ", tokenInfoData);
-    let tokenInfo = {};
+
     if (tokenInfoData.status === '0') {
-      tokenInfo = {
-        tokenName: "Test erc20 token",
-        symbol: "TEST"
+
+      if (currentConnection === 'testnet') {
+        const tokenObj = {
+          tokenName: "Test erc20 token",
+          symbol: address && address.slice(0, 6),
+          address: address
+        }
+        cacheImportedToken(tokenObj);
+        dispatch({
+          type: IMPORT_TOKEN,
+          payload: {
+            listData: tokenObj,
+          },
+        });
       }
-      // tokenInfo.tokenName = "Test token";
-      // tokenInfo.symbol = "TEST";
+      console.log('token not found')
+
     } else {
-      tokenInfo = tokenInfoData.result[0];
+      const tokenInfo = tokenInfoData.result[0];
+      const tokenObj = {
+        name: tokenInfo.tokenName,
+        symbol: tokenInfo.symbol,
+        address: address,
+      };
+      cacheImportedToken(tokenObj);
+      dispatch({
+        type: IMPORT_TOKEN,
+        payload: {
+          listData: tokenObj,
+        },
+      });
+
     }
 
-    const tokenObj = {
-      name: tokenInfo.tokenName,
-      symbol: tokenInfo.symbol,
-      address: address,
-    };
-    cacheImportedToken(tokenObj);
-    dispatch({
-      type: IMPORT_TOKEN,
-      payload: {
-        listData: tokenObj,
-      },
-    });
   } catch (error) {
     console.log("importToken ", error);
     dispatch({
@@ -958,12 +970,39 @@ export const getToken1OutAmount = (token0, token1, account, network) => async (d
 
     if (pairAddress && (reserve && (new BigNumber(reserve[token0.symbol]).gt(THRESOLD_WEI_VALUE) || new BigNumber(reserve[token1.symbol]).gt(THRESOLD_WEI_VALUE)))) {
 
-      const amountsOutPair = await _routerContract.methods.getAmountOut(token0In, reserve[token0.symbol], reserve[token1.symbol]).call();
+      let amountsOutPair;
+      try {
+        amountsOutPair = await _routerContract.methods.getAmountOut(token0In, reserve[token0.symbol], reserve[token1.symbol]).call();
+      } catch (error) {
+        amountsOutPair = '0';
+      }
+
       // console.log({ amountsOutPair })
       resultOut = fromWei(amountsOutPair);
       selectedPath = _path0;
 
       // console.log('getToken1OutAmount getting from pair')
+
+      if ([token0.symbol, token1.symbol].includes(USDT) && [token0.symbol, token1.symbol].includes(PBR)) {
+        //pbr-usdt fix if pair exist and not enough liquidity
+        const _token0In = DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0In), 6) : token0In;
+
+        amountsOutBridge = await _routerContract.methods.getAmountsOut(_token0In, bridgePath).call();
+
+        const token1OutBridge = new BigNumber(amountsOutBridge[amountsOutBridge.length - 1])
+        // console.log('getToken1OutAmount fetching from bridge ', { amountsOutBridge, bridgePath, token1OutBridge: token1OutBridge.toString() })
+        const _resultOutBridge = DECIMAL_6_ADDRESSES.includes(token1.address) ? fromWei(token1OutBridge.toString(), 6) : fromWei(token1OutBridge.toString());
+
+        if (new BigNumber(resultOut).lt(_resultOutBridge)) {
+          //consider swap from bridge instead of pair
+          resultOut = _resultOutBridge;
+          selectedPath = bridgePath;
+          // console.log('getToken1OutAmount swap using bridge out amount')
+        }
+
+      }
+
+
     } else {
       //fix if it is bridge swap and token0 is usdc
       const _token0In = DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0In), 6) : token0In;
@@ -1043,11 +1082,36 @@ export const getToken0InAmount = (token0, token1, account, network) => async (di
     // console.log({ reserve, totalSupply, lpBalance })
 
     if (pairAddress && (reserve && (new BigNumber(reserve[token0.symbol]).gt(THRESOLD_WEI_VALUE) || new BigNumber(reserve[token1.symbol]).gt(THRESOLD_WEI_VALUE)))) {
-      // new  
-      const amountsInPair = await _routerContract.methods.getAmountIn(token1Out, reserve[token0.symbol], reserve[token1.symbol]).call();
+      // new 
+      let amountsInPair;
+      try {
+        amountsInPair = await _routerContract.methods.getAmountIn(token1Out, reserve[token0.symbol], reserve[token1.symbol]).call();
+      } catch (error) {
+        amountsInPair = '0';
+      }
       console.log({ amountsInPair })
       resultIn = fromWei(amountsInPair);
       selectedPath = _path0
+
+      // temp fix for pbr-usdt pair with low liquidity
+      if ([token0.symbol, token1.symbol].includes(USDT) && [token0.symbol, token1.symbol].includes(PBR)) {
+
+        const _token1OutWei = DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1Out), 6) : token1Out;
+
+        amountsInBridge = await _routerContract.methods.getAmountsIn(_token1OutWei, bridgePath).call()
+        const token1OutWethBridge = new BigNumber(amountsInBridge[0])
+
+        const _resultInBridge = DECIMAL_6_ADDRESSES.includes(token0.address) ? fromWei(token1OutWethBridge.toString(), 6) : fromWei(token1OutWethBridge.toString());
+
+        if (new BigNumber(resultIn).lt(_resultInBridge)) {
+          //consider swap from bridge instead of pair
+          resultIn = _resultInBridge;
+          selectedPath = bridgePath;
+          // console.log('getToken0InAmount swap using bridge out amount')
+        }
+
+      }
+
 
     } else {
       //Note: token1Out should be in usdc decimals if we are fetching amount from path,
@@ -1088,53 +1152,65 @@ export const getToken0InAmount = (token0, token1, account, network) => async (di
 const getReservesForPriceImpact = async (token0, token1, account, network) => {
   if ([token0.symbol, token1.symbol].includes(PBR) && [token0.symbol, token1.symbol].includes(USDT)) {
     // fetch all reserves
-    //pbr-eth
     const wethAddress = currentConnection === 'testnet' ? WETH_ADDRESS_TESTNET : WETH_ADDRESS_MAINNET;
-    const pair0Address = await getPairAddress(token0.address, wethAddress)
+    const pbrAddress = token0.symbol === PBR ? token0.address : token1.address;
+    const usdtAddress = token0.symbol === USDT ? token0.address : token1.address;
+
+    //pbr-eth
+    const pair0Address = await getPairAddress(pbrAddress, wethAddress)
     const pair0Contract = pairContract(pair0Address, network)
-    const pair0Reserves = await fetchPairData(token0, { address: wethAddress, symbol: ETH }, pair0Contract, account);
+    const pair0Reserves = await fetchPairData({ address: pbrAddress, symbol: PBR }, { address: wethAddress, symbol: ETH }, pair0Contract, account);
 
     //eth-usdt
-    const pair1Address = await getPairAddress(token1.address, wethAddress)
+    const pair1Address = await getPairAddress(usdtAddress, wethAddress)
     const pair1Contract = pairContract(pair1Address, network)
-    const pair1Reserves = await fetchPairData({ address: wethAddress, symbol: ETH }, token1, pair1Contract, account);
+    const pair1Reserves = await fetchPairData({ address: wethAddress, symbol: ETH }, { address: usdtAddress, symbol: USDT }, pair1Contract, account);
 
     return { ...pair0Reserves.reserve, ...pair1Reserves.reserve }
 
 
   } else if ([token0.symbol, token1.symbol].includes(PBR) && [token0.symbol, token1.symbol].includes(USDC)) {
+    // console.log('getting reserves for pbr usdt ')
     //
-    //pbr-eth
     const wethAddress = currentConnection === 'testnet' ? WETH_ADDRESS_TESTNET : WETH_ADDRESS_MAINNET;
-    const pair0Address = await getPairAddress(token0.address, wethAddress)
-    const pair0Contract = pairContract(pair0Address, network)
-    const pair0Reserves = await fetchPairData(token0, { address: wethAddress, symbol: ETH }, pair0Contract, account);
-
-    //eth-usdt
     const usdtAddress = currentConnection === 'testnet' ? usdtTestnetAddress : usdtMainnetAddress;
-    const pair1Address = await getPairAddress(usdtAddress, wethAddress)
-    const pair1Contract = pairContract(pair1Address, network)
-    const pair1Reserves = await fetchPairData({ address: wethAddress, symbol: ETH }, { address: usdtAddress, symbol: USDT }, pair1Contract, account);
+    const usdcAddress = token0.symbol === USDC ? token0.address : token1.address;
+    const pbrAddress = token0.symbol === PBR ? token0.address : token1.address;
+
+    // //pbr-eth
+    const pair0Address = await getPairAddress(pbrAddress, wethAddress)
+    const pair0Contract = pairContract(pair0Address, network)
+    const pair0Reserves = await fetchPairData({ address: pbrAddress, symbol: PBR }, { address: wethAddress, symbol: ETH }, pair0Contract, account);
+
+    // console.log('usdc-pbr pair ', pair0Address)
+    // //eth-usdt
+    // const pair1Address = await getPairAddress(usdtAddress, wethAddress)
+    // const pair1Contract = pairContract(pair1Address, network)
+    // const pair1Reserves = await fetchPairData({ address: wethAddress, symbol: ETH }, { address: usdtAddress, symbol: USDT }, pair1Contract, account);
 
     //usdt-usdc
-    const pair2Address = await getPairAddress(token1.address, wethAddress)
+    const pair2Address = await getPairAddress(usdtAddress, usdcAddress)
     const pair2Contract = pairContract(pair2Address, network)
-    const pair2Reserves = await fetchPairData({ address: usdtAddress, symbol: USDT }, token1, pair2Contract, account);
+    const pair2Reserves = await fetchPairData({ address: usdtAddress, symbol: USDT }, { address: usdcAddress, symbol: USDC }, pair2Contract, account);
 
-    return { ...pair0Reserves.reserve, ...pair1Reserves.reserve, ...pair2Reserves.reserve }
+    // console.log('checkPriceImpact:  ', { pair2Reserves })
+    return { ...pair2Reserves.reserve, ...pair0Reserves.reserve }
 
   } else if ([token0.symbol, token1.symbol].includes(ETH) && [token0.symbol, token1.symbol].includes(USDC)) {
     //
-    //eth-usdt
     const usdtAddress = currentConnection === 'testnet' ? usdtTestnetAddress : usdtMainnetAddress;
-    const pair0Address = await getPairAddress(token0.address, usdtAddress)
+    const ethAddress = token0.symbol === ETH ? token0.address : token1.address;
+    const usdcAddress = token0.symbol === USDC ? token0.address : token1.address;
+
+    //eth-usdt
+    const pair0Address = await getPairAddress(ethAddress, usdtAddress)
     const pair0Contract = pairContract(pair0Address, network)
-    const pair0Reserves = await fetchPairData(token0, { address: usdtAddress, symbol: USDT }, pair0Contract, account);
+    const pair0Reserves = await fetchPairData({ address: ethAddress, symbol: ETH }, { address: usdtAddress, symbol: USDT }, pair0Contract, account);
 
     //usdt-usdc
-    const pair1Address = await getPairAddress(token1.address, usdtAddress)
+    const pair1Address = await getPairAddress(usdcAddress, usdtAddress)
     const pair1Contract = pairContract(pair1Address, network)
-    const pair1Reserves = await fetchPairData({ address: usdtAddress, symbol: USDT }, token1, pair1Contract, account);
+    const pair1Reserves = await fetchPairData({ address: usdtAddress, symbol: USDT }, { address: usdcAddress, symbol: USDC }, pair1Contract, account);
 
     return { ...pair0Reserves.reserve, ...pair1Reserves.reserve }
   }
@@ -1161,15 +1237,22 @@ export const calculatePriceImpact = async (token0, token1, account, network) => 
 
 
 
-      // console.log('checkPriceImpact fetched reserves  ', { reserve })
-      return sellPriceImpact(token0.amount, token1.amount, reserve[token0.symbol])
+      // console.log('checkPriceImpact fetched reserves0  ', { reserv0: reserve[token0.symbol], amount0: token0.amount })
+      const _token0WeiAmount = DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0.amount, 6)) : token0.amount;
+      const _token1WeiAmount = DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1.amount, 6)) : token1.amount;
+
+      return sellPriceImpact(_token0WeiAmount, _token1WeiAmount, reserve[token0.symbol])
 
     } else {
 
       const reserves = await getReservesForPriceImpact(token0, token1, account, network);
 
       // console.log('checkPriceImpact fetched reserves  ', { reserves })
-      return sellPriceImpact(token0.amount, token1.amount, reserves[token0.symbol])
+
+      const _token0WeiAmount = DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0.amount, 6)) : token0.amount;
+      const _token1WeiAmount = DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1.amount, 6)) : token1.amount;
+      // console.log('checkPriceImpact fetched reserves0  ', { _token0WeiAmount, _token1WeiAmount, reserve: reserves[token0.symbol], reserves })
+      return sellPriceImpact(_token0WeiAmount, _token1WeiAmount, reserves[token0.symbol])
 
     }
 

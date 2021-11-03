@@ -1,8 +1,9 @@
 // import React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
-import { useState } from "react/cjs/react.development";
 import { usePrevious } from "react-use";
+import CurrencyFormat from "react-currency-format";
+import { formatCurrency } from "../../../../../utils/formatters";
 
 const chartEvent = (
   event,
@@ -21,12 +22,9 @@ const state = {
     chart: {
       id: "chart2",
       type: "area",
-      height: 180,
-
+      height: 300,
       foreColor: "#ccc",
-      zoom: {
-        autoScaleYaxis: true,
-      },
+
       toolbar: {
         show: false,
       },
@@ -44,7 +42,7 @@ const state = {
       clipMarkers: false,
       yaxis: {
         lines: {
-          show: true,
+          show: false,
         },
       },
     },
@@ -58,11 +56,14 @@ const state = {
     },
     xaxis: {
       type: "datetime",
-      // min: new Date("27 Oct 2021").getTime(),
-      // tickAmount: 20,
     },
     yaxis: {
-      tickAmount: 5,
+      tickAmount: 3,
+      labels: {
+        formatter: function (value) {
+          return formatCurrency(value)
+        },
+      },
     },
     tooltip: {
       x: {
@@ -100,11 +101,11 @@ const AreaChart = ({ chartData }) => {
       const _data =
         chartData.length > 0
           ? chartData.map((item) => [
-              item.date * 1000,
-              item.totalLiquidityUSD || item.reserveUSD
-                ? parseInt(item.totalLiquidityUSD || item.reserveUSD)
-                : 0,
-            ])
+            item.date * 1000,
+            item.totalLiquidityUSD || item.reserveUSD
+              ? parseInt(item.totalLiquidityUSD || item.reserveUSD)
+              : 0,
+          ])
           : [];
 
       console.log("area chart data  ", currChartData);
@@ -117,7 +118,7 @@ const AreaChart = ({ chartData }) => {
       options={state.options}
       series={currChartData}
       type="area"
-      style={{ maxWidth: 700, margin: "0 auto" }}
+      height="100%"
     />
   );
 };

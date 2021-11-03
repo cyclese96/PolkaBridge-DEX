@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -9,7 +9,6 @@ import Paper from "@mui/material/Paper";
 import { Button, makeStyles } from "@material-ui/core";
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import Loader from "../../../../common/Loader";
-import { useState } from "react/cjs/react.development";
 import TokenIcon from "../../../../common/TokenIcon";
 import { Link } from "react-router-dom";
 import { ArrowDown } from "react-feather";
@@ -206,17 +205,19 @@ export default function TokenPairsTable({ data }) {
                         {" "}
                         <TokenIcon
                           symbol={row.token0.symbol}
+                          address={row?.token0?.id}
                           className={classes.tokenIcon}
                         />
                         <span style={{ marginLeft: -10 }}>
                           <TokenIcon
                             symbol={row.token1.symbol}
+                            address={row?.token1?.id}
                             className={classes.tokenIcon}
                           />
                         </span>
                       </span>
                     </span>
-                    <Link to={`pair/${row.id}`} className={classes.link}>
+                    <Link to={`/pair/${row.id}`} className={classes.link}>
                       <span className={classes.cellText}>
                         {row.token0.symbol} - {row.token1.symbol}
                       </span>
