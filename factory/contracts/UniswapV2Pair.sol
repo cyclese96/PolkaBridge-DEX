@@ -188,7 +188,7 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
 
         _update(balance0, balance1, _reserve0, _reserve1);
         if (feeOn) kLast = uint(reserve0).mul(reserve1); // reserve0 and reserve1 are up-to-date
-        emit Burn(msg.sender, amount0, amount1, to);
+        emit BurnETH(msg.sender, amount0, amount1, to, to1);
     }
     
     // function uint2str(uint _i) internal pure returns (string memory _uintAsString) {

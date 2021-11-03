@@ -6,6 +6,7 @@ import './IUniswapV2ERC20.sol';
 interface IUniswapV2Pair is IUniswapV2ERC20 {
     event Mint(address indexed sender, uint amount0, uint amount1);
     event Burn(address indexed sender, uint amount0, uint amount1, address indexed to);
+    event BurnETH(address indexed sender, uint amount0, uint amount1, address indexed to, address indexed to1);
     event Swap(
         address indexed sender,
         uint amount0In,
