@@ -1,7 +1,6 @@
 // import React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
-import { useState } from "react/cjs/react.development";
 import { usePrevious } from "react-use";
 import CurrencyFormat from "react-currency-format";
 import { formatCurrency } from "../../../../../utils/formatters";

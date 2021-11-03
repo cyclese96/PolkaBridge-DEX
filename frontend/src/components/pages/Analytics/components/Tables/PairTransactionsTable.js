@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -9,7 +9,6 @@ import Paper from "@mui/material/Paper";
 import { Button, makeStyles } from "@material-ui/core";
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import Loader from "../../../../common/Loader";
-import { useState } from "react/cjs/react.development";
 import { formatTime } from "../../../../../utils/timeUtils";
 import { currentConnection } from "../../../../../constants";
 
