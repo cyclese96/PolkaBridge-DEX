@@ -14,8 +14,8 @@ if (typeof window.web3 !== "undefined") {
     // console.log('using infura provider')
     const infura =
       currentConnection === "testnet"
-        ? `https://kovan.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`
-        : `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`;
+        ? `https://kovan.infura.io/v3/${process.env.REACT_APP_INFURA_KEY.split('').reverse().join('')}`
+        : `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY.split('').reverse().join('')}`;
 
     web3 = new Web3(new Web3.providers.HttpProvider(infura));
   }
