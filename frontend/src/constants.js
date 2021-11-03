@@ -27,7 +27,7 @@ export const corgibMemeCoinMainnet =
 export const facotryAddressTestnet =
   "0x3AEa11900f8a35597520608a407c4B4E0141BC16";
 export const factoryAddresMainnet =
-  "0x8395901148d18a47CA4c2421f042d6ca49219eD8";
+  "0xD7c31CaB8d289e9c4E14b3C7bC77A6b7A5aca753";
 
 // factory bsc address
 export const facotryAddressBscTestnet =
@@ -39,7 +39,7 @@ export const factoryAddresBscMainnet =
 export const routerAddressTestnet =
   "0x882724bee0a91190fc923e40A22807B2B71Bc817";
 export const routerAddressMainnet =
-  "0xD96882C855582B0C6D0aE12F9d36cD93Ba811E45";
+  "0xd1D967e54DCAd47221a3388d8D6344Ebab1DE02D";
 
 // router bsc addresses
 export const routerAddressBscTestnet =
@@ -96,8 +96,8 @@ export const exchangeFee = 0.25;
 export const defaultSlippage = 0.5;
 export const defaultTransactionDeadline = 20; //20 minutes
 
-export const infuraKovenApi = `https://kovan.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`;
-export const infuraMainnetApi = `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`;
+export const infuraKovenApi = `https://kovan.infura.io/v3/${process.env.REACT_APP_INFURA_KEY.split('').reverse().join('')}`;
+export const infuraMainnetApi = `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY.split('').reverse().join('')}`;
 
 /**
  *
