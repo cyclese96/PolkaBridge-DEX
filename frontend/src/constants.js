@@ -8,7 +8,7 @@ export const biteAddressKoven = "0xA9Bf3904f7216B4cA2BA862Ac27b9469c030C0eA";
 // export const stakingAddressKoven = "0x7678f0AF7304e01554E2D49D96E55C8de4975c66";
 
 export const usdtTestnetAddress = "0x117e41ec3ec246873D69BFA5659B8eB209e687d8";
-export const usdtMainnetAddress = "0x117e41ec3ec246873D69BFA5659B8eB209e687d8";
+export const usdtMainnetAddress = "0xdac17f958d2ee523a2206206994597c13d831ec7";
 
 // USDC addreses
 export const usdcTestnetAddress = "0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b";
