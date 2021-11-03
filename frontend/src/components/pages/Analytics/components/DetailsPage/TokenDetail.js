@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   useTokenChartData,
@@ -22,7 +22,6 @@ import { currentConnection } from "../../../../../constants";
 import Loader from "../../../../common/Loader";
 import TokenTxTable from "../Tables/TokenTxTable";
 import { useGlobalTransactions } from "../../../../../contexts/GlobalData";
-import { useState } from "react/cjs/react.development";
 import TokenPairsTable from "../Tables/TokenPairsTable";
 
 const useStyles = makeStyles((theme) => ({

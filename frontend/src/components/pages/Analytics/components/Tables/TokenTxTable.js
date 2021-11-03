@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -11,7 +11,6 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import Loader from "../../../../common/Loader";
-import { useState } from "react/cjs/react.development";
 import { formatTime } from "../../../../../utils/timeUtils";
 import { currentConnection } from "../../../../../constants";
 
@@ -324,8 +323,8 @@ export default function TokenTxTable({ data }) {
                     {row.amount0
                       ? parseFloat(row.amount0).toFixed(3)
                       : row.amount0Out !== "0"
-                      ? parseFloat(row.amount0Out).toFixed(3)
-                      : parseFloat(row.amount0In).toFixed(3)}
+                        ? parseFloat(row.amount0Out).toFixed(3)
+                        : parseFloat(row.amount0In).toFixed(3)}
                   </TableCell>
                   <TableCell
                     align="right"
@@ -334,9 +333,9 @@ export default function TokenTxTable({ data }) {
                     {row.amount1
                       ? parseFloat(row.amount1).toFixed(3)
                       : row.amount1Out !== "0"
-                      ? parseFloat(row.amount1Out).toFixed(3)
-                      : parseFloat(row.amount1In).toFixed(3)}
-                    {}
+                        ? parseFloat(row.amount1Out).toFixed(3)
+                        : parseFloat(row.amount1In).toFixed(3)}
+                    { }
                   </TableCell>
                   <TableCell
                     align="right"
