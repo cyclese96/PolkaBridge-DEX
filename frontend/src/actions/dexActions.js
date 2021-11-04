@@ -331,16 +331,16 @@ export const addLiquidity =
 
       // deadline should be passed in minites in calculation
       const _deadlineUnix = getUnixTime(deadline);
-      // console.log({
-      //   address0: token0.address,
-      //   address1: token1.address,
-      //   token0AmountDesired,
-      //   token1AmountDesired,
-      //   token0AmountMin,
-      //   token1AmountMin,
-      //   account,
-      //   _deadlineUnix,
-      // });
+      console.log({
+        address0: token0.address,
+        address1: token1.address,
+        token0AmountDesired,
+        token1AmountDesired,
+        token0AmountMin,
+        token1AmountMin,
+        account,
+        _deadlineUnix,
+      });
       dispatch({ type: START_TRANSACTION })
       const liquidity = await _routerContract.methods
         .addLiquidity(

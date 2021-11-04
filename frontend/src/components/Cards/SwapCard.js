@@ -343,13 +343,13 @@ const SwapCard = (props) => {
 
   useEffect(() => {
     async function loadPair() {
+      setLocalStateLoading(true);
 
       if (!selectedToken1.symbol || !selectedToken2.symbol) {
         clearInputState();
       }
 
       if (selectedToken1.symbol && selectedToken2.symbol) {
-        setLocalStateLoading(true);
 
         // reset token input on token selection
         clearInputState();
