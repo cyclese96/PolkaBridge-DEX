@@ -101,6 +101,11 @@ export default function PairTransactionsTable({ data }) {
     setRows([...tempRows]);
   };
   const filterTx = (filter) => {
+
+    if (!data) {
+      return
+    }
+
     let result = Object.keys(data).map((key) => data[key]);
     let tempRows;
     if (filter === "all") {

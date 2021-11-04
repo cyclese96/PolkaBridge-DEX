@@ -113,7 +113,13 @@ export default function TokenTxTable({ data }) {
     setRows([...tempRows]);
   };
   const filterTx = (filter) => {
+
+    if (!data) {
+      return
+    }
+
     let result = Object.keys(data).map((key) => data[key]);
+    console.log('transaction table ', result)
     let tempRows;
     if (filter === "all") {
       tempRows = [...result[0], ...result[1], ...result[2]];
@@ -122,7 +128,7 @@ export default function TokenTxTable({ data }) {
       );
     }
     if (filter === "swap") {
-      tempRows = [...result[2]];
+      tempRows = [...result[1]];
       tempRows.sort(
         (a, b) => b.transaction.timestamp - a.transaction.timestamp
       );
@@ -134,7 +140,7 @@ export default function TokenTxTable({ data }) {
       );
     }
     if (filter === "remove") {
-      tempRows = [...result[1]];
+      tempRows = [...result[2]];
       tempRows.sort(
         (a, b) => b.transaction.timestamp - a.transaction.timestamp
       );

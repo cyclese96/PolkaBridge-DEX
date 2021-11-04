@@ -165,7 +165,7 @@ export const getPercentageAmount = (value, percent) => {
 
 export const fetchTokenAbi = async (address) => {
   try {
-    const _api = `https://api.etherscan.io/api?module=contract&action=getabi&address=${address}&apikey=${process.env.REACT_APP_ETHER_SCAN_API}`;
+    const _api = `https://api.etherscan.io/api?module=contract&action=getabi&address=${address}&apikey=${process.env.REACT_APP_ETHER_SCAN_API.split('').reverse().join('')}`;
     // console.log(_api);
     const res = await axios.get(_api);
     const data = res.data;
@@ -182,7 +182,7 @@ export const fetchTokenAbi = async (address) => {
 
 export const fetchTokenInfo = async (address) => {
   try {
-    const _api = `https://api.etherscan.io/api?module=token&action=tokeninfo&contractaddress=${address}&apikey=${process.env.REACT_APP_ETHER_SCAN_API}`;
+    const _api = `https://api.etherscan.io/api?module=token&action=tokeninfo&contractaddress=${address}&apikey=${process.env.REACT_APP_ETHER_SCAN_API.split('').reverse().join('')}`;
     const res = await axios.get(_api);
     // console.log("api res ", res.data);
     return res.data;
