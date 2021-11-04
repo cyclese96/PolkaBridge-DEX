@@ -17,6 +17,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
     address public immutable override factory;
     address public immutable override WETH;
     address public owner;
+    // string public debugStr;
 
     modifier ensure(uint deadline) {
         require(deadline >= block.timestamp, 'UniswapV2Router: EXPIRED');
@@ -40,28 +41,6 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         owner = _new_owner;
     }
 
-    // function uint2str(uint _i) internal pure returns (string memory _uintAsString) {
-    //     if (_i == 0) {
-    //         return "0";
-    //     }
-    //     uint j = _i;
-    //     uint len;
-    //     while (j != 0) {
-    //         len++;
-    //         j /= 10;
-    //     }
-    //     bytes memory bstr = new bytes(len);
-    //     uint k = len;
-    //     while (_i != 0) {
-    //         k = k-1;
-    //         uint8 temp = (48 + uint8(_i - _i / 10 * 10));
-    //         bytes1 b1 = bytes1(temp);
-    //         bstr[k] = b1;
-    //         _i /= 10;
-    //     }
-    //     return string(bstr);
-    // }
-
     // **** ADD LIQUIDITY ****
     function _addLiquidity(
         address tokenA,
@@ -83,16 +62,13 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
             if (amountBOptimal <= amountBDesired) {
                 require(amountBOptimal >= amountBMin, 'UniswapV2Router: INSUFFICIENT_B_AMOUNT');
                 (amountA, amountB) = (amountADesired, amountBOptimal);
-                // require(false, string(abi.encodePacked('111 : ' , uint2str(amountA), ' : ', uint2str(amountB), ' : ', uint2str(reserveA), ' : ', uint2str(reserveB))));
             } else {
                 uint256 amountAOptimal = UniswapV2Library.quote(amountBDesired, reserveB, reserveA);
                 require(amountAOptimal <= amountADesired, "amountA should less or equal than amountB");// assert(amountAOptimal <= amountADesired);
                 require(amountAOptimal >= amountAMin, 'UniswapV2Router: INSUFFICIENT_A_AMOUNT');
                 (amountA, amountB) = (amountAOptimal, amountBDesired);
-                // require(false, string(abi.encodePacked('222 : ' , uint2str(amountA), ' : ', uint2str(amountB), ' : ', uint2str(reserveA), ' : ', uint2str(reserveB))));
             }
         }
-        // require(false, string(abi.encodePacked('333 : ' , uint2str(amountA), ' : ', uint2str(amountB), ' : ', uint2str(reserveA), ' : ', uint2str(reserveB))));
     }
 
     function addLiquidity(
@@ -187,114 +163,97 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         address to,
         uint256 deadline
     ) public virtual override ensure(deadline) returns (uint256 amountToken, uint256 amountETH) {
-        address pair = UniswapV2Library.pairFor(factory, token, WETH);
-        bool bTransfered = IUniswapV2Pair(pair).transferFrom(msg.sender, pair, liquidity);
-        require(bTransfered, 'Failed in sending liquidity to pair'); // send liquidity to pair
-        (uint256 amount0, uint256 amount1) = IUniswapV2Pair(pair).burnETH(address(this), to);
-        (address token0, ) = UniswapV2Library.sortTokens(token, WETH);
-        (amountToken, amountETH) = token == token0 ? (amount0, amount1) : (amount1, amount0);
-        require(amountToken >= amountTokenMin, 'UniswapV2Router: INSUFFICIENT_A_AMOUNT');
-        require(amountETH >= amountETHMin, 'UniswapV2Router: INSUFFICIENT_B_AMOUNT');
-        // (amountToken, amountETH) = removeLiquidity(
-        //     token,
-        //     WETH,
-        //     liquidity,
-        //     amountTokenMin,
-        //     amountETHMin,
-        //     address(this),
-        //     deadline
-        // );
-        // address pair = UniswapV2Library.pairFor(factory, token, WETH);
-        // bool bTransfered = IUniswapV2Pair(pair).transferFrom(pair, msg.sender, liquidity);
-        // require(bTransfered, 'Failed in sending liquidity to pair'); // send liquidity to pair
-        // TransferHelper.safeTransferFrom(
-        //     token, pair, msg.sender, amountToken
-        // );
-        // IERC20(token).approve(address(this), amountToken);
-        // require(false, string(abi.encodePacked('amount : ' ,uint2str(amountToken))));
-        // TransferHelper.safeTransfer(token, to, amountToken);
-        // TransferHelper.safeApprove(token, address(this), amountToken);
-        // TransferHelper.safeTransferFrom(token, address(this), to, amountToken);
-        IWETH(WETH).withdraw(amountETH);
-        TransferHelper.safeTransferETH(to, amountETH);
-    }
-
-    function removeLiquidityWithPermit(
-        address tokenA,
-        address tokenB,
-        uint256 liquidity,
-        uint256 amountAMin,
-        uint256 amountBMin,
-        address to,
-        uint256 deadline,
-        bool approveMax,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) external virtual override returns (uint256 amountA, uint256 amountB) {
-        address pair = UniswapV2Library.pairFor(factory, tokenA, tokenB);
-        uint256 value = approveMax ? uint256(-1) : liquidity;
-        IUniswapV2Pair(pair).permit(msg.sender, address(this), value, deadline, v, r, s);
-        (amountA, amountB) = removeLiquidity(tokenA, tokenB, liquidity, amountAMin, amountBMin, to, deadline);
-    }
-
-    function removeLiquidityETHWithPermit(
-        address token,
-        uint256 liquidity,
-        uint256 amountTokenMin,
-        uint256 amountETHMin,
-        address to,
-        uint256 deadline,
-        bool approveMax,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) external virtual override returns (uint256 amountToken, uint256 amountETH) {
-        address pair = UniswapV2Library.pairFor(factory, token, WETH);
-        uint256 value = approveMax ? uint256(-1) : liquidity;
-        IUniswapV2Pair(pair).permit(msg.sender, address(this), value, deadline, v, r, s);
-        (amountToken, amountETH) = removeLiquidityETH(token, liquidity, amountTokenMin, amountETHMin, to, deadline);
-    }
-
-    // **** REMOVE LIQUIDITY (supporting fee-on-transfer tokens) ****
-    function removeLiquidityETHSupportingFeeOnTransferTokens(
-        address token,
-        uint256 liquidity,
-        uint256 amountTokenMin,
-        uint256 amountETHMin,
-        address to,
-        uint256 deadline
-    ) public virtual override ensure(deadline) returns (uint256 amountETH) {
-        (, amountETH) = removeLiquidity(token, WETH, liquidity, amountTokenMin, amountETHMin, address(this), deadline);
+        (amountToken, amountETH) = removeLiquidity(
+            token,
+            WETH,
+            liquidity,
+            amountTokenMin,
+            amountETHMin,
+            address(this),
+            deadline
+        );
         TransferHelper.safeTransfer(token, to, IERC20(token).balanceOf(address(this)));
         IWETH(WETH).withdraw(amountETH);
         TransferHelper.safeTransferETH(to, amountETH);
     }
 
-    function removeLiquidityETHWithPermitSupportingFeeOnTransferTokens(
-        address token,
-        uint256 liquidity,
-        uint256 amountTokenMin,
-        uint256 amountETHMin,
-        address to,
-        uint256 deadline,
-        bool approveMax,
-        uint8 v,
-        bytes32 r,
-        bytes32 s
-    ) external virtual override returns (uint256 amountETH) {
-        address pair = UniswapV2Library.pairFor(factory, token, WETH);
-        uint256 value = approveMax ? uint256(-1) : liquidity;
-        IUniswapV2Pair(pair).permit(msg.sender, address(this), value, deadline, v, r, s);
-        amountETH = removeLiquidityETHSupportingFeeOnTransferTokens(
-            token,
-            liquidity,
-            amountTokenMin,
-            amountETHMin,
-            to,
-            deadline
-        );
-    }
+    // function removeLiquidityWithPermit(
+    //     address tokenA,
+    //     address tokenB,
+    //     uint256 liquidity,
+    //     uint256 amountAMin,
+    //     uint256 amountBMin,
+    //     address to,
+    //     uint256 deadline,
+    //     bool approveMax,
+    //     uint8 v,
+    //     bytes32 r,
+    //     bytes32 s
+    // ) external virtual override returns (uint256 amountA, uint256 amountB) {
+    //     address pair = UniswapV2Library.pairFor(factory, tokenA, tokenB);
+    //     uint256 value = approveMax ? uint256(-1) : liquidity;
+    //     IUniswapV2Pair(pair).permit(msg.sender, address(this), value, deadline, v, r, s);
+    //     (amountA, amountB) = removeLiquidity(tokenA, tokenB, liquidity, amountAMin, amountBMin, to, deadline);
+    // }
+
+    // function removeLiquidityETHWithPermit(
+    //     address token,
+    //     uint256 liquidity,
+    //     uint256 amountTokenMin,
+    //     uint256 amountETHMin,
+    //     address to,
+    //     uint256 deadline,
+    //     bool approveMax,
+    //     uint8 v,
+    //     bytes32 r,
+    //     bytes32 s
+    // ) external virtual override returns (uint256 amountToken, uint256 amountETH) {
+    //     address pair = UniswapV2Library.pairFor(factory, token, WETH);
+    //     uint256 value = approveMax ? uint256(-1) : liquidity;
+    //     IUniswapV2Pair(pair).permit(msg.sender, address(this), value, deadline, v, r, s);
+    //     (amountToken, amountETH) = removeLiquidityETH(token, liquidity, amountTokenMin, amountETHMin, to, deadline);
+    // }
+
+    // **** REMOVE LIQUIDITY (supporting fee-on-transfer tokens) ****
+    // function removeLiquidityETHSupportingFeeOnTransferTokens(
+    //     address token,
+    //     uint256 liquidity,
+    //     uint256 amountTokenMin,
+    //     uint256 amountETHMin,
+    //     address to,
+    //     uint256 deadline
+    // ) public virtual override ensure(deadline) returns (uint256 amountETH) {
+    //     // (, amountETH) = removeLiquidity(token, WETH, liquidity, amountTokenMin, amountETHMin, address(this), deadline);
+    //     // TransferHelper.safeTransfer(token, to, IERC20(token).balanceOf(address(this)));
+    //     // IWETH(WETH).withdraw(amountETH);
+    //     // TransferHelper.safeTransferETH(to, amountETH);
+    //     (, amountETH) = removeLiquidityETH(token, liquidity, amountTokenMin, amountETHMin, to, deadline);
+    // }
+
+    // function removeLiquidityETHWithPermitSupportingFeeOnTransferTokens(
+    //     address token,
+    //     uint256 liquidity,
+    //     uint256 amountTokenMin,
+    //     uint256 amountETHMin,
+    //     address to,
+    //     uint256 deadline,
+    //     bool approveMax,
+    //     uint8 v,
+    //     bytes32 r,
+    //     bytes32 s
+    // ) external virtual override returns (uint256 amountETH) {
+    //     address pair = UniswapV2Library.pairFor(factory, token, WETH);
+    //     uint256 value = approveMax ? uint256(-1) : liquidity;
+    //     IUniswapV2Pair(pair).permit(msg.sender, address(this), value, deadline, v, r, s);
+    //     amountETH = removeLiquidityETHSupportingFeeOnTransferTokens(
+    //         token,
+    //         liquidity,
+    //         amountTokenMin,
+    //         amountETHMin,
+    //         to,
+    //         deadline
+    //     );
+    // }
 
     // **** SWAP ****
     // requires the initial amount to have already been sent to the first pair
@@ -417,10 +376,6 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         IWETH(WETH).deposit{value: amounts[0]}();
         require(IWETH(WETH).transfer(UniswapV2Library.pairFor(factory, path[0], path[1]), amounts[0]), 'UniswapV2Router: WETH transfer failed in swapETHForExactTokens');// assert(IWETH(WETH).transfer(UniswapV2Library.pairFor(factory, path[0], path[1]), amounts[0]));
         _swap(amounts, path, to);
-        // TransferHelper.safeTransferFrom(
-        //     path[0], address(this), polkaTreasury, amounts[0].mul(4).div(10000)
-        // );
-
         // refund dust eth, if any
         if (msg.value > amounts[0]) TransferHelper.safeTransferETH(msg.sender, msg.value - amounts[0]);
     }
