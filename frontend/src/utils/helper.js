@@ -1,12 +1,4 @@
 import BigNumber from "bignumber.js";
-import { BITE, CORGIB, PBR, PWAR, USDT } from "../constants";
-import {
-  biteContract,
-  corgibCoinContract,
-  pbrContract,
-  pwarCoinContract,
-  usdtContract,
-} from "../contracts/connections";
 import web3 from "../web";
 import axios from "axios";
 import { ethers } from "ethers";
@@ -111,23 +103,6 @@ export const token1PerToken2 = (token1UsdPrice, token2UsdPrice) => {
   return price;
 };
 
-// current token contract
-export const getTokenContract = (network, tokenType) => {
-  switch (tokenType) {
-    case PBR:
-      return pbrContract(network);
-    case BITE:
-      return biteContract(network);
-    case CORGIB:
-      return corgibCoinContract(network);
-    case PWAR:
-      return pwarCoinContract(network);
-    case USDT:
-      return usdtContract(network);
-    default:
-      return pwarCoinContract(network);
-  }
-};
 
 export const getUnixTime = (timeInMintes) => {
   const now = new Date();
@@ -163,22 +138,6 @@ export const getPercentageAmount = (value, percent) => {
   return percentValue.toString();
 };
 
-export const fetchTokenAbi = async (address) => {
-  try {
-    const _api = `https://api.etherscan.io/api?module=contract&action=getabi&address=${address}&apikey=${process.env.REACT_APP_ETHER_SCAN_API.split('').reverse().join('')}`;
-    // console.log(_api);
-    const res = await axios.get(_api);
-    const data = res.data;
-    if (data.status !== "1") {
-      return [];
-    }
-    const result = JSON.parse(data.result);
-    return result;
-  } catch (error) {
-    console.log("fetchTokenAbi", error);
-    return {};
-  }
-};
 
 export const fetchTokenInfo = async (address) => {
   try {

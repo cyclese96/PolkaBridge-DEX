@@ -5,79 +5,16 @@ import pairAbi from '../abi/pair.json';
 import tokenAbi from '../abi/erc20.json';
 
 import {
-  biteAddressKoven,
-  biteAddressMainnet,
   bscNetwork,
-  corgibMemeCoinMainnet,
-  corgibMemeCoinTestent,
   currentConnection,
   etheriumNetwork,
-  pbrAddressTestnet,
-  pbrAddressMainnet,
-  pwarAddressMainnet,
-  pwarAddressTestnet,
-
-  routerAddressBscTestnet,
-  routerAddressBscMainnet,
-  routerAddressTestnet,
-  routerAddressMainnet,
-  facotryAddressBscTestnet,
-  factoryAddresBscMainnet,
-  facotryAddressTestnet,
-  factoryAddresMainnet,
-  usdtTestnetAddress,
-  usdtMainnetAddress,
+  routerAddresses,
+  factoryAddresses,
 
 } from "../../constants";
 import { isMetaMaskInstalled } from "../../utils/helper";
 
-export const biteContract = (network) => {
-  const address =
-    currentConnection === "testnet" ? biteAddressKoven : biteAddressMainnet;
 
-  const abi = tokenAbi;
-
-  const connection = getCurrentConnection(network, abi, address);
-  return connection;
-};
-
-export const pbrContract = (network) => {
-  const address =
-    currentConnection === "testnet" ? pbrAddressTestnet : pbrAddressMainnet;
-
-  const abi = tokenAbi;
-  const connection = getCurrentConnection(network, abi, address);
-  return connection;
-};
-
-export const usdtContract = (network) => {
-  const address =
-    currentConnection === "testnet" ? usdtTestnetAddress : usdtMainnetAddress;
-
-  const abi = tokenAbi;
-  const connection = getCurrentConnection(network, abi, address);
-  return connection;
-};
-
-export const corgibCoinContract = (network) => {
-  const address =
-    currentConnection === "testnet"
-      ? corgibMemeCoinTestent
-      : corgibMemeCoinMainnet;
-
-  const abi = tokenAbi;
-  const connection = getCurrentConnection(network, abi, address);
-  return connection;
-};
-
-export const pwarCoinContract = (network) => {
-  const address =
-    currentConnection === "testnet" ? pwarAddressTestnet : pwarAddressMainnet;
-
-  const abi = tokenAbi;
-  const connection = getCurrentConnection(network, abi, address);
-  return connection;
-};
 
 export const pairContract = (pairAddress, network) => {
 
@@ -87,14 +24,6 @@ export const pairContract = (pairAddress, network) => {
   return connection;
 };
 
-export const pairContract2 = (pairData, network) => {
-  const connection = getCurrentConnection(
-    network,
-    pairData.abi,
-    pairData.address
-  );
-  return connection;
-};
 
 //get connecttion of imported contract
 export const tokenContract = (address, network) => {
@@ -109,8 +38,8 @@ export const routerContract = (network) => {
   if (network === bscNetwork) {
     const address =
       currentConnection === "testnet"
-        ? routerAddressBscTestnet
-        : routerAddressBscMainnet;
+        ? routerAddresses.bsc.testnet
+        : routerAddresses.bsc.mainnet;
 
     const abi = RouterAbi; // update for bsc
     const connection = getCurrentConnection(network, abi, address);
@@ -118,8 +47,8 @@ export const routerContract = (network) => {
   } else {
     const address =
       currentConnection === "testnet"
-        ? routerAddressTestnet
-        : routerAddressMainnet;
+        ? routerAddresses.ethereum.testnet
+        : routerAddresses.ethereum.mainnet;
 
     const abi = RouterAbi;
     const connection = getCurrentConnection(network, abi, address);
@@ -131,8 +60,8 @@ export const factoryContract = (network) => {
   if (network === bscNetwork) {
     const address =
       currentConnection === "testnet"
-        ? facotryAddressBscTestnet
-        : factoryAddresBscMainnet;
+        ? factoryAddresses.bsc.testnet
+        : factoryAddresses.bsc.mainnet;
 
     const abi = FactoryAbi; // update for bsc
     const connection = getCurrentConnection(network, abi, address);
@@ -140,8 +69,8 @@ export const factoryContract = (network) => {
   } else {
     const address =
       currentConnection === "testnet"
-        ? facotryAddressTestnet
-        : factoryAddresMainnet;
+        ? factoryAddresses.ethereum.testnet
+        : factoryAddresses.ethereum.mainnet;
 
     const abi = FactoryAbi;
     const connection = getCurrentConnection(network, abi, address);

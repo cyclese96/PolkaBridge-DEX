@@ -7,31 +7,24 @@ import {
   etheriumNetwork,
   nullAddress,
   PBR,
-  supportedTokens,
   swapFnConstants,
   THRESOLD_WEI_VALUE,
+  tokenAddresses,
   tokens,
   USDC,
   USDT,
-  usdtMainnetAddress,
-  usdtTestnetAddress,
-  WETH_ADDRESS_MAINNET,
-  WETH_ADDRESS_TESTNET,
 } from "../constants";
 import {
   factoryContract,
   pairContract,
-  pairContract2,
   routerContract,
   tokenContract,
 } from "../contracts/connections";
 import { getPairAddress } from "../utils/connectionUtils";
 import {
   toWei,
-  getTokenContract,
   getUnixTime,
   getPercentage,
-  fetchTokenAbi,
   fetchTokenInfo,
   cacheImportedToken,
   getCachedTokens,
@@ -292,21 +285,6 @@ export const getPoolShare =
         //Load pair contract of selected token pair
         const _pairContract = pairContract(pairAddress, network);
 
-        // const erc20TokenSymbol =
-        //   token0Symbol === ETH ? token1Symbol : token0Symbol;
-        // const erc20InputValue = token0Symbol === ETH ? token1Input : token0Input;
-        // const _erc20Contract = getTokenContract(network, erc20TokenSymbol);
-
-        // const inputTokenValue = toWei(erc20InputValue);
-
-        // if (!_pairContract) {
-        //   dispatch({
-        //     type: GET_POOL_SHARE,
-        //     payload: getPercentage(inputTokenValue, "0"),
-        //   });
-        //   return;
-        // }
-
         const [token0Address, token1Address, reservesData] = await Promise.all([
           _pairContract.methods.token0().call(),
           _pairContract.methods.token1().call(),
@@ -321,7 +299,6 @@ export const getPoolShare =
           tokenAReserve = reservesData._reserve1;
         }
 
-        // const reserveTokenValue = tokenAReserve ? tokenAReserve : "0";
 
         dispatch({
           type: GET_POOL_SHARE,
@@ -679,10 +656,7 @@ export const removeLiquidityEth =
 // token: { symbol, name, address, abi }
 export const checkAllowance = (token, account, network) => async (dispatch) => {
   try {
-    // console.log("checking allowance", token);
-    // const _tokenContract = token.imported
-    //   ? tokenContract(token.address, token.abi, network)
-    //   : getTokenContract(network, token.symbol);
+
     const _tokenContract = tokenContract(token.address, network);
 
     const _routerContract = routerContract(network);
@@ -727,10 +701,7 @@ export const checkAllowance = (token, account, network) => async (dispatch) => {
 export const confirmAllowance =
   (balance, token, account, network) => async (dispatch) => {
     try {
-      // const _tokenContract = token.imported
-      //   ? tokenContract(token.address, token.abi, network)
-      //   : getTokenContract(network, token.symbol);
-      // console.log("token", token);
+
       const _tokenContract = tokenContract(token.address, network);
 
       const _routerContract = routerContract(network);
@@ -866,7 +837,6 @@ export const importToken = (address, account, network) => async (dispatch) => {
     });
 
     const [tokenInfoData] = await Promise.all([
-      // fetchTokenAbi(address),
       fetchTokenInfo(address),
     ]);
 
@@ -927,8 +897,8 @@ export const getToken1OutAmount = (token0, token1, account, network) => async (d
     const _routerContract = routerContract(network);
 
     // calculate price from token0->weth->token path
-    const wethAddress = currentConnection === 'testnet' ? WETH_ADDRESS_TESTNET : WETH_ADDRESS_MAINNET;
-    const usdtAddress = currentConnection === 'testnet' ? usdtTestnetAddress : usdtMainnetAddress;
+    const wethAddress = currentConnection === 'testnet' ? tokenAddresses.ethereum.ETH.testnet : tokenAddresses.ethereum.ETH.mainnet;
+    const usdtAddress = currentConnection === 'testnet' ? tokenAddresses.ethereum.USDT.testnet : tokenAddresses.ethereum.USDT.mainnet;
 
     const token0In = token0.amount;
 
@@ -1042,8 +1012,8 @@ export const getToken0InAmount = (token0, token1, account, network) => async (di
 
     const _routerContract = routerContract(network);
     // calculate price from token0->weth->token path
-    const wethAddress = currentConnection === 'testnet' ? WETH_ADDRESS_TESTNET : WETH_ADDRESS_MAINNET;
-    const usdtAddress = currentConnection === 'testnet' ? usdtTestnetAddress : usdtMainnetAddress;
+    const wethAddress = currentConnection === 'testnet' ? tokenAddresses.ethereum.ETH.testnet : tokenAddresses.ethereum.ETH.mainnet;
+    const usdtAddress = currentConnection === 'testnet' ? tokenAddresses.ethereum.USDT.testnet : tokenAddresses.ethereum.USDT.mainnet;
 
     const token1Out = token1.amount;
 
@@ -1152,7 +1122,7 @@ export const getToken0InAmount = (token0, token1, account, network) => async (di
 const getReservesForPriceImpact = async (token0, token1, account, network) => {
   if ([token0.symbol, token1.symbol].includes(PBR) && [token0.symbol, token1.symbol].includes(USDT)) {
     // fetch all reserves
-    const wethAddress = currentConnection === 'testnet' ? WETH_ADDRESS_TESTNET : WETH_ADDRESS_MAINNET;
+    const wethAddress = currentConnection === 'testnet' ? tokenAddresses.ethereum.ETH.testnet : tokenAddresses.ethereum.ETH.mainnet;
     const pbrAddress = token0.symbol === PBR ? token0.address : token1.address;
     const usdtAddress = token0.symbol === USDT ? token0.address : token1.address;
 
@@ -1172,8 +1142,8 @@ const getReservesForPriceImpact = async (token0, token1, account, network) => {
   } else if ([token0.symbol, token1.symbol].includes(PBR) && [token0.symbol, token1.symbol].includes(USDC)) {
     // console.log('getting reserves for pbr usdt ')
     //
-    const wethAddress = currentConnection === 'testnet' ? WETH_ADDRESS_TESTNET : WETH_ADDRESS_MAINNET;
-    const usdtAddress = currentConnection === 'testnet' ? usdtTestnetAddress : usdtMainnetAddress;
+    const wethAddress = currentConnection === 'testnet' ? tokenAddresses.ethereum.ETH.testnet : tokenAddresses.ethereum.ETH.mainnet;
+    const usdtAddress = currentConnection === 'testnet' ? tokenAddresses.ethereum.USDT.testnet : tokenAddresses.ethereum.USDT.mainnet;
     const usdcAddress = token0.symbol === USDC ? token0.address : token1.address;
     const pbrAddress = token0.symbol === PBR ? token0.address : token1.address;
 
@@ -1198,7 +1168,7 @@ const getReservesForPriceImpact = async (token0, token1, account, network) => {
 
   } else if ([token0.symbol, token1.symbol].includes(ETH) && [token0.symbol, token1.symbol].includes(USDC)) {
     //
-    const usdtAddress = currentConnection === 'testnet' ? usdtTestnetAddress : usdtMainnetAddress;
+    const usdtAddress = currentConnection === 'testnet' ? tokenAddresses.ethereum.USDT.testnet : tokenAddresses.ethereum.USDT.mainnet;
     const ethAddress = token0.symbol === ETH ? token0.address : token1.address;
     const usdcAddress = token0.symbol === USDC ? token0.address : token1.address;
 
