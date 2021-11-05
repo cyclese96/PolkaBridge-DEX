@@ -16,30 +16,30 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
 
     address public immutable override factory;
     address public immutable override WETH;
-    address public owner;
+    // address public owner;
     // string public debugStr;
 
     modifier ensure(uint deadline) {
         require(deadline >= block.timestamp, 'UniswapV2Router: EXPIRED');
         _;
     }
-    modifier onlyOwner() {
-        require(msg.sender == owner, 'Only Owner');
-        _;
-    }
+    // modifier onlyOwner() {
+    //     require(msg.sender == owner, 'Only Owner');
+    //     _;
+    // }
     constructor(address _factory, address _WETH) public {
         factory = _factory;
         WETH = _WETH;
-        owner = msg.sender;
+        // owner = msg.sender;
     }
 
     receive() external payable {
         require(msg.sender == WETH, "transfer ETH from unexpected sender"); // only accept ETH via fallback from the WETH contract
     }
 
-    function transferOwnership(address _new_owner) public onlyOwner {
-        owner = _new_owner;
-    }
+    // function transferOwnership(address _new_owner) public onlyOwner {
+    //     owner = _new_owner;
+    // }
 
     // **** ADD LIQUIDITY ****
     function _addLiquidity(

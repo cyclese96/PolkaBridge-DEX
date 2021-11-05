@@ -24,7 +24,7 @@
   "homepage": "https://github.com/Uniswap/uniswap-v2-core#readme",
   "dependencies": {
     "@openzeppelin/contracts": "^4.3.2",
-    "@truffle/hdwallet-provider": "^1.4.3",
+    "@truffle/hdwallet-provider": "^1.0.37",
     "dotenv": "^10.0.0",
     "fs": "0.0.1-security",
     "moonbeam-truffle-plugin": "^1.4.0",
