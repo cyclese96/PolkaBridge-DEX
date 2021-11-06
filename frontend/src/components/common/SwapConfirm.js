@@ -11,7 +11,7 @@ import TokenIcon from "./TokenIcon";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import {
   formatFloat,
-  getPercentage,
+  // getPercentage,
   getPercentageAmount,
   getPriceRatio,
   toWei,
@@ -19,7 +19,7 @@ import {
 import { swapTokens } from "../../actions/dexActions";
 // import { ETH, swapFnConstants } from "../../constants";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import BigNumber from "bignumber.js";
+// import BigNumber from "bignumber.js";
 import TransactionStatus from "./TransactionStatus";
 import { DECIMAL_6_ADDRESSES } from "../../constants";
 
@@ -150,17 +150,17 @@ const SwapConfirm = (props) => {
   const onConfirmSwap = async () => {
     // todo swap code
 
-    const _amount0InWei = DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value);
+    const _amount0InWei = toWei(token1Value, selectedToken1.decimals) //DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value);
     const token0 = {
       amount: _amount0InWei,
-      min: toWei(token1Value.toString()),
+      min: toWei(token1Value.toString(), selectedToken1.decimals),
       ...selectedToken1,
     };
 
-    const _amount1InWei = DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token2Value);
+    const _amount1InWei = toWei(token2Value, selectedToken2.decimals)   //DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token2Value);
     const token1 = {
       amount: _amount1InWei,
-      min: toWei(token2Value.toString()),
+      min: toWei(token2Value.toString(), selectedToken2.decimals),
       ...selectedToken2,
     };
 

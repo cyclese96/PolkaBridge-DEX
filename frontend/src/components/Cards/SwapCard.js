@@ -444,7 +444,7 @@ const SwapCard = (props) => {
 
 
       debouncedToken1OutCall(
-        { ...selectedToken1, amount: toWei(tokens) },
+        { ...selectedToken1, amount: toWei(tokens, selectedToken1.decimals) },
         selectedToken2,
         currentAccount,
         currentNetwork
@@ -478,7 +478,7 @@ const SwapCard = (props) => {
 
       debouncedToken0InCall(
         selectedToken1,
-        { ...selectedToken2, amount: toWei(tokens) },
+        { ...selectedToken2, amount: toWei(tokens, selectedToken2.decimals) },
         currentAccount,
         currentNetwork
       )
@@ -641,14 +641,14 @@ const SwapCard = (props) => {
     const _amount0InWei = toWei(token1Value, selectedToken1.decimals) //DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value);
     const token0 = {
       amount: _amount0InWei,
-      min: toWei(token1Value.toString()),
+      min: toWei(token1Value.toString(), selectedToken1.decimals),
       ...selectedToken1,
     };
 
     const _amount1InWei = toWei(token2Value, selectedToken2.decimals) //DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token2Value);
     const token1 = {
       amount: _amount1InWei,
-      min: toWei(token2Value.toString()),
+      min: toWei(token2Value.toString(), selectedToken2.decimals),
       ...selectedToken2,
     };
 

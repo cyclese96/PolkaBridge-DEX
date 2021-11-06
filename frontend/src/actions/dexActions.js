@@ -955,16 +955,16 @@ export const getToken1OutAmount = (token0, token1, account, network) => async (d
       }
 
       // console.log({ amountsOutPair })
-      resultOut = fromWei(amountsOutPair);
+      resultOut = fromWei(amountsOutPair, token1.decimals);
       selectedPath = _path0;
 
       // console.log('getToken1OutAmount getting from pair')
 
       if ([token0.symbol, token1.symbol].includes(USDT) && [token0.symbol, token1.symbol].includes(PBR)) {
         //pbr-usdt fix if pair exist and not enough liquidity
-        const _token0In = toWei(fromWei(token0In), token0.decimals)  //DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0In), 6) : token0In;
+        // const _token0In = toWei(fromWei(token0In), token0.decimals)  //DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0In), 6) : token0In;
 
-        amountsOutBridge = await _routerContract.methods.getAmountsOut(_token0In, _path0).call();
+        amountsOutBridge = await _routerContract.methods.getAmountsOut(token0In, _path0).call();
 
         const token1OutBridge = new BigNumber(amountsOutBridge[amountsOutBridge.length - 1])
         // console.log('getToken1OutAmount fetching from bridge ', { amountsOutBridge, bridgePath, token1OutBridge: token1OutBridge.toString() })
@@ -982,9 +982,9 @@ export const getToken1OutAmount = (token0, token1, account, network) => async (d
 
     } else {
       //fix if it is bridge swap and token0 is usdc
-      const _token0In = toWei(fromWei(token0In), token0.decimals)// DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0In), 6) : token0In;
+      // const _token0In = toWei(fromWei(token0In), token0.decimals)// DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0In), 6) : token0In;
 
-      amountsOutBridge = await _routerContract.methods.getAmountsOut(_token0In, bridgePath).call();
+      amountsOutBridge = await _routerContract.methods.getAmountsOut(token0In, bridgePath).call();
 
       const token1OutBridge = new BigNumber(amountsOutBridge[amountsOutBridge.length - 1])
       // console.log('getToken1OutAmount fetching from bridge ', { amountsOutBridge, bridgePath, token1OutBridge: token1OutBridge.toString() })
@@ -1074,16 +1074,16 @@ export const getToken0InAmount = (token0, token1, account, network) => async (di
       } catch (error) {
         amountsInPair = '0';
       }
-      console.log({ amountsInPair })
-      resultIn = fromWei(amountsInPair);
+      // console.log({ amountsInPair })
+      resultIn = fromWei(amountsInPair, token0.decimals);
       selectedPath = _path0
 
       // temp fix for pbr-usdt pair with low liquidity
       if ([token0.symbol, token1.symbol].includes(USDT) && [token0.symbol, token1.symbol].includes(PBR)) {
 
-        const _token1OutWei = toWei(fromWei(token1Out), token1.decimals) //DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1Out), 6) : token1Out;
+        // const _token1OutWei = toWei(fromWei(token1Out), token1.decimals) //DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1Out), 6) : token1Out;
 
-        amountsInBridge = await _routerContract.methods.getAmountsIn(_token1OutWei, bridgePath).call()
+        amountsInBridge = await _routerContract.methods.getAmountsIn(token1Out, bridgePath).call()
         const token1OutWethBridge = new BigNumber(amountsInBridge[0])
 
         const _resultInBridge = fromWei(token1OutWethBridge.toString(), token1.decimals) //DECIMAL_6_ADDRESSES.includes(token0.address) ? fromWei(token1OutWethBridge.toString(), 6) : fromWei(token1OutWethBridge.toString());
@@ -1102,9 +1102,9 @@ export const getToken0InAmount = (token0, token1, account, network) => async (di
       //Note: token1Out should be in usdc decimals if we are fetching amount from path,
       // in normal wei if fetching from pair reserves
 
-      const _token1OutWei = toWei(fromWei(token1Out), token1.decimals) //DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1Out), 6) : token1Out;
+      // const _token1OutWei = toWei(fromWei(token1Out), token1.decimals) //DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1Out), 6) : token1Out;
 
-      amountsInBridge = await _routerContract.methods.getAmountsIn(_token1OutWei, bridgePath).call()
+      amountsInBridge = await _routerContract.methods.getAmountsIn(token1Out, bridgePath).call()
       const token1OutWethBridge = new BigNumber(amountsInBridge[0])
 
       resultIn = fromWei(token1OutWethBridge.toString(), token1.decimals)  //DECIMAL_6_ADDRESSES.includes(token0.address) ? fromWei(token1OutWethBridge.toString(), 6) : fromWei(token1OutWethBridge.toString());
@@ -1223,10 +1223,10 @@ export const calculatePriceImpact = async (token0, token1, account, network) => 
 
 
       // console.log('checkPriceImpact fetched reserves0  ', { reserv0: reserve[token0.symbol], amount0: token0.amount })
-      const _token0WeiAmount = toWei(fromWei(token0.amount, token0.decimals)) //DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0.amount, 6)) : token0.amount;
-      const _token1WeiAmount = toWei(fromWei(token1.amount, token1.decimals)) //DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1.amount, 6)) : token1.amount;
+      // const _token0WeiAmount = toWei(fromWei(token0.amount, token0.decimals)) //DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0.amount, 6)) : token0.amount;
+      // const _token1WeiAmount = toWei(fromWei(token1.amount, token1.decimals)) //DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1.amount, 6)) : token1.amount;
 
-      return sellPriceImpact(_token0WeiAmount, _token1WeiAmount, reserve[token0.symbol])
+      return sellPriceImpact(fromWei(token0.amount, token0.decimals), fromWei(token1.amount, token1.decimals), fromWei(reserve[token0.symbol], token0.decimals))
 
     } else {
 
@@ -1237,7 +1237,7 @@ export const calculatePriceImpact = async (token0, token1, account, network) => 
       const _token0WeiAmount = toWei(fromWei(token0.amount, token0.decimals)) //DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0.amount, 6)) : token0.amount;
       const _token1WeiAmount = toWei(fromWei(token1.amount, token1.decimals)) //DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1.amount, 6)) : token1.amount;
       // console.log('checkPriceImpact fetched reserves0  ', { _token0WeiAmount, _token1WeiAmount, reserve: reserves[token0.symbol], reserves })
-      return sellPriceImpact(_token0WeiAmount, _token1WeiAmount, reserves[token0.symbol])
+      return sellPriceImpact(fromWei(token0.amount, token0.decimals), fromWei(token1.amount, token1.decimals), fromWei(reserves[token0.symbol], token0.decimals))
 
     }
 
