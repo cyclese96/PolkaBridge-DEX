@@ -354,10 +354,24 @@ const AddCard = (props) => {
   };
 
   const currentTokenApprovalStatus = () => {
-    return selectedToken1.symbol === "ETH"
-      ? true
-      : approvedTokens[selectedToken1.symbol];
+    // return selectedToken1.symbol === "ETH"
+    //   ? true
+    //   : approvedTokens[selectedToken1.symbol];
+    if (approvedTokens[selectedToken1.symbol] && approvedTokens[selectedToken2.symbol]) {
+      return true;
+    }
+    return false;
   };
+
+  const currApproveBtnText = () => {
+    if (!approvedTokens[selectedToken1.symbol]) {
+      return `Approve ${selectedToken1.symbol}`
+    }
+    if (!approvedTokens[selectedToken2.symbol]) {
+      return `Approve ${selectedToken2.symbol}`
+    }
+    return 'Approve'
+  }
 
   const clearInputState = () => {
     setToken1Value("");
@@ -427,12 +441,22 @@ const AddCard = (props) => {
   const handleConfirmAllowance = async () => {
     const allowanceAmount = toWei("999999999");
 
-    await confirmAllowance(
-      allowanceAmount,
-      selectedToken1,
-      currentAccount,
-      currentNetwork
-    );
+    if (!approvedTokens[selectedToken1.symbol]) {
+
+      await confirmAllowance(
+        allowanceAmount,
+        selectedToken1,
+        currentAccount,
+        currentNetwork
+      );
+    } else {
+      await confirmAllowance(
+        allowanceAmount,
+        selectedToken2,
+        currentAccount,
+        currentNetwork
+      );
+    }
   };
 
   const verifySwapStatus = (token1, token2) => {
@@ -464,11 +488,11 @@ const AddCard = (props) => {
 
     // balance check before trade
     const _bal0 = Object.keys(balance).includes(selectedToken1.symbol) ? balance[selectedToken1.symbol] : 0
-    const bal0Wei = DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? fromWei(_bal0, 6) : fromWei(_bal0)
+    const bal0Wei = fromWei(_bal0, selectedToken1.decimals) //DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? fromWei(_bal0, 6) : fromWei(_bal0)
 
     // balance check before trade
     const _bal1 = Object.keys(balance).includes(selectedToken2.symbol) ? balance[selectedToken2.symbol] : 0
-    const bal1Wei = DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? fromWei(_bal1, 6) : fromWei(_bal1)
+    const bal1Wei = fromWei(_bal1, selectedToken2.decimals) //DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? fromWei(_bal1, 6) : fromWei(_bal1)
 
     // console.log('Test: ', { _token1, bal0Wei, _token2, bal1Wei })
     if (new BigNumber(_token1).gt(bal0Wei) || new BigNumber(_token2).gt(bal1Wei)) {
@@ -507,6 +531,7 @@ const AddCard = (props) => {
   const onToken1InputChange = async (tokens) => {
     setToken1Value(tokens);
 
+    setLocalStateLoading(true)
     //calculate resetpective value of token 2 if selected
     let _token2Value = "";
     const pairAddress = currentPairAddress();
@@ -521,9 +546,9 @@ const AddCard = (props) => {
       );
 
       _token2Value = getTokenOutWithReserveRatio(
-        toWei(tokens),
-        poolReserves[selectedToken2.symbol],
-        poolReserves[selectedToken1.symbol],
+        tokens,
+        fromWei(poolReserves[selectedToken2.symbol], selectedToken2.decimals),
+        fromWei(poolReserves[selectedToken1.symbol], selectedToken1.decimals) ,
       );
       if (new BigNumber(_token2Value).gt(0)) {
         setToken2Value(_token2Value);
@@ -544,11 +569,14 @@ const AddCard = (props) => {
         { value: token2Value, selected: selectedToken2 }
       );
     }
+
+    setLocalStateLoading(false)
   };
 
   const onToken2InputChange = async (tokens) => {
     setToken2Value(tokens);
 
+    setLocalStateLoading(true)
     let _token1Value = "";
     const pairAddress = currentPairAddress();
 
@@ -562,9 +590,9 @@ const AddCard = (props) => {
       );
 
       _token1Value = getTokenOutWithReserveRatio(
-        toWei(tokens),
-        poolReserves[selectedToken1.symbol],
-        poolReserves[selectedToken2.symbol],
+        tokens,
+        fromWei(poolReserves[selectedToken1.symbol], selectedToken1.decimals),
+        fromWei(poolReserves[selectedToken2.symbol], selectedToken2.decimals),
       );
       if (new BigNumber(_token1Value).eq(0)) {
         verifySwapStatus(
@@ -590,6 +618,8 @@ const AddCard = (props) => {
         { value: tokens, selected: selectedToken2 }
       );
     }
+
+    setLocalStateLoading(false)
   };
 
   const resetInput = () => {
@@ -635,7 +665,7 @@ const AddCard = (props) => {
           amount: token1Value,
         };
 
-        const _amount = DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token2Value)
+        const _amount = toWei(token2Value, selectedToken2.decimals)  //DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token2Value)
         erc20Token = {
           ...selectedToken2,
           amount: _amount,
@@ -648,7 +678,7 @@ const AddCard = (props) => {
           amount: token2Value,
         };
 
-        const _amount = DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value)
+        const _amount = toWei(token1Value, selectedToken1.decimals)  //DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value)
         erc20Token = {
           ...selectedToken1,
           amount: _amount,
@@ -665,8 +695,8 @@ const AddCard = (props) => {
     } else {
       // addLiquidity
 
-      const _amount1 = DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value)
-      const _amount2 = DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token1Value)
+      const _amount1 = toWei(token1Value, selectedToken1.decimals) //DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value)
+      const _amount2 = toWei(token2Value, selectedToken2.decimals) //DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token1Value)
       await addLiquidity(
         { ...selectedToken1, amount: _amount1 },
         { ...selectedToken2, amount: _amount2 },
@@ -723,7 +753,7 @@ const AddCard = (props) => {
     } else if (addStatus.disabled) {
       return addStatus.message;
     } else {
-      return !currentTokenApprovalStatus() ? "Approve" : addStatus.message;
+      return !currentTokenApprovalStatus() ? currApproveBtnText() : addStatus.message;
     }
   };
 

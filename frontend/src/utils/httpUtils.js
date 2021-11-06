@@ -2,24 +2,6 @@ import axios from "axios";
 import { currentConnection } from "../constants";
 
 // downlaod abi from network
-export const fetchContractAbi = async (address, network) => {
-  try {
-    const _api =
-      currentConnection === "testnet"
-        ? `https://api-rinkeby.etherscan.io/api?module=contract&action=getabi&address=${address}&apikey=${process.env.REACT_APP_ETHER_SCAN_API.split('').reverse().join('')}`
-        : `https://api.etherscan.io/api?module=contract&action=getabi&address=${address}&apikey=${process.env.REACT_APP_ETHER_SCAN_API.split('').reverse().join('')}`;
-
-    const res = await axios.get(_api);
-    const data = res.data;
-    if (data.status === "1") {
-      return JSON.parse(data.result);
-    }
-    return [];
-  } catch (error) {
-    console.log("fetchTokenAbi", error);
-    return [];
-  }
-};
 
 export const fetchTokenInfo = async (address) => {
   try {

@@ -452,9 +452,10 @@ const RemoveCard = ({
     );
 
     // check USDC formatting
-    const _lpAmount = (DECIMAL_6_ADDRESSES.includes(selectedToken1.address)
-      || DECIMAL_6_ADDRESSES.includes(selectedToken2.address))
-      ? new BigNumber(lpAmount).div(WEI_UNITS_6).toFixed(0).toString() : lpAmount;
+    // const _lpAmount = (DECIMAL_6_ADDRESSES.includes(selectedToken1.address)
+    //   || DECIMAL_6_ADDRESSES.includes(selectedToken2.address))
+    //   ? new BigNumber(lpAmount).div(WEI_UNITS_6).toFixed(0).toString() : lpAmount;
+    const _lpAmount = lpAmount;
 
     if (selectedToken1.symbol === ETH || selectedToken2.symbol === ETH) {
       // remove liquidity eth-erc20 || erc20 - eth
@@ -509,15 +510,15 @@ const RemoveCard = ({
 
   const priceRatio1 = () => {
     return getPriceRatio(
-      poolReserves[selectedToken2.symbol],
-      poolReserves[selectedToken1.symbol]
+      fromWei(poolReserves[selectedToken2.symbol], selectedToken2.decimals),
+      fromWei(poolReserves[selectedToken1.symbol], selectedToken1.decimals)
     );
   };
 
   const priceRatio2 = () => {
     return getPriceRatio(
-      poolReserves[selectedToken1.symbol],
-      poolReserves[selectedToken2.symbol]
+      fromWei(poolReserves[selectedToken1.symbol], selectedToken1.decimals),
+      fromWei(poolReserves[selectedToken2.symbol], selectedToken2.decimals)
     );
   };
 
@@ -546,6 +547,10 @@ const RemoveCard = ({
       store.dispatch({ type: START_TRANSACTION });
     }
   };
+
+  const currentPairDecimals = (token1, token2) => {
+    return (parseInt(token1.decimals) + parseInt(token2.decimals)) / 2;
+  }
 
   return (
     <>
@@ -763,7 +768,7 @@ const RemoveCard = ({
                       {`( LP tokens )`}
                     </span>
                   </div>
-                  <span>{formatCurrency(fromWei(currentLpBalance()))}</span>
+                  <span>{formatCurrency(fromWei(currentLpBalance(), currentPairDecimals(selectedToken1, selectedToken2)))}</span>
                 </div>
                 <div className="d-flex justify-content-between mt-3 mb-3">
                   <div>Your pool share:</div>

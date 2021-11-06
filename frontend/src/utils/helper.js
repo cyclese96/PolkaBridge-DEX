@@ -1,12 +1,4 @@
 import BigNumber from "bignumber.js";
-import { BITE, CORGIB, PBR, PWAR, USDT } from "../constants";
-import {
-  biteContract,
-  corgibCoinContract,
-  pbrContract,
-  pwarCoinContract,
-  usdtContract,
-} from "../contracts/connections";
 import web3 from "../web";
 import axios from "axios";
 import { ethers } from "ethers";
@@ -14,16 +6,13 @@ import { ethers } from "ethers";
 const WEI_UNITS = 1000000000000000000;
 const WEI_UNITS_6 = 1000000;
 
-export const fromWei = (tokens, precision = 18) => {
+export const fromWei = (tokens, decimals = 18) => {
   try {
     if (!tokens) {
       return new BigNumber(0).toString();
     }
-    if (precision === 6) {
-      return new BigNumber(tokens).div(WEI_UNITS_6).toString();
-    }
 
-    return new BigNumber(tokens).div(WEI_UNITS).toString();
+    return new BigNumber(tokens).div(new BigNumber(10).exponentiatedBy(decimals)).toString();
   } catch (error) {
     console.log("exeption in fromWei ", error);
     return null;
@@ -35,7 +24,7 @@ export const toWei = (tokens, decimals = 18) => {
     if (!tokens) {
       return new BigNumber(0).toString();
     }
-    return new BigNumber(tokens).multipliedBy(parseInt(decimals) === 6 ? WEI_UNITS_6 : WEI_UNITS).toFixed(0).toString();
+    return new BigNumber(tokens).multipliedBy(new BigNumber(10).exponentiatedBy(decimals)).toFixed(0).toString();
   } catch (error) {
     console.log("exeption in toWei , ", error);
     return null;
@@ -111,23 +100,6 @@ export const token1PerToken2 = (token1UsdPrice, token2UsdPrice) => {
   return price;
 };
 
-// current token contract
-export const getTokenContract = (network, tokenType) => {
-  switch (tokenType) {
-    case PBR:
-      return pbrContract(network);
-    case BITE:
-      return biteContract(network);
-    case CORGIB:
-      return corgibCoinContract(network);
-    case PWAR:
-      return pwarCoinContract(network);
-    case USDT:
-      return usdtContract(network);
-    default:
-      return pwarCoinContract(network);
-  }
-};
 
 export const getUnixTime = (timeInMintes) => {
   const now = new Date();
@@ -163,22 +135,6 @@ export const getPercentageAmount = (value, percent) => {
   return percentValue.toString();
 };
 
-export const fetchTokenAbi = async (address) => {
-  try {
-    const _api = `https://api.etherscan.io/api?module=contract&action=getabi&address=${address}&apikey=${process.env.REACT_APP_ETHER_SCAN_API.split('').reverse().join('')}`;
-    // console.log(_api);
-    const res = await axios.get(_api);
-    const data = res.data;
-    if (data.status !== "1") {
-      return [];
-    }
-    const result = JSON.parse(data.result);
-    return result;
-  } catch (error) {
-    console.log("fetchTokenAbi", error);
-    return {};
-  }
-};
 
 export const fetchTokenInfo = async (address) => {
   try {
@@ -292,13 +248,15 @@ export const getTokenOutWithReserveRatio = (
     return new BigNumber("0").toFixed(4).toString();
   }
 
+  console.log('getTokenOutWithReserveRatio', { tokenIn, token1Reserve, token2Reserve })
+
   try {
     const _out = _token1.div(_token2).multipliedBy(tokenIn);
 
     // if (_out.gt(1)) {
     //   return _out.toFixed(2).toString();
     // }
-    return _out.div(WEI_UNITS).toString();
+    return _out.toString();
   } catch (error) {
     console.log("exeption getTokenOut", error);
     return "0";

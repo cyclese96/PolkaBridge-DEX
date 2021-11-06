@@ -1,17 +1,10 @@
 import gql from "graphql-tag";
 import {
   BUNDLE_ID,
-  currentConnection,
-  facotryAddressTestnet,
-  factoryAddresMainnet,
 } from "../constants";
 import { getUnixTime } from "../utils/helper";
 import { client } from "./client";
 
-const FACTORY_ADDRESS =
-  currentConnection === "testnet"
-    ? facotryAddressTestnet
-    : factoryAddresMainnet;
 
 export const testQuery = async () => {
   const queryObj = `
