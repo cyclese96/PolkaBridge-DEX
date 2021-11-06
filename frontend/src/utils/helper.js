@@ -11,7 +11,7 @@ export const fromWei = (tokens, decimals = 18) => {
     if (!tokens) {
       return new BigNumber(0).toString();
     }
-    // console.log('fromWei', new BigNumber(10).exponentiatedBy(decimals).toString())
+
     return new BigNumber(tokens).div(new BigNumber(10).exponentiatedBy(decimals)).toString();
   } catch (error) {
     console.log("exeption in fromWei ", error);

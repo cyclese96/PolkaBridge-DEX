@@ -1107,7 +1107,7 @@ export const getToken0InAmount = (token0, token1, account, network) => async (di
       amountsInBridge = await _routerContract.methods.getAmountsIn(token1Out, bridgePath).call()
       const token1OutWethBridge = new BigNumber(amountsInBridge[0])
 
-      resultIn = fromWei(token1OutWethBridge.toString(), token1.decimals)  //DECIMAL_6_ADDRESSES.includes(token0.address) ? fromWei(token1OutWethBridge.toString(), 6) : fromWei(token1OutWethBridge.toString());
+      resultIn = fromWei(token1OutWethBridge.toString(), token0.decimals)  //DECIMAL_6_ADDRESSES.includes(token0.address) ? fromWei(token1OutWethBridge.toString(), 6) : fromWei(token1OutWethBridge.toString());
       selectedPath = bridgePath
 
     }
