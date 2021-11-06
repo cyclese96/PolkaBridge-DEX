@@ -8,9 +8,9 @@ import './libraries/UQ112x112.sol';
 import './interfaces/IERC20.sol';
 import './interfaces/IUniswapV2Factory.sol';
 // import './interfaces/IUniswapV2Callee.sol';
-import "@openzeppelin/contracts/access/Ownable.sol";
+// import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
+contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
     using SafeMath  for uint;
     using UQ112x112 for uint224;
 
@@ -21,7 +21,7 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
     address public override token0;
     address public override token1;
     
-    address ownerAddress;
+    // address ownerAddress;
 
     address treasury;
 
@@ -60,11 +60,11 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
     }
 
     // called once by the factory at time of deployment
-    function initialize(address _token0, address _token1, address _owner, address _treasury) external override {
+    function initialize(address _token0, address _token1, address _treasury) external override {
         require(msg.sender == factory, 'PolkaBridge AMM V1: FORBIDDEN'); // sufficient check
         token0 = _token0;
         token1 = _token1;
-        ownerAddress = _owner;
+        // ownerAddress = _owner;
         treasury = _treasury;
     }
 
@@ -212,13 +212,13 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
     }    
 
 
-    function setTreasuryAddress(address _treasury) external override {
-        require(msg.sender == ownerAddress, 'Only ownerAddress can set treasury');
-        {
-            require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
-            treasury = _treasury;
-            releaseTime = block.timestamp;
-            emit TreasurySet(_treasury);
-        }
-    }    
+    // function setTreasuryAddress(address _treasury) external override {
+    //     require(msg.sender == ownerAddress, 'Only ownerAddress can set treasury');
+    //     {
+    //         require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
+    //         treasury = _treasury;
+    //         releaseTime = block.timestamp;
+    //         emit TreasurySet(_treasury);
+    //     }
+    // }    
 }
