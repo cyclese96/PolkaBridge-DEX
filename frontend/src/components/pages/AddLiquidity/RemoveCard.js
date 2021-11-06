@@ -452,9 +452,10 @@ const RemoveCard = ({
     );
 
     // check USDC formatting
-    const _lpAmount = (DECIMAL_6_ADDRESSES.includes(selectedToken1.address)
-      || DECIMAL_6_ADDRESSES.includes(selectedToken2.address))
-      ? new BigNumber(lpAmount).div(WEI_UNITS_6).toFixed(0).toString() : lpAmount;
+    // const _lpAmount = (DECIMAL_6_ADDRESSES.includes(selectedToken1.address)
+    //   || DECIMAL_6_ADDRESSES.includes(selectedToken2.address))
+    //   ? new BigNumber(lpAmount).div(WEI_UNITS_6).toFixed(0).toString() : lpAmount;
+    const _lpAmount = lpAmount;
 
     if (selectedToken1.symbol === ETH || selectedToken2.symbol === ETH) {
       // remove liquidity eth-erc20 || erc20 - eth
@@ -546,6 +547,10 @@ const RemoveCard = ({
       store.dispatch({ type: START_TRANSACTION });
     }
   };
+
+  const currentPairDecimals = () => {
+    return (parseInt(selectedToken1.decimals) + parseInt(selectedToken2.decimals)) / 2;
+  }
 
   return (
     <>
@@ -763,7 +768,7 @@ const RemoveCard = ({
                       {`( LP tokens )`}
                     </span>
                   </div>
-                  <span>{formatCurrency(fromWei(currentLpBalance()))}</span>
+                  <span>{formatCurrency(fromWei(currentLpBalance(), currentPairDecimals()))}</span>
                 </div>
                 <div className="d-flex justify-content-between mt-3 mb-3">
                   <div>Your pool share:</div>

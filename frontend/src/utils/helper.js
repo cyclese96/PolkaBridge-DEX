@@ -6,16 +6,13 @@ import { ethers } from "ethers";
 const WEI_UNITS = 1000000000000000000;
 const WEI_UNITS_6 = 1000000;
 
-export const fromWei = (tokens, precision = 18) => {
+export const fromWei = (tokens, decimals = 18) => {
   try {
     if (!tokens) {
       return new BigNumber(0).toString();
     }
-    if (precision === 6) {
-      return new BigNumber(tokens).div(WEI_UNITS_6).toString();
-    }
-
-    return new BigNumber(tokens).div(WEI_UNITS).toString();
+    // console.log('fromWei', new BigNumber(10).exponentiatedBy(decimals).toString())
+    return new BigNumber(tokens).div(new BigNumber(10).exponentiatedBy(decimals)).toString();
   } catch (error) {
     console.log("exeption in fromWei ", error);
     return null;
@@ -27,7 +24,7 @@ export const toWei = (tokens, decimals = 18) => {
     if (!tokens) {
       return new BigNumber(0).toString();
     }
-    return new BigNumber(tokens).multipliedBy(parseInt(decimals) === 6 ? WEI_UNITS_6 : WEI_UNITS).toFixed(0).toString();
+    return new BigNumber(tokens).multipliedBy(new BigNumber(10).exponentiatedBy(decimals)).toFixed(0).toString();
   } catch (error) {
     console.log("exeption in toWei , ", error);
     return null;
@@ -251,13 +248,15 @@ export const getTokenOutWithReserveRatio = (
     return new BigNumber("0").toFixed(4).toString();
   }
 
+  console.log('getTokenOutWithReserveRatio', { tokenIn, token1Reserve, token2Reserve })
+
   try {
     const _out = _token1.div(_token2).multipliedBy(tokenIn);
 
     // if (_out.gt(1)) {
     //   return _out.toFixed(2).toString();
     // }
-    return _out.div(WEI_UNITS).toString();
+    return _out.toString();
   } catch (error) {
     console.log("exeption getTokenOut", error);
     return "0";

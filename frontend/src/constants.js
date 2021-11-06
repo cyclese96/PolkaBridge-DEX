@@ -9,7 +9,7 @@ export const tokenAddresses = {
       mainnet: '0x298d492e8c1d909D3F63Bc4A36C66c64ACB3d695'
     },
     USDT: {
-      testnet: '0x117e41ec3ec246873D69BFA5659B8eB209e687d8',
+      testnet: '0xe687b0a94c3a20540552d981cd311a6812759df8',
       mainnet: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
     },
     USDC: {
@@ -356,6 +356,8 @@ export const tokens = [
 export const DECIMAL_6_ADDRESSES = [
   tokenAddresses.ethereum.USDC.testnet,
   tokenAddresses.ethereum.USDC.mainnet,
+  tokenAddresses.ethereum.USDT.testnet,
+  tokenAddresses.ethereum.USDT.mainnet,
 ]
 
 export const nullAddress = "0x0000000000000000000000000000000000000000";

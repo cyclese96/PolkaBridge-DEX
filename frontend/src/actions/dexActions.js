@@ -596,7 +596,7 @@ export const removeLiquidityEth =
         const tokenAmountMin = "0";
         const lpTokenAmount = lpAmount;
 
-        // console.log({ ethToken, erc20Token, lpAmount })
+        console.log({ ethToken, erc20Token, lpAmount })
         // deadline should be passed in minites in calculation
         const _deadlineUnix = getUnixTime(deadline);
 
@@ -908,14 +908,21 @@ export const getToken1OutAmount = (token0, token1, account, network) => async (d
     const _path21 = [token0.address, usdtAddress, wethAddress, token1.address]; // when usdc is token0
     const _path3 = [token0.address, usdtAddress, token1.address];
 
-    let bridgePath;
-    if ((DECIMAL_6_ADDRESSES.includes(token0.address) || DECIMAL_6_ADDRESSES.includes(token1.address)) && (token0.symbol === ETH || token1.symbol === ETH)) {
+    let bridgePath = _path0;
+    if ([PBR, USDT].includes(token0.symbol) && [PBR, USDT].includes(token1.symbol)) {
+      bridgePath = _path1;
+    } else if ([PBR, USDC].includes(token0.symbol) && [PBR, USDC].includes(token1.symbol)) {
+      bridgePath = token0.symbol === PBR ? _path2 : _path21;
+    } else if ([ETH, USDC].includes(token0.symbol) && [ETH, USDC].includes(token1.symbol)) {
       bridgePath = _path3;
-    } else {
-      bridgePath = (DECIMAL_6_ADDRESSES.includes(token0.address) || DECIMAL_6_ADDRESSES.includes(token1.address))
-        ? DECIMAL_6_ADDRESSES.includes(token0.address) ? _path21 : _path2
-        : _path1;
     }
+    // if ((DECIMAL_6_ADDRESSES.includes(token0.address) || DECIMAL_6_ADDRESSES.includes(token1.address)) && (token0.symbol === ETH || token1.symbol === ETH)) {
+    //   bridgePath = _path3;
+    // } else {
+    //   bridgePath = (DECIMAL_6_ADDRESSES.includes(token0.address) || DECIMAL_6_ADDRESSES.includes(token1.address))
+    //     ? DECIMAL_6_ADDRESSES.includes(token0.address) ? _path21 : _path2
+    //     : _path1;
+    // }
 
     // let amountsOutPair;
     let amountsOutBridge;
@@ -955,13 +962,13 @@ export const getToken1OutAmount = (token0, token1, account, network) => async (d
 
       if ([token0.symbol, token1.symbol].includes(USDT) && [token0.symbol, token1.symbol].includes(PBR)) {
         //pbr-usdt fix if pair exist and not enough liquidity
-        const _token0In = DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0In), 6) : token0In;
+        const _token0In = toWei(fromWei(token0In), token0.decimals)  //DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0In), 6) : token0In;
 
-        amountsOutBridge = await _routerContract.methods.getAmountsOut(_token0In, bridgePath).call();
+        amountsOutBridge = await _routerContract.methods.getAmountsOut(_token0In, _path0).call();
 
         const token1OutBridge = new BigNumber(amountsOutBridge[amountsOutBridge.length - 1])
         // console.log('getToken1OutAmount fetching from bridge ', { amountsOutBridge, bridgePath, token1OutBridge: token1OutBridge.toString() })
-        const _resultOutBridge = DECIMAL_6_ADDRESSES.includes(token1.address) ? fromWei(token1OutBridge.toString(), 6) : fromWei(token1OutBridge.toString());
+        const _resultOutBridge = fromWei(token1OutBridge.toString(), token1.decimals) //DECIMAL_6_ADDRESSES.includes(token1.address) ? fromWei(token1OutBridge.toString(), 6) : fromWei(token1OutBridge.toString());
 
         if (new BigNumber(resultOut).lt(_resultOutBridge)) {
           //consider swap from bridge instead of pair
@@ -975,13 +982,13 @@ export const getToken1OutAmount = (token0, token1, account, network) => async (d
 
     } else {
       //fix if it is bridge swap and token0 is usdc
-      const _token0In = DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0In), 6) : token0In;
+      const _token0In = toWei(fromWei(token0In), token0.decimals)// DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0In), 6) : token0In;
 
       amountsOutBridge = await _routerContract.methods.getAmountsOut(_token0In, bridgePath).call();
 
       const token1OutBridge = new BigNumber(amountsOutBridge[amountsOutBridge.length - 1])
       // console.log('getToken1OutAmount fetching from bridge ', { amountsOutBridge, bridgePath, token1OutBridge: token1OutBridge.toString() })
-      resultOut = DECIMAL_6_ADDRESSES.includes(token1.address) ? fromWei(token1OutBridge.toString(), 6) : fromWei(token1OutBridge.toString());
+      resultOut = fromWei(token1OutBridge.toString(), token1.decimals) //DECIMAL_6_ADDRESSES.includes(token1.address) ? fromWei(token1OutBridge.toString(), 6) : fromWei(token1OutBridge.toString());
       selectedPath = bridgePath;
 
     }
@@ -1023,14 +1030,22 @@ export const getToken0InAmount = (token0, token1, account, network) => async (di
     const _path21 = [token0.address, usdtAddress, wethAddress, token1.address]; // when usdc is token0
     const _path3 = [token0.address, usdtAddress, token1.address];
 
-    let bridgePath;
-    if ((DECIMAL_6_ADDRESSES.includes(token0.address) || DECIMAL_6_ADDRESSES.includes(token1.address)) && (token0.symbol === ETH || token1.symbol === ETH)) {
+    let bridgePath = _path0;
+    if ([PBR, USDT].includes(token0.symbol) && [PBR, USDT].includes(token1.symbol)) {
+      bridgePath = _path1;
+    } else if ([PBR, USDC].includes(token0.symbol) && [PBR, USDC].includes(token1.symbol)) {
+      bridgePath = token0.symbol === PBR ? _path2 : _path21;
+    } else if ([ETH, USDC].includes(token0.symbol) && [ETH, USDC].includes(token1.symbol)) {
       bridgePath = _path3;
-    } else {
-      bridgePath = (DECIMAL_6_ADDRESSES.includes(token0.address) || DECIMAL_6_ADDRESSES.includes(token1.address))
-        ? DECIMAL_6_ADDRESSES.includes(token0.address) ? _path21 : _path2
-        : _path1;
     }
+
+    // if ((DECIMAL_6_ADDRESSES.includes(token0.address) || DECIMAL_6_ADDRESSES.includes(token1.address)) && (token0.symbol === ETH || token1.symbol === ETH)) {
+    //   bridgePath = _path3;
+    // } else {
+    //   bridgePath = (DECIMAL_6_ADDRESSES.includes(token0.address) || DECIMAL_6_ADDRESSES.includes(token1.address))
+    //     ? DECIMAL_6_ADDRESSES.includes(token0.address) ? _path21 : _path2
+    //     : _path1;
+    // }
 
     let amountsInPair;
     let amountsInBridge;
@@ -1066,12 +1081,12 @@ export const getToken0InAmount = (token0, token1, account, network) => async (di
       // temp fix for pbr-usdt pair with low liquidity
       if ([token0.symbol, token1.symbol].includes(USDT) && [token0.symbol, token1.symbol].includes(PBR)) {
 
-        const _token1OutWei = DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1Out), 6) : token1Out;
+        const _token1OutWei = toWei(fromWei(token1Out), token1.decimals) //DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1Out), 6) : token1Out;
 
         amountsInBridge = await _routerContract.methods.getAmountsIn(_token1OutWei, bridgePath).call()
         const token1OutWethBridge = new BigNumber(amountsInBridge[0])
 
-        const _resultInBridge = DECIMAL_6_ADDRESSES.includes(token0.address) ? fromWei(token1OutWethBridge.toString(), 6) : fromWei(token1OutWethBridge.toString());
+        const _resultInBridge = fromWei(token1OutWethBridge.toString(), token1.decimals) //DECIMAL_6_ADDRESSES.includes(token0.address) ? fromWei(token1OutWethBridge.toString(), 6) : fromWei(token1OutWethBridge.toString());
 
         if (new BigNumber(resultIn).lt(_resultInBridge)) {
           //consider swap from bridge instead of pair
@@ -1087,12 +1102,12 @@ export const getToken0InAmount = (token0, token1, account, network) => async (di
       //Note: token1Out should be in usdc decimals if we are fetching amount from path,
       // in normal wei if fetching from pair reserves
 
-      const _token1OutWei = DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1Out), 6) : token1Out;
+      const _token1OutWei = toWei(fromWei(token1Out), token1.decimals) //DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1Out), 6) : token1Out;
 
       amountsInBridge = await _routerContract.methods.getAmountsIn(_token1OutWei, bridgePath).call()
       const token1OutWethBridge = new BigNumber(amountsInBridge[0])
 
-      resultIn = DECIMAL_6_ADDRESSES.includes(token0.address) ? fromWei(token1OutWethBridge.toString(), 6) : fromWei(token1OutWethBridge.toString());
+      resultIn = fromWei(token1OutWethBridge.toString(), token1.decimals)  //DECIMAL_6_ADDRESSES.includes(token0.address) ? fromWei(token1OutWethBridge.toString(), 6) : fromWei(token1OutWethBridge.toString());
       selectedPath = bridgePath
 
     }
@@ -1208,8 +1223,8 @@ export const calculatePriceImpact = async (token0, token1, account, network) => 
 
 
       // console.log('checkPriceImpact fetched reserves0  ', { reserv0: reserve[token0.symbol], amount0: token0.amount })
-      const _token0WeiAmount = DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0.amount, 6)) : token0.amount;
-      const _token1WeiAmount = DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1.amount, 6)) : token1.amount;
+      const _token0WeiAmount = toWei(fromWei(token0.amount, token0.decimals)) //DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0.amount, 6)) : token0.amount;
+      const _token1WeiAmount = toWei(fromWei(token1.amount, token1.decimals)) //DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1.amount, 6)) : token1.amount;
 
       return sellPriceImpact(_token0WeiAmount, _token1WeiAmount, reserve[token0.symbol])
 
@@ -1219,8 +1234,8 @@ export const calculatePriceImpact = async (token0, token1, account, network) => 
 
       // console.log('checkPriceImpact fetched reserves  ', { reserves })
 
-      const _token0WeiAmount = DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0.amount, 6)) : token0.amount;
-      const _token1WeiAmount = DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1.amount, 6)) : token1.amount;
+      const _token0WeiAmount = toWei(fromWei(token0.amount, token0.decimals)) //DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0.amount, 6)) : token0.amount;
+      const _token1WeiAmount = toWei(fromWei(token1.amount, token1.decimals)) //DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1.amount, 6)) : token1.amount;
       // console.log('checkPriceImpact fetched reserves0  ', { _token0WeiAmount, _token1WeiAmount, reserve: reserves[token0.symbol], reserves })
       return sellPriceImpact(_token0WeiAmount, _token1WeiAmount, reserves[token0.symbol])
 
@@ -1264,9 +1279,11 @@ export const loadPairAddress =
 const WEI_UNITS_6 = 1000000;
 const WEI_UNITS_12 = 1000000000000;
 
-const considerUsdcDecimals = (tokenAddress, value) => {
-  return DECIMAL_6_ADDRESSES.includes(tokenAddress)
-    ? new BigNumber(value).multipliedBy(WEI_UNITS_12).toFixed(0).toString() : value
+const stablizeTo18Decimals = (token, value) => {
+  // return DECIMAL_6_ADDRESSES.includes(tokenAddress)
+  //   ? new BigNumber(value).multipliedBy(WEI_UNITS_12).toFixed(0).toString() : value
+  const decimal18Stablizer = new BigNumber(10).exponentiatedBy(18 - parseInt(token.decimals));
+  return parseInt(token.decimals) === 18 ? value : new BigNumber(value).multipliedBy(decimal18Stablizer).toFixed(0).toString()
 }
 
 const fetchPairData = async (token1, token2, _pairContract, account) => {
@@ -1284,11 +1301,11 @@ const fetchPairData = async (token1, token2, _pairContract, account) => {
     let reserve = {};
 
     if (token1.address.toLowerCase() === token0Addr.toLowerCase()) {
-      reserve[token1.symbol] = considerUsdcDecimals(token1.address, reservesData._reserve0);
-      reserve[token2.symbol] = considerUsdcDecimals(token2.address, reservesData._reserve1);
+      reserve[token1.symbol] = reservesData._reserve0//stablizeTo18Decimals(token1, reservesData._reserve0);
+      reserve[token2.symbol] = reservesData._reserve1//stablizeTo18Decimals(token2, reservesData._reserve1);
     } else {
-      reserve[token1.symbol] = considerUsdcDecimals(token1.address, reservesData._reserve1);
-      reserve[token2.symbol] = considerUsdcDecimals(token2.address, reservesData._reserve0);
+      reserve[token1.symbol] = reservesData._reserve1//stablizeTo18Decimals(token1, reservesData._reserve1);
+      reserve[token2.symbol] = reservesData._reserve0//stablizeTo18Decimals(token2, reservesData._reserve0);
     }
 
     return { reserve, lpBalance, totalSupply }
@@ -1317,12 +1334,17 @@ export const getLpBalance =
         payload: reserve,
       });
 
-      // formatting fix for usdc
-      const _lpBalance = (DECIMAL_6_ADDRESSES.includes(token1.address) || DECIMAL_6_ADDRESSES.includes(token2.address))
-        ? new BigNumber(lpBalance).multipliedBy(WEI_UNITS_6).toFixed(0).toString() : lpBalance
+      // formatting fix for non 18 decimal tokens
+      const _lpDecimals = (parseInt(token1.decimals) + parseInt(token2.decimals)) / 2;
+      const _lpBalance = lpBalance; //stablizeTo18Decimals({ decimals: _lpDecimals }, lpBalance);
+      const _totalSupply = totalSupply; //stablizeTo18Decimals({ decimals: _lpDecimals }, totalSupply);
+      //49749371855330
+      //75000000
+      // const _lpBalance = (DECIMAL_6_ADDRESSES.includes(token1.address) || DECIMAL_6_ADDRESSES.includes(token2.address))
+      //   ? new BigNumber(lpBalance).multipliedBy(WEI_UNITS_6).toFixed(0).toString() : lpBalance
 
-      const _totalSupply = (DECIMAL_6_ADDRESSES.includes(token1.address) || DECIMAL_6_ADDRESSES.includes(token2.address))
-        ? new BigNumber(totalSupply).multipliedBy(WEI_UNITS_6).toFixed(0).toString() : totalSupply
+      // const _totalSupply = (DECIMAL_6_ADDRESSES.includes(token1.address) || DECIMAL_6_ADDRESSES.includes(token2.address))
+      //   ? new BigNumber(totalSupply).multipliedBy(WEI_UNITS_6).toFixed(0).toString() : totalSupply
 
       dispatch({
         type: GET_POOL_SHARE,

@@ -18,17 +18,12 @@ import {
   ETH,
   etheriumNetwork,
   swapFnConstants,
-  THRESOLD_WEI_VALUE,
   THRESOLD_VALUE,
   tokens,
 } from "../../constants";
 import {
-  buyPriceImpact,
   fromWei,
   getPriceRatio,
-  getToken1Out,
-  getToken2Out,
-  sellPriceImpact,
   toWei,
 } from "../../utils/helper";
 import {
@@ -520,7 +515,7 @@ const SwapCard = (props) => {
 
     // balance check before trade
     const _bal0 = Object.keys(balance).includes(selectedToken1.symbol) ? balance[selectedToken1.symbol] : 0
-    const bal0Wei = DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? fromWei(_bal0, 6) : fromWei(_bal0)
+    const bal0Wei = fromWei(_bal0, selectedToken1.decimals) //DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? fromWei(_bal0, 6) : fromWei(_bal0)
     if (new BigNumber(token1Value).gt(bal0Wei)) {
       setStatus({
         disabled: true,
@@ -563,7 +558,7 @@ const SwapCard = (props) => {
 
     // balance check before trade
     const _bal0 = Object.keys(balance).includes(selectedToken1.symbol) ? balance[selectedToken1.symbol] : 0
-    const bal0Wei = DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? fromWei(_bal0, 6) : fromWei(_bal0)
+    const bal0Wei = fromWei(_bal0, selectedToken1.decimals)//DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? fromWei(_bal0, 6) : fromWei(_bal0)
     if (new BigNumber(_tokenAmount).gt(bal0Wei)) {
       setStatus({
         disabled: true,
@@ -643,14 +638,14 @@ const SwapCard = (props) => {
     //   );
     // }
 
-    const _amount0InWei = DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value);
+    const _amount0InWei = toWei(token1Value, selectedToken1.decimals) //DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value);
     const token0 = {
       amount: _amount0InWei,
       min: toWei(token1Value.toString()),
       ...selectedToken1,
     };
 
-    const _amount1InWei = DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token2Value);
+    const _amount1InWei = toWei(token2Value, selectedToken2.decimals) //DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token2Value);
     const token1 = {
       amount: _amount1InWei,
       min: toWei(token2Value.toString()),
