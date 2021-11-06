@@ -8,20 +8,20 @@ import './libraries/UQ112x112.sol';
 import './interfaces/IERC20.sol';
 import './interfaces/IUniswapV2Factory.sol';
 // import './interfaces/IUniswapV2Callee.sol';
-import "@openzeppelin/contracts/access/Ownable.sol";
+// import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
+contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
     using SafeMath  for uint;
     using UQ112x112 for uint224;
 
-    uint public override constant MINIMUM_LIQUIDITY = 10**3;
+    // uint public override constant MINIMUM_LIQUIDITY = 10**3;
     bytes4 private constant SELECTOR = bytes4(keccak256(bytes('transfer(address,uint256)')));
 
     address public override factory;
     address public override token0;
     address public override token1;
     
-    address ownerAddress;
+    // address ownerAddress;
 
     address treasury;
 
@@ -60,11 +60,11 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
     }
 
     // called once by the factory at time of deployment
-    function initialize(address _token0, address _token1, address _owner, address _treasury) external override {
+    function initialize(address _token0, address _token1, address _treasury) external override {
         require(msg.sender == factory, 'PolkaBridge AMM V1: FORBIDDEN'); // sufficient check
         token0 = _token0;
         token1 = _token1;
-        ownerAddress = _owner;
+        // ownerAddress = _owner;
         treasury = _treasury;
     }
 
@@ -128,7 +128,7 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
         bool feeOn = _mintFee(_reserve0, _reserve1);
         uint _totalSupply = totalSupply; // gas savings, must be defined here since totalSupply can update in _mintFee
         if (_totalSupply == 0) {
-            liquidity = Math.sqrt(amount0.mul(amount1)).sub(MINIMUM_LIQUIDITY);
+            liquidity = Math.sqrt(amount0.mul(amount1));//.sub(MINIMUM_LIQUIDITY);
         //    _mint(address(0), MINIMUM_LIQUIDITY); // permanently lock the first MINIMUM_LIQUIDITY tokens
         } else {
             liquidity = Math.min(amount0.mul(_totalSupply) / _reserve0, amount1.mul(_totalSupply) / _reserve1);
@@ -138,7 +138,7 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
 
         _update(balance0, balance1, _reserve0, _reserve1);
         if (feeOn) kLast = uint(reserve0).mul(reserve1); // reserve0 and reserve1 are up-to-date
-        emit Mint(msg.sender, amount0, amount1);
+        // emit Mint(msg.sender, amount0, amount1);
     }
 
     // this low-level function should be called from a contract which performs important safety checks
@@ -163,7 +163,7 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
 
         _update(balance0, balance1, _reserve0, _reserve1);
         if (feeOn) kLast = uint(reserve0).mul(reserve1); // reserve0 and reserve1 are up-to-date
-        emit Burn(msg.sender, amount0, amount1, to);
+        // emit Burn(msg.sender, amount0, amount1, to);
     }
 
    
@@ -207,18 +207,18 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20, Ownable {
             }
         
         _update(balance0, balance1, _reserve0, _reserve1);
-        emit Swap(msg.sender, amount0In, amount1In, amount0Out, amount1Out, to);
+        // emit Swap(msg.sender, amount0In, amount1In, amount0Out, amount1Out, to);
 
     }    
 
 
-    function setTreasuryAddress(address _treasury) external override {
-        require(msg.sender == ownerAddress, 'Only ownerAddress can set treasury');
-        {
-            require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
-            treasury = _treasury;
-            releaseTime = block.timestamp;
-            emit TreasurySet(_treasury);
-        }
-    }    
+    // function setTreasuryAddress(address _treasury) external override {
+    //     require(msg.sender == ownerAddress, 'Only ownerAddress can set treasury');
+    //     {
+    //         require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
+    //         treasury = _treasury;
+    //         releaseTime = block.timestamp;
+    //         emit TreasurySet(_treasury);
+    //     }
+    // }    
 }

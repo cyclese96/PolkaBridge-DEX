@@ -6,7 +6,7 @@ import './IUniswapV2ERC20.sol';
 interface IUniswapV2Pair is IUniswapV2ERC20 {
     event Mint(address indexed sender, uint amount0, uint amount1);
     event Burn(address indexed sender, uint amount0, uint amount1, address indexed to);
-    event BurnETH(address indexed sender, uint amount0, uint amount1, address indexed to, address indexed to1);
+    // event BurnETH(address indexed sender, uint amount0, uint amount1, address indexed to, address indexed to1);
     event Swap(
         address indexed sender,
         uint amount0In,
@@ -16,11 +16,11 @@ interface IUniswapV2Pair is IUniswapV2ERC20 {
         address indexed to
     );
     event Sync(uint112 reserve0, uint112 reserve1);
-    event TreasurySet(address _address);
+    // event TreasurySet(address _address);
 
-    function setTreasuryAddress(address _address) external;
+    // function setTreasuryAddress(address _address) external;
 
-    function MINIMUM_LIQUIDITY() external pure returns (uint);
+    // function MINIMUM_LIQUIDITY() external pure returns (uint);
     function factory() external view returns (address);
     function token0() external view returns (address);
     function token1() external view returns (address);
@@ -35,5 +35,5 @@ interface IUniswapV2Pair is IUniswapV2ERC20 {
     function swap(uint amount0Out, uint amount1Out, address to) external;
     function skim(address to) external;
     function sync() external;    
-    function initialize(address, address, address, address) external;
+    function initialize(address, address, address) external;
 }

@@ -14,10 +14,9 @@ contract UniswapV2Factory is IUniswapV2Factory {
 
     mapping(address => mapping(address => address)) public override getPair;
     // address[] public allPairs; // storage of all pairs
-    uint public override allPairs;
-
     bytes32 public constant INIT_CODE_PAIR_HASH = keccak256(abi.encodePacked(type(UniswapV2Pair).creationCode));
     
+    uint public override allPairs;
     uint releaseTime;
     uint lockTime = 2 days;
 
@@ -43,13 +42,13 @@ contract UniswapV2Factory is IUniswapV2Factory {
         assembly {
             pair := create2(0, add(bytecode, 32), mload(bytecode), salt)
         }
-        IUniswapV2Pair(pair).initialize(token0, token1, owner, treasury);
+        IUniswapV2Pair(pair).initialize(token0, token1, treasury);//, owner, treasury);
         getPair[token0][token1] = pair;
         getPair[token1][token0] = pair; // populate mapping in the reverse direction
         // allPairs.push(pair);
         allPairs++;
         // emit PairCreated(token0, token1, pair, allPairs.length);
-        emit PairCreated(token0, token1, pair, allPairs);
+        // emit PairCreated(token0, token1, pair, allPairs);
     }
 
     function setTreasuryAddress(address _treasury) external override {
