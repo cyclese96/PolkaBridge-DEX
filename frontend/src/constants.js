@@ -194,27 +194,27 @@ export const tokens = [
     address: '0xb6083cf9c33ccde1711ecb63cff1b0dd2cf06c09',
     decimals: 12
   },
-  {
-    name: "US Tether8",
-    symbol: "USDT8",
-    address: '0x1793fbb125512015099261d339ed2e2f3fe94b2d',
-    decimals: 8
-  },
+  // {
+  //   name: "US Tether8",
+  //   symbol: "USDT8",
+  //   address: '0x1793fbb125512015099261d339ed2e2f3fe94b2d',
+  //   decimals: 8
+  // },
   {
     name: "USD Coin",
     symbol: "USDC",
     address: getTokenAddress(USDC),
     decimals: 6
   },
-  {
-    name: "1INCH Token",
-    symbol: "1INCH",
-    address:
-      currentConnection === "testnet"
-        ? "0xcc521406C8F796169DCe1D10bDe6AaA60847FB63"
-        : "0x111111111117dc0aa78b770fa6a738034120c302",
-    decimals: 18
-  },
+  // {
+  //   name: "1INCH Token",
+  //   symbol: "1INCH",
+  //   address:
+  //     currentConnection === "testnet"
+  //       ? "0xcc521406C8F796169DCe1D10bDe6AaA60847FB63"
+  //       : "0x111111111117dc0aa78b770fa6a738034120c302",
+  //   decimals: 18
+  // },
   {
     name: "Dai Stablecoin",
     symbol: "DAI",
