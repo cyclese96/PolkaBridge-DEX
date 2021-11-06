@@ -363,6 +363,7 @@ const SwapCard = (props) => {
       }
     }
     loadPair();
+    setLocalStateLoading(false);
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
   useEffect(() => {

@@ -195,6 +195,12 @@ export const tokens = [
     decimals: 12
   },
   {
+    name: "US Tether8",
+    symbol: "USDT8",
+    address: '0x1793fbb125512015099261d339ed2e2f3fe94b2d',
+    decimals: 8
+  },
+  {
     name: "USD Coin",
     symbol: "USDC",
     address: getTokenAddress(USDC),
