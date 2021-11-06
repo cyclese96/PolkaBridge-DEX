@@ -354,10 +354,24 @@ const AddCard = (props) => {
   };
 
   const currentTokenApprovalStatus = () => {
-    return selectedToken1.symbol === "ETH"
-      ? true
-      : approvedTokens[selectedToken1.symbol];
+    // return selectedToken1.symbol === "ETH"
+    //   ? true
+    //   : approvedTokens[selectedToken1.symbol];
+    if (approvedTokens[selectedToken1.symbol] && approvedTokens[selectedToken2.symbol]) {
+      return true;
+    }
+    return false;
   };
+
+  const currApproveBtnText = () => {
+    if (!approvedTokens[selectedToken1.symbol]) {
+      return `Approve ${selectedToken1.symbol}`
+    }
+    if (!approvedTokens[selectedToken2.symbol]) {
+      return `Approve ${selectedToken2.symbol}`
+    }
+    return 'Approve'
+  }
 
   const clearInputState = () => {
     setToken1Value("");
@@ -427,12 +441,22 @@ const AddCard = (props) => {
   const handleConfirmAllowance = async () => {
     const allowanceAmount = toWei("999999999");
 
-    await confirmAllowance(
-      allowanceAmount,
-      selectedToken1,
-      currentAccount,
-      currentNetwork
-    );
+    if (!approvedTokens[selectedToken1.symbol]) {
+
+      await confirmAllowance(
+        allowanceAmount,
+        selectedToken1,
+        currentAccount,
+        currentNetwork
+      );
+    } else {
+      await confirmAllowance(
+        allowanceAmount,
+        selectedToken2,
+        currentAccount,
+        currentNetwork
+      );
+    }
   };
 
   const verifySwapStatus = (token1, token2) => {
@@ -729,7 +753,7 @@ const AddCard = (props) => {
     } else if (addStatus.disabled) {
       return addStatus.message;
     } else {
-      return !currentTokenApprovalStatus() ? "Approve" : addStatus.message;
+      return !currentTokenApprovalStatus() ? currApproveBtnText() : addStatus.message;
     }
   };
 
