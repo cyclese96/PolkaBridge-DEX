@@ -1135,7 +1135,7 @@ export const getToken0InAmount = (token0, token1, account, network) => async (di
 }
 
 const getReservesForPriceImpact = async (token0, token1, account, network) => {
-  if ([token0.symbol, token1.symbol].includes(PBR) && [token0.symbol, token1.symbol].includes(USDT)) {
+  if ([PBR, USDT].includes(token0.symbol) && [PBR, USDT].includes(token1.symbol)) {
     // fetch all reserves
     const wethAddress = currentConnection === 'testnet' ? tokenAddresses.ethereum.ETH.testnet : tokenAddresses.ethereum.ETH.mainnet;
     const pbrAddress = token0.symbol === PBR ? token0.address : token1.address;
@@ -1154,7 +1154,7 @@ const getReservesForPriceImpact = async (token0, token1, account, network) => {
     return { ...pair0Reserves.reserve, ...pair1Reserves.reserve }
 
 
-  } else if ([token0.symbol, token1.symbol].includes(PBR) && [token0.symbol, token1.symbol].includes(USDC)) {
+  } else if ([PBR, USDC].includes(token0.symbol) && [PBR, USDC].includes(token0.symbol)) {
     // console.log('getting reserves for pbr usdt ')
     //
     const wethAddress = currentConnection === 'testnet' ? tokenAddresses.ethereum.ETH.testnet : tokenAddresses.ethereum.ETH.mainnet;
@@ -1181,7 +1181,7 @@ const getReservesForPriceImpact = async (token0, token1, account, network) => {
     // console.log('checkPriceImpact:  ', { pair2Reserves })
     return { ...pair2Reserves.reserve, ...pair0Reserves.reserve }
 
-  } else if ([token0.symbol, token1.symbol].includes(ETH) && [token0.symbol, token1.symbol].includes(USDC)) {
+  } else if ([ETH, USDC].includes(token0.symbol) && [ETH, USDC].includes(token1.symbol)) {
     //
     const usdtAddress = currentConnection === 'testnet' ? tokenAddresses.ethereum.USDT.testnet : tokenAddresses.ethereum.USDT.mainnet;
     const ethAddress = token0.symbol === ETH ? token0.address : token1.address;
@@ -1201,6 +1201,10 @@ const getReservesForPriceImpact = async (token0, token1, account, network) => {
   }
 }
 
+const tokenThresoldValue = (decimals) => {
+  return new BigNumber(10).exponentiatedBy(parseInt(decimals) - 3);
+}
+
 export const calculatePriceImpact = async (token0, token1, account, network) => {
   try {
 
@@ -1217,12 +1221,13 @@ export const calculatePriceImpact = async (token0, token1, account, network) => 
       totalSupply = pairReserveRes.totalSupply;
       lpBalance = pairReserveRes.lpBalance;
     }
+    // console.log('checkPriceImpact fetched pair  ', { reserve })
 
-    if (pairAddress && (reserve && (new BigNumber(reserve[token0.symbol]).gt(THRESOLD_WEI_VALUE) || new BigNumber(reserve[token1.symbol]).gt(THRESOLD_WEI_VALUE)))) {
+    if (pairAddress && (reserve && (new BigNumber(reserve[token0.symbol]).gt(tokenThresoldValue(token0.decimals)) || new BigNumber(reserve[token1.symbol]).gt(tokenThresoldValue(token1.decimals))))) {
 
 
 
-      // console.log('checkPriceImpact fetched reserves0  ', { reserv0: reserve[token0.symbol], amount0: token0.amount })
+      // console.log('checkPriceImpact fetched pair  ', { reserve })
       // const _token0WeiAmount = toWei(fromWei(token0.amount, token0.decimals)) //DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0.amount, 6)) : token0.amount;
       // const _token1WeiAmount = toWei(fromWei(token1.amount, token1.decimals)) //DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1.amount, 6)) : token1.amount;
 
@@ -1243,7 +1248,7 @@ export const calculatePriceImpact = async (token0, token1, account, network) => 
 
 
   } catch (error) {
-    console.log("calculatePriceImpact exeption : ", { error })
+    console.log("checkPriceImpact calculatePriceImpact exeption : ", { error })
   }
 }
 export const loadPairAddress =
