@@ -836,8 +836,11 @@ export const importToken = (address, account, network) => async (dispatch) => {
       type: SHOW_DEX_LOADING,
     });
 
-    const [tokenInfoData] = await Promise.all([
+    const _tokenContract = tokenContract(address, network);
+
+    const [tokenInfoData, tokenDecimals] = await Promise.all([
       fetchTokenInfo(address),
+      _tokenContract.methods.decimals().call()
     ]);
 
     // console.log("token info received ", tokenInfoData);
@@ -848,7 +851,8 @@ export const importToken = (address, account, network) => async (dispatch) => {
         const tokenObj = {
           tokenName: "Test erc20 token",
           symbol: address && address.slice(0, 6),
-          address: address
+          address: address,
+          decimals: parseInt(tokenDecimals)
         }
         cacheImportedToken(tokenObj);
         dispatch({
@@ -866,6 +870,7 @@ export const importToken = (address, account, network) => async (dispatch) => {
         name: tokenInfo.tokenName,
         symbol: tokenInfo.symbol,
         address: address,
+        decimals: parseInt(tokenDecimals)
       };
       cacheImportedToken(tokenObj);
       dispatch({
