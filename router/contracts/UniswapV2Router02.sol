@@ -13,7 +13,7 @@ import './interfaces/IWETH.sol';
 
 contract UniswapV2Router02 is IUniswapV2Router02 {
     using SafeMath for uint256;
-    string public name = 'PolkaBridgeAMM: Router';
+    // string public name = 'PolkaBridgeAMM: Router';
     address public immutable override factory;
     address public immutable override WETH;
     // address public owner;
