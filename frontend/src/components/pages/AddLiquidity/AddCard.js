@@ -353,11 +353,20 @@ const AddCard = (props) => {
     }
   };
 
+
+  const isApproved = (token) => {
+
+    if (token.symbol === ETH) {
+      return true
+    }
+    return approvedTokens[token.symbol];
+  }
+
   const currentTokenApprovalStatus = () => {
     // return selectedToken1.symbol === "ETH"
     //   ? true
     //   : approvedTokens[selectedToken1.symbol];
-    if (approvedTokens[selectedToken1.symbol] && approvedTokens[selectedToken2.symbol]) {
+    if (isApproved(selectedToken1) && isApproved(selectedToken2)) {
       return true;
     }
     return false;
