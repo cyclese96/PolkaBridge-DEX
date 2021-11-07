@@ -9,16 +9,16 @@ import './UniswapV2Pair.sol';
 contract UniswapV2Factory is IUniswapV2Factory {
     // address public override feeTo;
     address owner;
-
+    string public name = 'PolkaBridgeAMM: Factory';
     address treasury;
 
     mapping(address => mapping(address => address)) public override getPair;
     // address[] public allPairs; // storage of all pairs
     bytes32 public constant INIT_CODE_PAIR_HASH = keccak256(abi.encodePacked(type(UniswapV2Pair).creationCode));
-    
-    uint public override allPairs;
-    uint releaseTime;
-    uint lockTime = 2 days;
+
+    uint256 public override allPairs;
+    uint256 releaseTime;
+    uint256 lockTime = 2 days;
 
     constructor(address _owner, address _treasury) {
         owner = _owner;
@@ -26,7 +26,7 @@ contract UniswapV2Factory is IUniswapV2Factory {
         releaseTime = block.timestamp;
     }
 
-    function allPairsLength() external override view returns (uint) {
+    function allPairsLength() external view override returns (uint256) {
         // return pair length
         // return allPairs.length;
         return allPairs;
@@ -42,7 +42,7 @@ contract UniswapV2Factory is IUniswapV2Factory {
         assembly {
             pair := create2(0, add(bytecode, 32), mload(bytecode), salt)
         }
-        IUniswapV2Pair(pair).initialize(token0, token1, treasury);//, owner, treasury);
+        IUniswapV2Pair(pair).initialize(token0, token1, treasury); //, owner, treasury);
         getPair[token0][token1] = pair;
         getPair[token1][token0] = pair; // populate mapping in the reverse direction
         // allPairs.push(pair);
@@ -54,10 +54,9 @@ contract UniswapV2Factory is IUniswapV2Factory {
     function setTreasuryAddress(address _treasury) external override {
         require(msg.sender == owner, 'Only owner can set treasury');
         {
-            require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
+            require(block.timestamp - releaseTime >= lockTime, 'current time is before release time');
             treasury = _treasury;
             emit TreasurySet(_treasury);
         }
     }
-
 }

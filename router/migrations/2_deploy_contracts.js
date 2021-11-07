@@ -6,9 +6,8 @@ const Weth = artifacts.require("test/WETH9")
 module.exports = async function (deployer) {
 
     //testnet
-    let owner = "0xfEEF5F353aE5022d0cfcD072165cDA284B65772B";
-    // let owner = "0x57866ed63ca5f9744cef9aa270bd1f1dce935831";
-    let factorycontract = "0xC835C7b511537Aa3f63AAb02823adb419994f308";
+
+    let factorycontract = "0xb99045a8fA329f84D459634Bd74b3df35e5dAeCD";
     let WETH = "0xc778417E063141139Fce010982780140Aa0cD5Ab";
     // let treasury = "0xC5516e155aa03F002A00c6bbA9467Cdbc4272581";
     //mainnet
