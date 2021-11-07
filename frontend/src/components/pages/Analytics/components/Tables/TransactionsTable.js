@@ -8,12 +8,16 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { makeStyles } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import Stack from "@mui/material/Stack";
+
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import Loader from "../../../../common/Loader";
-import { formatTime } from "../../../../../utils/timeUtils";
+import {
+  formatDollarAmount,
+  formattedNum,
+  formatTime,
+} from "../../../../../utils/timeUtils";
 import { currentConnection } from "../../../../../constants";
-
+import CurrencyFormat from "react-currency-format";
 const useStyles = makeStyles((theme) => ({
   table: {
     background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
@@ -113,9 +117,8 @@ export default function TransactionsTable({ data }) {
     setRows([...tempRows]);
   };
   const filterTx = (filter) => {
-
     if (!data) {
-      return
+      return;
     }
 
     let result = Object.keys(data).map((key) => data[key]);
@@ -320,28 +323,27 @@ export default function TransactionsTable({ data }) {
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
-                    {parseFloat(row.amountUSD).toFixed(2)}
+                    {formattedNum(parseFloat(row.amountUSD).toFixed(2))}
                   </TableCell>
                   <TableCell
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
                     {row.amount0
-                      ? parseFloat(row.amount0).toFixed(3)
+                      ? formattedNum(parseFloat(row.amount0).toFixed(3))
                       : row.amount0Out !== "0"
-                        ? parseFloat(row.amount0Out).toFixed(3)
-                        : parseFloat(row.amount0In).toFixed(3)}
+                      ? formattedNum(parseFloat(row.amount0Out).toFixed(3))
+                      : formattedNum(parseFloat(row.amount0In).toFixed(3))}
                   </TableCell>
                   <TableCell
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
                     {row.amount1
-                      ? parseFloat(row.amount1).toFixed(3)
+                      ? formattedNum(parseFloat(row.amount1).toFixed(3))
                       : row.amount1Out !== "0"
-                        ? parseFloat(row.amount1Out).toFixed(3)
-                        : parseFloat(row.amount1In).toFixed(3)}
-                    { }
+                      ? formattedNum(parseFloat(row.amount1Out).toFixed(3))
+                      : formattedNum(parseFloat(row.amount1In).toFixed(3))}
                   </TableCell>
                   <TableCell
                     align="right"

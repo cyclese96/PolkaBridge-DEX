@@ -12,6 +12,7 @@ import Loader from "../../../../common/Loader";
 import { Link } from "react-router-dom";
 import TokenIcon from "../../../../common/TokenIcon";
 import { ArrowDownward } from "@material-ui/icons";
+import { formattedNum } from "../../../../../utils/timeUtils";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -236,19 +237,19 @@ export default function TopTokensTable({ data }) {
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
-                    {parseInt(row.totalLiquidityUSD)}
+                    ${formattedNum(parseInt(row.totalLiquidityUSD))}
                   </TableCell>
                   <TableCell
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
-                    ${parseFloat(row.tradeVolumeUSD).toFixed(2)}
+                    ${formattedNum(parseFloat(row.tradeVolumeUSD).toFixed(3))}
                   </TableCell>
                   <TableCell
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
-                    ${parseFloat(row.priceUSD).toFixed(3)}
+                    ${formattedNum(parseFloat(row.priceUSD).toFixed(3))}
                   </TableCell>
                   <TableCell
                     align="right"

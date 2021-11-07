@@ -48,7 +48,6 @@ const useStyles = makeStyles((theme) => ({
   },
   tokenTitle: {
     color: "white",
-
     fontSize: 32,
     [theme.breakpoints.down("sm")]: {
       fontSize: 18,
@@ -65,6 +64,10 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 10,
     borderRadius: 7,
     padding: "4px 8px 4px 8px",
+    [theme.breakpoints.down("sm")]: {
+      padding: "3px 3px 3px 3px",
+      fontSize: 10,
+    },
   },
   sectionTitle: {
     fontSize: 18,
@@ -297,8 +300,14 @@ function TokenPage({ address }) {
                 address={id}
                 className={classes.tokenImage}
               />
-              <span style={{ paddingRight: 3 }}>{name}</span>
-              <span style={{ paddingRight: 15 }}>({symbol})</span>
+              {window.innerWidth < 300 ? (
+                ""
+              ) : (
+                <span style={{ paddingRight: 3 }}>{name}</span>
+              )}
+              <span style={{ paddingRight: window.innerWidth < 500 ? 2 : 15 }}>
+                ({symbol})
+              </span>
               <span>${formatCurrency(priceUSD)}</span>
               <span className={classes.changeIndicator}>
                 {parseFloat(priceChangeUSD).toFixed(0)} %
