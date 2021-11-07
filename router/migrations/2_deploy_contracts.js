@@ -8,7 +8,7 @@ module.exports = async function (deployer) {
     //testnet
     let owner = "0xfEEF5F353aE5022d0cfcD072165cDA284B65772B";
     // let owner = "0x57866ed63ca5f9744cef9aa270bd1f1dce935831";
-    let factorycontract = "0x596E7728b2B8df09ffb3D0f11891C4BE5E540D61";
+    let factorycontract = "0xA29bABaA23B6adFA50991be744Ffb227B8D4b430";
     let WETH = "0xc778417E063141139Fce010982780140Aa0cD5Ab";
     // let treasury = "0xC5516e155aa03F002A00c6bbA9467Cdbc4272581";
     //mainnet

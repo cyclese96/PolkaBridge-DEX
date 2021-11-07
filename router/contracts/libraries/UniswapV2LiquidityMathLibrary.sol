@@ -77,21 +77,21 @@ library UniswapV2LiquidityMathLibrary {
         uint256 reservesA,
         uint256 reservesB,
         uint256 totalSupply,
-        uint256 liquidityAmount,
-        bool feeOn,
-        uint kLast
+        uint256 liquidityAmount
+        // bool feeOn,
+        // uint kLast
     ) internal pure returns (uint256 tokenAAmount, uint256 tokenBAmount) {
-        if (feeOn && kLast > 0) {
-            uint rootK = Babylonian.sqrt(reservesA.mul(reservesB));
-            uint rootKLast = Babylonian.sqrt(kLast);
-            if (rootK > rootKLast) {
-                uint numerator1 = totalSupply;
-                uint numerator2 = rootK.sub(rootKLast);
-                uint denominator = rootK.mul(5).add(rootKLast);
-                uint feeLiquidity = FullMath.mulDiv(numerator1, numerator2, denominator);
-                totalSupply = totalSupply.add(feeLiquidity);
-            }
-        }
+        // if (feeOn && kLast > 0) {
+        //     uint rootK = Babylonian.sqrt(reservesA.mul(reservesB));
+        //     uint rootKLast = Babylonian.sqrt(kLast);
+        //     if (rootK > rootKLast) {
+        //         uint numerator1 = totalSupply;
+        //         uint numerator2 = rootK.sub(rootKLast);
+        //         uint denominator = rootK.mul(5).add(rootKLast);
+        //         uint feeLiquidity = FullMath.mulDiv(numerator1, numerator2, denominator);
+        //         totalSupply = totalSupply.add(feeLiquidity);
+        //     }
+        // }
         return (reservesA.mul(liquidityAmount) / totalSupply, reservesB.mul(liquidityAmount) / totalSupply);
     }
 
@@ -106,35 +106,35 @@ library UniswapV2LiquidityMathLibrary {
     ) internal view returns (uint256 tokenAAmount, uint256 tokenBAmount) {
         (uint256 reservesA, uint256 reservesB) = UniswapV2Library.getReserves(factory, tokenA, tokenB);
         IUniswapV2Pair pair = IUniswapV2Pair(UniswapV2Library.pairFor(factory, tokenA, tokenB));
-        bool feeOn = true;//IUniswapV2Factory(factory).feeTo() != address(0);
-        uint kLast = feeOn ? pair.kLast() : 0;
+        // bool feeOn = false;//IUniswapV2Factory(factory).feeTo() != address(0);
+        // uint kLast = 0;//feeOn ? pair.kLast() : 0;
         uint totalSupply = pair.totalSupply();
-        return computeLiquidityValue(reservesA, reservesB, totalSupply, liquidityAmount, feeOn, kLast);
+        return computeLiquidityValue(reservesA, reservesB, totalSupply, liquidityAmount);//, feeOn, kLast);
     }
 
     // given two tokens, tokenA and tokenB, and their "true price", i.e. the observed ratio of value of token A to token B,
     // and a liquidity amount, returns the value of the liquidity in terms of tokenA and tokenB
-    function getLiquidityValueAfterArbitrageToPrice(
-        address factory,
-        address tokenA,
-        address tokenB,
-        uint256 truePriceTokenA,
-        uint256 truePriceTokenB,
-        uint256 liquidityAmount
-    ) internal view returns (
-        uint256 tokenAAmount,
-        uint256 tokenBAmount
-    ) {
-        bool feeOn = true;//IUniswapV2Factory(factory).feeTo() != address(0);
-        IUniswapV2Pair pair = IUniswapV2Pair(UniswapV2Library.pairFor(factory, tokenA, tokenB));
-        uint kLast = feeOn ? pair.kLast() : 0;
-        uint totalSupply = pair.totalSupply();
+    // function getLiquidityValueAfterArbitrageToPrice(
+    //     address factory,
+    //     address tokenA,
+    //     address tokenB,
+    //     uint256 truePriceTokenA,
+    //     uint256 truePriceTokenB,
+    //     uint256 liquidityAmount
+    // ) internal view returns (
+    //     uint256 tokenAAmount,
+    //     uint256 tokenBAmount
+    // ) {
+    //     // bool feeOn = true;//IUniswapV2Factory(factory).feeTo() != address(0);
+    //     IUniswapV2Pair pair = IUniswapV2Pair(UniswapV2Library.pairFor(factory, tokenA, tokenB));
+    //     // uint kLast = feeOn ? pair.kLast() : 0;
+    //     uint totalSupply = pair.totalSupply();
 
-        // this also checks that totalSupply > 0
-        require(totalSupply >= liquidityAmount && liquidityAmount > 0, 'ComputeLiquidityValue: LIQUIDITY_AMOUNT');
+    //     // this also checks that totalSupply > 0
+    //     require(totalSupply >= liquidityAmount && liquidityAmount > 0, 'ComputeLiquidityValue: LIQUIDITY_AMOUNT');
 
-        (uint reservesA, uint reservesB) = getReservesAfterArbitrage(factory, tokenA, tokenB, truePriceTokenA, truePriceTokenB);
+    //     (uint reservesA, uint reservesB) = getReservesAfterArbitrage(factory, tokenA, tokenB, truePriceTokenA, truePriceTokenB);
 
-        return computeLiquidityValue(reservesA, reservesB, totalSupply, liquidityAmount, feeOn, kLast);
-    }
+    //     return computeLiquidityValue(reservesA, reservesB, totalSupply, liquidityAmount);//, feeOn, kLast);
+    // }
 }

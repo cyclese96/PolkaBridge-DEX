@@ -4,8 +4,6 @@ pragma solidity 0.8.0;
 import './interfaces/IUniswapV2Factory.sol';
 import './UniswapV2Pair.sol';
 
-// import "@openzeppelin/contracts/access/Ownable.sol";
-
 contract UniswapV2Factory is IUniswapV2Factory {
     // address public override feeTo;
     address owner;
@@ -33,10 +31,10 @@ contract UniswapV2Factory is IUniswapV2Factory {
     }
 
     function createPair(address tokenA, address tokenB) external override returns (address pair) {
-        require(tokenA != tokenB, 'PolkaBridge AMM V1: IDENTICAL_ADDRESSES');
+        require(tokenA != tokenB, 'PolkaBridge AMM: IDENTICAL_ADDRESSES');
         (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
-        require(token0 != address(0), 'PolkaBridge AMM V1: ZERO_ADDRESS');
-        require(getPair[token0][token1] == address(0), 'PolkaBridge AMM V1: PAIR_EXISTS'); // single check is sufficient
+        require(token0 != address(0), 'PolkaBridge AMM: ZERO_ADDRESS');
+        require(getPair[token0][token1] == address(0), 'PolkaBridge AMM: PAIR_EXISTS'); // single check is sufficient
         bytes memory bytecode = type(UniswapV2Pair).creationCode;
         bytes32 salt = keccak256(abi.encodePacked(token0, token1));
         assembly {
