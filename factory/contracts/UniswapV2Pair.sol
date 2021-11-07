@@ -9,29 +9,29 @@ import './interfaces/IERC20.sol';
 import './interfaces/IUniswapV2Factory.sol';
 
 contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
-    using SafeMath  for uint;
+    using SafeMath for uint256;
     using UQ112x112 for uint224;
-
-    // uint public override constant MINIMUM_LIQUIDITY = 10**3;
+    string public name = 'PolkaBridgeAMM: Pair';
+    uint256 public constant override MINIMUM_LIQUIDITY = 10**3;
     bytes4 private constant SELECTOR = bytes4(keccak256(bytes('transfer(address,uint256)')));
 
     address public override factory;
     address public override token0;
     address public override token1;
-    
+
     // address ownerAddress;
 
     address treasury;
 
-    uint112 private reserve0;           // uses single storage slot, accessible via getReserves
-    uint112 private reserve1;           // uses single storage slot, accessible via getReserves
-    uint32  private blockTimestampLast; // uses single storage slot, accessible via getReserves
+    uint112 private reserve0; // uses single storage slot, accessible via getReserves
+    uint112 private reserve1; // uses single storage slot, accessible via getReserves
+    uint32 private blockTimestampLast; // uses single storage slot, accessible via getReserves
 
     uint public override price0CumulativeLast;
     uint public override price1CumulativeLast;
     // uint public override kLast; // reserve0 * reserve1, as of immediately after the most recent liquidity event
 
-    uint private unlocked = 1;
+    uint256 private unlocked = 1;
     uint256 private releaseTime;
     uint256 private lockTime = 2 days;
 
@@ -42,13 +42,26 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
         unlocked = 1;
     }
 
-    function getReserves() public override view returns (uint112 _reserve0, uint112 _reserve1, uint32 _blockTimestampLast) {
+    function getReserves()
+        public
+        view
+        override
+        returns (
+            uint112 _reserve0,
+            uint112 _reserve1,
+            uint32 _blockTimestampLast
+        )
+    {
         _reserve0 = reserve0;
         _reserve1 = reserve1;
         _blockTimestampLast = blockTimestampLast;
     }
 
-    function _safeTransfer(address token, address to, uint value) private {
+    function _safeTransfer(
+        address token,
+        address to,
+        uint256 value
+    ) private {
         (bool success, bytes memory data) = token.call(abi.encodeWithSelector(SELECTOR, to, value));
         require(success && (data.length == 0 || abi.decode(data, (bool))), 'PolkaBridge AMM: TRANSFER_FAILED');
     }
@@ -79,18 +92,8 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
     }
 
     // update reserves and, on the first call per block, price accumulators
-    function _update(uint balance0, uint balance1, uint112 _reserve0, uint112 _reserve1) private {
         require(balance0 <= uint112(int112(-1)) && balance1 <= uint112(int112(-1)), 'PolkaBridge AMM: OVERFLOW');
         uint32 blockTimestamp = uint32(block.timestamp % 2**32);
-        uint32 timeElapsed = blockTimestamp - blockTimestampLast; // overflow is desired
-        if (timeElapsed > 0 && _reserve0 != 0 && _reserve1 != 0) {
-            // * never overflows, and + overflow is desired
-            price0CumulativeLast += uint(UQ112x112.encode(_reserve1).uqdiv(_reserve0)) * timeElapsed;
-            price1CumulativeLast += uint(UQ112x112.encode(_reserve0).uqdiv(_reserve1)) * timeElapsed;
-        }
-        reserve0 = uint112(balance0);
-        reserve1 = uint112(balance1);
-        blockTimestampLast = blockTimestamp;
         emit Sync(reserve0, reserve1);
     }
 
@@ -118,18 +121,18 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
     // }
 
     // this low-level function should be called from a contract which performs important safety checks
-    function mint(address to) external override lock returns (uint liquidity) {
-        (uint112 _reserve0, uint112 _reserve1,) = getReserves(); // gas savings
-        uint balance0 = IERC20(token0).balanceOf(address(this));
-        uint balance1 = IERC20(token1).balanceOf(address(this));
-        uint amount0 = balance0.sub(_reserve0);
-        uint amount1 = balance1.sub(_reserve1);
+    function mint(address to) external override lock returns (uint256 liquidity) {
+        (uint112 _reserve0, uint112 _reserve1, ) = getReserves(); // gas savings
+        uint256 balance0 = IERC20(token0).balanceOf(address(this));
+        uint256 balance1 = IERC20(token1).balanceOf(address(this));
+        uint256 amount0 = balance0.sub(_reserve0);
+        uint256 amount1 = balance1.sub(_reserve1);
 
         // bool feeOn = false;//_mintFee(_reserve0, _reserve1);
         uint _totalSupply = totalSupply; // gas savings, must be defined here since totalSupply can update in _mintFee
         if (_totalSupply == 0) {
-            liquidity = Math.sqrt(amount0.mul(amount1));//.sub(MINIMUM_LIQUIDITY);
-        //    _mint(address(0), MINIMUM_LIQUIDITY); // permanently lock the first MINIMUM_LIQUIDITY tokens
+            liquidity = Math.sqrt(amount0.mul(amount1)).sub(MINIMUM_LIQUIDITY);
+            _mint(address(0), MINIMUM_LIQUIDITY); // permanently lock the first MINIMUM_LIQUIDITY tokens
         } else {
             liquidity = Math.min(amount0.mul(_totalSupply) / _reserve0, amount1.mul(_totalSupply) / _reserve1);
         }
@@ -142,13 +145,13 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
     }
 
     // this low-level function should be called from a contract which performs important safety checks
-    function burn(address to) external override lock returns (uint amount0, uint amount1) {
-        (uint112 _reserve0, uint112 _reserve1,) = getReserves(); // gas savings
-        address _token0 = token0;                                // gas savings
-        address _token1 = token1;                                // gas savings
-        uint balance0 = IERC20(_token0).balanceOf(address(this));
-        uint balance1 = IERC20(_token1).balanceOf(address(this));
-        uint liquidity = balanceOf[address(this)];
+    function burn(address to) external override lock returns (uint256 amount0, uint256 amount1) {
+        (uint112 _reserve0, uint112 _reserve1, ) = getReserves(); // gas savings
+        address _token0 = token0; // gas savings
+        address _token1 = token1; // gas savings
+        uint256 balance0 = IERC20(_token0).balanceOf(address(this));
+        uint256 balance1 = IERC20(_token1).balanceOf(address(this));
+        uint256 liquidity = balanceOf[address(this)];
 
         // bool feeOn = _mintFee(_reserve0, _reserve1);
         uint _totalSupply = totalSupply; // gas savings, must be defined here since totalSupply can update in _mintFee
@@ -166,16 +169,16 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
         emit Burn(msg.sender, amount0, amount1, to);
     }
 
-   
     // this low-level function should be called from a contract which performs important safety checks
     function swap(uint amount0Out, uint amount1Out, address to) external override lock {
         require(amount0Out > 0 || amount1Out > 0, 'PolkaBridge AMM: INSUFFICIENT_OUTPUT_AMOUNT');
         (uint112 _reserve0, uint112 _reserve1,) = getReserves(); // gas savings
         require(amount0Out < _reserve0 && amount1Out < _reserve1, 'PolkaBridge AMM: INSUFFICIENT_LIQUIDITY');
 
-        uint balance0;
-        uint balance1;
-        { // scope for _token{0,1}, avoids stack too deep errors
+        uint256 balance0;
+        uint256 balance1;
+        {
+            // scope for _token{0,1}, avoids stack too deep errors
             address _token0 = token0;
             address _token1 = token1;
             require(to != _token0 && to != _token1, 'PolkaBridge AMM: INVALID_TO');
@@ -195,22 +198,20 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
             // require(balance0Adjusted.mul(balance1Adjusted) >= uint(_reserve0).mul(_reserve1).mul(1000**2), 'PolkaBridge AMM: K');
         }
 
-            if(amount0In.mul(4).div(10000) > 0) {
-                require(treasury != address(0), 'Treasury address error');
-                _safeTransfer(token0, treasury, amount0In.mul(4).div(10000));
-                balance0 = balance0 - amount0In.mul(4).div(10000);
-            }
-            if(amount1In.mul(4).div(10000) > 0) {
-                require(treasury != address(0), 'Treasury address error');
-                _safeTransfer(token1, treasury, amount1In.mul(4).div(10000));
-                balance1 = balance1 - amount1In.mul(4).div(10000);
-            }
-        
+        if (amount0In.mul(4).div(10000) > 0) {
+            require(treasury != address(0), 'Treasury address error');
+            _safeTransfer(token0, treasury, amount0In.mul(4).div(10000));
+            balance0 = balance0 - amount0In.mul(4).div(10000);
+        }
+        if (amount1In.mul(4).div(10000) > 0) {
+            require(treasury != address(0), 'Treasury address error');
+            _safeTransfer(token1, treasury, amount1In.mul(4).div(10000));
+            balance1 = balance1 - amount1In.mul(4).div(10000);
+        }
+
         _update(balance0, balance1, _reserve0, _reserve1);
         emit Swap(msg.sender, amount0In, amount1In, amount0Out, amount1Out, to);
-
-    }    
-
+    }
 
     // function setTreasuryAddress(address _treasury) external override {
     //     require(msg.sender == ownerAddress, 'Only ownerAddress can set treasury');
@@ -220,5 +221,5 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
     //         releaseTime = block.timestamp;
     //         emit TreasurySet(_treasury);
     //     }
-    // }    
+    // }
 }
