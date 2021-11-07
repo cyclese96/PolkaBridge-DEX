@@ -20,7 +20,7 @@ interface IUniswapV2Pair is IUniswapV2ERC20 {
 
     // function setTreasuryAddress(address _address) external;
 
-    function MINIMUM_LIQUIDITY() external pure returns (uint);
+    // function MINIMUM_LIQUIDITY() external pure returns (uint);
     function factory() external view returns (address);
     function token0() external view returns (address);
     function token1() external view returns (address);
