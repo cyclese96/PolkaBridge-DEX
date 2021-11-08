@@ -108,18 +108,18 @@ const TokenChart = ({ address, color, base }) => {
   const priceData =
     timeWindow === timeframeOptions.MONTH
       ? // monthly selected
-        frequency === DATA_FREQUENCY.DAY
+      frequency === DATA_FREQUENCY.DAY
         ? dailyMonth
         : hourlyMonth
       : // weekly selected
       timeWindow === timeframeOptions.WEEK
-      ? frequency === DATA_FREQUENCY.DAY
-        ? dailyWeek
-        : hourlyWeek
-      : // all time selected
-      frequency === DATA_FREQUENCY.DAY
-      ? dailyAll
-      : hourlyAll;
+        ? frequency === DATA_FREQUENCY.DAY
+          ? dailyWeek
+          : hourlyWeek
+        : // all time selected
+        frequency === DATA_FREQUENCY.DAY
+          ? dailyAll
+          : hourlyAll;
 
   // switch to hourly data when switched to week window
   useEffect(() => {
@@ -192,9 +192,9 @@ const TokenChart = ({ address, color, base }) => {
       <RowBetween
         mb={
           chartFilter === CHART_VIEW.LIQUIDITY ||
-          chartFilter === CHART_VIEW.VOLUME ||
-          (chartFilter === CHART_VIEW.PRICE &&
-            frequency === DATA_FREQUENCY.LINE)
+            chartFilter === CHART_VIEW.VOLUME ||
+            (chartFilter === CHART_VIEW.PRICE &&
+              frequency === DATA_FREQUENCY.LINE)
             ? 40
             : 0
         }
@@ -303,7 +303,7 @@ const TokenChart = ({ address, color, base }) => {
       {chartFilter === CHART_VIEW.PRICE &&
         (frequency === DATA_FREQUENCY.LINE ? (
           <ResponsiveContainer aspect={below1080 ? 60 / 32 : 60 / 16}>
-            <AreaChartNative
+            {/* <AreaChartNative
               margin={{ top: 0, right: 10, bottom: 6, left: 0 }}
               barCategoryGap={1}
               data={chartData}
@@ -362,7 +362,8 @@ const TokenChart = ({ address, color, base }) => {
                 stroke={darken(0.12, color)}
                 fill="url(#colorUv)"
               />
-            </AreaChartNative>
+            </AreaChartNative> */}
+            <AreaChart chartData={chartData} chartType="price" />
           </ResponsiveContainer>
         ) : priceData ? (
           <ResponsiveContainer aspect={aspect} ref={ref}>

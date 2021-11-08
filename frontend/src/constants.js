@@ -45,7 +45,7 @@ export const tokenAddresses = {
 
 export const routerAddresses = {
   ethereum: {
-    testnet: '0x880763eb7a21fa0724046465c6eE7770Fd5cb771',
+    testnet: '0xbF22a66044B510930cA2e074f691F70618676770',
     mainnet: '0xd1D967e54DCAd47221a3388d8D6344Ebab1DE02D'
   },
   bsc: {
@@ -64,7 +64,7 @@ export const routerAddresses = {
 
 export const factoryAddresses = {
   ethereum: {
-    testnet: '0x596E7728b2B8df09ffb3D0f11891C4BE5E540D61',
+    testnet: '0x2BA91efbd6258F3eFab3f7D1500707D102880e08',
     mainnet: '0xD7c31CaB8d289e9c4E14b3C7bC77A6b7A5aca753'
   },
   bsc: {
