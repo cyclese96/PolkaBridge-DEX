@@ -88,7 +88,7 @@ const AreaChart = ({ chartData, chartType }) => {
     selection: "all",
     series: [
       {
-        name: chartType === 'price' ? "Price" : "TVL USD",
+        name: chartType === 'price' ? "Price USD" : "TVL USD",
         data: [],
       },
     ],
@@ -99,22 +99,29 @@ const AreaChart = ({ chartData, chartType }) => {
   const dataPrev = usePrevious(chartData);
   const [currChartData, setChartData] = useState(state.series);
 
+  const currentChartDataPoint = (item, type) => {
+
+    if (type === 'price') {
+      return [item.date, item.priceUSD]
+    }
+    return [item.date * 1000,
+    item.totalLiquidityUSD || item.reserveUSD
+      ? parseInt(item.totalLiquidityUSD || item.reserveUSD)
+      : 0,]
+
+  }
   useEffect(() => {
+    console.log('chart data ', { chartData, chartType })
     if (chartData !== dataPrev && chartData) {
       const _data =
         chartData.length > 0
-          ? chartData.map((item) => [
-            item.date * 1000,
-            item.totalLiquidityUSD || item.reserveUSD
-              ? parseInt(item.totalLiquidityUSD || item.reserveUSD)
-              : 0,
-          ])
+          ? chartData.map((item) => currentChartDataPoint(item, chartType))
           : [];
 
       console.log("area chart data  ", currChartData);
       setChartData([{ name: currChartData[0].name, data: _data }]);
     }
-  }, [chartCreated, chartData, dataPrev]);
+  }, [chartCreated, chartData, dataPrev, chartType]);
 
   return (
     <Chart

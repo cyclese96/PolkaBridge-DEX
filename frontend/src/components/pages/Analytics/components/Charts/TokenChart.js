@@ -1,40 +1,26 @@
 import React, { useState, useRef, useEffect } from "react";
-import styled from "styled-components";
 import {
-  Area,
-  XAxis,
-  YAxis,
   ResponsiveContainer,
-  Tooltip,
-  AreaChart as AreaChartNative,
 } from "recharts";
 import { AutoRow, RowBetween, RowFixed } from "../../../../common/Styled/Row";
 import BarChart from "../Charts/BarChart";
 import AreaChart from "../Charts/AreaChart";
 
 import {
-  toK,
-  toNiceDate,
-  toNiceDateYear,
-  formattedNum,
   getTimeframe,
 } from "../../../../../utils/timeUtils";
-import { OptionButton } from "../../../../common/Styled/ButtonStyled";
-import { darken } from "polished";
+
 import { useMedia, usePrevious } from "react-use";
 import { timeframeOptions } from "../../../../../constants";
 import {
   useTokenChartData,
   useTokenPriceData,
 } from "../../../../../contexts/TokenData";
-import DropdownSelect from "../../../../common/Styled/DropdownSelect";
 import CandleStickChart from "../../../../common/Styled/CandleChart";
-// import LocalLoader from '../LocalLoader'
-import { AutoColumn } from "../../../../common/Styled/Column";
+
 import { Activity } from "react-feather";
 import Loader from "../../../../common/Loader";
 import { Button } from "@material-ui/core";
-// import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 const CHART_VIEW = {
   VOLUME: "Volume",
