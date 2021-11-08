@@ -13,6 +13,7 @@ import TokenIcon from "../../../../common/TokenIcon";
 import { Link } from "react-router-dom";
 import { ArrowDown } from "react-feather";
 import { ArrowDownward } from "@material-ui/icons";
+import { formattedNum } from "../../../../../utils/timeUtils";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -229,26 +230,29 @@ export default function TopPoolsTable({ data }) {
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
-                    ${parseInt(row.reserveUSD)}
+                    ${formattedNum(parseInt(row.reserveUSD))}
                   </TableCell>
                   <TableCell
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
-                    ${parseFloat(row.oneDayVolumeUSD).toFixed(2)}
+                    ${formattedNum(parseFloat(row.oneDayVolumeUSD).toFixed(2))}
                   </TableCell>
                   <TableCell
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
-                    $ {parseInt(row.oneWeekVolumeUSD)}
+                    $ {formattedNum(parseInt(row.oneWeekVolumeUSD))}
                   </TableCell>
                   <TableCell
                     align="right"
                     className={classes.tableText}
                     style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
-                    ${(parseFloat(row.oneDayVolumeUSD) * 0.02).toFixed(2)}
+                    ${" "}
+                    {formattedNum(
+                      (parseFloat(row.oneDayVolumeUSD) * 0.02).toFixed(2)
+                    )}
                   </TableCell>
                 </TableRow>
               ))}

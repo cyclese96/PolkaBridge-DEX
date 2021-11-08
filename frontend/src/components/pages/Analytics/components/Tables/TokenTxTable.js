@@ -11,7 +11,7 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import Loader from "../../../../common/Loader";
-import { formatTime } from "../../../../../utils/timeUtils";
+import { formattedNum, formatTime } from "../../../../../utils/timeUtils";
 import { currentConnection } from "../../../../../constants";
 
 const useStyles = makeStyles((theme) => ({
@@ -113,13 +113,12 @@ export default function TokenTxTable({ data }) {
     setRows([...tempRows]);
   };
   const filterTx = (filter) => {
-
     if (!data) {
-      return
+      return;
     }
 
     let result = Object.keys(data).map((key) => data[key]);
-    console.log('transaction table ', result)
+    console.log("transaction table ", result);
     let tempRows;
     if (filter === "all") {
       tempRows = [...result[0], ...result[1], ...result[2]];
@@ -320,28 +319,27 @@ export default function TokenTxTable({ data }) {
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
-                    {parseFloat(row.amountUSD).toFixed(2)}
+                    {formattedNum(parseFloat(row.amountUSD).toFixed(2))}
                   </TableCell>
                   <TableCell
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
                     {row.amount0
-                      ? parseFloat(row.amount0).toFixed(3)
+                      ? formattedNum(parseFloat(row.amount0).toFixed(3))
                       : row.amount0Out !== "0"
-                        ? parseFloat(row.amount0Out).toFixed(3)
-                        : parseFloat(row.amount0In).toFixed(3)}
+                      ? formattedNum(parseFloat(row.amount0Out).toFixed(3))
+                      : formattedNum(parseFloat(row.amount0In).toFixed(3))}
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
                     {row.amount1
-                      ? parseFloat(row.amount1).toFixed(3)
+                      ? formattedNum(parseFloat(row.amount1).toFixed(3))
                       : row.amount1Out !== "0"
-                        ? parseFloat(row.amount1Out).toFixed(3)
-                        : parseFloat(row.amount1In).toFixed(3)}
-                    { }
+                      ? formattedNum(parseFloat(row.amount1Out).toFixed(3))
+                      : formattedNum(parseFloat(row.amount1In).toFixed(3))}
                   </TableCell>
                   <TableCell
                     align="right"
