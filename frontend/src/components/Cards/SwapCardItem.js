@@ -19,8 +19,8 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 0,
       paddingRight: 0,
-      width: 290,
-      height: 80,
+      width: "95%",
+      height: 100,
     },
   },
   cardContents: {
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     color: "#e5e5e5",
     [theme.breakpoints.down("sm")]: {
-      fontSize: 13,
+      fontSize: 14,
     },
   },
   labelRow: {
@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
     outline: "none",
     [theme.breakpoints.down("sm")]: {
       maxWidth: 100,
-      fontSize: 18,
+      fontSize: 24,
     },
   },
   token: {
@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 2,
     marginRight: 4,
     [theme.breakpoints.down("sm")]: {
-      fontSize: 13,
+      fontSize: 14,
     },
   },
 }));
@@ -125,8 +125,11 @@ const SwapCardItem = (props) => {
   };
 
   const handleMax = () => {
-
-    onInputChange(balance ? fromWei(balance[currentToken.symbol], currentToken.decimals) : "0");
+    onInputChange(
+      balance
+        ? fromWei(balance[currentToken.symbol], currentToken.decimals)
+        : "0"
+    );
   };
 
   return (
@@ -143,7 +146,9 @@ const SwapCardItem = (props) => {
             )}
             <p className={classes.labelFont}>
               Balance:
-              {formatCurrency(fromWei(balance[currentToken.symbol], currentToken.decimals))}
+              {formatCurrency(
+                fromWei(balance[currentToken.symbol], currentToken.decimals)
+              )}
             </p>
           </div>
           <div className={classes.inputRow}>

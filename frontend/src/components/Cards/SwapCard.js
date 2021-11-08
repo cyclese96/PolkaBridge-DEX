@@ -21,11 +21,7 @@ import {
   THRESOLD_VALUE,
   tokens,
 } from "../../constants";
-import {
-  fromWei,
-  getPriceRatio,
-  toWei,
-} from "../../utils/helper";
+import { fromWei, getPriceRatio, toWei } from "../../utils/helper";
 import {
   calculatePriceImpact,
   checkAllowance,
@@ -43,7 +39,11 @@ import { getPairAddress } from "../../utils/connectionUtils";
 import { Info, Settings } from "@material-ui/icons";
 import TabPage from "../TabPage";
 import store from "../../store";
-import { HIDE_DEX_LOADING, SHOW_DEX_LOADING, START_TRANSACTION } from "../../actions/types";
+import {
+  HIDE_DEX_LOADING,
+  SHOW_DEX_LOADING,
+  START_TRANSACTION,
+} from "../../actions/types";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
     transition: "all 0.4s ease",
     [theme.breakpoints.down("sm")]: {
-      fontSize: 17,
+      fontSize: 22,
     },
   },
   iconButton: {
@@ -124,7 +124,7 @@ const useStyles = makeStyles((theme) => ({
       background: "rgba(224, 7, 125, 0.7)",
     },
     [theme.breakpoints.down("sm")]: {
-      fontSize: 14,
+      fontSize: 16,
     },
   },
 
@@ -190,14 +190,22 @@ const useStyles = makeStyles((theme) => ({
 const SwapCard = (props) => {
   const {
     account: { currentNetwork, currentAccount, loading, balance, connected },
-    dex: { approvedTokens, poolReserves, pairContractData, transaction, token0In, token1Out, priceLoading },
+    dex: {
+      approvedTokens,
+      poolReserves,
+      pairContractData,
+      transaction,
+      token0In,
+      token1Out,
+      priceLoading,
+    },
     checkAllowance,
     confirmAllowance,
     getLpBalance,
     getAccountBalance,
     loadPairAddress,
     getToken0InAmount,
-    getToken1OutAmount
+    getToken1OutAmount,
   } = props;
 
   const classes = useStyles();
@@ -345,7 +353,6 @@ const SwapCard = (props) => {
       }
 
       if (selectedToken1.symbol && selectedToken2.symbol) {
-
         // reset token input on token selection
         clearInputState();
 
@@ -424,7 +431,6 @@ const SwapCard = (props) => {
     [] // will be created only once initially
   );
 
-
   // token 1 input change
   const onToken1InputChange = async (tokens) => {
     setToken1Value(tokens);
@@ -442,23 +448,18 @@ const SwapCard = (props) => {
     // const pairAddress = currentPairAddress();
 
     if (selectedToken2.symbol && new BigNumber(tokens).gt(0)) {
-
-
       debouncedToken1OutCall(
         { ...selectedToken1, amount: toWei(tokens, selectedToken1.decimals) },
         selectedToken2,
         currentAccount,
         currentNetwork
-      )
-
-
+      );
     } else if (selectedToken2.symbol && !tokens) {
       setToken2Value("");
       if (!swapStatus.disabled) {
         setStatus({ disabled: true, message: "Enter Amounts" });
       }
     }
-
   };
 
   // token2 input change
@@ -476,30 +477,25 @@ const SwapCard = (props) => {
     //calculate respective value of token1 if selected
 
     if (selectedToken1.symbol && new BigNumber(tokens).gt(0)) {
-
       debouncedToken0InCall(
         selectedToken1,
         { ...selectedToken2, amount: toWei(tokens, selectedToken2.decimals) },
         currentAccount,
         currentNetwork
-      )
-
-
+      );
     } else if (selectedToken1.symbol && !tokens) {
       setToken1Value("");
       if (!swapStatus.disabled) {
         setStatus({ disabled: true, message: "Enter Amounts" });
       }
     }
-
   };
 
   // token out updates
 
   useEffect(() => {
-
     if (!token1Out) {
-      return
+      return;
     }
 
     const _tokenAmount = token1Out.tokenAmount;
@@ -515,8 +511,10 @@ const SwapCard = (props) => {
     }
 
     // balance check before trade
-    const _bal0 = Object.keys(balance).includes(selectedToken1.symbol) ? balance[selectedToken1.symbol] : 0
-    const bal0Wei = fromWei(_bal0, selectedToken1.decimals) //DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? fromWei(_bal0, 6) : fromWei(_bal0)
+    const _bal0 = Object.keys(balance).includes(selectedToken1.symbol)
+      ? balance[selectedToken1.symbol]
+      : 0;
+    const bal0Wei = fromWei(_bal0, selectedToken1.decimals); //DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? fromWei(_bal0, 6) : fromWei(_bal0)
     if (new BigNumber(token1Value).gt(bal0Wei)) {
       setStatus({
         disabled: true,
@@ -534,16 +532,14 @@ const SwapCard = (props) => {
     // update current price ratio based on trade amounts
     const _ratio = getPriceRatio(_tokenAmount, token1Value);
     setPriceRatio(_ratio);
-
-  }, [token1Out])
+  }, [token1Out]);
 
   useEffect(() => {
-
     if (!token0In) {
-      return
+      return;
     }
 
-    console.log('handling token0IN')
+    console.log("handling token0IN");
 
     const _tokenAmount = token0In.tokenAmount;
     setSwapPath(token0In.selectedPath);
@@ -558,16 +554,16 @@ const SwapCard = (props) => {
     }
 
     // balance check before trade
-    const _bal0 = Object.keys(balance).includes(selectedToken1.symbol) ? balance[selectedToken1.symbol] : 0
-    const bal0Wei = fromWei(_bal0, selectedToken1.decimals)//DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? fromWei(_bal0, 6) : fromWei(_bal0)
+    const _bal0 = Object.keys(balance).includes(selectedToken1.symbol)
+      ? balance[selectedToken1.symbol]
+      : 0;
+    const bal0Wei = fromWei(_bal0, selectedToken1.decimals); //DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? fromWei(_bal0, 6) : fromWei(_bal0)
     if (new BigNumber(_tokenAmount).gt(bal0Wei)) {
       setStatus({
         disabled: true,
         message: "Insufficient funds!",
       });
     }
-
-
 
     if (new BigNumber(_tokenAmount).lt(THRESOLD_VALUE)) {
       setStatus({
@@ -576,13 +572,10 @@ const SwapCard = (props) => {
       });
     }
 
-
     // update current price ratio based on trade amounts
     const _ratio = getPriceRatio(token2Value, _tokenAmount);
     setPriceRatio(_ratio);
-
-  }, [token0In])
-
+  }, [token0In]);
 
   const onToken1Select = async (token) => {
     setToken1(token);
@@ -639,23 +632,28 @@ const SwapCard = (props) => {
     //   );
     // }
 
-    const _amount0InWei = toWei(token1Value, selectedToken1.decimals) //DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value);
+    const _amount0InWei = toWei(token1Value, selectedToken1.decimals); //DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value);
     const token0 = {
       amount: _amount0InWei,
       min: toWei(token1Value.toString(), selectedToken1.decimals),
       ...selectedToken1,
     };
 
-    const _amount1InWei = toWei(token2Value, selectedToken2.decimals) //DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token2Value);
+    const _amount1InWei = toWei(token2Value, selectedToken2.decimals); //DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token2Value);
     const token1 = {
       amount: _amount1InWei,
       min: toWei(token2Value.toString(), selectedToken2.decimals),
       ...selectedToken2,
     };
 
-    store.dispatch({ type: SHOW_DEX_LOADING })
-    impact = await calculatePriceImpact(token0, token1, currentAccount, currentNetwork);
-    store.dispatch({ type: HIDE_DEX_LOADING })
+    store.dispatch({ type: SHOW_DEX_LOADING });
+    impact = await calculatePriceImpact(
+      token0,
+      token1,
+      currentAccount,
+      currentNetwork
+    );
+    store.dispatch({ type: HIDE_DEX_LOADING });
 
     setPriceImpact(impact);
   };
@@ -683,7 +681,6 @@ const SwapCard = (props) => {
   };
 
   const disableStatus = () => {
-
     if (!connected) {
       return true;
     }
@@ -700,9 +697,8 @@ const SwapCard = (props) => {
   };
   // const handleTokenPriceRatio = () => {};
   const currentButton = () => {
-
     if (!connected) {
-      return "Connect Wallet"
+      return "Connect Wallet";
     }
 
     if (localStateLoading || priceLoading) {
@@ -820,8 +816,8 @@ const SwapCard = (props) => {
             <div className="mt-1 d-flex justify-content-end">
               <div className={classes.tokenPrice}>
                 {selectedToken1.symbol &&
-                  selectedToken2.symbol &&
-                  !disableStatus() ? (
+                selectedToken2.symbol &&
+                !disableStatus() ? (
                   <span>
                     1 {selectedToken1.symbol} {" = "} {priceRatio}{" "}
                     {selectedToken2.symbol}
@@ -891,5 +887,5 @@ export default connect(mapStateToProps, {
   getAccountBalance,
   loadPairAddress,
   getToken0InAmount,
-  getToken1OutAmount
+  getToken1OutAmount,
 })(SwapCard);
