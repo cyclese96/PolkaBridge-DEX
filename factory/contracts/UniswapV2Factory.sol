@@ -54,6 +54,7 @@ contract UniswapV2Factory is IUniswapV2Factory {
         {
             require(block.timestamp - releaseTime >= lockTime, 'current time is before release time');
             treasury = _treasury;
+            releaseTime = block.timestamp;
             emit TreasurySet(_treasury);
         }
     }
