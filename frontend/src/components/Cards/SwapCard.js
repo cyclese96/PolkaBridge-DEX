@@ -721,7 +721,11 @@ const SwapCard = (props) => {
       return;
     }
 
-    loadPairReserves();
+    // loadPairReserves();
+    if (transaction.type === "swap" && transaction.status === "success") {
+      getAccountBalance(selectedToken1, currentNetwork)
+      getAccountBalance(selectedToken2, currentNetwork)
+    }
 
     if (
       transaction.type === "swap" &&
@@ -816,8 +820,8 @@ const SwapCard = (props) => {
             <div className="mt-1 d-flex justify-content-end">
               <div className={classes.tokenPrice}>
                 {selectedToken1.symbol &&
-                selectedToken2.symbol &&
-                !disableStatus() ? (
+                  selectedToken2.symbol &&
+                  !disableStatus() ? (
                   <span>
                     1 {selectedToken1.symbol} {" = "} {priceRatio}{" "}
                     {selectedToken2.symbol}
