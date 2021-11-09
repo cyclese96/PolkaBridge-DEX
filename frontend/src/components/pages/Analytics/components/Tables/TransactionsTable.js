@@ -326,27 +326,27 @@ export default function TransactionsTable({ data }) {
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
-                    {formattedNum(parseFloat(row.amountUSD).toFixed(2))}
+                    ${formattedNum(parseFloat(row.amountUSD).toFixed(2))}
                   </TableCell>
                   <TableCell
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
-                    {row.amount0
+                    ${row.amount0
                       ? formattedNum(parseFloat(row.amount0).toFixed(3))
                       : row.amount0Out !== "0"
-                      ? formattedNum(parseFloat(row.amount0Out).toFixed(3))
-                      : formattedNum(parseFloat(row.amount0In).toFixed(3))}
+                        ? formattedNum(parseFloat(row.amount0Out).toFixed(3))
+                        : formattedNum(parseFloat(row.amount0In).toFixed(3))}
                   </TableCell>
                   <TableCell
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
-                    {row.amount1
+                    ${row.amount1
                       ? formattedNum(parseFloat(row.amount1).toFixed(3))
                       : row.amount1Out !== "0"
-                      ? formattedNum(parseFloat(row.amount1Out).toFixed(3))
-                      : formattedNum(parseFloat(row.amount1In).toFixed(3))}
+                        ? formattedNum(parseFloat(row.amount1Out).toFixed(3))
+                        : formattedNum(parseFloat(row.amount1In).toFixed(3))}
                   </TableCell>
                   <TableCell
                     align="right"

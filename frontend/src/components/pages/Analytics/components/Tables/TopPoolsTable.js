@@ -242,7 +242,7 @@ export default function TopPoolsTable({ data }) {
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
-                    $ {formattedNum(parseInt(row.oneWeekVolumeUSD))}
+                    ${formattedNum(parseInt(row.oneWeekVolumeUSD))}
                   </TableCell>
                   <TableCell
                     align="right"
