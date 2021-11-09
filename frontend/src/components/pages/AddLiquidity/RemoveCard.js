@@ -12,7 +12,7 @@ import etherImg from "../../../assets/ether.png";
 import bnbImg from "../../../assets/binance.png";
 import CustomButton from "../../Buttons/CustomButton";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
-import { DECIMAL_6_ADDRESSES, ETH, etheriumNetwork, tokens } from "../../../constants";
+import { allowanceAmount, ETH, etheriumNetwork, tokens } from "../../../constants";
 import {
   fromWei,
   getPercentAmountWithFloor,
@@ -27,6 +27,7 @@ import {
   loadPairAddress,
   removeLiquidity,
 } from "../../../actions/dexActions";
+import { getAccountBalance } from '../../../actions/accountActions'
 import pwarImg from "../../../assets/pwar.png";
 import SelectToken from "../../common/SelectToken";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
@@ -259,7 +260,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const RemoveCard = ({
-  account: { balance, loading, currentNetwork, currentAccount, connected },
+  account: { currentNetwork, currentAccount, connected },
   dex: {
     lpApproved,
     lpBalance,
@@ -277,6 +278,7 @@ const RemoveCard = ({
   removeLiquidityEth,
   loadPairAddress,
   removeLiquidity,
+  getAccountBalance
 }) => {
   const currentDefaultToken = {
     icon: etherImg,
@@ -331,7 +333,7 @@ const RemoveCard = ({
   };
 
   const handleConfirmAllowance = async () => {
-    const allowanceAmount = toWei("999999999");
+    const allowanceAmount = allowanceAmount;
     const pairAddress = currentPairAddress();
     await confirmLPAllowance(
       allowanceAmount,
@@ -527,6 +529,12 @@ const RemoveCard = ({
     if (!transaction.hash && !transaction.type) {
       return;
     }
+
+    if (transaction.type === "remove" && transaction.status === "success") {
+      getAccountBalance(selectedToken1, currentNetwork)
+      getAccountBalance(selectedToken2, currentNetwork)
+    }
+
     if (
       transaction.type === "remove" &&
       (transaction.status === "success" || transaction.status === "failed")
@@ -795,4 +803,5 @@ export default connect(mapStateToProps, {
   removeLiquidityEth,
   loadPairAddress,
   removeLiquidity,
+  getAccountBalance
 })(RemoveCard);

@@ -205,6 +205,7 @@ export default function TransactionsTable({ data }) {
                       border: "none",
                       outline: "none",
                       textTransform: "none",
+                      fontSize: window.innerWidth < 500 ? 14 : 13,
                     }}
                   >
                     Swaps
@@ -224,6 +225,7 @@ export default function TransactionsTable({ data }) {
                       width: 50,
                       fontWeight: 500,
                       border: "none",
+                      fontSize: window.innerWidth < 500 ? 14 : 13,
                     }}
                   >
                     Adds
@@ -239,9 +241,10 @@ export default function TransactionsTable({ data }) {
                       textTransform: "none",
                       backgroundColor: "transparent",
                       textDecoration: "none",
-                      width: 60,
+                      width: 75,
                       border: "none",
                       fontWeight: 500,
+                      fontSize: window.innerWidth < 500 ? 14 : 13,
                     }}
                   >
                     Removes

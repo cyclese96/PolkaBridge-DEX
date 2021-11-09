@@ -63,6 +63,7 @@ const useStyles = makeStyles((theme) => ({
   cardSpan: {
     color: "#eeeeee",
     fontSize: 15,
+    paddingLeft: 7,
     fontWeight: 400,
     letterSpacing: -0.5,
     [theme.breakpoints.down("sm")]: {
@@ -73,14 +74,16 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
     padding: 0,
     paddingTop: 5,
+    paddingLeft: 7,
     fontSize: 22,
     fontWeight: 400,
     color: "#f9f9f9",
 
     letterSpacing: -0.5,
     [theme.breakpoints.down("sm")]: {
-      fontSize: 18,
-      paddingTop: 0,
+      fontSize: 22,
+      fontWeight: 600,
+      paddingTop: 5,
     },
   },
 
@@ -123,27 +126,30 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     [theme.breakpoints.down("xs")]: {
       display: "flex",
-      width: "100%",
-      justifyContent: "center",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      width: "90%",
     },
   },
   statLabel: {
     paddingRight: 10,
     fontSize: 15,
+    color: "#bdbdbd",
+    fontWeight: 500,
 
-    color: "#eeeeee",
     [theme.breakpoints.down("sm")]: {
-      fontSize: 12,
+      fontSize: 14,
       paddingRight: 5,
     },
   },
   statAmount: {
-    color: "#bdbdbd",
+    color: "#eeeeee",
     paddingRight: 5,
     fontSize: 14,
-
+    fontWeight: 600,
     [theme.breakpoints.down("sm")]: {
-      fontSize: 11,
+      fontSize: 14,
+      fontWeight: 500,
     },
   },
 
@@ -155,6 +161,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 2,
     fontWeight: 500,
     letterSpacing: 0.7,
+    fontSize: 18,
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 10,
     },

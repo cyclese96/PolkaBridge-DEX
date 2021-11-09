@@ -65,7 +65,7 @@ const styles = {
 const TokenChart = ({ address, color, base }) => {
   // settings for the window and candle width
   const [chartFilter, setChartFilter] = useState(CHART_VIEW.LIQUIDITY);
-  const [frequency, setFrequency] = useState(DATA_FREQUENCY.LINE);
+  const [frequency, setFrequency] = useState(DATA_FREQUENCY.DAY);
 
   const [darkMode, setDarkMode] = useState(true);
   const textColor = darkMode ? "white" : "black";
@@ -228,22 +228,22 @@ const TokenChart = ({ address, color, base }) => {
           {chartFilter === CHART_VIEW.PRICE && (
             <AutoRow gap="4px">
               {/* <Button
-                  active={frequency === DATA_FREQUENCY.DAY}
-                  onClick={() => {
-                    setTimeWindow(timeframeOptions.MONTH);
-                    setFrequency(DATA_FREQUENCY.DAY);
-                  }}
-                  style={styles.button}
-                >
-                  D
-                </Button> */}
-              {/* <Button
-                  active={frequency === DATA_FREQUENCY.HOUR}
-                  onClick={() => setFrequency(DATA_FREQUENCY.HOUR)}
-                  style={styles.button}
-                >
-                  H
-                </Button> */}
+                active={frequency === DATA_FREQUENCY.DAY}
+                onClick={() => {
+                  setTimeWindow(timeframeOptions.MONTH);
+                  setFrequency(DATA_FREQUENCY.DAY);
+                }}
+                style={styles.button}
+              >
+                D
+              </Button>
+              <Button
+                active={frequency === DATA_FREQUENCY.HOUR}
+                onClick={() => setFrequency(DATA_FREQUENCY.HOUR)}
+                style={styles.button}
+              >
+                H
+              </Button> */}
               <Button
                 active={frequency === DATA_FREQUENCY.LINE}
                 onClick={() => setFrequency(DATA_FREQUENCY.LINE)}
@@ -258,29 +258,29 @@ const TokenChart = ({ address, color, base }) => {
             </AutoRow>
           )}
         </div>
-        {/* <AutoRow justify="flex-end" gap="6px" align="flex-start">
-            <Button
-              active={timeWindow === timeframeOptions.WEEK}
-              onClick={() => setTimeWindow(timeframeOptions.WEEK)}
-              style={styles.button}
-            >
-              1W
-            </Button>
-            <Button
-              active={timeWindow === timeframeOptions.MONTH}
-              onClick={() => setTimeWindow(timeframeOptions.MONTH)}
-              style={styles.button}
-            >
-              1M
-            </Button>
-            <Button
-              active={timeWindow === timeframeOptions.ALL_TIME}
-              onClick={() => setTimeWindow(timeframeOptions.ALL_TIME)}
-              style={styles.button}
-            >
-              All
-            </Button>
-          </AutoRow> */}
+        <AutoRow justify="flex-end" gap="6px" align="flex-start">
+          <Button
+            active={timeWindow === timeframeOptions.WEEK}
+            onClick={() => setTimeWindow(timeframeOptions.WEEK)}
+            style={styles.button}
+          >
+            1W
+          </Button>
+          <Button
+            active={timeWindow === timeframeOptions.MONTH}
+            onClick={() => setTimeWindow(timeframeOptions.MONTH)}
+            style={styles.button}
+          >
+            1M
+          </Button>
+          <Button
+            active={timeWindow === timeframeOptions.ALL_TIME}
+            onClick={() => setTimeWindow(timeframeOptions.ALL_TIME)}
+            style={styles.button}
+          >
+            All
+          </Button>
+        </AutoRow>
       </RowBetween>
 
       {chartFilter === CHART_VIEW.LIQUIDITY && chartData && (

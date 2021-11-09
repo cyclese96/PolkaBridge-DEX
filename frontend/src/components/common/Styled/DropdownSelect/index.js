@@ -10,7 +10,7 @@ import { StyledIcon } from "..";
 const Wrapper = styled.div`
   z-index: 20;
   position: relative;
-  background-color: ${({ theme }) => theme.panelColor};
+  background-color: rgba(223, 9, 124,0.1);
   border: 1px solid ${({ open, color }) =>
     open ? color : "rgba(0, 0, 0, 0.15);"} 
   width: 100px;
@@ -31,10 +31,10 @@ const Dropdown = styled.div`
   top: 34px;
   padding-top: 40px;
   width: calc(100% - 40px);
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: rgba(0, 5, 9, 0.6);
   border: 1px solid rgba(0, 0, 0, 0.15);
   padding: 10px 10px;
-  border-radius: 8px;
+  border-radius: 2px;
   width: calc(100% - 20px);
   font-weight: 500;
   font-size: 1rem;
@@ -78,7 +78,7 @@ const DropdownSelect = ({ options, active, setActive, color }) => {
                     }}
                     key={index}
                   >
-                    <TYPE.body fontSize={14}>{option}</TYPE.body>
+                    <TYPE.body fontSize={11}>{option}</TYPE.body>
                   </Row>
                 )
               );

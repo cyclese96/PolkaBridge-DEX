@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     height: 30,
     borderRadius: "50%",
     [theme.breakpoints.down("sm")]: {
-      height: 25,
+      height: 32,
     },
   },
   tokenTitle: {
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     fontSize: 15,
     [theme.breakpoints.down("sm")]: {
-      fontSize: 13,
+      fontSize: 15,
     },
   },
   tokenSubtitle: {
@@ -35,32 +35,39 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 300,
     fontSize: 12,
     [theme.breakpoints.down("sm")]: {
-      fontSize: 11,
+      fontSize: 12,
+    },
+  },
+  listItem: {
+    "&:hover": {
+      background: "rgba(0, 0, 0, 0.2)",
+      borderRadius: 3,
     },
   },
 }));
 
-const TokenList = ({
-  handleItemSelected,
-  tokens,
-  disableToken,
-}) => {
+const TokenList = ({ handleItemSelected, tokens, disableToken }) => {
   const classes = useStyles();
 
   return (
     <List className={classes.root}>
       {tokens.map((token, index) => (
         <ListItem
-          style={{ height: 60 }}
+          style={{ height: 65 }}
           button
           key={index}
+          className={classes.listItem}
           onClick={() => handleItemSelected(token)}
           disabled={
             !disableToken ? false : token.symbol === disableToken.symbol
           }
         >
           <ListItemAvatar>
-            <TokenIcon symbol={token.symbol} address={token.address} className={classes.tokenIcon} />
+            <TokenIcon
+              symbol={token.symbol}
+              address={token.address}
+              className={classes.tokenIcon}
+            />
           </ListItemAvatar>
           <ListItemText
             primary={<p className={classes.tokenTitle}>{token.symbol}</p>}

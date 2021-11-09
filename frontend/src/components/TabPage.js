@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     color: "rgba(255, 255, 255, 0.5)",
     fontSize: 14,
     [theme.breakpoints.down("sm")]: {
-      fontSize: 11,
+      fontSize: 14,
     },
   },
   active_tabStyle: {
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 7,
     color: "white",
     [theme.breakpoints.down("sm")]: {
-      fontSize: 13,
+      fontSize: 16,
     },
   },
 }));

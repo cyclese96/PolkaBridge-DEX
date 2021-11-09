@@ -193,7 +193,7 @@ const useStyles = makeStyles((theme) => ({
     width: 150,
     [theme.breakpoints.down("sm")]: {
       height: 30,
-      width: "fit-content",
+      width: "auto",
     },
   },
   list: {
@@ -208,7 +208,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Navbar = (props) => {
-  const { account: { currentNetwork } } = props;
+  const {
+    account: { currentNetwork },
+  } = props;
   const classes = useStyles();
 
   const [state, setState] = React.useState({
@@ -316,11 +318,13 @@ const Navbar = (props) => {
         className={classes.appBarBackground}
       >
         <Toolbar className={classes.sectionDesktop}>
-          <a href='/'>  <img
-            alt='logo'
-            src="/img/logo-white.png"
-            className={classes.logo}
-          />
+          <a href="/">
+            {" "}
+            <img
+              alt="logo"
+              src="/img/logo-white.png"
+              className={classes.logo}
+            />
           </a>
 
           <div className={classes.leftMargin} />
@@ -351,7 +355,11 @@ const Navbar = (props) => {
             </a>
           </div>
           <div>
-            <a href="#" className={classes.navbarItemsDesktop} style={{ color: '#DF097C' }}>
+            <a
+              href="#"
+              className={classes.navbarItemsDesktop}
+              style={{ color: "#DF097C" }}
+            >
               Swap <DotCircle />
             </a>
           </div>
@@ -394,13 +402,14 @@ const Navbar = (props) => {
         <Toolbar className={classes.sectionMobile}>
           <div className={classes.row1}>
             <div>
-
-              <a href='/'>   <img
-                alt='logo'
-                variant="square"
-                src="/img/logo-white.png"
-                className={classes.logo}
-              />
+              <a href="/">
+                {" "}
+                <img
+                  alt="logo"
+                  variant="square"
+                  src="/img/logo-white.png"
+                  className={classes.logo}
+                />
               </a>
             </div>
 
@@ -438,8 +447,7 @@ const Navbar = (props) => {
   );
 };
 
-
 const mapStateToProps = (state) => ({
-  account: state.account
-})
+  account: state.account,
+});
 export default connect(mapStateToProps, {})(Navbar);

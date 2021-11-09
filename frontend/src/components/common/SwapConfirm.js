@@ -22,6 +22,9 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 // import BigNumber from "bignumber.js";
 import TransactionStatus from "./TransactionStatus";
 import { DECIMAL_6_ADDRESSES } from "../../constants";
+import BigNumber from "bignumber.js";
+import { default as NumberFormat } from 'react-number-format';
+
 
 const styles = (theme) => ({
   root: {
@@ -64,8 +67,9 @@ const useStyles = makeStyles((theme) => ({
     width: 350,
     // height: 380,
     [theme.breakpoints.down("sm")]: {
-      width: 320,
-      //   height: 350,
+      width: "80vw",
+      height: "100%",
+      maxHeight: "80vh",
     },
   },
   cardContainer: {
@@ -83,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
     color: "#f4f4f4",
   },
   subheading: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: 400,
     color: "#989898",
   },
@@ -110,6 +114,7 @@ const useStyles = makeStyles((theme) => ({
     width: 220,
     height: 50,
     borderRadius: 50,
+    fontSize: 15,
   },
   acceptPrice: {
     height: 35,
@@ -150,14 +155,14 @@ const SwapConfirm = (props) => {
   const onConfirmSwap = async () => {
     // todo swap code
 
-    const _amount0InWei = toWei(token1Value, selectedToken1.decimals) //DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value);
+    const _amount0InWei = toWei(token1Value, selectedToken1.decimals); //DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value);
     const token0 = {
       amount: _amount0InWei,
       min: toWei(token1Value.toString(), selectedToken1.decimals),
       ...selectedToken1,
     };
 
-    const _amount1InWei = toWei(token2Value, selectedToken2.decimals)   //DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token2Value);
+    const _amount1InWei = toWei(token2Value, selectedToken2.decimals); //DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token2Value);
     const token1 = {
       amount: _amount1InWei,
       min: toWei(token2Value.toString(), selectedToken2.decimals),
@@ -204,13 +209,23 @@ const SwapConfirm = (props) => {
               <div className="d-flex justify-content-between w-100">
                 <div>
                   <span className={classes.subheading}> From : </span>
-                  <TokenIcon symbol={selectedToken1.symbol} address={selectedToken1.address} />
+                  {" "}
+                  <TokenIcon
+                    symbol={selectedToken1.symbol}
+                    address={selectedToken1.address}
+                  />
                   <span style={{ marginLeft: 2 }}>
                     {" "}
                     {selectedToken1.symbol}
                   </span>
                 </div>
-                <span>{token1Value}</span>
+                <span>
+                  <NumberFormat
+                    displayType="text"
+                    value={token1Value}
+                    decimalScale={7}
+                  />
+                </span>
               </div>
             </div>
 
@@ -222,25 +237,35 @@ const SwapConfirm = (props) => {
               <div className="d-flex justify-content-between w-100">
                 <div>
                   <span className={classes.subheading}>To : </span>
-                  <TokenIcon symbol={selectedToken2.symbol} address={selectedToken2.address} />
+                  <TokenIcon
+                    symbol={selectedToken2.symbol}
+                    address={selectedToken2.address}
+                  />
                   <span style={{ marginLeft: 2 }}>
                     {" "}
                     {selectedToken2.symbol}
                   </span>
                 </div>
-                <span>{token2Value}</span>
+                <span>
+                  <NumberFormat
+                    displayType="text"
+                    value={token2Value}
+                    decimalScale={7}
+                  />
+                </span>
               </div>
             </div>
 
             <div className="d-flex justify-content-around w-100 mt-2 mb-2 ">
-              <span className={classes.subheading}>Current Price</span>
+              <span className={classes.subheading}>Swap Price:</span>
               <span className={classes.subheading}>
                 1 {selectedToken1.symbol} {" = "}{" "}
-                {getPriceRatio(
-                  poolReserves[selectedToken2.symbol],
-                  poolReserves[selectedToken1.symbol]
-                )}{" "}
-                {selectedToken2.symbol}
+                <NumberFormat
+                  displayType="text"
+                  value={getPriceRatio(poolReserves[selectedToken2.symbol], poolReserves[selectedToken1.symbol])}
+                  decimalScale={5}
+                />
+                {" "}{selectedToken2.symbol}
               </span>
             </div>
 
@@ -264,8 +289,8 @@ const SwapConfirm = (props) => {
                     Liquidity provider fee
                   </span>
                   <span className={classes.detailValue}>
-                    {getPercentageAmount(token1Value, "0.2 ")}{" "}
-                    {selectedToken1.symbol}
+                    <NumberFormat displayType="text" value={getPercentageAmount(token1Value, "0.2 ")} decimalScale={5} />
+                    {" "}{selectedToken1.symbol}
                   </span>
                 </div>
                 {/* <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
@@ -277,13 +302,26 @@ const SwapConfirm = (props) => {
                 <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
                   <span className={classes.detailTitle}>Price impact</span>
                   <span className={classes.detailValue}>
-                    - {formatFloat(priceImpact)} %
+                    -{" "}
+                    <NumberFormat
+                      displayType="text"
+                      value={priceImpact}
+                      decimalScale={5}
+                    />
+                    %
                   </span>
                 </div>
                 <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
                   <span className={classes.detailTitle}>Minimum received</span>
                   <span className={classes.detailValue}>
-                    {parseFloat(token2Value).toFixed(2)} {selectedToken2.symbol}
+
+                    <NumberFormat
+                      displayType="text"
+                      value={token2Value}
+                      decimalScale={5}
+                    />
+                    {" "}
+                    {selectedToken2.symbol}
                   </span>
                 </div>
 

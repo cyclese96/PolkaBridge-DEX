@@ -24,6 +24,9 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       background: "rgba(255, 255, 255, 0.1)",
     },
+    [theme.breakpoints.down("sm")]: {
+      height: 40,
+    },
   },
   noToken: {
     display: "flex",
@@ -44,13 +47,16 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 2,
     borderRadius: "50%",
     color: "#e5e5e5",
+    [theme.breakpoints.down("sm")]: {
+      height: 25,
+    },
   },
 
   selectToken: {
     fontSize: 15,
     color: "white",
     [theme.breakpoints.down("sm")]: {
-      fontSize: 12,
+      fontSize: 16,
     },
   },
   selectedToken: {
@@ -58,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 5,
     fontSize: 15,
     [theme.breakpoints.down("sm")]: {
-      fontSize: 12,
+      fontSize: 16,
     },
   },
   dropIcon: {
