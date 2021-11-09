@@ -48,8 +48,8 @@ const OptionsRow = styled.div`
 const CHART_VIEW = {
   VOLUME: "Volume",
   LIQUIDITY: "Liquidity",
-  RATE0: "Rate 0",
-  RATE1: "Rate 1",
+  RATE0: "Price 0",
+  RATE1: "Price 1",
 };
 
 const PairChart = ({ address, color, base0, base1 }) => {
@@ -239,24 +239,30 @@ const PairChart = ({ address, color, base0, base1 }) => {
             </Button>
           </div>
           <AutoRow justify="flex-end" gap="6px">
-            <OptionButton
+            <Button
               active={timeWindow === timeframeOptions.WEEK}
               onClick={() => setTimeWindow(timeframeOptions.WEEK)}
+              style={styles.button}
+
             >
               1W
-            </OptionButton>
-            <OptionButton
+            </Button>
+            <Button
               active={timeWindow === timeframeOptions.MONTH}
               onClick={() => setTimeWindow(timeframeOptions.MONTH)}
+              style={styles.button}
+
             >
               1M
-            </OptionButton>
-            <OptionButton
+            </Button>
+            <Button
               active={timeWindow === timeframeOptions.ALL_TIME}
               onClick={() => setTimeWindow(timeframeOptions.ALL_TIME)}
+              style={styles.button}
+
             >
               All
-            </OptionButton>
+            </Button>
           </AutoRow>
         </div>
       )}

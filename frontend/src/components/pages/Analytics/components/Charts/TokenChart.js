@@ -5,6 +5,7 @@ import {
 import { AutoRow, RowBetween, RowFixed } from "../../../../common/Styled/Row";
 import BarChart from "../Charts/BarChart";
 import AreaChart from "../Charts/AreaChart";
+import styled from "styled-components";
 
 import {
   getTimeframe,
@@ -21,6 +22,18 @@ import CandleStickChart from "../../../../common/Styled/CandleChart";
 import { Activity } from "react-feather";
 import Loader from "../../../../common/Loader";
 import { Button } from "@material-ui/core";
+import DropdownSelect from "../../../../common/Styled/DropdownSelect";
+
+
+const ChartWrapper = styled.div`
+  height: 100%;
+  max-height: 340px;
+
+  @media screen and (max-width: 600px) {
+    min-height: 200px;
+  }
+`;
+
 
 const CHART_VIEW = {
   VOLUME: "Volume",
@@ -174,18 +187,23 @@ const TokenChart = ({ address, color, base }) => {
   }, [chartData]);
 
   return (
-    <div style={{ maxHeight: 300, height: "100%" }}>
-      <RowBetween
-        mb={
-          chartFilter === CHART_VIEW.LIQUIDITY ||
-            chartFilter === CHART_VIEW.VOLUME ||
-            (chartFilter === CHART_VIEW.PRICE &&
-              frequency === DATA_FREQUENCY.LINE)
-            ? 40
-            : 0
-        }
-        align="flex-start"
-      >
+    <ChartWrapper>
+      {below600 ? (
+        <RowBetween mb={40}>
+          <DropdownSelect
+            options={CHART_VIEW}
+            active={chartFilter}
+            setActive={setChartFilter}
+            color={color}
+          />
+          <DropdownSelect
+            options={timeframeOptions}
+            active={timeWindow}
+            setActive={setTimeWindow}
+            color={color}
+          />
+        </RowBetween>
+      ) : (
         <div>
           <div className="d-flex justify-content-center ">
             <Button
@@ -257,31 +275,34 @@ const TokenChart = ({ address, color, base }) => {
               </Button>
             </AutoRow>
           )}
+
+          <AutoRow justify="flex-end" gap="6px" align="flex-start">
+            <Button
+              active={timeWindow === timeframeOptions.WEEK}
+              onClick={() => setTimeWindow(timeframeOptions.WEEK)}
+              style={styles.button}
+            >
+              1W
+            </Button>
+            <Button
+              active={timeWindow === timeframeOptions.MONTH}
+              onClick={() => setTimeWindow(timeframeOptions.MONTH)}
+              style={styles.button}
+            >
+              1M
+            </Button>
+            <Button
+              active={timeWindow === timeframeOptions.ALL_TIME}
+              onClick={() => setTimeWindow(timeframeOptions.ALL_TIME)}
+              style={styles.button}
+            >
+              All
+            </Button>
+          </AutoRow>
         </div>
-        <AutoRow justify="flex-end" gap="6px" align="flex-start">
-          <Button
-            active={timeWindow === timeframeOptions.WEEK}
-            onClick={() => setTimeWindow(timeframeOptions.WEEK)}
-            style={styles.button}
-          >
-            1W
-          </Button>
-          <Button
-            active={timeWindow === timeframeOptions.MONTH}
-            onClick={() => setTimeWindow(timeframeOptions.MONTH)}
-            style={styles.button}
-          >
-            1M
-          </Button>
-          <Button
-            active={timeWindow === timeframeOptions.ALL_TIME}
-            onClick={() => setTimeWindow(timeframeOptions.ALL_TIME)}
-            style={styles.button}
-          >
-            All
-          </Button>
-        </AutoRow>
-      </RowBetween>
+      )}
+
+      {/* </RowBetween> */}
 
       {chartFilter === CHART_VIEW.LIQUIDITY && chartData && (
         <AreaChart chartData={chartData} />
@@ -362,7 +383,7 @@ const TokenChart = ({ address, color, base }) => {
         ))}
 
       {chartFilter === CHART_VIEW.VOLUME && <BarChart chartData={chartData} />}
-    </div>
+    </ChartWrapper>
   );
 };
 
