@@ -7,9 +7,8 @@ const useStyles = makeStyles((theme) => ({
   statPercentageGreen: {
     color: "#9ccc65",
     fontSize: 14,
-
     [theme.breakpoints.down("sm")]: {
-      fontSize: 12,
+      fontSize: 14,
     },
   },
   statPercentageRed: {
@@ -17,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
 
     [theme.breakpoints.down("sm")]: {
-      fontSize: 12,
+      fontSize: 14,
     },
   },
   arrowIcon: {

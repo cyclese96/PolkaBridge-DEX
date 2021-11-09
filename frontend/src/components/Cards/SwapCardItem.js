@@ -55,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     [theme.breakpoints.down("sm")]: {
       marginTop: -10,
+      width: "100%",
     },
   },
   input: {
@@ -65,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 200,
     outline: "none",
     [theme.breakpoints.down("sm")]: {
-      maxWidth: 100,
+      maxWidth: 150,
       fontSize: 24,
     },
   },
@@ -90,12 +91,17 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 2,
   },
   maxButton: {
-    color: "#E0077D",
+    color: "white",
     cursor: "pointer",
+    backgroundColor: "rgba(223, 9, 124,0.5)",
+    borderRadius: 7,
+    padding: "1px 5px 1px 5px",
     marginLeft: 2,
-    marginRight: 4,
+    marginRight: 7,
+    fontSize: 15,
+
     [theme.breakpoints.down("sm")]: {
-      fontSize: 14,
+      fontSize: 16,
     },
   },
 }));
@@ -160,15 +166,16 @@ const SwapCardItem = (props) => {
               placeholder="0.0"
             />
 
-            <span className={classes.maxButton} onClick={handleMax}>
-              Max
-            </span>
-
-            <SelectToken
-              selectedToken={currentToken}
-              disableToken={disableToken}
-              handleTokenSelected={onTokenChange}
-            />
+            <div className="d-flex align-items-center">
+              <span className={classes.maxButton} onClick={handleMax}>
+                Max
+              </span>
+              <SelectToken
+                selectedToken={currentToken}
+                disableToken={disableToken}
+                handleTokenSelected={onTokenChange}
+              />
+            </div>
           </div>
         </div>
       </Card>

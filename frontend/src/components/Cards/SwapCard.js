@@ -58,8 +58,9 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 7,
       paddingRight: 7,
-      width: "100%",
+      width: "90%",
       maxWidth: 400,
+      border: "1px solid #212121",
     },
   },
   cardContents: {
@@ -813,12 +814,15 @@ const SwapCard = (props) => {
           />
 
           {token1Value && token2Value && (
-            <div className="mt-1 d-flex justify-content-end">
+            <div
+              className="mt-2 d-flex justify-content-end"
+              style={{ width: "95%" }}
+            >
               <div className={classes.tokenPrice}>
                 {selectedToken1.symbol &&
                 selectedToken2.symbol &&
                 !disableStatus() ? (
-                  <span>
+                  <span style={{ paddingRight: 5 }}>
                     1 {selectedToken1.symbol} {" = "} {priceRatio}{" "}
                     {selectedToken2.symbol}
                   </span>

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
-
 import {
   usePairData,
   usePairTransactions,
@@ -110,8 +109,11 @@ const useStyles = makeStyles((theme) => ({
   },
   cardValue: {
     color: "white",
-    fontSize: 25,
+    fontSize: 32,
     textAlign: "left",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 28,
+    },
   },
   cardTokenValue: {
     color: "white",
@@ -125,7 +127,10 @@ const useStyles = makeStyles((theme) => ({
   },
   cardChangeIndicator: {
     color: "green",
-    fontSize: 13,
+    fontSize: 24,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 24,
+    },
   },
   chartsCard: {
     height: "100%",
@@ -258,8 +263,8 @@ function PoolDetail({ pairAddress }) {
       : "-";
 
   const isLoaded = () => {
-    return (poolInfo && poolInfo.token1?.symbol) || (token0 && token0.address)
-  }
+    return (poolInfo && poolInfo.token1?.symbol) || (token0 && token0.address);
+  };
 
   // token data for usd
   const [ethPrice] = useEthPrice();
@@ -439,15 +444,6 @@ function PoolDetail({ pairAddress }) {
               </div>
               <div className="col-md-8">
                 <Card elevation={10} className={classes.chartsCard}>
-                  {/* <div
-                    style={{
-                      marginTop: 140,
-                      color: "#DF097C",
-                      textAlign: "center",
-                    }}
-                  >
-                    Insufficient data to display chart.
-                  </div> */}
                   <PairChart
                     address={pairAddress}
                     color={"#E0077D"}

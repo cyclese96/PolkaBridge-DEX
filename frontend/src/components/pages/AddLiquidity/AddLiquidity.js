@@ -33,7 +33,8 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 7,
       paddingRight: 7,
-      width: "100%",
+
+      width: "90vw",
     },
   },
   buttonsWrapper: {
@@ -41,6 +42,12 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+    },
   },
   icon: {
     color: "#f6f6f6",
@@ -53,8 +60,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "rgba(255, 255, 255, 0.1)",
     color: "#f6f6f6",
     borderColor: "#f6f6f6",
-
-    height: 40,
+    height: 50,
     textTransform: "none",
     fontSize: 16,
     borderRadius: 10,
@@ -62,12 +68,15 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 5,
     marginTop: 5,
     marginBottom: 5,
+    padding: "20px 30px 20px 30px",
     "&:hover": {
       background: "rgba(255, 255, 255, 0.3)",
     },
     [theme.breakpoints.down("sm")]: {
-      fontSize: 11,
-      padding: "5px 20px 5px 5px",
+      fontSize: 18,
+      height: 50,
+      width: 240,
+      padding: "15px 30px 15px 30px",
     },
   },
   selectedToken: {
@@ -186,73 +195,6 @@ const AddLiquidity = ({ account: { balance, loading } }) => {
               </Button>
             </div>
           </Card>
-          {/* <div className="mt-5">
-            <Card elevation={10} className={classes.card}>
-              <h4>Your Liquidity</h4>
-              <Card className={classes.cardAddedLiquidity}>
-                <div className="d-flex justify-content-start align-items-center">
-                  <div className={classes.token}>
-                    <img
-                      className={classes.tokenIcon}
-                      src={tokenThumbnail("PBR")}
-                      alt={""}
-                    />
-
-                    <span className={classes.selectedToken}>PBR</span>
-                  </div>
-                  <div>
-                    <SwapHoriz style={{ color: "#bdbdbd" }} />
-                  </div>
-                  <div className={classes.token}>
-                    <img
-                      className={classes.tokenIcon}
-                      src={tokenThumbnail("ETH")}
-                      alt={""}
-                    />
-
-                    <span className={classes.selectedToken}>ETH</span>
-                  </div>
-                </div>
-                <div>
-                  <CustomButton className={classes.removeButton}>
-                    {" "}
-                    Remove
-                  </CustomButton>
-                </div>
-              </Card>
-              <Card className={classes.cardAddedLiquidity}>
-                <div className="d-flex justify-content-start align-items-center">
-                  <div className={classes.token}>
-                    <img
-                      className={classes.tokenIcon}
-                      src={tokenThumbnail("PBR")}
-                      alt={""}
-                    />
-
-                    <span className={classes.selectedToken}>PBR</span>
-                  </div>
-                  <div>
-                    <SwapHoriz style={{ color: "#bdbdbd" }} />
-                  </div>
-                  <div className={classes.token}>
-                    <img
-                      className={classes.tokenIcon}
-                      src={tokenThumbnail("ETH")}
-                      alt={""}
-                    />
-
-                    <span className={classes.selectedToken}>ETH</span>
-                  </div>
-                </div>
-                <div>
-                  <CustomButton className={classes.removeButton}>
-                    {" "}
-                    Remove
-                  </CustomButton>
-                </div>
-              </Card>
-            </Card>
-          </div> */}
         </div>
       ) : showCard.component === "AddCard" ? (
         <AddCard

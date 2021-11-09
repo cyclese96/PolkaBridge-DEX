@@ -53,8 +53,9 @@ const useStyles = makeStyles((theme) => ({
     width: 400,
     height: 600,
     [theme.breakpoints.down("sm")]: {
-      width: "75vw",
-      height: 500,
+      width: "80vw",
+      height: "100%",
+      maxHeight: "80vh",
     },
   },
   heading: {
@@ -63,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "left",
     color: "#e5e5e5",
     [theme.breakpoints.down("sm")]: {
-      fontSize: 16,
+      fontSize: 20,
     },
   },
   subheading: {
@@ -92,8 +93,8 @@ const useStyles = makeStyles((theme) => ({
     padding: 10,
     outline: "none",
     [theme.breakpoints.down("sm")]: {
-      height: 35,
-      fontSize: 13,
+      height: 45,
+      fontSize: 15,
     },
   },
   buttons: {
@@ -112,7 +113,7 @@ const useStyles = makeStyles((theme) => ({
     color: "#f6f6f6",
     fontSize: 24,
     [theme.breakpoints.down("sm")]: {
-      fontSize: 18,
+      fontSize: 20,
     },
   },
   cancelButton: {
@@ -126,7 +127,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "8px 50px 8px 50px",
 
     [theme.breakpoints.down("sm")]: {
-      fontSize: 14,
+      fontSize: 16,
     },
   },
 }));
@@ -145,7 +146,7 @@ const SelectTokenDialog = ({
   const [filteredTokens, setTokens] = useState([]);
   const [showImported, setShowImported] = useState(false);
   const [_importedTokens, setImported] = useState([]);
-  const [filterInput, setFilterInput] = useState("")
+  const [filterInput, setFilterInput] = useState("");
 
   const onTokenSelect = (token) => {
     handleTokenSelected(token);
@@ -154,7 +155,6 @@ const SelectTokenDialog = ({
 
   useEffect(() => {
     if (open) {
-
       setTokens(tokenList);
     }
   }, [tokenList, open]);
@@ -189,13 +189,12 @@ const SelectTokenDialog = ({
   };
 
   const handleTokenFilter = async (value) => {
-
-    setFilterInput(value)
+    setFilterInput(value);
     if (!value) {
       value = "";
     }
 
-    const _value = value.split(' ').join('');
+    const _value = value.split(" ").join("");
     const filteredList = applyFilter(tokenList, _value);
     setTokens(filteredList);
     if (_value.length >= 42 && filteredList.length === 0) {
@@ -213,7 +212,7 @@ const SelectTokenDialog = ({
 
   const onClose = () => {
     handleClose();
-    resetInputState()
+    resetInputState();
   };
 
   return (

@@ -64,8 +64,9 @@ const useStyles = makeStyles((theme) => ({
     width: 350,
     // height: 380,
     [theme.breakpoints.down("sm")]: {
-      width: 320,
-      //   height: 350,
+      width: "80vw",
+      height: "100%",
+      maxHeight: "80vh",
     },
   },
   cardContainer: {
@@ -83,7 +84,7 @@ const useStyles = makeStyles((theme) => ({
     color: "#f4f4f4",
   },
   subheading: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: 400,
     color: "#989898",
   },
@@ -110,6 +111,7 @@ const useStyles = makeStyles((theme) => ({
     width: 220,
     height: 50,
     borderRadius: 50,
+    fontSize: 15,
   },
   acceptPrice: {
     height: 35,
@@ -150,14 +152,14 @@ const SwapConfirm = (props) => {
   const onConfirmSwap = async () => {
     // todo swap code
 
-    const _amount0InWei = toWei(token1Value, selectedToken1.decimals) //DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value);
+    const _amount0InWei = toWei(token1Value, selectedToken1.decimals); //DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value);
     const token0 = {
       amount: _amount0InWei,
       min: toWei(token1Value.toString(), selectedToken1.decimals),
       ...selectedToken1,
     };
 
-    const _amount1InWei = toWei(token2Value, selectedToken2.decimals)   //DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token2Value);
+    const _amount1InWei = toWei(token2Value, selectedToken2.decimals); //DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token2Value);
     const token1 = {
       amount: _amount1InWei,
       min: toWei(token2Value.toString(), selectedToken2.decimals),
@@ -204,7 +206,10 @@ const SwapConfirm = (props) => {
               <div className="d-flex justify-content-between w-100">
                 <div>
                   <span className={classes.subheading}> From : </span>
-                  <TokenIcon symbol={selectedToken1.symbol} address={selectedToken1.address} />
+                  <TokenIcon
+                    symbol={selectedToken1.symbol}
+                    address={selectedToken1.address}
+                  />
                   <span style={{ marginLeft: 2 }}>
                     {" "}
                     {selectedToken1.symbol}
@@ -222,7 +227,10 @@ const SwapConfirm = (props) => {
               <div className="d-flex justify-content-between w-100">
                 <div>
                   <span className={classes.subheading}>To : </span>
-                  <TokenIcon symbol={selectedToken2.symbol} address={selectedToken2.address} />
+                  <TokenIcon
+                    symbol={selectedToken2.symbol}
+                    address={selectedToken2.address}
+                  />
                   <span style={{ marginLeft: 2 }}>
                     {" "}
                     {selectedToken2.symbol}
@@ -233,7 +241,7 @@ const SwapConfirm = (props) => {
             </div>
 
             <div className="d-flex justify-content-around w-100 mt-2 mb-2 ">
-              <span className={classes.subheading}>Current Price</span>
+              <span className={classes.subheading}>Swap Price:</span>
               <span className={classes.subheading}>
                 1 {selectedToken1.symbol} {" = "}{" "}
                 {getPriceRatio(

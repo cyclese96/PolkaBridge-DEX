@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 15,
     color: "white",
     [theme.breakpoints.down("sm")]: {
-      fontSize: 13,
+      fontSize: 16,
     },
   },
   selectedToken: {
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 5,
     fontSize: 15,
     [theme.breakpoints.down("sm")]: {
-      fontSize: 13,
+      fontSize: 16,
     },
   },
   dropIcon: {

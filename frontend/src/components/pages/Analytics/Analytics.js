@@ -141,38 +141,48 @@ const Analytics = () => {
           <Card elevation={10} className={classes.priceStatContainer}>
             <div className={classes.statsGroup}>
               <span className={classes.statLabel}>Volume 24H:</span>
-              <span className={classes.statAmount}>
-                $ {formatCurrency(new BigNumber(globalData.oneDayVolumeUSD))}
-              </span>
+              <div className="d-flex align-items-center justify-content-end">
+                <span className={classes.statAmount}>
+                  ${formatCurrency(new BigNumber(globalData.oneDayVolumeUSD))}
+                </span>
 
-              <PercentLabel
-                percentValue={globalData.volumeChangeUSD}
-                braces={true}
-              />
+                <PercentLabel
+                  percentValue={globalData.volumeChangeUSD}
+                  braces={true}
+                />
+              </div>
             </div>
 
             <div className={classes.statsGroup}>
-              <span className={classes.statLabel}>Fees 24H:</span>
-              <span className={classes.statAmount}>
-                $ {formatCurrency(globalData.oneDayVolumeUSD * 0.02)}
-              </span>
+              <div>
+                <span className={classes.statLabel}>Fees 24H:</span>
+              </div>
+              <div className="d-flex align-items-center justify-content-end">
+                <div className={classes.statAmount}>
+                  ${formatCurrency(globalData.oneDayVolumeUSD * 0.02)}
+                </div>
 
-              <PercentLabel
-                percentValue={globalData.volumeChangeUSD}
-                braces={true}
-              />
+                <div>
+                  <PercentLabel
+                    percentValue={globalData.volumeChangeUSD}
+                    braces={true}
+                  />
+                </div>
+              </div>
             </div>
 
             <div className={classes.statsGroup}>
-              <span className={classes.statLabel}>TVL</span>
-              <span className={classes.statAmount}>
-                {"$" + formatCurrency(globalData.totalLiquidityUSD)}
-              </span>
+              <span className={classes.statLabel}>TVL: </span>
+              <div className="d-flex align-items-center justify-content-end">
+                <span className={classes.statAmount}>
+                  {"$" + formatCurrency(globalData.totalLiquidityUSD)}
+                </span>
 
-              <PercentLabel
-                percentValue={globalData.liquidityChangeUSD}
-                braces={true}
-              />
+                <PercentLabel
+                  percentValue={globalData.liquidityChangeUSD}
+                  braces={true}
+                />
+              </div>
             </div>
           </Card>
         )}
