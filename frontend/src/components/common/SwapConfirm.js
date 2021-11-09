@@ -22,6 +22,9 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 // import BigNumber from "bignumber.js";
 import TransactionStatus from "./TransactionStatus";
 import { DECIMAL_6_ADDRESSES } from "../../constants";
+import BigNumber from "bignumber.js";
+import { default as NumberFormat } from 'react-number-format';
+
 
 const styles = (theme) => ({
   root: {
@@ -206,6 +209,7 @@ const SwapConfirm = (props) => {
               <div className="d-flex justify-content-between w-100">
                 <div>
                   <span className={classes.subheading}> From : </span>
+                  {" "}
                   <TokenIcon
                     symbol={selectedToken1.symbol}
                     address={selectedToken1.address}
@@ -215,7 +219,13 @@ const SwapConfirm = (props) => {
                     {selectedToken1.symbol}
                   </span>
                 </div>
-                <span>{token1Value}</span>
+                <span>
+                  <NumberFormat
+                    displayType="text"
+                    value={token1Value}
+                    decimalScale={7}
+                  />
+                </span>
               </div>
             </div>
 
@@ -236,7 +246,13 @@ const SwapConfirm = (props) => {
                     {selectedToken2.symbol}
                   </span>
                 </div>
-                <span>{token2Value}</span>
+                <span>
+                  <NumberFormat
+                    displayType="text"
+                    value={token2Value}
+                    decimalScale={7}
+                  />
+                </span>
               </div>
             </div>
 
@@ -244,11 +260,12 @@ const SwapConfirm = (props) => {
               <span className={classes.subheading}>Swap Price:</span>
               <span className={classes.subheading}>
                 1 {selectedToken1.symbol} {" = "}{" "}
-                {getPriceRatio(
-                  poolReserves[selectedToken2.symbol],
-                  poolReserves[selectedToken1.symbol]
-                )}{" "}
-                {selectedToken2.symbol}
+                <NumberFormat
+                  displayType="text"
+                  value={getPriceRatio(poolReserves[selectedToken2.symbol], poolReserves[selectedToken1.symbol])}
+                  decimalScale={5}
+                />
+                {" "}{selectedToken2.symbol}
               </span>
             </div>
 
@@ -272,8 +289,8 @@ const SwapConfirm = (props) => {
                     Liquidity provider fee
                   </span>
                   <span className={classes.detailValue}>
-                    {getPercentageAmount(token1Value, "0.2 ")}{" "}
-                    {selectedToken1.symbol}
+                    <NumberFormat displayType="text" value={getPercentageAmount(token1Value, "0.2 ")} decimalScale={5} />
+                    {" "}{selectedToken1.symbol}
                   </span>
                 </div>
                 {/* <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
@@ -285,13 +302,26 @@ const SwapConfirm = (props) => {
                 <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
                   <span className={classes.detailTitle}>Price impact</span>
                   <span className={classes.detailValue}>
-                    - {formatFloat(priceImpact)} %
+                    -{" "}
+                    <NumberFormat
+                      displayType="text"
+                      value={priceImpact}
+                      decimalScale={5}
+                    />
+                    %
                   </span>
                 </div>
                 <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
                   <span className={classes.detailTitle}>Minimum received</span>
                   <span className={classes.detailValue}>
-                    {parseFloat(token2Value).toFixed(2)} {selectedToken2.symbol}
+
+                    <NumberFormat
+                      displayType="text"
+                      value={token2Value}
+                      decimalScale={5}
+                    />
+                    {" "}
+                    {selectedToken2.symbol}
                   </span>
                 </div>
 

@@ -45,6 +45,7 @@ import {
   SHOW_DEX_LOADING,
   START_TRANSACTION,
 } from "../../actions/types";
+import { default as NumberFormat } from 'react-number-format';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -828,7 +829,13 @@ const SwapCard = (props) => {
                   selectedToken2.symbol &&
                   !disableStatus() ? (
                   <span style={{ paddingRight: 5 }}>
-                    1 {selectedToken1.symbol} {" = "} {priceRatio}{" "}
+                    1 {selectedToken1.symbol} {" = "}
+                    <NumberFormat
+                      displayType="text"
+                      value={priceRatio}
+                      decimalScale={5}
+                    />
+                    {" "}
                     {selectedToken2.symbol}
                   </span>
                 ) : (
