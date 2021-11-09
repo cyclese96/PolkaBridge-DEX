@@ -12,7 +12,7 @@ import etherImg from "../../../assets/ether.png";
 import bnbImg from "../../../assets/binance.png";
 import CustomButton from "../../Buttons/CustomButton";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
-import { ETH, etheriumNetwork, tokens } from "../../../constants";
+import { allowanceAmount, ETH, etheriumNetwork, tokens } from "../../../constants";
 import {
   fromWei,
   getPercentAmountWithFloor,
@@ -333,7 +333,7 @@ const RemoveCard = ({
   };
 
   const handleConfirmAllowance = async () => {
-    const allowanceAmount = toWei("999999999");
+    const allowanceAmount = allowanceAmount;
     const pairAddress = currentPairAddress();
     await confirmLPAllowance(
       allowanceAmount,

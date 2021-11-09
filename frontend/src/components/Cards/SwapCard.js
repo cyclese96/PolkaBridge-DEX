@@ -14,6 +14,7 @@ import SwapSettings from "../common/SwapSettings";
 import BigNumber from "bignumber.js";
 import CustomSnackBar from "../common/CustomSnackbar";
 import {
+  allowanceAmount,
   DECIMAL_6_ADDRESSES,
   ETH,
   etheriumNetwork,
@@ -604,9 +605,9 @@ const SwapCard = (props) => {
   };
 
   const handleConfirmAllowance = async () => {
-    const allowanceAmount = toWei("9999999999");
+    const _allowanceAmount = allowanceAmount
     await confirmAllowance(
-      allowanceAmount,
+      _allowanceAmount,
       selectedToken1,
       currentAccount,
       currentNetwork
@@ -824,8 +825,8 @@ const SwapCard = (props) => {
             >
               <div className={classes.tokenPrice}>
                 {selectedToken1.symbol &&
-                selectedToken2.symbol &&
-                !disableStatus() ? (
+                  selectedToken2.symbol &&
+                  !disableStatus() ? (
                   <span style={{ paddingRight: 5 }}>
                     1 {selectedToken1.symbol} {" = "} {priceRatio}{" "}
                     {selectedToken2.symbol}

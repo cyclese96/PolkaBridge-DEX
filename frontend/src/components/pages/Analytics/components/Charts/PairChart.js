@@ -25,6 +25,7 @@ import { useMedia } from "react-use";
 // import { EmptyCard } from '..'
 import DropdownSelect from "../../../../common/Styled/DropdownSelect";
 import CandleStickChart from "../../../../common/Styled/CandleChart";
+import { Button } from "@material-ui/core";
 // import LocalLoader from '../LocalLoader'
 // import { useDarkModeManager } from '../../contexts/LocalStorage'
 
@@ -178,9 +179,9 @@ const PairChart = ({ address, color, base0, base1 }) => {
           />
         </RowBetween>
       ) : (
-        <OptionsRow>
-          <AutoRow gap="6px" style={{ flexWrap: "nowrap" }}>
-            <OptionButton
+        <div>
+          <div className="d-flex justify-content-center ">
+            <Button
               active={chartFilter === CHART_VIEW.LIQUIDITY}
               onClick={() => {
                 setTimeWindow(timeframeOptions.ALL_TIME);
@@ -193,8 +194,8 @@ const PairChart = ({ address, color, base0, base1 }) => {
               }
             >
               Liquidity
-            </OptionButton>
-            <OptionButton
+            </Button>
+            <Button
               active={chartFilter === CHART_VIEW.VOLUME}
               onClick={() => {
                 setTimeWindow(timeframeOptions.ALL_TIME);
@@ -207,26 +208,36 @@ const PairChart = ({ address, color, base0, base1 }) => {
               }
             >
               Volume
-            </OptionButton>
-            {/* <OptionButton
+            </Button>
+            <Button
               active={chartFilter === CHART_VIEW.RATE0}
               onClick={() => {
                 setTimeWindow(timeframeOptions.WEEK)
                 setChartFilter(CHART_VIEW.RATE0)
               }}
+              style={
+                chartFilter === CHART_VIEW.RATE0
+                  ? styles.buttonActive
+                  : styles.button
+              }
             >
               {pairData.token0 ? formattedSymbol1 + '/' + formattedSymbol0 : '-'}
-            </OptionButton>
-            <OptionButton
+            </Button>
+            <Button
               active={chartFilter === CHART_VIEW.RATE1}
               onClick={() => {
                 setTimeWindow(timeframeOptions.WEEK)
                 setChartFilter(CHART_VIEW.RATE1)
               }}
+              style={
+                chartFilter === CHART_VIEW.RATE1
+                  ? styles.buttonActive
+                  : styles.button
+              }
             >
               {pairData.token0 ? formattedSymbol0 + '/' + formattedSymbol1 : '-'}
-            </OptionButton> */}
-          </AutoRow>
+            </Button>
+          </div>
           <AutoRow justify="flex-end" gap="6px">
             <OptionButton
               active={timeWindow === timeframeOptions.WEEK}
@@ -247,7 +258,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
               All
             </OptionButton>
           </AutoRow>
-        </OptionsRow>
+        </div>
       )}
       {chartFilter === CHART_VIEW.LIQUIDITY && chartData && (
         <ResponsiveContainer aspect={aspect}>

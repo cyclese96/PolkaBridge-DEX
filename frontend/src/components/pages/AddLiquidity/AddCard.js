@@ -12,12 +12,7 @@ import SwapSettings from "../../common/SwapSettings";
 import etherImg from "../../../assets/ether.png";
 import SwapCardItem from "../../Cards/SwapCardItem";
 import AddIcon from "@material-ui/icons/Add";
-import {
-  DECIMAL_6_ADDRESSES,
-  ETH,
-  etheriumNetwork,
-  tokens,
-} from "../../../constants";
+import { allowanceAmount, ETH, etheriumNetwork, tokens } from "../../../constants";
 import {
   fromWei,
   getPercentage,
@@ -446,18 +441,18 @@ const AddCard = (props) => {
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
   const handleConfirmAllowance = async () => {
-    const allowanceAmount = toWei("999999999");
 
+    const _allowanceAmount = allowanceAmount;
     if (!approvedTokens[selectedToken1.symbol]) {
       await confirmAllowance(
-        allowanceAmount,
+        _allowanceAmount,
         selectedToken1,
         currentAccount,
         currentNetwork
       );
     } else {
       await confirmAllowance(
-        allowanceAmount,
+        _allowanceAmount,
         selectedToken2,
         currentAccount,
         currentNetwork

@@ -137,6 +137,8 @@ export const bscConfig = {
 
 export const supportedNetworks = ["1", "56"];
 
+export const allowanceAmount = '9999999999999999999999999';
+
 //pairs
 export const PBR_ETH = "PBR_ETH";
 export const PWAR_BNB = "PWAR_BNB";
