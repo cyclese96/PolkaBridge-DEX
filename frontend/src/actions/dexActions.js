@@ -2,7 +2,6 @@ import BigNumber from "bignumber.js";
 import {
   bscTokens,
   currentConnection,
-  DECIMAL_6_ADDRESSES,
   ETH,
   etheriumNetwork,
   nullAddress,
@@ -15,7 +14,6 @@ import {
   USDT,
 } from "../constants";
 import {
-  factoryContract,
   pairContract,
   routerContract,
   tokenContract,
@@ -35,7 +33,6 @@ import {
   APPROVE_LP_TOKENS,
   APPROVE_TOKEN,
   DEX_ERROR,
-  GET_PAIR_RESERVES,
   GET_POOL_SHARE,
   GET_TOKEN_1_OUT,
   GET_TOKEN_O_IN,
@@ -43,12 +40,9 @@ import {
   HIDE_LOADING,
   IMPORT_TOKEN,
   LOAD_TOKEN_LIST,
-  RESET_POOL_DATA,
   SET_LP_BALANCE,
   SET_PAIR_DATA,
   SET_POOL_RESERVES,
-  SET_TOKEN0_PRICE,
-  SET_TOKEN1_PRICE,
   SHOW_DEX_LOADING,
   SHOW_LOADING,
   START_PRICE_LOADING,
@@ -246,6 +240,7 @@ export const swapTokens =
 
       await swapPromise
         .on('receipt', async function (receipt) {
+
 
           console.log('UPDATE_TRANSACTION_STATUS', receipt)
           dispatch({

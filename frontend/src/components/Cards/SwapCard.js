@@ -722,7 +722,11 @@ const SwapCard = (props) => {
       return;
     }
 
-    loadPairReserves();
+    // loadPairReserves();
+    if (transaction.type === "swap" && transaction.status === "success") {
+      getAccountBalance(selectedToken1, currentNetwork);
+      getAccountBalance(selectedToken2, currentNetwork);
+    }
 
     if (
       transaction.type === "swap" &&

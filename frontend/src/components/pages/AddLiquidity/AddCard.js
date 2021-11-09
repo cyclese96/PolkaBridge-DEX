@@ -772,6 +772,12 @@ const AddCard = (props) => {
     if (!transaction.hash && !transaction.type) {
       return;
     }
+
+    if (transaction.type === "add" && transaction.status === "success") {
+      getAccountBalance(selectedToken1, currentNetwork)
+      getAccountBalance(selectedToken2, currentNetwork)
+    }
+
     if (
       (transaction.type === "add" && transaction.status === "success") ||
       transaction.status === "failed"
