@@ -243,9 +243,9 @@ export default function PairTransactionsTable({ data }) {
               <TableCell align="right" style={styles.tableHeading}>
                 Token Amount
               </TableCell>
-              <TableCell align="right" style={styles.tableHeading}>
+              {/* <TableCell align="right" style={styles.tableHeading}>
                 Account
-              </TableCell>
+              </TableCell> */}
               <TableCell
                 align="right"
                 style={styles.tableHeading}
@@ -309,13 +309,13 @@ export default function PairTransactionsTable({ data }) {
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
-                    {parseFloat(row.amountUSD).toFixed(2)}
+                    ${parseFloat(row.amountUSD).toFixed(2)}
                   </TableCell>
                   <TableCell
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
-                    {row.amount0
+                    ${row.amount0
                       ? parseFloat(row.amount0).toFixed(3)
                       : row.amount0Out !== "0"
                         ? parseFloat(row.amount0Out).toFixed(2)
@@ -325,22 +325,21 @@ export default function PairTransactionsTable({ data }) {
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
-                    {row.amount1
+                    ${row.amount1
                       ? parseFloat(row.amount1).toFixed(3)
                       : row.amount1Out !== "0"
                         ? parseFloat(row.amount1Out).toFixed(2)
                         : parseFloat(row.amount1In).toFixed(2)}
                     { }
                   </TableCell>
-                  <TableCell
+                  {/* <TableCell
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
-                    ---
-                    {/* ToDo */}
-                    {/* {[...row.sender].splice(0, 3)} {"..."}
-                    {[...row.sender].splice([...row.sender].length - 5, 5)} */}
-                  </TableCell>
+
+                    {row.sender?.slice(0, 3)} {"..."}
+                    {row.sender?.slice(0, 3)}
+                  </TableCell> */}
                   <TableCell
                     align="right"
                     className={classes.tableText}

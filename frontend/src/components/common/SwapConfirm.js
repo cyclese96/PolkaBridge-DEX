@@ -21,8 +21,7 @@ import { swapTokens } from "../../actions/dexActions";
 import CircularProgress from "@material-ui/core/CircularProgress";
 // import BigNumber from "bignumber.js";
 import TransactionStatus from "./TransactionStatus";
-import { DECIMAL_6_ADDRESSES } from "../../constants";
-import BigNumber from "bignumber.js";
+
 import { default as NumberFormat } from 'react-number-format';
 
 
