@@ -24,11 +24,11 @@ contract UniswapV2Factory is IUniswapV2Factory {
         releaseTime = block.timestamp;
     }
 
-    function allPairsLength() external view override returns (uint256) {
-        // return pair length
-        // return allPairs.length;
-        return allPairs;
-    }
+    // function allPairsLength() external view override returns (uint256) {
+    //     // return pair length
+    //     // return allPairs.length;
+    //     return allPairs;
+    // }
 
     function createPair(address tokenA, address tokenB) external override returns (address pair) {
         require(tokenA != tokenB, 'PolkaBridge AMM: IDENTICAL_ADDRESSES');
