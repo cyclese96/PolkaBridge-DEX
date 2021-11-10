@@ -130,7 +130,7 @@ export default function (state = initalState, action) {
 
       let _updatedTokenList = [];
       if (_index < 0) {
-        _updatedTokenList = [...state.tokenList, _listData];
+        _updatedTokenList = [_listData, ...state.tokenList];
       } else {
         _updatedTokenList = [...state.tokenList];
         // _updatedTokenList[_index] = _listData;
