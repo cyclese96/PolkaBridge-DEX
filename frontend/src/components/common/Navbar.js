@@ -260,7 +260,7 @@ const Navbar = (props) => {
             id: "characters",
             icon: <PeopleAltOutlined />,
           },
-          { name: "Swap", link: "#", id: "items", icon: <SwapVertIcon /> },
+          { name: "Swap", link: "/", id: "items", icon: <SwapVertIcon /> },
           {
             name: "Lending",
             link: "#",
@@ -273,14 +273,19 @@ const Navbar = (props) => {
             id: "usecase",
             icon: <CategoryIcon />,
           },
-          {},
         ].map((tab, index) => (
-          <ListItem button key={tab.name} onClick={toggleDrawer(anchor, false)}>
-            <ListItemText
-              primary={tab.name}
-              className={classes.menuTitleMobile}
-            />
-          </ListItem>
+          <a href={tab.link}>
+            <ListItem
+              button
+              key={tab.name}
+              onClick={toggleDrawer(anchor, false)}
+            >
+              <ListItemText
+                primary={tab.name}
+                className={classes.menuTitleMobile}
+              />
+            </ListItem>
+          </a>
         ))}
         <ListItem button>
           <div className={classes.network}>
@@ -330,7 +335,10 @@ const Navbar = (props) => {
           <div className={classes.leftMargin} />
 
           <div>
-            <a href="/" className={classes.navbarItemsDesktop}>
+            <a
+              href="https://stake.polkabridge.org/"
+              className={classes.navbarItemsDesktop}
+            >
               Stake <DotCircle />
             </a>
           </div>
@@ -356,7 +364,7 @@ const Navbar = (props) => {
           </div>
           <div>
             <a
-              href="#"
+              href="/"
               className={classes.navbarItemsDesktop}
               style={{ color: "#DF097C" }}
             >
