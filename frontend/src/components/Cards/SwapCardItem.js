@@ -101,7 +101,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 15,
 
     [theme.breakpoints.down("sm")]: {
-      fontSize: 16,
+      fontSize: 14,
     },
   },
 }));
@@ -131,6 +131,11 @@ const SwapCardItem = (props) => {
   };
 
   const handleMax = () => {
+
+    if (!currentToken.symbol) {
+      return
+    }
+
     onInputChange(
       balance
         ? fromWei(balance[currentToken.symbol], currentToken.decimals)
