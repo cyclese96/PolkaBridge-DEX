@@ -183,15 +183,20 @@ const useStyles = makeStyles((theme) => ({
   },
   detailTitle: {
     fontSize: 14,
-
     color: "#bdbdbd",
     fontWeight: 500,
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 12,
+    },
   },
   detailValue: {
     fontSize: 18,
     fontWeight: 500,
     letterSpacing: 0.5,
     color: "#f7f7f7",
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 12,
+    },
   },
   copyIcon: {
     fontSize: 14,

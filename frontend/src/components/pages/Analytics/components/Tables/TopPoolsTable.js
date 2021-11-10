@@ -197,7 +197,7 @@ export default function TopPoolsTable({ data }) {
                   <TableCell
                     component="th"
                     scope="row"
-                    style={{ color: "#e5e5e5", fontSize: 13 }}
+                    style={{ color: "#e5e5e5", fontSize: 12 }}
                     sortDirection="asc"
                   >
                     <span>
@@ -228,26 +228,26 @@ export default function TopPoolsTable({ data }) {
 
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 13 }}
+                    style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
                     ${formattedNum(parseInt(row.reserveUSD))}
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 13 }}
+                    style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
                     ${formattedNum(parseFloat(row.oneDayVolumeUSD).toFixed(2))}
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 13 }}
+                    style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
                     ${formattedNum(parseInt(row.oneWeekVolumeUSD))}
                   </TableCell>
                   <TableCell
                     align="right"
                     className={classes.tableText}
-                    style={{ color: "#e5e5e5", fontSize: 13 }}
+                    style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
                     ${" "}
                     {formattedNum(
