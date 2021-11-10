@@ -10,7 +10,7 @@ export const tokenAddresses = {
     },
     USDT: {
       testnet: '0xe687b0a94c3a20540552d981cd311a6812759df8',
-      mainnet: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
+      mainnet: '0xdac17f958d2ee523a2206206994597c13d831ec7'
     },
     USDC: {
       testnet: '0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b',
@@ -190,12 +190,12 @@ export const tokens = [
     address: getTokenAddress(USDT),
     decimals: 6
   },
-  {
-    name: "US Tether12",
-    symbol: "USDT12",
-    address: '0xb6083cf9c33ccde1711ecb63cff1b0dd2cf06c09',
-    decimals: 12
-  },
+  // {
+  //   name: "US Tether12",
+  //   symbol: "USDT12",
+  //   address: '0xb6083cf9c33ccde1711ecb63cff1b0dd2cf06c09',
+  //   decimals: 12
+  // },
   // {
   //   name: "US Tether8",
   //   symbol: "USDT8",
