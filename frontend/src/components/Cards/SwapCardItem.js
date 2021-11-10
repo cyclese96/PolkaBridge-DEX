@@ -131,6 +131,11 @@ const SwapCardItem = (props) => {
   };
 
   const handleMax = () => {
+
+    if (!currentToken.symbol) {
+      return
+    }
+
     onInputChange(
       balance
         ? fromWei(balance[currentToken.symbol], currentToken.decimals)

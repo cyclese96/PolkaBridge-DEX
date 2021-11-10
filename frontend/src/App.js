@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useEffect } from "react";
+import React, { lazy, useEffect } from "react";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "./theme";
 import Home from "./components/Home";
@@ -13,9 +13,9 @@ import { isAddress } from "./utils/helper";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
-import PoolDetail from "./components/pages/Analytics/components/DetailsPage/PoolDetail";
 import SwapCard from "./components/Cards/SwapCard";
 import AddLiquidity from "./components/pages/AddLiquidity";
+import PoolDetail from "./components/pages/Analytics/components/DetailsPage/PoolDetail";
 import Analytics from "./components/pages/Analytics/Analytics";
 
 const useStyles = makeStyles((theme) => ({

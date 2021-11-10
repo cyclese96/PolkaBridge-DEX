@@ -333,10 +333,10 @@ const RemoveCard = ({
   };
 
   const handleConfirmAllowance = async () => {
-    const allowanceAmount = allowanceAmount;
+    const _allowanceAmount = allowanceAmount;
     const pairAddress = currentPairAddress();
     await confirmLPAllowance(
-      allowanceAmount,
+      _allowanceAmount,
       selectedToken1,
       selectedToken2,
       pairAddress,
@@ -445,7 +445,7 @@ const RemoveCard = ({
   const handleClearState = () => {
     handleInputChange("");
   };
-  const WEI_UNITS_6 = 1000000;
+
   const handleRemoveLiquidity = async () => {
 
     const lpAmount = getPercentAmountWithFloor(
