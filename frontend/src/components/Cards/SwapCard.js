@@ -434,9 +434,15 @@ const SwapCard = (props) => {
     [] // will be created only once initially
   );
 
+  const token1OutCalling = 'token1OutCalling';
+  const token0InCalling = 'token0InCalling';
+  let input0Typed = false;
+  let input1Typed = false;
   // token 1 input change
   const onToken1InputChange = async (tokens) => {
     setToken1Value(tokens);
+
+    localStorage.priceTracker = token1OutCalling;
 
     if (selectedToken1.symbol === ETH) {
       setCurrentSwapFn(swapFnConstants.swapExactETHForTokens);
@@ -469,6 +475,8 @@ const SwapCard = (props) => {
   const onToken2InputChange = async (tokens) => {
     setToken2Value(tokens);
 
+    localStorage.priceTracker = token0InCalling;
+
     if (selectedToken1.symbol === ETH) {
       setCurrentSwapFn(swapFnConstants.swapETHforExactTokens);
     } else if (selectedToken2.symbol && selectedToken2.symbol === ETH) {
@@ -499,6 +507,10 @@ const SwapCard = (props) => {
   useEffect(() => {
     if (!token1Out) {
       return;
+    }
+
+    if (localStorage.getItem('priceTracker') !== token1OutCalling) {
+      return
     }
 
     const _tokenAmount = token1Out.tokenAmount;
@@ -535,6 +547,22 @@ const SwapCard = (props) => {
     // update current price ratio based on trade amounts
     const _ratio = getPriceRatio(_tokenAmount, token1Value);
     setPriceRatio(_ratio);
+
+    // price update tracker on every 1 sec interval
+    setTimeout(async () => {
+      if (localStorage.getItem('priceTracker') === token1OutCalling && selectedToken1.symbol && selectedToken2.symbol && new BigNumber(token1Value).gt(0)) {
+        const token1OutParams = [{ ...selectedToken1, amount: toWei(token1Value, selectedToken1.decimals) },
+          selectedToken2,
+          currentAccount,
+          currentNetwork]
+        console.log('calling token', token1OutParams)
+
+        await debouncedToken1OutCall(...token1OutParams)
+      }
+
+    }, 1000)
+
+
   }, [token1Out]);
 
   useEffect(() => {
@@ -543,6 +571,10 @@ const SwapCard = (props) => {
     }
 
     console.log("handling token0IN");
+
+    if (localStorage.getItem('priceTracker') !== token0InCalling) {
+      return
+    }
 
     const _tokenAmount = token0In.tokenAmount;
     setSwapPath(token0In.selectedPath);
@@ -578,6 +610,24 @@ const SwapCard = (props) => {
     // update current price ratio based on trade amounts
     const _ratio = getPriceRatio(token2Value, _tokenAmount);
     setPriceRatio(_ratio);
+
+    // price update tracker on every 1 sec interval
+    setTimeout(async () => {
+      if (localStorage.getItem('priceTracker') === token0InCalling && selectedToken1.symbol && selectedToken2.symbol && new BigNumber(token2Value).gt(0)) {
+        const token0InParams = [
+          selectedToken1,
+          { ...selectedToken2, amount: toWei(token2Value, selectedToken2.decimals) },
+          currentAccount,
+          currentNetwork
+        ]
+        console.log('calling token', token0InParams)
+
+        await debouncedToken0InCall(...token0InParams)
+      }
+
+    }, 1000)
+
+
   }, [token0In]);
 
   const onToken1Select = async (token) => {
