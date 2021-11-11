@@ -14,6 +14,8 @@ import { Link } from "react-router-dom";
 import { ArrowDown } from "react-feather";
 import { ArrowDownward } from "@material-ui/icons";
 import { formattedNum } from "../../../../../utils/timeUtils";
+import { useEthPrice } from "../../../../../contexts/GlobalData";
+import BigNumber from "bignumber.js";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -67,6 +69,7 @@ export default function TopPoolsTable({ data }) {
   const [sortedFees, setSortedFees] = useState(false);
   const [sortedVolume7d, setSortedVolume7d] = useState(false);
   const [skipIndex, setSkipIndex] = useState(0);
+  const [ethPrice, oldEthPrice] = useEthPrice();
 
   let styles = {
     tableHeading: {
@@ -230,13 +233,13 @@ export default function TopPoolsTable({ data }) {
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
-                    ${formattedNum(parseInt(row.reserveUSD))}
+                    ${formattedNum(parseInt(new BigNumber(row.reserveETH).multipliedBy(ethPrice).toString()))}
                   </TableCell>
                   <TableCell
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 12 }}
                   >
-                    ${formattedNum(parseFloat(row.oneDayVolumeUSD).toFixed(2))}
+                    ${formattedNum(parseFloat(row.oneDayVolumeUntracked).toFixed(2))}
                   </TableCell>
                   <TableCell
                     align="right"
