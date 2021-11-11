@@ -107,7 +107,7 @@ const Analytics = () => {
                   <p className={classes.cardP}>
                     {"$" +
                       formatCurrency(
-                        !globalData ? "0" : globalData.oneDayVolumeUSD
+                        !globalData ? "0" : isNaN(globalData.oneDayVolumeUSD) ? globalData.totalVolumeUSD : globalData.oneDayVolumeUSD
                       )}
                   </p>
                   <p
@@ -143,7 +143,7 @@ const Analytics = () => {
               <span className={classes.statLabel}>Volume 24H:</span>
               <div className="d-flex align-items-center justify-content-end">
                 <span className={classes.statAmount}>
-                  ${formatCurrency(globalData.oneDayVolumeUSD)}
+                  ${formatCurrency(isNaN(globalData.oneDayVolumeUSD) ? globalData.totalVolumeUSD : globalData.oneDayVolumeUSD)}
                 </span>
 
                 <PercentLabel
@@ -159,7 +159,7 @@ const Analytics = () => {
               </div>
               <div className="d-flex align-items-center justify-content-end">
                 <div className={classes.statAmount}>
-                  ${formatCurrency(globalData.oneDayVolumeUSD * 0.02)}
+                  ${formatCurrency((isNaN(globalData.oneDayVolumeUSD) ? globalData.totalVolumeUSD : globalData.oneDayVolumeUSD) * 0.02)}
                 </div>
 
                 <div>
