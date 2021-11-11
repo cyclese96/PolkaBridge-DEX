@@ -6,7 +6,7 @@ module.exports = function (deployer) {
   //let owner = "0xfEEF5F353aE5022d0cfcD072165cDA284B65772B";
   let maintreasury = "0x82c5c4fcd9189ee0160343203d52f97d0b7cabb6";
 
-  //let maintreasury = "0xC5516e155aa03F002A00c6bbA9467Cdbc4272581";
+  //let maintreasury = "0xAa9b97cf7E4c52D028b854F2610aac18F60c86F5";
   deployer.deploy(UniswapV2Factory, owner, maintreasury);
   deployer.deploy(UniswapV2Pair);//, owner, treasury);
 
