@@ -45,7 +45,7 @@ export const tokenAddresses = {
 
 export const routerAddresses = {
   ethereum: {
-    testnet: '0x83F02Cd54160a6AcDc58b8Df89AA305888C0259A',
+    testnet: '0x76ED9803Ba3085a7bB0e6a666C924e376f5B9E29',
     mainnet: '0x8A2795aE669476Bf119A1a40FbFD75cA71Fd35c4'
   },
   bsc: {
@@ -64,7 +64,7 @@ export const routerAddresses = {
 
 export const factoryAddresses = {
   ethereum: {
-    testnet: '0xFbB84E87075153Fecc706475dFC880C64300Ce0D',
+    testnet: '0xA5d426Fa8C76ecD6F937f84442d1C0B26fb11286',
     mainnet: '0xeff9EcEFe14279C0157f88573Ca9361D253c10bE'
   },
   bsc: {
@@ -111,7 +111,7 @@ export const infuraMainnetApi = `https://mainnet.infura.io/v3/${process.env.REAC
  *    'testnet'  BSC testnet testing
  *    'mainnet'  BSC/ETH mainent deployment
  */
-const testing = false;
+const testing = true;
 
 export const currentConnection = testing ? "testnet" : "mainnet";
 // export const currentConnection = "mainnet";
