@@ -183,7 +183,7 @@ export default function Provider({ children }) {
 
   const updatePriceData = useCallback((address, data, timeWindow, interval) => {
 
-    console.log('useAllTokenData  updating price data ', { address, data, timeWindow, interval })
+    // console.log('analyticsTest  updating price data ', { address, data, timeWindow, interval })
     dispatch({
       type: UPDATE_PRICE_DATA,
       payload: { address, data, timeWindow, interval },
@@ -223,6 +223,7 @@ export default function Provider({ children }) {
 }
 
 const getTopTokens = async (ethPrice, ethPriceOld) => {
+  // console.log('analyticsTest getting top tokens', ethPrice)
   const utcCurrentTime = dayjs()
   const utcOneDayBack = utcCurrentTime.subtract(1, 'day').unix()
   const utcTwoDaysBack = utcCurrentTime.subtract(2, 'day').unix()
@@ -239,7 +240,7 @@ const getTopTokens = async (ethPrice, ethPriceOld) => {
       variables: { date: currentDate },
     })
 
-    console.log('analyticsTest fetched top tokens', tokenids)
+    // console.log('analyticsTest fetched top tokens', tokenids)
     const ids = tokenids?.data?.tokenDayDatas?.reduce((accum, entry) => {
       accum.push(entry.id.slice(0, 42))
       return accum
@@ -357,7 +358,8 @@ const getTopTokens = async (ethPrice, ethPriceOld) => {
 
     // calculate percentage changes and daily changes
   } catch (e) {
-    console.log(e)
+
+    console.log('analyticsTest', e)
   }
 }
 
@@ -668,16 +670,19 @@ const getTokenChartData = async (tokenAddress) => {
 }
 
 export function Updater() {
-  const [, { updateTopTokens }] = useTokenDataContext()
+  const [state, { updateTopTokens }] = useTokenDataContext()
   const [ethPrice, ethPriceOld] = useEthPrice()
+  // console.log('analyticsTest, updater calling..')
+
   useEffect(() => {
     async function getData() {
       // get top pairs for overview list
       let topTokens = await getTopTokens(ethPrice, ethPriceOld)
-      console.log('fetched top tokens', topTokens)
+      // console.log('analyticsTest, fetched top tokens', topTokens)
       topTokens && updateTopTokens(topTokens)
     }
-    ethPrice && ethPriceOld && getData()
+    // ethPrice && ethPriceOld && getData()
+    ethPrice && getData()
   }, [ethPrice, ethPriceOld, updateTopTokens])
   return null
 }
@@ -879,7 +884,7 @@ export function useTokenPriceData(tokenAddress, timeWindow, interval = 3600) {
 export function useAllTokenData() {
   const [state] = useTokenDataContext()
 
-  console.log('analyticsTest: tokenData state ', state)
+  // console.log('analyticsTest: tokenData state ', state)
   // filter out for only addresses
   return Object.keys(state)
     .filter((key) => key !== 'combinedVol')
