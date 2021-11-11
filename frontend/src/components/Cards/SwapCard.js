@@ -776,6 +776,7 @@ const SwapCard = (props) => {
 
     // loadPairReserves();
     if (transaction.type === "swap" && transaction.status === "success") {
+      localStorage.priceTracker = 'None'
       getAccountBalance(selectedToken1, currentNetwork);
       getAccountBalance(selectedToken2, currentNetwork);
     }

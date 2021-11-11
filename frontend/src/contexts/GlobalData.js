@@ -597,7 +597,7 @@ export function useGlobalData() {
 
   useEffect(() => {
     async function fetchData() {
-      // console.log("analyticsTest: fetching global data...", { ethPrice, oldEthPrice });
+      console.log("analyticsTest: fetching global data...", { ethPrice, oldEthPrice });
       let globalData = await getGlobalData(ethPrice, oldEthPrice);
 
       // console.log('analyticsTest: fetched global data ', globalData)
@@ -609,7 +609,10 @@ export function useGlobalData() {
       let allTokens = await getAllTokensOnUniswap();
       updateAllTokensInUniswap(allTokens);
     }
-    if (!data && ethPrice && oldEthPrice) {
+    // if (!data && ethPrice && oldEthPrice) {
+    //   fetchData();
+    // }
+    if (!data && ethPrice) {
       fetchData();
     }
   }, [
@@ -701,6 +704,7 @@ export function useEthPrice() {
   const ethPriceOld = state?.["oneDayPrice"];
   useEffect(() => {
     async function checkForEthPrice() {
+      console.log('allPairs', ethPrice)
       if (!ethPrice) {
         let [newPrice, oneDayPrice, priceChange] = await getEthPrice();
         updateEthPrice(newPrice, oneDayPrice, priceChange);

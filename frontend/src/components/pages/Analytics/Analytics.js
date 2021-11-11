@@ -31,28 +31,28 @@ const Analytics = () => {
   const chartData = useGlobalChartData();
 
   useEffect(() => {
-    console.log("transactions  ", transactions);
-  }, [transactions]);
+    console.log("analyticsTest  ", { chartData, globalData });
+  }, [chartData, globalData]);
 
-  const isValidGlobalChart = (_chartData, _globalData) => {
-    let areaChartPrepared = false;
-    let barChartPrepared = false;
-    let globalDataLoaded = false;
+  // const isValidGlobalChart = (_chartData, _globalData) => {
+  //   let areaChartPrepared = false;
+  //   let barChartPrepared = false;
+  //   let globalDataLoaded = false;
 
-    if (_chartData && chartData[0].length === 7) {
-      areaChartPrepared = true;
-    }
+  //   if (_chartData && chartData[0].length === 7) {
+  //     areaChartPrepared = true;
+  //   }
 
-    if (_chartData && chartData[0].length === 7) {
-      barChartPrepared = true;
-    }
+  //   if (_chartData && chartData[0].length === 7) {
+  //     barChartPrepared = true;
+  //   }
 
-    if (globalData) {
-      globalDataLoaded = true;
-    }
+  //   if (globalData) {
+  //     globalDataLoaded = true;
+  //   }
 
-    return { areaChartPrepared, barChartPrepared, globalDataLoaded };
-  };
+  //   return { areaChartPrepared, barChartPrepared, globalDataLoaded };
+  // };
 
   return (
     <div>
@@ -143,7 +143,7 @@ const Analytics = () => {
               <span className={classes.statLabel}>Volume 24H:</span>
               <div className="d-flex align-items-center justify-content-end">
                 <span className={classes.statAmount}>
-                  ${formatCurrency(new BigNumber(globalData.oneDayVolumeUSD))}
+                  ${formatCurrency(globalData.oneDayVolumeUSD)}
                 </span>
 
                 <PercentLabel
