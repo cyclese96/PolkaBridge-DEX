@@ -52,6 +52,17 @@ import {
   VERIFY_SLIPPAGE,
 } from "./types";
 
+const getCurrentGasLimit = (path) => {
+  if (path.length < 3) {
+    return 200000
+  } else if (path.length === 3) {
+    return 250000
+  } else if (path.length === 4) {
+    return 300000
+  } else {
+    return 200000
+  }
+}
 
 // swap transaction function
 export const swapTokens =
@@ -86,7 +97,7 @@ export const swapTokens =
             path,
             toAddress,
             _deadlineUnix
-          ).send({ from: account, value: token0In }, function (error, transactionHash) {
+          ).send({ from: account, value: token0In, gas: getCurrentGasLimit(path) }, function (error, transactionHash) {
 
             // console.log('swapTokens: UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
@@ -111,7 +122,7 @@ export const swapTokens =
             path,
             toAddress,
             _deadlineUnix
-          ).send({ from: account, value: token0In }, function (error, transactionHash) {
+          ).send({ from: account, value: token0In, gas: getCurrentGasLimit(path) }, function (error, transactionHash) {
 
             // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
@@ -138,7 +149,7 @@ export const swapTokens =
             path,
             toAddress,
             _deadlineUnix
-          ).send({ from: account }, function (error, transactionHash) {
+          ).send({ from: account, gas: getCurrentGasLimit(path) }, function (error, transactionHash) {
 
             // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
@@ -165,7 +176,7 @@ export const swapTokens =
             path,
             toAddress,
             _deadlineUnix
-          ).send({ from: account }, function (error, transactionHash) {
+          ).send({ from: account, gas: getCurrentGasLimit(path) }, function (error, transactionHash) {
 
             // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
@@ -192,7 +203,7 @@ export const swapTokens =
             path,
             toAddress,
             _deadlineUnix
-          ).send({ from: account }, function (error, transactionHash) {
+          ).send({ from: account, gas: getCurrentGasLimit(path) }, function (error, transactionHash) {
 
             // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
@@ -219,7 +230,7 @@ export const swapTokens =
             path,
             toAddress,
             _deadlineUnix
-          ).send({ from: account }, function (error, transactionHash) {
+          ).send({ from: account, gas: getCurrentGasLimit(path) }, function (error, transactionHash) {
 
             // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
@@ -326,16 +337,16 @@ export const addLiquidity =
 
       // deadline should be passed in minites in calculation
       const _deadlineUnix = getUnixTime(deadline);
-      console.log({
-        address0: token0.address,
-        address1: token1.address,
-        token0AmountDesired,
-        token1AmountDesired,
-        token0AmountMin,
-        token1AmountMin,
-        account,
-        _deadlineUnix,
-      });
+      // console.log({
+      //   address0: token0.address,
+      //   address1: token1.address,
+      //   token0AmountDesired,
+      //   token1AmountDesired,
+      //   token0AmountMin,
+      //   token1AmountMin,
+      //   account,
+      //   _deadlineUnix,
+      // });
       dispatch({ type: START_TRANSACTION })
       const liquidity = await _routerContract.methods
         .addLiquidity(
@@ -348,7 +359,7 @@ export const addLiquidity =
           account,
           _deadlineUnix
         )
-        .send({ from: account }, function (error, transactionHash) {
+        .send({ from: account, gas: 250000 }, function (error, transactionHash) {
 
           // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
           if (error) {
@@ -436,7 +447,7 @@ export const addLiquidityEth =
           account,
           _deadlineUnix
         )
-        .send({ from: account, value: toWei(etherAmount) }, function (error, transactionHash) {
+        .send({ from: account, value: toWei(etherAmount), gas: 250000 }, function (error, transactionHash) {
 
           // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
           if (error) {
@@ -524,7 +535,7 @@ export const removeLiquidity =
             account,
             _deadlineUnix
           )
-          .send({ from: account }, function (error, transactionHash) {
+          .send({ from: account, gas: 250000 }, function (error, transactionHash) {
 
             // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
@@ -605,7 +616,7 @@ export const removeLiquidityEth =
             account,
             _deadlineUnix
           )
-          .send({ from: account }, function (error, transactionHash) {
+          .send({ from: account, gas: 250000 }, function (error, transactionHash) {
 
             // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
