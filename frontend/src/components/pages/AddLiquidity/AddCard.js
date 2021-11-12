@@ -431,6 +431,7 @@ const AddCard = (props) => {
           getAccountBalance(selectedToken2, currentNetwork),
           loadPairReserves(),
           checkAllowance(selectedToken1, currentAccount, currentNetwork),
+          checkAllowance(selectedToken2, currentAccount, currentNetwork),
         ]);
 
         setLocalStateLoading(false);
