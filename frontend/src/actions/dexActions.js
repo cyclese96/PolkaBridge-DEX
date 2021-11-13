@@ -97,7 +97,7 @@ export const swapTokens =
             path,
             toAddress,
             _deadlineUnix
-          ).send({ from: account, value: token0In, gas: getCurrentGasLimit(path) }, function (error, transactionHash) {
+          ).send({ from: account, value: token0In }, function (error, transactionHash) {
 
             // console.log('swapTokens: UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
@@ -122,7 +122,7 @@ export const swapTokens =
             path,
             toAddress,
             _deadlineUnix
-          ).send({ from: account, value: token0In, gas: getCurrentGasLimit(path) }, function (error, transactionHash) {
+          ).send({ from: account, value: token0In }, function (error, transactionHash) {
 
             // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
@@ -149,7 +149,7 @@ export const swapTokens =
             path,
             toAddress,
             _deadlineUnix
-          ).send({ from: account, gas: getCurrentGasLimit(path) }, function (error, transactionHash) {
+          ).send({ from: account }, function (error, transactionHash) {
 
             // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
@@ -176,7 +176,7 @@ export const swapTokens =
             path,
             toAddress,
             _deadlineUnix
-          ).send({ from: account, gas: getCurrentGasLimit(path) }, function (error, transactionHash) {
+          ).send({ from: account }, function (error, transactionHash) {
 
             // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
@@ -203,7 +203,7 @@ export const swapTokens =
             path,
             toAddress,
             _deadlineUnix
-          ).send({ from: account, gas: getCurrentGasLimit(path) }, function (error, transactionHash) {
+          ).send({ from: account }, function (error, transactionHash) {
 
             // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
@@ -230,7 +230,7 @@ export const swapTokens =
             path,
             toAddress,
             _deadlineUnix
-          ).send({ from: account, gas: getCurrentGasLimit(path) }, function (error, transactionHash) {
+          ).send({ from: account }, function (error, transactionHash) {
 
             // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
@@ -359,7 +359,7 @@ export const addLiquidity =
           account,
           _deadlineUnix
         )
-        .send({ from: account, gas: 250000 }, function (error, transactionHash) {
+        .send({ from: account }, function (error, transactionHash) {
 
           // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
           if (error) {
@@ -447,7 +447,7 @@ export const addLiquidityEth =
           account,
           _deadlineUnix
         )
-        .send({ from: account, value: toWei(etherAmount), gas: 250000 }, function (error, transactionHash) {
+        .send({ from: account, value: toWei(etherAmount) }, function (error, transactionHash) {
 
           // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
           if (error) {
@@ -535,7 +535,7 @@ export const removeLiquidity =
             account,
             _deadlineUnix
           )
-          .send({ from: account, gas: 250000 }, function (error, transactionHash) {
+          .send({ from: account }, function (error, transactionHash) {
 
             // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
@@ -616,7 +616,7 @@ export const removeLiquidityEth =
             account,
             _deadlineUnix
           )
-          .send({ from: account, gas: 250000 }, function (error, transactionHash) {
+          .send({ from: account }, function (error, transactionHash) {
 
             // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
