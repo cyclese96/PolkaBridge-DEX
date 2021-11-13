@@ -8,7 +8,6 @@ import {
 import { formattedNum, formattedPercent } from "../../../../../utils/timeUtils";
 import {
   useEthPrice,
-  useGlobalTransactions,
 } from "../../../../../contexts/GlobalData";
 import { Button, Card } from "@material-ui/core";
 import TokenIcon from "../../../../common/TokenIcon";
@@ -259,12 +258,15 @@ function PoolDetail({ pairAddress }) {
 
   const usingUtVolume = oneDayVolumeUSD === 0 && !!oneDayVolumeUntracked;
 
+  const volume = formattedNum(
+    !!oneDayVolumeUSD ? oneDayVolumeUSD : usingUtVolume
+  );
   // Total gas fees collected
   const fees =
     oneDayVolumeUSD || oneDayVolumeUSD === 0
       ? usingUtVolume
-        ? formattedNum(oneDayVolumeUntracked * 0.002, true)
-        : formattedNum(oneDayVolumeUSD * 0.003, true)
+        ? formattedNum(oneDayVolumeUntracked * 0.002)
+        : formattedNum(oneDayVolumeUSD * 0.003)
       : "-";
 
   const isLoaded = () => {
@@ -359,7 +361,7 @@ function PoolDetail({ pairAddress }) {
                   <h6 className={classes.cardTitle}>Total Liquidity</h6>
                   <div className="d-flex justify-content-between">
                     <h6 className={classes.cardValue}>
-                      {parseFloat(poolInfo.trackedReserveUSD).toFixed(2)}
+                      ${formattedNum(poolInfo.trackedReserveUSD)}
                     </h6>
                     <p className={classes.cardChangeIndicator}>
                       {liquidityChangeUSD < 0 ? (
@@ -379,7 +381,7 @@ function PoolDetail({ pairAddress }) {
                   <h6 className={classes.cardTitle}>Volume (24Hrs)</h6>
                   <div className="d-flex justify-content-between">
                     <h6 className={classes.cardValue}>
-                      {parseFloat(oneDayVolumeUSD).toFixed(2)}
+                      ${volume}
                     </h6>
                     <p className={classes.cardChangeIndicator}>
                       {volumeChangeUSD < 0 ? (
@@ -396,7 +398,7 @@ function PoolDetail({ pairAddress }) {
                 <Card elevation={10} className={classes.liquidityCard}>
                   <h6 className={classes.cardTitle}>Fees (24hrs)</h6>
                   <div className="d-flex justify-content-between">
-                    <h6 className={classes.cardValue}>{fees}</h6>
+                    <h6 className={classes.cardValue}>${fees}</h6>
                     <p className={classes.cardChangeIndicator}>
                       {volumeChangeUSD < 0 ? (
                         <span style={{ color: "red" }}>

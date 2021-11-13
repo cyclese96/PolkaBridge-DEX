@@ -206,13 +206,12 @@ function TokenPage({ address }) {
 
   // volume
   const volume = formattedNum(
-    !!oneDayVolumeUSD ? oneDayVolumeUSD : oneDayVolumeUT,
-    true
+    !!oneDayVolumeUSD ? oneDayVolumeUSD : oneDayVolumeUT
   );
 
   const usingUtVolume = oneDayVolumeUSD === 0 && !!oneDayVolumeUT;
 
-  const fee = formattedNum(oneDayVolumeUSD * 0.025, true);
+  const fee = formattedNum(oneDayVolumeUSD * 0.025);
 
   const allPairs = useAllPairData();
 
@@ -323,7 +322,7 @@ function TokenPage({ address }) {
                   <h6 className={classes.cardTitle}>Total Liquidity</h6>
                   <div className="d-flex justify-content-between">
                     <h6 className={classes.cardValue}>
-                      {formatCurrency(totalLiquidityUSD)}
+                      ${formattedNum(totalLiquidityUSD)}
                     </h6>
                     <p className={classes.cardChangeIndicator}>
                       {parseFloat(liquidityChangeUSD).toFixed(2)}%
@@ -333,7 +332,7 @@ function TokenPage({ address }) {
                 <Card elevation={10} className={classes.liquidityCard}>
                   <h6 className={classes.cardTitle}>Volume (24Hrs)</h6>
                   <div className="d-flex justify-content-between">
-                    <h6 className={classes.cardValue}>{volume}</h6>
+                    <h6 className={classes.cardValue}>${volume}</h6>
                     <p className={classes.cardChangeIndicator}>
                       {parseFloat(volumeChangeUSD).toFixed(2)}%
                     </p>
@@ -342,7 +341,7 @@ function TokenPage({ address }) {
                 <Card elevation={10} className={classes.liquidityCard}>
                   <h6 className={classes.cardTitle}>Fees (24hrs)</h6>
                   <div className="d-flex justify-content-between">
-                    <h6 className={classes.cardValue}>{fee}</h6>
+                    <h6 className={classes.cardValue}>${fee}</h6>
                     <p className={classes.cardChangeIndicator}>
                       {parseFloat(volumeChangeUSD).toFixed(2)}%
                     </p>
