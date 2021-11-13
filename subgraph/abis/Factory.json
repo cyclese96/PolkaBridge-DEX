@@ -3,7 +3,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_feeToSetter",
+        "name": "_owner",
         "type": "address"
       },
       {
@@ -52,24 +52,11 @@
       {
         "indexed": false,
         "internalType": "address",
-        "name": "_feeTo",
+        "name": "_address",
         "type": "address"
       }
     ],
-    "name": "SetFeeTo",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "_feeToSetter",
-        "type": "address"
-      }
-    ],
-    "name": "SetFeeToSetter",
+    "name": "TreasurySet",
     "type": "event"
   },
   {
@@ -88,19 +75,6 @@
   {
     "inputs": [],
     "name": "allPairs",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "allPairsLength",
     "outputs": [
       {
         "internalType": "uint256",
@@ -136,32 +110,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "feeTo",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "feeToSetter",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -186,27 +134,27 @@
     "type": "function"
   },
   {
-    "inputs": [
+    "inputs": [],
+    "name": "name",
+    "outputs": [
       {
-        "internalType": "address",
-        "name": "_feeTo",
-        "type": "address"
+        "internalType": "string",
+        "name": "",
+        "type": "string"
       }
     ],
-    "name": "setFeeTo",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
       {
         "internalType": "address",
-        "name": "_feeToSetter",
+        "name": "_treasury",
         "type": "address"
       }
     ],
-    "name": "setFeeToSetter",
+    "name": "setTreasuryAddress",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
