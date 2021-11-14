@@ -12,8 +12,8 @@ import {
 import { Button, Card } from "@material-ui/core";
 import TokenIcon from "../../../../common/TokenIcon";
 // import { formatCurrency } from "../../../utils/helper";
-import TokenChart from "../../components/Charts/TokenChart";
-import { formatCurrency } from "../../../../../utils/formatters";
+// import TokenChart from "../../components/Charts/TokenChart";
+// import { formatCurrency } from "../../../../../utils/formatters";
 import { currentConnection } from "../../../../../constants";
 import { FileCopy, FileCopyOutlined, OpenInNew } from "@material-ui/icons";
 import PairTransactionsTable from "../Tables/PairTransactionsTable";
