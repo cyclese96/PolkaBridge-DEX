@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TopPoolsTable({ data }) {
+export default function TopPoolsTable({ data, numberOfRows = 5 }) {
   const classes = useStyles();
   const [rows, setRows] = useState([]);
   const [sortedFees, setSortedFees] = useState(false);
@@ -192,7 +192,7 @@ export default function TopPoolsTable({ data }) {
               </TableRow>
             )}
             {data &&
-              rows.slice(skipIndex * 5, skipIndex * 5 + 5).map((row, index) => (
+              rows.slice(skipIndex * numberOfRows, skipIndex * numberOfRows + numberOfRows).map((row, index) => (
                 <TableRow
                   key={row.name}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -204,7 +204,7 @@ export default function TopPoolsTable({ data }) {
                     sortDirection="asc"
                   >
                     <span>
-                      {skipIndex * 5 + index + 1}
+                      {skipIndex * numberOfRows + index + 1}
                       <span className={classes.tokenImageWrapper}>
                         {" "}
                         <TokenIcon
@@ -271,7 +271,7 @@ export default function TopPoolsTable({ data }) {
           </Button>
           <Button
             className={classes.paginationButton}
-            disabled={skipIndex === parseInt(rows.length / 5)}
+            disabled={skipIndex === parseInt(rows.length / numberOfRows)}
             onClick={() => setSkipIndex(skipIndex + 1)}
           >
             Next{" >>"}

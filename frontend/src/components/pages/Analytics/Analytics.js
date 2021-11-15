@@ -19,10 +19,10 @@ import BigNumber from "bignumber.js";
 import TopTokensTable from "./components/Tables/TopTokensTable";
 import TopPoolsTable from "./components/Tables/TopPoolsTable";
 import Transactions from "./components/Tables/TransactionsTable";
+import { Link } from "react-router-dom";
 
 const Analytics = () => {
   const classes = useStyles();
-
   const allPairs = useAllPairData();
   const allTokens = useAllTokenData();
   const transactions = useGlobalTransactions();
@@ -60,7 +60,6 @@ const Analytics = () => {
         <TabPage data={2} />
       </div>
       <h3 className={classes.heading}>PolkaBridge DEX Overview</h3>
-
       <div className="mt-2 row g-3" style={{ padding: 10 }}>
         <div className="col-md-6">
           <Card elevation={10} className={classes.card}>
@@ -107,7 +106,11 @@ const Analytics = () => {
                   <p className={classes.cardP}>
                     {"$" +
                       formatCurrency(
-                        !globalData ? "0" : isNaN(globalData.oneDayVolumeUSD) ? globalData.totalVolumeUSD : globalData.oneDayVolumeUSD
+                        !globalData
+                          ? "0"
+                          : isNaN(globalData.oneDayVolumeUSD)
+                            ? globalData.totalVolumeUSD
+                            : globalData.oneDayVolumeUSD
                       )}
                   </p>
                   <p
@@ -143,7 +146,12 @@ const Analytics = () => {
               <span className={classes.statLabel}>Volume 24H:</span>
               <div className="d-flex align-items-center justify-content-end">
                 <span className={classes.statAmount}>
-                  ${formatCurrency(isNaN(globalData.oneDayVolumeUSD) ? globalData.totalVolumeUSD : globalData.oneDayVolumeUSD)}
+                  $
+                  {formatCurrency(
+                    isNaN(globalData.oneDayVolumeUSD)
+                      ? globalData.totalVolumeUSD
+                      : globalData.oneDayVolumeUSD
+                  )}
                 </span>
 
                 <PercentLabel
@@ -159,7 +167,12 @@ const Analytics = () => {
               </div>
               <div className="d-flex align-items-center justify-content-end">
                 <div className={classes.statAmount}>
-                  ${formatCurrency((isNaN(globalData.oneDayVolumeUSD) ? globalData.totalVolumeUSD : globalData.oneDayVolumeUSD) * 0.02)}
+                  $
+                  {formatCurrency(
+                    (isNaN(globalData.oneDayVolumeUSD)
+                      ? globalData.totalVolumeUSD
+                      : globalData.oneDayVolumeUSD) * 0.02
+                  )}
                 </div>
 
                 <div>
@@ -189,14 +202,52 @@ const Analytics = () => {
       </div>
 
       <div className="p-2">
-        <div className={classes.tokenListHeading}>Top Tokens</div>
+        <div className="d-flex justify-content-between">
+          <div className={classes.tokenListHeading}>Top Tokens</div>
+          <div
+            className="d-flex-end"
+            style={{
+              fontSize: 13,
+              color: "#bdbdbd",
+              marginTop: 35,
+              marginBottom: 10,
+              paddingLeft: 2,
+              fontWeight: 500,
+              letterSpacing: 0.7,
+              cursor: 'pointer',
+              minWidth: 100,
+              textAlign: 'right'
+            }}
+          >
+            <Link to="charts/tokens">View All</Link>
+          </div>
+        </div>
         <div className="d-flex justify-content-center ">
           <TopTokensTable data={allTokens} />
         </div>
       </div>
 
       <div className="p-2">
-        <div className={classes.tokenListHeading}>Top Pools</div>
+        <div className="d-flex justify-content-between">
+          <div className={classes.tokenListHeading}>Top Pool</div>
+          <div
+            className="d-flex-end"
+            style={{
+              fontSize: 13,
+              color: "#bdbdbd",
+              marginTop: 35,
+              marginBottom: 10,
+              paddingLeft: 2,
+              fontWeight: 500,
+              letterSpacing: 0.7,
+              cursor: 'pointer',
+              minWidth: 100,
+              textAlign: 'right'
+            }}
+          >
+            <Link to="charts/pools">View All</Link>
+          </div>
+        </div>
         <div className="d-flex justify-content-center">
           <TopPoolsTable data={allPairs} />
         </div>

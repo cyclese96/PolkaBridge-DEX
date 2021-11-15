@@ -173,6 +173,20 @@ const useStyles = makeStyles((theme) => ({
       width: "100%",
     },
   },
+  viewAll:{
+      color: "#bdbdbd",
+      marginTop: 35,
+      marginBottom: 10,
+      paddingLeft: 2,
+      fontWeight: 500,
+      letterSpacing: 0.7,
+      fontSize: 18,
+      display:'flex',
+      justifyContent:'flex-end',
+      [theme.breakpoints.down("sm")]: {
+        paddingLeft: 10,
+      },
+  }
 }));
 
 export default useStyles;
