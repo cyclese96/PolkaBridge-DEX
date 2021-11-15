@@ -198,6 +198,11 @@ function TokenPage({ address }) {
   }, []);
 
   useEffect(() => {
+    console.log("alltransaction token page ", { oneDayVolumeUSD });
+  }, []);
+
+
+  useEffect(() => {
     window.scrollTo({
       behavior: "smooth",
       top: 0,
@@ -205,13 +210,11 @@ function TokenPage({ address }) {
   }, []);
 
   // volume
-  const volume = formattedNum(
-    !!oneDayVolumeUSD ? oneDayVolumeUSD : oneDayVolumeUT
-  );
+  const volume = formattedNum(oneDayVolumeUSD);
 
   const usingUtVolume = oneDayVolumeUSD === 0 && !!oneDayVolumeUT;
 
-  const fee = formattedNum(oneDayVolumeUSD * 0.025);
+  const fee = formattedNum(oneDayVolumeUSD * 0.005);
 
   const allPairs = useAllPairData();
 
@@ -285,7 +288,7 @@ function TokenPage({ address }) {
                 <a
                   style={{ color: "#DF097C", paddingLeft: 5 }}
                   target="_blank"
-                  href={`https://rinkeby.etherscan.io/address/${id}`}
+                  href={currentConnection === 'testnet' ? `https://rinkeby.etherscan.io/address/${id}` : `https://etherscan.io/address/${id}`}
                 >
                   ({id && id.slice(0, 8)})
                 </a>
@@ -332,7 +335,7 @@ function TokenPage({ address }) {
                 <Card elevation={10} className={classes.liquidityCard}>
                   <h6 className={classes.cardTitle}>Volume (24Hrs)</h6>
                   <div className="d-flex justify-content-between">
-                    <h6 className={classes.cardValue}>${volume}</h6>
+                    <h6 className={classes.cardValue}>${formattedNum(oneDayVolumeUSD)}</h6>
                     <p className={classes.cardChangeIndicator}>
                       {parseFloat(volumeChangeUSD).toFixed(2)}%
                     </p>

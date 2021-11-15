@@ -13,7 +13,7 @@ import { Button, Card } from "@material-ui/core";
 import TokenIcon from "../../../../common/TokenIcon";
 // import { formatCurrency } from "../../../utils/helper";
 // import TokenChart from "../../components/Charts/TokenChart";
-// import { formatCurrency } from "../../../../../utils/formatters";
+import { formatCurrency } from "../../../../../utils/formatters";
 import { currentConnection } from "../../../../../constants";
 import { FileCopy, FileCopyOutlined, OpenInNew } from "@material-ui/icons";
 import PairTransactionsTable from "../Tables/PairTransactionsTable";
@@ -226,7 +226,7 @@ function PoolDetail({ pairAddress }) {
   const poolData = usePairData(pairAddress);
 
   useEffect(() => {
-    console.log("alltransaction", transactions);
+    console.log("alltransaction", { oneDayVolumeUSD, oneDayVolumeUntracked });
   }, []);
 
   useEffect(() => {
@@ -259,15 +259,11 @@ function PoolDetail({ pairAddress }) {
   const usingUtVolume = oneDayVolumeUSD === 0 && !!oneDayVolumeUntracked;
 
   const volume = formattedNum(
-    !!oneDayVolumeUSD ? oneDayVolumeUSD : usingUtVolume
+    !oneDayVolumeUSD ? oneDayVolumeUSD : usingUtVolume
   );
   // Total gas fees collected
   const fees =
-    oneDayVolumeUSD || oneDayVolumeUSD === 0
-      ? usingUtVolume
-        ? formattedNum(oneDayVolumeUntracked * 0.002)
-        : formattedNum(oneDayVolumeUSD * 0.003)
-      : "-";
+    formattedNum(oneDayVolumeUSD * 0.002)
 
   const isLoaded = () => {
     return (poolInfo && poolInfo.token1?.symbol) || (token0 && token0.address);
@@ -295,7 +291,7 @@ function PoolDetail({ pairAddress }) {
                 <a
                   style={{ color: "#DF097C", paddingLeft: 5 }}
                   target="_blank"
-                  href={`https://rinkeby.etherscan.io/address/${pairAddress}`}
+                  href={currentConnection === 'testnet' ? `https://rinkeby.etherscan.io/address/${pairAddress}` : `https://etherscan.io/address/${pairAddress}`}
                 >
                   ({pairAddress && pairAddress.slice(0, 8)})
                 </a>
@@ -381,7 +377,7 @@ function PoolDetail({ pairAddress }) {
                   <h6 className={classes.cardTitle}>Volume (24Hrs)</h6>
                   <div className="d-flex justify-content-between">
                     <h6 className={classes.cardValue}>
-                      ${volume}
+                      ${formattedNum(oneDayVolumeUSD)}
                     </h6>
                     <p className={classes.cardChangeIndicator}>
                       {volumeChangeUSD < 0 ? (

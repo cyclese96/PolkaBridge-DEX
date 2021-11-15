@@ -109,8 +109,8 @@ const Analytics = () => {
                         !globalData
                           ? "0"
                           : isNaN(globalData.oneDayVolumeUSD)
-                          ? globalData.totalVolumeUSD
-                          : globalData.oneDayVolumeUSD
+                            ? globalData.totalVolumeUSD
+                            : globalData.oneDayVolumeUSD
                       )}
                   </p>
                   <p
@@ -214,10 +214,12 @@ const Analytics = () => {
               paddingLeft: 2,
               fontWeight: 500,
               letterSpacing: 0.7,
-              cursor:'pointer',
+              cursor: 'pointer',
+              minWidth: 100,
+              textAlign: 'right'
             }}
           >
-            <Link to="/tokens">View All</Link> 
+            <Link to="charts/tokens">View All</Link>
           </div>
         </div>
         <div className="d-flex justify-content-center ">
@@ -226,7 +228,7 @@ const Analytics = () => {
       </div>
 
       <div className="p-2">
-      <div className="d-flex justify-content-between">
+        <div className="d-flex justify-content-between">
           <div className={classes.tokenListHeading}>Top Pool</div>
           <div
             className="d-flex-end"
@@ -238,10 +240,12 @@ const Analytics = () => {
               paddingLeft: 2,
               fontWeight: 500,
               letterSpacing: 0.7,
-              cursor:'pointer',
+              cursor: 'pointer',
+              minWidth: 100,
+              textAlign: 'right'
             }}
           >
-          <Link to="/pools">View All</Link> 
+            <Link to="charts/pools">View All</Link>
           </div>
         </div>
         <div className="d-flex justify-content-center">

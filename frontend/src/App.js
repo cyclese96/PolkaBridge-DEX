@@ -17,8 +17,8 @@ import SwapCard from "./components/Cards/SwapCard";
 import AddLiquidity from "./components/pages/AddLiquidity";
 import PoolDetail from "./components/pages/Analytics/components/DetailsPage/PoolDetail";
 import Analytics from "./components/pages/Analytics/Analytics";
-import AllTopToken from "./components/pages/Analytics/AllTopToken";
-import AllTopPool from "./components/pages/Analytics/AllTopPool";
+import AllTopToken from "./components/pages/Analytics/components/Tables/AllTopToken";
+import AllTopPool from "./components/pages/Analytics/components/Tables/AllTopPool";
 
 const useStyles = makeStyles((theme) => ({
   navbar: {
@@ -101,8 +101,8 @@ function App() {
               <Route exact path="/" component={SwapCard} />
               <Route exact path="/liquidity" component={AddLiquidity} />
               <Route exact path="/charts" component={Analytics} />
-              <Route exact path="/tokens" component={AllTopToken} />
-              <Route exact path="/pools" component={AllTopPool} />
+              <Route exact path="/charts/tokens" component={AllTopToken} />
+              <Route exact path="/charts/pools" component={AllTopPool} />
 
               <Switch>
                 <Route

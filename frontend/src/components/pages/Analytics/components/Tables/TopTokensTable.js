@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TopTokensTable({ data }) {
+export default function TopTokensTable({ data, numberOfRows = 5 }) {
   const classes = useStyles();
   const [rows, setRows] = useState([]);
   const [sortedChange, setSortedChange] = useState(false);
@@ -200,7 +200,7 @@ export default function TopTokensTable({ data }) {
             )}
 
             {data &&
-              rows.slice(skipIndex * 5).map((row, index) => (
+              rows.slice(skipIndex * numberOfRows).map((row, index) => (
                 <TableRow
                   key={row.name}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -211,7 +211,7 @@ export default function TopTokensTable({ data }) {
                     style={{ color: "white", fontSize: 13 }}
                   >
                     <span>
-                      {skipIndex * 5 + index + 1}
+                      {skipIndex * numberOfRows + index + 1}
 
                       <TokenIcon
                         symbol={row.symbol}
@@ -281,7 +281,7 @@ export default function TopTokensTable({ data }) {
           </Button>
           <Button
             className={classes.paginationButton}
-            disabled={skipIndex === parseInt(rows.length / 5 - 1)}
+            disabled={skipIndex === parseInt(rows.length / numberOfRows - 1)}
             onClick={() => setSkipIndex(skipIndex + 1)}
           >
             Next{" >>"}
