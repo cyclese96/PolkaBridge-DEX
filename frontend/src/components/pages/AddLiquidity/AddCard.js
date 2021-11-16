@@ -38,6 +38,7 @@ import debounce from "lodash.debounce";
 import { getPairAddress } from "../../../utils/connectionUtils";
 import { Settings } from "@material-ui/icons";
 import SwapConfirm from "../../common/SwapConfirm";
+import { useAllTokenData } from "../../../contexts/TokenData";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -287,6 +288,22 @@ const AddCard = (props) => {
   const [localStateLoading, setLocalStateLoading] = useState(false);
 
   const [swapDialogOpen, setSwapDialog] = useState(false);
+
+  const [_token0PriceUSD, setToken0PriceUSD] = useState(null)
+  const [_token1PriceUSD, setToken1PriceUSD] = useState(null)
+
+
+  const allTokens = useAllTokenData();
+
+  useEffect(() => {
+    if (!allTokens) {
+      return
+    }
+
+    setToken0PriceUSD(allTokens?.[selectedToken1.address?.toLowerCase()]?.priceUSD)
+    setToken1PriceUSD(allTokens?.[selectedToken2.address?.toLowerCase()]?.priceUSD)
+
+  }, [allTokens, selectedToken2, selectedToken1])
 
   const [addStatus, setStatus] = useState({
     message: "Please select tokens",
@@ -836,6 +853,7 @@ const AddCard = (props) => {
             currentToken={selectedToken1}
             disableToken={selectedToken2}
             inputValue={token1Value}
+            priceUSD={_token0PriceUSD}
           />
           <IconButton className={classes.iconButton}>
             <AddIcon fontSize="default" className={classes.addIcon} />
@@ -847,6 +865,7 @@ const AddCard = (props) => {
             currentToken={selectedToken2}
             disableToken={selectedToken1}
             inputValue={token2Value}
+            priceUSD={_token1PriceUSD}
           />
 
           {selectedToken1.symbol && selectedToken2.symbol ? (
