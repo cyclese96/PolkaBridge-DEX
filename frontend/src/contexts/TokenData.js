@@ -363,6 +363,131 @@ const getTopTokens = async (ethPrice, ethPriceOld) => {
   }
 }
 
+const getTokenPriceData = async (address, ethPrice, ethPriceOld) => {
+  const utcCurrentTime = dayjs()
+  // const utcOneDayBack = utcCurrentTime.subtract(1, 'day').startOf('minute').unix()
+  // const utcTwoDaysBack = utcCurrentTime.subtract(2, 'day').startOf('minute').unix()
+  // let oneDayBlock = await getBlockFromTimestamp(utcOneDayBack)
+  // let twoDayBlock = await getBlockFromTimestamp(utcTwoDaysBack)
+
+  // initialize data arrays
+  let data = {}
+  // let oneDayData = {}
+  // let twoDayData = {}
+
+  try {
+    // fetch all current and historical data
+    let result = await client.query({
+      query: TOKEN_DATA(address),
+      fetchPolicy: 'cache-first',
+    })
+    data = result?.data?.tokens?.[0]
+    console.log('tokenData  fetched token price Data', data)
+    // // get results from 24 hours in past
+    // let oneDayResult = await client.query({
+    //   query: TOKEN_DATA(address, oneDayBlock),
+    //   fetchPolicy: 'cache-first',
+    // })
+    // oneDayData = oneDayResult.data.tokens[0]
+
+    // // get results from 48 hours in past
+    // let twoDayResult = await client.query({
+    //   query: TOKEN_DATA(address, twoDayBlock),
+    //   fetchPolicy: 'cache-first',
+    // })
+    // twoDayData = twoDayResult.data.tokens[0]
+
+    // // catch the case where token wasnt in top list in previous days
+    // if (!oneDayData) {
+    //   let oneDayResult = await client.query({
+    //     query: TOKEN_DATA(address, oneDayBlock),
+    //     fetchPolicy: 'cache-first',
+    //   })
+    //   oneDayData = oneDayResult.data.tokens[0]
+    // }
+    // if (!twoDayData) {
+    //   let twoDayResult = await client.query({
+    //     query: TOKEN_DATA(address, twoDayBlock),
+    //     fetchPolicy: 'cache-first',
+    //   })
+    //   twoDayData = twoDayResult.data.tokens[0]
+    // }
+
+    // // calculate percentage changes and daily changes
+    // const [oneDayVolumeUSD, volumeChangeUSD] = get2DayPercentChange(
+    //   data.tradeVolumeUSD,
+    //   oneDayData?.tradeVolumeUSD ?? 0,
+    //   twoDayData?.tradeVolumeUSD ?? 0
+    // )
+
+    // // calculate percentage changes and daily changes
+    // const [oneDayVolumeUT, volumeChangeUT] = get2DayPercentChange(
+    //   data.untrackedVolumeUSD,
+    //   oneDayData?.untrackedVolumeUSD ?? 0,
+    //   twoDayData?.untrackedVolumeUSD ?? 0
+    // )
+
+    // // calculate percentage changes and daily changes
+    // const [oneDayTxns, txnChange] = get2DayPercentChange(
+    //   data.txCount,
+    //   oneDayData?.txCount ?? 0,
+    //   twoDayData?.txCount ?? 0
+    // )
+
+    // const priceChangeUSD = getPercentChange(
+    //   data?.derivedETH * ethPrice,
+    //   parseFloat(oneDayData?.derivedETH ?? 0) * ethPriceOld
+    // )
+
+    // const currentLiquidityUSD = data?.totalLiquidity * ethPrice * data?.derivedETH
+    // const oldLiquidityUSD = oneDayData?.totalLiquidity * ethPriceOld * oneDayData?.derivedETH
+
+    // set data
+    data.priceUSD = data?.derivedETH * ethPrice
+    // data.totalLiquidityUSD = currentLiquidityUSD
+    // data.oneDayVolumeUSD = oneDayVolumeUSD
+    // data.volumeChangeUSD = volumeChangeUSD
+    // data.priceChangeUSD = priceChangeUSD
+    // data.oneDayVolumeUT = oneDayVolumeUT
+    // data.volumeChangeUT = volumeChangeUT
+    // const liquidityChangeUSD = getPercentChange(currentLiquidityUSD ?? 0, oldLiquidityUSD ?? 0)
+    // data.liquidityChangeUSD = liquidityChangeUSD
+    // data.oneDayTxns = oneDayTxns
+    // data.txnChange = txnChange
+
+    // // used for custom adjustments
+    // data.oneDayData = oneDayData?.[address]
+    // data.twoDayData = twoDayData?.[address]
+
+    // // new tokens
+    // if (!oneDayData && data) {
+    //   data.oneDayVolumeUSD = data.tradeVolumeUSD
+    //   data.oneDayVolumeETH = data.tradeVolume * data.derivedETH
+    //   data.oneDayTxns = data.txCount
+    // }
+
+    // update name data for
+    // updateNameData({
+    //   token0: data,
+    // })
+
+    // // HOTFIX for Aave
+    // if (data.id === '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9') {
+    //   const aaveData = await client.query({
+    //     query: PAIR_DATA('0xdfc14d2af169b0d36c4eff567ada9b2e0cae044f'),
+    //     fetchPolicy: 'cache-first',
+    //   })
+    //   const result = aaveData.data.pairs[0]
+    //   data.totalLiquidityUSD = parseFloat(result.reserveUSD) / 2
+    //   data.liquidityChangeUSD = 0
+    //   data.priceChangeUSD = 0
+    // }
+  } catch (e) {
+    console.log(e)
+  }
+  return data
+}
+
 const getTokenData = async (address, ethPrice, ethPriceOld) => {
   const utcCurrentTime = dayjs()
   const utcOneDayBack = utcCurrentTime.subtract(1, 'day').startOf('minute').unix()
@@ -702,6 +827,23 @@ export function useTokenData(tokenAddress) {
 
   return tokenData || {}
 }
+
+// export function useTokenPrice(tokenAddress) {
+//   const [state, { update }] = useTokenDataContext()
+//   const [ethPrice, ethPriceOld] = useEthPrice()
+//   const tokenData = state?.[tokenAddress]
+
+//   useEffect(() => {
+//     if (!tokenData && ethPrice && ethPriceOld && isAddress(tokenAddress)) {
+//       getTokenPriceData(tokenAddress, ethPrice, ethPriceOld).then((data) => {
+//         // update(tokenAddress, data)
+//         tokenData = data;
+//       })
+//     }
+//   }, [ethPrice, ethPriceOld, tokenAddress, tokenData])
+
+//   return tokenData || {}
+// }
 
 export function useTokenTransactions(tokenAddress) {
   const [state, { updateTokenTxns }] = useTokenDataContext()

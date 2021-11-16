@@ -83,7 +83,7 @@ export default function TopTokensTable({ data, numberOfRows = 5 }) {
   };
 
   useEffect(() => {
-    let result = Object.keys(data).map((key) => data[key]);
+    let result = Object.keys(data).map((key) => data[key].id && data[key]);
     if (result.length > 0) {
       setRows(result);
     }

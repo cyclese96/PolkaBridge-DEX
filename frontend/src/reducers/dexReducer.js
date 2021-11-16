@@ -262,6 +262,7 @@ export default function (state = initalState, action) {
         ...state,
         priceLoading: false
       }
+
     default:
       return state;
   }

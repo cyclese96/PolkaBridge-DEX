@@ -46,6 +46,7 @@ import {
   START_TRANSACTION,
 } from "../../actions/types";
 import { default as NumberFormat } from 'react-number-format';
+import { useAllTokenData } from "../../contexts/TokenData";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -251,17 +252,20 @@ const SwapCard = (props) => {
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popper" : undefined;
+  const [_token0PriceUSD, setToken0PriceUSD] = useState(null)
+  const [_token1PriceUSD, setToken1PriceUSD] = useState(null)
+  const allTokens = useAllTokenData();
 
-  // const updateTokenPrices = async () => {
-  //   console.log("updating...");
-  //   setTimeout(async () => {
-  //     await Promise.all([
-  //       getTokenPrice(0, currentNetwork),
-  //       getTokenPrice(1, currentNetwork),
-  //     ]);
-  //     await updateTokenPrices();
-  //   }, 1000);
-  // };
+
+  useEffect(() => {
+    if (!allTokens) {
+      return
+    }
+
+    setToken0PriceUSD(allTokens?.[selectedToken1.address?.toLowerCase()]?.priceUSD)
+    setToken1PriceUSD(allTokens?.[selectedToken2.address?.toLowerCase()]?.priceUSD)
+
+  }, [allTokens, selectedToken2, selectedToken1])
 
   useEffect(() => {
     async function initSelection() {
@@ -352,7 +356,16 @@ const SwapCard = (props) => {
       setLocalStateLoading(true);
 
       if (!selectedToken1.symbol || !selectedToken2.symbol) {
+        localStorage.priceTracker = 'None'
         clearInputState();
+      }
+
+      if (selectedToken1.symbol) {
+        await getAccountBalance(selectedToken1, currentNetwork);
+      }
+
+      if (selectedToken2.symbol) {
+        await getAccountBalance(selectedToken2, currentNetwork);
       }
 
       if (selectedToken1.symbol && selectedToken2.symbol) {
@@ -360,10 +373,10 @@ const SwapCard = (props) => {
         clearInputState();
 
         // load erc20 token abi and balance
-        const erc20Token =
-          selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
+        // const erc20Token =
+        //   selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
 
-        await getAccountBalance(erc20Token, currentNetwork);
+        // await getAccountBalance(erc20Token, currentNetwork);
 
         await loadPairReserves();
 
@@ -672,18 +685,7 @@ const SwapCard = (props) => {
 
   const checkPriceImpact = async () => {
     let impact;
-    // if (selectedToken1.symbol === ETH) {
-    //   impact = buyPriceImpact(
-    //     toWei(token2Value),
-    //     poolReserves[selectedToken2.symbol]
-    //   );
-    // } else {
-    //   impact = sellPriceImpact(
-    //     toWei(token1Value),
-    //     toWei(token2Value),
-    //     poolReserves[selectedToken1.symbol]
-    //   );
-    // }
+
 
     const _amount0InWei = toWei(token1Value, selectedToken1.decimals); //DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value);
     const token0 = {
@@ -717,6 +719,9 @@ const SwapCard = (props) => {
 
   // swap selected tokens and reset inputs
   const handleSwapInputs = () => {
+
+    localStorage.priceTracker = 'None'
+
     setRotate(!rotate);
     const tokenSelected1 = selectedToken1;
     setToken1(selectedToken2);
@@ -848,6 +853,7 @@ const SwapCard = (props) => {
             currentToken={selectedToken1}
             disableToken={selectedToken2}
             inputValue={token1Value}
+            priceUSD={_token0PriceUSD}
           />
 
           <IconButton className={classes.iconButton}>
@@ -868,6 +874,7 @@ const SwapCard = (props) => {
             currentToken={selectedToken2}
             disableToken={selectedToken1}
             inputValue={token2Value}
+            priceUSD={_token1PriceUSD}
           />
 
           {token1Value && token2Value && (
