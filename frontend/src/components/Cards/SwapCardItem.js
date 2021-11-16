@@ -24,8 +24,8 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 0,
       paddingRight: 0,
-      width: "95%",
-      height: 100,
+      width: "96%",
+      height: 110,
     },
   },
   cardContents: {
