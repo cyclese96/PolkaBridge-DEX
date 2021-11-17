@@ -244,7 +244,7 @@ export function handleSync(event: Sync): void {
   token0.derivedETH = token0DerivedETH
 
   let token1DerivedETH = findEthPerToken(token1 as Token)
-  token1.derivedETH =token1DerivedETH
+  token1.derivedETH = token1DerivedETH
 
   token0.save()
   token1.save()
@@ -451,7 +451,7 @@ export function handleSwap(event: Swap): void {
   pair.volumeToken1 = pair.volumeToken1.plus(amount1Total)
   pair.untrackedVolumeUSD = pair.untrackedVolumeUSD.plus(derivedAmountUSD)
   pair.txCount = pair.txCount.plus(ONE_BI)
-  pair.save()
+  // pair.save()
 
   // update global values, only used tracked amounts for volume
   let polkabridgeAmm = PolkabridgeAmmFactory.load(FACTORY_ADDRESS)
@@ -461,7 +461,7 @@ export function handleSwap(event: Swap): void {
   polkabridgeAmm.txCount = polkabridgeAmm.txCount.plus(ONE_BI)
 
   // save entities
-  pair.save()
+  // pair.save()
   token0.save()
   token1.save()
   polkabridgeAmm.save()
@@ -493,6 +493,30 @@ export function handleSwap(event: Swap): void {
   swap.amount1In = amount1In
   swap.amount0Out = amount0Out
   swap.amount1Out = amount1Out
+
+  if (amount0In.gt(ZERO_BD) && amount1Out.gt(ZERO_BD)) {
+
+    swap.fromAmount = amount0In;
+    swap.toAmount = amount1Out;
+
+    pair.fromToken = pair.token0;
+    pair.toToken = pair.token1;
+
+
+
+  } else if (amount0Out.gt(ZERO_BD) && amount1In.gt(ZERO_BD)) {
+
+    swap.fromAmount = amount1In;
+    swap.toAmount = amount0Out;
+
+    pair.fromToken = pair.token1;
+    pair.toToken = pair.token0;
+
+
+  }
+
+  pair.save()
+
   swap.to = event.params.to
   swap.from = event.transaction.from
   swap.logIndex = event.logIndex
