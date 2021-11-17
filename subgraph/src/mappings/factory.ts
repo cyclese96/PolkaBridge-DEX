@@ -89,6 +89,10 @@ export function handlePairCreated(event: PairCreated): void {
   let pair = new Pair(event.params.pair.toHex()) as Pair
   pair.token0 = token0.id
   pair.token1 = token1.id
+
+  pair.fromToken = "";
+  pair.toToken = "";
+
   pair.liquidityProviderCount = ZERO_BI
   pair.createdAtTimestamp = event.block.timestamp
   pair.createdAtBlockNumber = event.block.number

@@ -61,6 +61,10 @@ type Pair @entity {
   # mirrored from the smart contract
   token0: Token!
   token1: Token!
+  #field required to expose api for coinmarketcap
+  fromToken: Token
+  toToken: Token
+
   reserve0: BigDecimal!
   reserve1: BigDecimal!
   totalSupply: BigDecimal!
@@ -203,10 +207,15 @@ type Swap @entity {
   # populated from the Swap event
   sender: Bytes!
   from: Bytes! # the EOA that initiated the txn
+
   amount0In: BigDecimal!
   amount1In: BigDecimal!
   amount0Out: BigDecimal!
   amount1Out: BigDecimal!
+
+  fromAmount: BigDecimal!
+  toAmount: BigDecimal!
+  
   to: Bytes!
   logIndex: BigInt
 
