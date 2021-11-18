@@ -5,7 +5,6 @@ import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
-import CustomButton from "../Buttons/CustomButton";
 import TokenList from "./TokenList";
 import { importToken } from "../../actions/dexActions";
 import { connect } from "react-redux";
@@ -158,12 +157,6 @@ const SelectTokenDialog = ({
       setTokens(tokenList);
     }
   }, [tokenList, open]);
-
-  // useEffect(() => {
-  //   if (open) {
-  //     resetInputState();
-  //   }
-  // }, [open]);
 
   useEffect(() => {
     if (importedToken.symbol) {
