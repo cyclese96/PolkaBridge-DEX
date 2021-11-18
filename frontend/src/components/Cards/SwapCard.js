@@ -15,12 +15,11 @@ import BigNumber from "bignumber.js";
 import CustomSnackBar from "../common/CustomSnackbar";
 import {
   allowanceAmount,
-  DECIMAL_6_ADDRESSES,
+  BNB,
   ETH,
   etheriumNetwork,
   swapFnConstants,
   THRESOLD_VALUE,
-  tokens,
 } from "../../constants";
 import { fromWei, getPriceRatio, toWei } from "../../utils/helper";
 import {
@@ -30,12 +29,11 @@ import {
   getLpBalance,
   getToken0InAmount,
   getToken1OutAmount,
-  loadPairAddress,
+  importToken
 } from "../../actions/dexActions";
-import { connectWallet, getAccountBalance } from "../../actions/accountActions";
+import { getAccountBalance } from "../../actions/accountActions";
 import SwapConfirm from "../common/SwapConfirm";
 import debounce from "lodash.debounce";
-import { getPairAddress } from "../../utils/connectionUtils";
 
 import { Info, Settings } from "@material-ui/icons";
 import TabPage from "../TabPage";
@@ -47,6 +45,7 @@ import {
 } from "../../actions/types";
 import { default as NumberFormat } from 'react-number-format';
 import { useAllTokenData } from "../../contexts/TokenData";
+import { useLocation } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -196,28 +195,26 @@ const SwapCard = (props) => {
     account: { currentNetwork, currentAccount, loading, balance, connected },
     dex: {
       approvedTokens,
-      poolReserves,
-      pairContractData,
       transaction,
       token0In,
       token1Out,
       priceLoading,
+      tokenList
     },
     checkAllowance,
     confirmAllowance,
     getLpBalance,
     getAccountBalance,
-    loadPairAddress,
     getToken0InAmount,
     getToken1OutAmount,
+    importToken
   } = props;
 
   const classes = useStyles();
   const [settingOpen, setOpen] = useState(false);
-  const [selectedToken1, setToken1] = useState({
-    name: "Ethereum",
-    symbol: "ETH",
-  });
+
+  const [selectedToken1, setToken1] = useState({});
+
   const [selectedToken2, setToken2] = useState({});
   const [token1Value, setToken1Value] = useState("");
   const [token2Value, setToken2Value] = useState("");
@@ -254,8 +251,10 @@ const SwapCard = (props) => {
   const id = open ? "simple-popper" : undefined;
   const [_token0PriceUSD, setToken0PriceUSD] = useState(null)
   const [_token1PriceUSD, setToken1PriceUSD] = useState(null)
+
   const allTokens = useAllTokenData();
 
+  const query = new URLSearchParams(useLocation().search);
 
   useEffect(() => {
     if (!allTokens) {
@@ -267,48 +266,64 @@ const SwapCard = (props) => {
 
   }, [allTokens, selectedToken2, selectedToken1])
 
+  const getTokenToSelect = (tokenQuery) => {
+    const token = tokenQuery && tokenList && tokenList.find(item => item.symbol.toUpperCase() === tokenQuery.toUpperCase() || item.address.toLowerCase() === tokenQuery.toLowerCase())
+
+    if (token && token.symbol) {
+      return token
+    }
+
+    return {}
+  }
+
   useEffect(() => {
+
     async function initSelection() {
-      let _token = {};
+
+      setLocalStateLoading(true)
+
+      const [token0Query, token1Query] = [query.get('inputCurrency'), query.get('outputCurrency')]
+
       if (currentNetwork === etheriumNetwork) {
-        _token = tokens[2];
-        setToken1(_token);
+
+        if (token0Query) {
+          const _token = getTokenToSelect(token0Query);
+
+          if (!_token || !_token.symbol) {
+            importToken(token0Query, currentAccount, currentNetwork);
+          }
+
+          setToken1(_token);
+        } else {
+          const _token = getTokenToSelect(ETH);
+          setToken1(_token);
+        }
+
+
+        if (token1Query) {
+          const _token = getTokenToSelect(token1Query);
+
+          if (!_token || !_token.symbol) {
+            importToken(token1Query, currentAccount, currentNetwork);
+          }
+
+          setToken2(_token);
+        }
+
+
       } else {
-        _token = {
-          name: "Binance",
-          symbol: "BNB",
-        };
+
+        const _token = getTokenToSelect(BNB)
         setToken1(_token);
+
       }
       setToken1Value("");
-      setToken2({});
       setToken2Value("");
-      // updateTokenPrices();
+      setLocalStateLoading(false)
     }
     initSelection();
-  }, [currentNetwork, currentAccount]);
+  }, [currentNetwork, currentAccount, tokenList]);
 
-  const currentPairAddress = () => {
-    if (
-      Object.keys(pairContractData).includes(
-        `${selectedToken1.symbol}_${selectedToken2.symbol}`
-      )
-    ) {
-      return pairContractData[
-        `${selectedToken1.symbol}_${selectedToken2.symbol}`
-      ];
-    } else if (
-      Object.keys(pairContractData).includes(
-        `${selectedToken2.symbol}_${selectedToken1.symbol}`
-      )
-    ) {
-      return pairContractData[
-        `${selectedToken2.symbol}_${selectedToken1.symbol}`
-      ];
-    } else {
-      return null;
-    }
-  };
 
   const clearInputState = () => {
     setToken1Value("");
@@ -316,40 +331,6 @@ const SwapCard = (props) => {
     setStatus({ disabled: true, message: "Enter Amounts" });
   };
 
-  const loadPairReserves = async () => {
-    let _pairAddress = currentPairAddress();
-    if (!_pairAddress) {
-      _pairAddress = await getPairAddress(
-        selectedToken1.address,
-        selectedToken2.address,
-        currentNetwork
-      );
-
-      loadPairAddress(
-        selectedToken1.symbol,
-        selectedToken2.symbol,
-        _pairAddress,
-        currentNetwork
-      );
-    }
-
-    if (!_pairAddress) {
-      // setStatus({
-      //   disabled: true,
-      //   message: "No liquidity available for this pair",
-      // });
-    } else {
-      // console.log("current pair address ", _pairAddress);
-
-      await getLpBalance(
-        selectedToken1,
-        selectedToken2,
-        _pairAddress,
-        currentAccount,
-        currentNetwork
-      );
-    }
-  };
 
   useEffect(() => {
     async function loadPair() {
@@ -372,13 +353,6 @@ const SwapCard = (props) => {
         // reset token input on token selection
         clearInputState();
 
-        // load erc20 token abi and balance
-        // const erc20Token =
-        //   selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
-
-        // await getAccountBalance(erc20Token, currentNetwork);
-
-        await loadPairReserves();
 
         await checkAllowance(selectedToken1, currentAccount, currentNetwork);
 
@@ -389,18 +363,7 @@ const SwapCard = (props) => {
     setLocalStateLoading(false);
   }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
 
-  useEffect(() => {
-    if (
-      poolReserves &&
-      (new BigNumber(poolReserves[selectedToken1.symbol]).eq(0) ||
-        new BigNumber(poolReserves[selectedToken2.symbol]).eq(0))
-    ) {
-      setStatus({
-        disabled: true,
-        message: "No liquidity available for this pair",
-      });
-    }
-  }, [poolReserves]);
+
 
   const verifySwapStatus = (token1, token2) => {
     let message, disabled;
@@ -582,8 +545,6 @@ const SwapCard = (props) => {
     if (!token0In) {
       return;
     }
-
-    console.log("handling token0IN");
 
     if (localStorage.getItem('priceTracker') !== token0InCalling) {
       return
@@ -779,7 +740,6 @@ const SwapCard = (props) => {
       return;
     }
 
-    // loadPairReserves();
     if (transaction.type === "swap" && transaction.status === "success") {
       localStorage.priceTracker = 'None'
       getAccountBalance(selectedToken1, currentNetwork);
@@ -797,13 +757,13 @@ const SwapCard = (props) => {
 
   const handleConfirmSwapClose = (value) => {
     setSwapDialog(value);
-    debouncedGetLpBalance(
-      selectedToken1,
-      selectedToken2,
-      currentPairAddress(),
-      currentAccount,
-      currentNetwork
-    );
+    // debouncedGetLpBalance(
+    //   selectedToken1,
+    //   selectedToken2,
+    //   currentPairAddress(),
+    //   currentAccount,
+    //   currentNetwork
+    // );
     if (transaction.type === "swap" && transaction.status === "success") {
       store.dispatch({ type: START_TRANSACTION });
       clearInputState();
@@ -831,6 +791,7 @@ const SwapCard = (props) => {
         priceImpact={priceImpact}
         currentSwapFn={currentSwapFn}
         currenSwapPath={swapPath}
+        priceRatio={priceRatio}
       />
       <SwapSettings open={settingOpen} handleClose={close} />
       <Card elevation={20} className={classes.card}>
@@ -959,7 +920,7 @@ export default connect(mapStateToProps, {
   confirmAllowance,
   getLpBalance,
   getAccountBalance,
-  loadPairAddress,
   getToken0InAmount,
   getToken1OutAmount,
+  importToken
 })(SwapCard);

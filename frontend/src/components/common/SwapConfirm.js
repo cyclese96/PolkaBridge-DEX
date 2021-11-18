@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
@@ -10,19 +10,15 @@ import { connect } from "react-redux";
 import TokenIcon from "./TokenIcon";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import {
-  formatFloat,
-  // getPercentage,
   getPercentageAmount,
-  getPriceRatio,
   toWei,
 } from "../../utils/helper";
 import { swapTokens } from "../../actions/dexActions";
-// import { ETH, swapFnConstants } from "../../constants";
 import CircularProgress from "@material-ui/core/CircularProgress";
-// import BigNumber from "bignumber.js";
 import TransactionStatus from "./TransactionStatus";
 
 import { default as NumberFormat } from 'react-number-format';
+import BigNumber from "bignumber.js";
 
 
 const styles = (theme) => ({
@@ -136,6 +132,7 @@ const useStyles = makeStyles((theme) => ({
 const SwapConfirm = (props) => {
   const {
     open,
+    priceRatio,
     handleClose,
     priceImpact,
     account: { currentAccount, currentNetwork, loading },
@@ -143,7 +140,7 @@ const SwapConfirm = (props) => {
     selectedToken2,
     token1Value,
     token2Value,
-    dex: { swapSettings, poolReserves, dexLoading, transaction },
+    dex: { swapSettings, dexLoading, transaction },
     currentSwapFn,
     currenSwapPath,
     swapTokens,
@@ -152,16 +149,15 @@ const SwapConfirm = (props) => {
   const classes = useStyles();
 
   const onConfirmSwap = async () => {
-    // todo swap code
 
-    const _amount0InWei = toWei(token1Value, selectedToken1.decimals); //DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value);
+    const _amount0InWei = toWei(token1Value, selectedToken1.decimals);
     const token0 = {
       amount: _amount0InWei,
       min: toWei(token1Value.toString(), selectedToken1.decimals),
       ...selectedToken1,
     };
 
-    const _amount1InWei = toWei(token2Value, selectedToken2.decimals); //DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token2Value);
+    const _amount1InWei = toWei(token2Value, selectedToken2.decimals);
     const token1 = {
       amount: _amount1InWei,
       min: toWei(token2Value.toString(), selectedToken2.decimals),
@@ -180,11 +176,10 @@ const SwapConfirm = (props) => {
   };
 
   const isValidSlippage = () => {
-    // if (new BigNumber(priceImpact).lt(swapSettings.slippage)) {
-    //   return true;
-    // }
-    // return false;
-    return true;
+    if (new BigNumber(priceImpact).lt(swapSettings.slippage)) {
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -261,7 +256,7 @@ const SwapConfirm = (props) => {
                 1 {selectedToken1.symbol} {" = "}{" "}
                 <NumberFormat
                   displayType="text"
-                  value={getPriceRatio(poolReserves[selectedToken2.symbol], poolReserves[selectedToken1.symbol])}
+                  value={priceRatio}
                   decimalScale={5}
                 />
                 {" "}{selectedToken2.symbol}
