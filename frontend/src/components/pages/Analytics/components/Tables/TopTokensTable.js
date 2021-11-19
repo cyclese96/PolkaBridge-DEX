@@ -214,7 +214,8 @@ export default function TopTokensTable({ data, numberOfRows = 5 }) {
                       {skipIndex * numberOfRows + index + 1}
 
                       <TokenIcon
-                        symbol={row.symbol}
+                        symbol={row?.symbol}
+                        address={row?.id}
                         className={classes.tokenImage}
                       />
                     </span>

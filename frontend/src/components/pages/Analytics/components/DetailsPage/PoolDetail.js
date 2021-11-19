@@ -302,12 +302,12 @@ function PoolDetail({ pairAddress }) {
             <h1 className={classes.tokenTitle}>
               <TokenIcon
                 symbol={poolInfo.token0?.symbol}
-                address={poolInfo.token0?.address}
+                address={poolInfo.token0?.id}
                 className={classes.tokenImage}
               />
               <TokenIcon
                 symbol={poolInfo.token1?.symbol}
-                address={poolInfo.token1?.address}
+                address={poolInfo.token1?.id}
                 className={classes.tokenImage2}
               />
               <span style={{ paddingRight: 3 }}>
@@ -325,8 +325,8 @@ function PoolDetail({ pairAddress }) {
               {" "}
               <Link to={`/token/${token0?.id}`}>
                 <TokenIcon
-                  symbol={token0?.symbol}
-                  address={token0?.address}
+                  symbol={poolInfo.token0?.symbol}
+                  address={poolInfo.token0?.id}
                   className={classes.tokenImage}
                   size={20}
                 />{" "}
@@ -338,8 +338,8 @@ function PoolDetail({ pairAddress }) {
             <div className={classes.ratioCard}>
               <Link to={`/token/${token1?.id}`}>
                 <TokenIcon
-                  symbol={token1?.symbol}
-                  address={token1?.address}
+                  symbol={poolInfo.token1?.symbol}
+                  address={poolInfo.token1?.id}
                   className={classes.tokenImage}
                   size={20}
                 />{" "}
@@ -411,7 +411,7 @@ function PoolDetail({ pairAddress }) {
                   <h6 className={classes.cardTitle}>Pooled tokens</h6>
                   <div className="d-flex justify-content-start">
                     <TokenIcon
-                      address={poolInfo.token0?.address}
+                      address={poolInfo.token0?.id}
                       symbol={token0?.symbol}
                       className={classes.tokenAvatarPooled}
                     />
@@ -428,7 +428,7 @@ function PoolDetail({ pairAddress }) {
                   </div>
                   <div className="d-flex justify-content-start">
                     <TokenIcon
-                      address={poolInfo.token1?.address}
+                      address={poolInfo.token1?.id}
                       symbol={token1?.symbol}
                       className={classes.tokenAvatarPooled}
                     />
