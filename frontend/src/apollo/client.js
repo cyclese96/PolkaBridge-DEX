@@ -8,8 +8,8 @@ import { currentConnection } from '../constants';
 // const APIURL = "https://api.studio.thegraph.com/query/8207/amm/0.8.1.2"; // oldsubgraph working price api
 // const APIURL = "https://api.studio.thegraph.com/query/2992/pbr-dex/2.3"//last recent factory
 const APIURL = "https://api.studio.thegraph.com/query/2992/polkabridge-amm-v1/3.3.0"; // current latest subgraph
-const API_MAINNET = "https://api.studio.thegraph.com/query/2992/polkabridge-amm-v1/3.5.8";// temp query mainnet
-// const API_MAINNET = `https://gateway.thegraph.com/api/${process.env.REACT_APP_GRAPH_API.split('').reverse().join('')}/subgraphs/id/0xac113a863e871ca007dd1be8be12563602502a6d-0`;// public query mainnet
+// const API_MAINNET = "https://api.studio.thegraph.com/query/2992/polkabridge-amm-v1/3.5.8";// temp query mainnet
+const API_MAINNET = `https://gateway.thegraph.com/api/${process.env.REACT_APP_GRAPH_API.split('').reverse().join('')}/subgraphs/id/0xac113a863e871ca007dd1be8be12563602502a6d-0`;// public query mainnet
 const BLOCKS_API_TESTNET =
   "https://api.studio.thegraph.com/query/8207/rinkeby-blocks/0.0.1";
 const BLOCKS_API_MAINNET =
