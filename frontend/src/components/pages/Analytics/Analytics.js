@@ -30,29 +30,13 @@ const Analytics = () => {
 
   const chartData = useGlobalChartData();
 
-  useEffect(() => {
-    console.log("analyticsTest  ", { chartData, globalData });
-  }, [chartData, globalData]);
-
-  // const isValidGlobalChart = (_chartData, _globalData) => {
-  //   let areaChartPrepared = false;
-  //   let barChartPrepared = false;
-  //   let globalDataLoaded = false;
-
-  //   if (_chartData && chartData[0].length === 7) {
-  //     areaChartPrepared = true;
+  // useEffect(() => {
+  //   if (!transactions) {
+  //     return
   //   }
 
-  //   if (_chartData && chartData[0].length === 7) {
-  //     barChartPrepared = true;
-  //   }
-
-  //   if (globalData) {
-  //     globalDataLoaded = true;
-  //   }
-
-  //   return { areaChartPrepared, barChartPrepared, globalDataLoaded };
-  // };
+  //   console.log("analyticsTest  ", { transactions });
+  // }, [transactions]);
 
   return (
     <div>

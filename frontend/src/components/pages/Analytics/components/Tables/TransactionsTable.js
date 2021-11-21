@@ -18,6 +18,7 @@ import {
 } from "../../../../../utils/timeUtils";
 import { currentConnection } from "../../../../../constants";
 import CurrencyFormat from "react-currency-format";
+import BigNumber from "bignumber.js";
 const useStyles = makeStyles((theme) => ({
   table: {
     background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
@@ -81,6 +82,7 @@ export default function TransactionsTable({ data }) {
   const [skipIndex, setSkipIndex] = useState(0);
   const [sortedTime, setSortedTime] = useState(true);
   const [txFilterType, setTxFilterType] = useState("all");
+  const [tokenHeaderNames, setTokenHeaderNames] = useState({ token0: 'Token(In)', token1: 'Token(Out)' })
 
   let styles = {
     tableHeading: {
@@ -151,6 +153,20 @@ export default function TransactionsTable({ data }) {
     setTxFilterType(filter);
   };
 
+  const getToken = (_row) => {
+    if (new BigNumber(_row?.amount0In).gt(0) && new BigNumber(_row?.amount1Out).gt(0)) {
+
+      return { fromSymbol: _row?.pair?.token0.symbol, toSymbol: _row?.pair?.token1?.symbol, tokenIn: _row?.amount0In, tokenOut: _row?.amount1Out }
+
+    } else {
+
+      return { fromSymbol: _row?.pair?.token1.symbol, toSymbol: _row?.pair?.token0?.symbol, tokenIn: _row?.amount1In, tokenOut: _row?.amount0Out }
+
+    }
+
+  }
+
+
   return (
     <Paper elevation={10} className={classes.table}>
       <TableContainer
@@ -177,6 +193,7 @@ export default function TransactionsTable({ data }) {
                     type="button"
                     onClick={() => {
                       filterTx("all");
+                      setTokenHeaderNames({ token0: 'Token(In)', token1: 'Token(Out)' })
                     }}
                     style={{
                       color: txFilterType === "all" ? "white" : "grey",
@@ -195,6 +212,7 @@ export default function TransactionsTable({ data }) {
                     type="button"
                     onClick={() => {
                       filterTx("swap");
+                      setTokenHeaderNames({ token0: 'Token(In)', token1: 'Token(Out)' })
                     }}
                     style={{
                       color: txFilterType === "swap" ? "white" : "grey",
@@ -214,6 +232,7 @@ export default function TransactionsTable({ data }) {
                     type="button"
                     onClick={() => {
                       filterTx("add");
+                      setTokenHeaderNames({ token0: 'Token Amount', token1: 'Token Amount' })
                     }}
                     style={{
                       color: txFilterType === "add" ? "white" : "grey",
@@ -234,6 +253,7 @@ export default function TransactionsTable({ data }) {
                     type="button"
                     onClick={() => {
                       filterTx("remove");
+                      setTokenHeaderNames({ token0: 'Token Amount', token1: 'Token Amount' })
                     }}
                     style={{
                       color: txFilterType === "remove" ? "white" : "grey",
@@ -255,11 +275,11 @@ export default function TransactionsTable({ data }) {
                 Total value
               </TableCell>
               <TableCell align="right" style={styles.tableHeading}>
-                Token(In)
+                {tokenHeaderNames.token0}
               </TableCell>
 
               <TableCell align="right" style={styles.tableHeading}>
-                Token(Out)
+                {tokenHeaderNames.token1}
               </TableCell>
               <TableCell align="right" style={styles.tableHeading}>
                 Account
@@ -309,17 +329,17 @@ export default function TransactionsTable({ data }) {
                       {" "}
                       <span
                         style={{
-                          backgroundColor: "#3a2b2d",
+                          backgroundColor: "#2B2022",
                           padding: "5px 5px 5px 5px",
                           borderRadius: 7,
                           fontWeight: 500,
                         }}
                       >
-                        {row.__typename.toLowerCase() === "mint" && "ADD"}
-                        {row.__typename.toLowerCase() === "burn" && "REMOVE"}
-                        {row.__typename.toLowerCase() === "swap" && "SWAP"}
+                        {row.__typename.toLowerCase() === "mint" && `ADD  ${getToken(row).fromSymbol} and ${getToken(row).toSymbol} `}
+                        {row.__typename.toLowerCase() === "burn" && `REMOVE ${getToken(row).fromSymbol} and ${getToken(row).toSymbol}`}
+                        {row.__typename.toLowerCase() === "swap" && `SWAP ${getToken(row).fromSymbol} for ${getToken(row).toSymbol}`}
                       </span>{" "}
-                      {" " + row.pair.token0.symbol} -{row.pair.token1.symbol}
+
                     </a>
                   </TableCell>
                   <TableCell
@@ -332,21 +352,13 @@ export default function TransactionsTable({ data }) {
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
-                    {row.amount0
-                      ? formattedNum(parseFloat(row.amount0).toFixed(3))
-                      : row.amount0Out !== "0"
-                        ? formattedNum(parseFloat(row.amount0Out).toFixed(3))
-                        : formattedNum(parseFloat(row.amount0In).toFixed(3))}
+                    {["mint", "burn"].includes(row.__typename.toLowerCase()) ? formattedNum(row?.amount0) : formattedNum(getToken(row).tokenIn)}
                   </TableCell>
                   <TableCell
                     align="right"
                     style={{ color: "#e5e5e5", fontSize: 13 }}
                   >
-                    {row.amount1
-                      ? formattedNum(parseFloat(row.amount1).toFixed(3))
-                      : row.amount1Out !== "0"
-                        ? formattedNum(parseFloat(row.amount1Out).toFixed(3))
-                        : formattedNum(parseFloat(row.amount1In).toFixed(3))}
+                    {["mint", "burn"].includes(row.__typename.toLowerCase()) ? formattedNum(row?.amount1) : formattedNum(getToken(row).tokenOut)}
                   </TableCell>
                   <TableCell
                     align="right"
