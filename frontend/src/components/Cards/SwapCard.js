@@ -252,19 +252,19 @@ const SwapCard = (props) => {
   const [_token0PriceUSD, setToken0PriceUSD] = useState(null)
   const [_token1PriceUSD, setToken1PriceUSD] = useState(null)
 
-  const allTokens = useAllTokenData();
+  // const allTokens = useAllTokenData();
 
   const query = new URLSearchParams(useLocation().search);
 
-  useEffect(() => {
-    if (!allTokens) {
-      return
-    }
+  // useEffect(() => {
+  //   if (!allTokens) {
+  //     return
+  //   }
 
-    setToken0PriceUSD(allTokens?.[selectedToken1.address?.toLowerCase()]?.priceUSD)
-    setToken1PriceUSD(allTokens?.[selectedToken2.address?.toLowerCase()]?.priceUSD)
+  //   setToken0PriceUSD(allTokens?.[selectedToken1.address?.toLowerCase()]?.priceUSD)
+  //   setToken1PriceUSD(allTokens?.[selectedToken2.address?.toLowerCase()]?.priceUSD)
 
-  }, [allTokens, selectedToken2, selectedToken1])
+  // }, [allTokens, selectedToken2, selectedToken1])
 
   const getTokenToSelect = (tokenQuery) => {
     const token = tokenQuery && tokenList && tokenList.find(item => item.symbol.toUpperCase() === tokenQuery.toUpperCase() || item.address.toLowerCase() === tokenQuery.toLowerCase())

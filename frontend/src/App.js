@@ -101,11 +101,11 @@ function App() {
               <Route exact path="/" component={SwapCard} />
               <Route exact path="/liquidity" component={AddLiquidity} />
               <Route exact path="/charts" component={Analytics} />
-              <Route exact path="/charts/tokens" component={AllTopToken} />
-              <Route exact path="/charts/pools" component={AllTopPool} />
+              {/* <Route exact path="/charts/tokens" component={AllTopToken} />
+              <Route exact path="/charts/pools" component={AllTopPool} /> */}
 
               <Switch>
-                <Route
+                {/* <Route
                   exacts
                   strict
                   path="/token/:tokenAddress"
@@ -127,8 +127,8 @@ function App() {
                       return <Redirect to="/" />;
                     }
                   }}
-                />
-                <Route
+                /> */}
+                {/* <Route
                   exacts
                   strict
                   path="/pair/:pairAddress"
@@ -150,7 +150,7 @@ function App() {
                       return <Redirect to="/" />;
                     }
                   }}
-                />
+                /> */}
               </Switch>
             </BrowserRouter>
           </div>

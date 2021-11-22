@@ -211,7 +211,7 @@ const SwapCardItem = (props) => {
           </div>
           {new BigNumber(inputValue).gt(0) && (
             <div className={classes.labelRow}>
-              <p className={classes.hintLabelFont}>~ $ {priceUSD?.priceUSD} {inputValue && formattedNum(new BigNumber(inputValue).multipliedBy(priceUSD).toString())}</p>
+              {/* <p className={classes.hintLabelFont}>~ $ {priceUSD?.priceUSD} {inputValue && formattedNum(new BigNumber(inputValue).multipliedBy(priceUSD).toString())}</p> */}
             </div>
           )}
         </div>
