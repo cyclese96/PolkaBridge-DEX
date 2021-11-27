@@ -19,7 +19,7 @@ import PoolDetail from "./components/pages/Analytics/components/DetailsPage/Pool
 import Analytics from "./components/pages/Analytics/Analytics";
 import AllTopToken from "./components/pages/Analytics/components/Tables/AllTopToken";
 import AllTopPool from "./components/pages/Analytics/components/Tables/AllTopPool";
-import Farm from "./components/Cards/Farm";
+import Farms from "./components/pages/Farms/Farms";
 
 const useStyles = makeStyles((theme) => ({
   navbar: {
@@ -100,7 +100,7 @@ function App() {
             <BrowserRouter>
               <Home />
               <Route exact path="/" component={SwapCard} />
-              <Route exact path="/farm" component={Farm} />
+              <Route exact path="/farms" component={Farms} />
               <Route exact path="/liquidity" component={AddLiquidity} />
               <Route exact path="/charts" component={Analytics} />
               {/* <Route exact path="/charts/tokens" component={AllTopToken} />
