@@ -133,10 +133,10 @@ export const infuraMainnetApi = `https://mainnet.infura.io/v3/${process.env.REAC
 const testing = true;
 
 export const currentConnection = testing ? "testnet" : "mainnet";
-// export const currentConnection = "mainnet";
 
 export const etheriumNetwork = "ethereum";
 export const bscNetwork = "bsc";
+export const moonriverNetwork = "moonriver";
 
 export const etherConfig = {
   network_id: {

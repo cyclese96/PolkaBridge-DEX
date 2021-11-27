@@ -27,6 +27,8 @@ import { useWeb3React } from "@web3-react/core";
 import connectors from "../../contracts/connections/connectors";
 import { isMetaMaskInstalled } from "../../utils/helper";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
+// import { Link } from "react-router-dom";
+import NetworkSelect from "./NetworkSelect";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -208,6 +210,7 @@ const useStyles = makeStyles((theme) => ({
 const Navbar = (props) => {
   const {
     account: { currentNetwork },
+    chainId,
   } = props;
   const classes = useStyles();
 
@@ -435,7 +438,7 @@ const Navbar = (props) => {
           </div>
 
           <div className={classes.grow} />
-          <div className={classes.network}>
+          {/* <div className={classes.network}>
             <img
               className={classes.networkIcon}
               src={currentNetwork === etheriumNetwork ? etherIcon : binanceIcon}
@@ -444,8 +447,9 @@ const Navbar = (props) => {
             <span style={{ color: "#212121", marginLeft: 5 }}>
               {currentNetwork === etheriumNetwork ? "Ethereum" : "BSC"}
             </span>
-          </div>
-          <Wallet onWalletClick={handleWalletClick} />
+          </div> */}
+          <NetworkSelect selectedNetwork={chainId} />
+          <Wallet onWalletClick={() => setAccountDialog(true)} />
         </Toolbar>
 
         <Toolbar className={classes.sectionMobile}>
