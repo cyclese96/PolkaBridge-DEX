@@ -8,6 +8,7 @@ import SwapCard from "./Cards/SwapCard";
 import AddLiquidity from "./pages/AddLiquidity";
 import Analytics from "./pages/Analytics/Analytics";
 import { Link } from "react-router-dom";
+import Farm from "./Cards/Farm";
 
 const useStyles = makeStyles((theme) => ({
   tabs: {
@@ -90,6 +91,14 @@ export default function TabPage({ data = 1 }) {
             label="Charts"
           />
         </Link>
+        <Link to="/farm">
+          <Tab
+            className={
+              data === 3 ? classes.active_tabStyle : classes.default_tabStyle
+            }
+            label="Farm"
+          />
+        </Link>
       </Tabs>
 
       <TabPanel data={0} index={0}>
@@ -100,6 +109,9 @@ export default function TabPage({ data = 1 }) {
       </TabPanel>
       <TabPanel data={2} index={2}>
         <Analytics />
+      </TabPanel>
+      <TabPanel data={3} index={3}>
+        <Farm />
       </TabPanel>
     </>
   );
