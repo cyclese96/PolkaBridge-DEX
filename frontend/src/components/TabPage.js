@@ -80,25 +80,26 @@ export default function TabPage({ data = 1 }) {
             className={
               data === 1 ? classes.active_tabStyle : classes.default_tabStyle
             }
-            label="Pool"
+            label="Pools"
           />
+          <Link to="/farms">
+            <Tab
+              className={
+                data === 2 ? classes.active_tabStyle : classes.default_tabStyle
+              }
+              label="Farms"
+            />
+          </Link>
         </Link>
         <Link to="/charts">
           <Tab
             className={
-              data === 2 ? classes.active_tabStyle : classes.default_tabStyle
+              data === 3 ? classes.active_tabStyle : classes.default_tabStyle
             }
             label="Charts"
           />
         </Link>
-        <Link to="/farm">
-          <Tab
-            className={
-              data === 3 ? classes.active_tabStyle : classes.default_tabStyle
-            }
-            label="Farm"
-          />
-        </Link>
+
       </Tabs>
 
       <TabPanel data={0} index={0}>
@@ -108,11 +109,12 @@ export default function TabPage({ data = 1 }) {
         <AddLiquidity />
       </TabPanel>
       <TabPanel data={2} index={2}>
-        <Analytics />
-      </TabPanel>
-      <TabPanel data={3} index={3}>
         <Farm />
       </TabPanel>
+      <TabPanel data={3} index={3}>
+        <Analytics />
+      </TabPanel>
+
     </>
   );
 }
