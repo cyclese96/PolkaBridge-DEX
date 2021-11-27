@@ -92,7 +92,7 @@ export const setupNetwork = async (networkObject) => {
 export const getCurrentNetwork = (networkId) => {
   // return ethereum network by default
   if (!networkId) {
-    return etheriumNetwork;
+    return null;
   }
 
   if (
@@ -101,13 +101,13 @@ export const getCurrentNetwork = (networkId) => {
   ) {
     return bscNetwork;
   } else if (
-    networkId === config.ethChainId ||
-    networkId === config.ethChainIdRinkeby
+    parseInt(networkId) === config.ethChainId ||
+    parseInt(networkId) === config.ethChainIdRinkeby
   ) {
     return etheriumNetwork;
   } else if (
-    networkId === config.moonriverChain ||
-    networkId === config.moonriverChainTestent
+    parseInt(networkId) === config.moonriverChain ||
+    parseInt(networkId) === config.moonriverChainTestent
   ) {
     return moonriverNetwork;
   } else {

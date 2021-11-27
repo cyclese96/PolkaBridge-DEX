@@ -273,7 +273,7 @@ const Swap = (props) => {
 
           setToken1(_token);
         } else {
-          const _token = getTokenToSelect(ETH);
+          const _token = getTokenToSelect('WMOVR');
           setToken1(_token);
         }
 

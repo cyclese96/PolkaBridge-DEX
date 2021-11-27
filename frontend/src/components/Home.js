@@ -50,13 +50,7 @@ const Home = ({ loadTokens, getAccountBalance }) => {
     onNetworkChangeUpdate();
   }, []);
 
-  return (
-    <>
-      <div className={classes.navbar}>
-        <Navbar currentNetwork={currentNetwork} chainId={currentChainId} />
-      </div>
-    </>
-  );
+  return <></>;
 };
 
 export default connect(null, {
