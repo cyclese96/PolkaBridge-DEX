@@ -29,6 +29,7 @@ import { etheriumNetwork } from "../../constants";
 import DotCircle from "./DotCircle";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import NetworkSelect from "./NetworkSelect";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -210,6 +211,7 @@ const useStyles = makeStyles((theme) => ({
 const Navbar = (props) => {
   const {
     account: { currentNetwork },
+    chainId
   } = props;
   const classes = useStyles();
 
@@ -394,7 +396,7 @@ const Navbar = (props) => {
           </div>
 
           <div className={classes.grow} />
-          <div className={classes.network}>
+          {/* <div className={classes.network}>
             <img
               className={classes.networkIcon}
               src={currentNetwork === etheriumNetwork ? etherIcon : binanceIcon}
@@ -403,7 +405,8 @@ const Navbar = (props) => {
             <span style={{ color: "#eeeeee", marginLeft: 5 }}>
               {currentNetwork === etheriumNetwork ? "Ethereum" : "BSC"}
             </span>
-          </div>
+          </div> */}
+          <NetworkSelect selectedNetwork={chainId} />
           <Wallet onWalletClick={() => setAccountDialog(true)} />
         </Toolbar>
 

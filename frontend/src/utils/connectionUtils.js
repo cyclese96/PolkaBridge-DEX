@@ -1,10 +1,14 @@
 import {
+  bscNetwork,
   currentConnection,
+  etheriumNetwork,
+  moonriverNetwork,
   nullAddress,
   tokenAddresses,
 } from "../constants";
 
 import { factoryContract } from "../contracts/connections";
+import config from "./config";
 
 export const getTokenAddress = (tokenSymbol) => {
   let address = '';
@@ -35,4 +39,60 @@ export const getPairAddress = async (address0, address1, network) => {
     return null;
   }
 
+};
+
+
+export const setupNetwork = async (networkObject) => {
+  const provider = window.ethereum
+  if (provider) {
+
+    try {
+      if (networkObject.chainId === `0x${config.ethChainId.toString(16)}` || networkObject.chainId === `0x${config.ethChainIdRinkeby.toString(16)}`) {
+        await provider.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: networkObject.chainId }],
+        })
+      }
+      await provider.request({
+        method: 'wallet_addEthereumChain',
+        params: [
+          networkObject
+        ]
+      })
+      return true
+    } catch (error) {
+      console.error('Failed to setup the network in Metamask:', error)
+      return false
+    }
+  } else {
+    console.error("Can't setup the BSC network on metamask because window.ethereum is undefined")
+    return false
+  }
+}
+
+export const getCurrentNetwork = (networkId) => {
+
+  // return ethereum network by default
+  if (!networkId) {
+    return etheriumNetwork;
+  }
+
+  if (
+    parseInt(networkId) === config.bscChain ||
+    parseInt(networkId) === config.bscChainTestent
+  ) {
+    return bscNetwork;
+  } else if (
+    networkId === config.ethChainId ||
+    networkId === config.ethChainIdRinkeby
+  ) {
+    return etheriumNetwork;
+  } else if (
+    networkId === config.moonriverChain ||
+    networkId === config.moonriverChainTestent
+  ) {
+    return moonriverNetwork;
+  } else {
+    return etheriumNetwork;
+  }
 };

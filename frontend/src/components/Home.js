@@ -1,5 +1,5 @@
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connectWallet } from "../actions/accountActions";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -19,6 +19,8 @@ import {
 import { CHANGE_NETWORK } from "../actions/types";
 import TabPage from "./TabPage";
 import { loadTokens } from "../actions/dexActions";
+import Navbar from "./common/Navbar";
+import { getCurrentNetwork } from "../utils/connectionUtils";
 
 const useStyles = makeStyles((theme) => ({
   navbar: {
@@ -88,22 +90,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Home = ({ connectWallet, loadTokens, account: { currentNetwork } }) => {
   const classes = useStyles();
+  const [currentChainId, setCurrentChainId] = useState(null);
 
-  const getCurrentNetwork = (networkId) => {
-    if (
-      networkId === bscConfig.network_id.mainnet ||
-      networkId === bscConfig.network_id.testnet
-    ) {
-      return bscNetwork;
-    } else if (
-      networkId === etherConfig.network_id.mainet ||
-      networkId === etherConfig.network_id.koven
-    ) {
-      return etheriumNetwork;
-    } else {
-      return etheriumNetwork;
-    }
-  };
 
   useEffect(() => {
     async function listenConnectionUpdate() {
@@ -119,12 +107,15 @@ const Home = ({ connectWallet, loadTokens, account: { currentNetwork } }) => {
         window.ethereum.on("networkChanged", async (networkId) => {
           // setCurrentNetwork(networkId)
           const network = getCurrentNetwork(networkId);
-
+          setCurrentChainId(parseInt(networkId));
           store.dispatch({
             type: CHANGE_NETWORK,
             payload: network,
           });
-          await connectWallet(false, network);
+
+          await connectWallet(false, network)
+          await loadTokens(network);
+          console.log('reloading...')
         });
 
         // todo: handle more ethereum event
@@ -142,6 +133,9 @@ const Home = ({ connectWallet, loadTokens, account: { currentNetwork } }) => {
       if (isMetaMaskInstalled()) {
         const networkId = await getCurrentNetworkId();
 
+        console.log('current networl id ', networkId)
+
+        setCurrentChainId(parseInt(networkId));
         if (!supportedNetworks.includes(networkId.toString())) {
           // alert(
           //   "This network is not supported yet! Please switch to Ethereum or Smart Chain network"
@@ -161,12 +155,15 @@ const Home = ({ connectWallet, loadTokens, account: { currentNetwork } }) => {
       if (!isMetaMaskInstalled()) {
         return;
       }
-      await Promise.all([connectWallet(false, network), loadTokens(network)]);
+      await connectWallet(false, network)
+      await loadTokens(network);
     }
     initConnection();
   }, []);
 
-  return <></>;
+  return <><div className={classes.navbar}>
+    <Navbar currentNetwork={currentNetwork} chainId={currentChainId} />
+  </div></>;
 };
 
 Home.propTypes = {

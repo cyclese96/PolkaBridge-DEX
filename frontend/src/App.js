@@ -11,7 +11,7 @@ import { PAIR_BLACKLIST, TOKEN_BLACKLIST } from "./constants";
 import TokenPage from "./components/pages/Analytics/components/DetailsPage/TokenDetail";
 import { isAddress } from "./utils/helper";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import Navbar from "./components/common/Navbar";
+// import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
 import SwapCard from "./components/Cards/SwapCard";
 import AddLiquidity from "./components/pages/AddLiquidity";
@@ -92,9 +92,9 @@ function App() {
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <div style={{ overflowX: "hidden" }}>
-          <div className={classes.navbar}>
+          {/* <div className={classes.navbar}>
             <Navbar />
-          </div>
+          </div> */}
           <div className={classes.mainContent}>
             <BrowserRouter>
               <Home />
