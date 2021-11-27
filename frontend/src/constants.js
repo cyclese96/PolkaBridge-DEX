@@ -368,6 +368,80 @@ export const tokens = [
   },
 ];
 
+const moonriverTokens = [
+  {
+    name: "Wrapped Moonriver",
+    symbol: "WMOVR",
+    address: testing ? "" : "0x98878b06940ae243284ca214f92bb71a2b032b8a",
+    decimals: 18,
+  },
+  {
+    name: "USD Coin",
+    symbol: "USDC",
+    address: testing ? '' : '',
+    decimals: 6
+  },
+  {
+    name: "US Tether",
+    symbol: "USDT",
+    address: testing ? '' : '',
+    decimals: 6
+  },
+  {
+    name: "Wrapped Ether",
+    symbol: "WETH",
+    address: testing ? '' : '',
+    decimals: 6
+  },
+  {
+    name: "Frax",
+    symbol: "FRAX",
+    address: testing ? '' : '0x853d955acef822db058eb8505911ed77f175b99e',
+    decimals: 6
+  },
+  {
+    name: "MIM",
+    symbol: "MIN",
+    address: testing ? '' : '',
+    decimals: 6
+  },
+  {
+    name: "Wrapped Bitcoin",
+    symbol: "WBTC",
+    address: testing ? '' : "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    decimals: 18,
+  },
+  {
+    name: "Sushi Swap",
+    symbol: "SUSHI",
+    address: testing ? '' : "",
+    decimals: 18,
+  },
+  {
+    name: "Aave Token",
+    symbol: "AAVE",
+    address: testing ? " " : "",
+    decimals: 18
+  },
+
+];
+
+export const allNetworkTokens = {
+  'ethereum': tokens,
+  'moonriver': moonriverTokens
+}
+
+export const blocksExplorer = {
+  'ethereum': {
+    'testnet': 'https://rinkeby.etherscan.io',
+    'mainnet': 'https://etherscan.io'
+  },
+  'moonriver': {
+    'testnet': 'https://moonbase.moonscan.io',
+    'mainnet': 'https://moonriver.moonscan.io'
+  }
+}
+
 export const DECIMAL_6_ADDRESSES = [
   tokenAddresses.ethereum.USDC.testnet,
   tokenAddresses.ethereum.USDC.mainnet,

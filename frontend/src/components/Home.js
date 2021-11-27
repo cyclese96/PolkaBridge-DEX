@@ -5,9 +5,6 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import store from "../store";
 import {
-  bscConfig,
-  bscNetwork,
-  etherConfig,
   etheriumNetwork,
   supportedNetworks,
 } from "../constants";
@@ -17,7 +14,6 @@ import {
   getCurrentAccount,
 } from "../utils/helper";
 import { CHANGE_NETWORK } from "../actions/types";
-import TabPage from "./TabPage";
 import { loadTokens } from "../actions/dexActions";
 import Navbar from "./common/Navbar";
 import { getCurrentNetwork } from "../utils/connectionUtils";
@@ -115,7 +111,7 @@ const Home = ({ connectWallet, loadTokens, account: { currentNetwork } }) => {
 
           await connectWallet(false, network)
           await loadTokens(network);
-          console.log('reloading...')
+          console.log('reloading...', { network, networkId })
         });
 
         // todo: handle more ethereum event

@@ -1,5 +1,6 @@
 import BigNumber from "bignumber.js";
 import {
+  allNetworkTokens,
   bscTokens,
   currentConnection,
   ETH,
@@ -812,9 +813,12 @@ export const loadTokens = (network) => async (dispatch) => {
       type: SHOW_LOADING,
     });
 
-    const currentSupportedTokens =
-      network === etheriumNetwork ? tokens : bscTokens;
+    // const currentSupportedTokens =
+    //   network === etheriumNetwork ? tokens : bscTokens;
 
+    const currentSupportedTokens = Object.keys(allNetworkTokens).includes(network) ? allNetworkTokens?.[network] : []
+
+    console.log('load tokens ', { currentSupportedTokens, network })
     const cachedTokens = getCachedTokens();
     const allTokens =
       cachedTokens.length > 0
@@ -826,10 +830,7 @@ export const loadTokens = (network) => async (dispatch) => {
     });
   } catch (error) {
     console.log("loadTokens ", error);
-    dispatch({
-      type: DEX_ERROR,
-      payload: "Failed to confirm allowance",
-    });
+
   }
   dispatch({
     type: HIDE_LOADING,
