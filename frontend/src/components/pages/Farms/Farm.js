@@ -5,59 +5,39 @@ import {
     makeStyles,
 } from "@material-ui/core";
 
-// import Wallet from "../common/Wallet";
-
+import ShowChartIcon from '@material-ui/icons/ShowChart';
 import Varified from "../../../assets/check.png";
-import Link from "../../../assets/link.png";
+import { Link } from "react-router-dom";
+import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import TokenIcon from "../../common/TokenIcon";
+
 
 const useStyles = makeStyles((theme) => ({
     card: {
-        width: "100%",
-        minHeight: 421,
-        width: 370,
-        borderRadius: 30,
-        backgroundColor: "rgba(50, 50, 50, .20)",
-        border: "1px solid #212121",
-        filter: "drop-shadow(0 0 0.5rem #212121)",
-        border: "1px solid #212121",
+        width: 350,
+
+        borderRadius: 15,
+        marginTop: 20,
+        background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 15,
+        paddingBottom: 15,
         [theme.breakpoints.down("sm")]: {
-            paddingLeft: 0,
-            paddingRight: 0,
-            width: "100%",
-            height: "100%",
+            paddingLeft: 7,
+            paddingRight: 7,
+            // width: "90%",
+            // maxWidth: 400,
+            width: 300,
+            border: "1px solid #212121",
         },
     },
-    cardHeader: {
-        paddingTop: 10,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-    },
+
     cardContents: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "space-around",
-        height: "100%",
-        width: "100%",
+
     },
     avatar: {
         height: "35px",
-    },
-    cardHeading: {
-        fontSize: 18,
-    },
-    cardText: {
-        fontSize: 14,
-        alignSelf: "start",
-        marginLeft: 60,
-        margin: 0,
-    },
-
-    buttons: {
-        marginTop: 20,
-        marginBottom: 20,
     },
     numbers: {
         color: "#E0077D",
@@ -72,35 +52,7 @@ const useStyles = makeStyles((theme) => ({
             fontSize: 10,
         },
     },
-    bitePool: {
-        marginBottom: 20,
-        alignSelf: "start",
-    },
-    poolItemText: {
-        fontSize: 12,
-        marginLeft: 60,
-        margin: 0,
-        marginTop: 2,
-    },
-    stakeButtons: {
-        display: "flex",
-        justifyContent: "center",
-        flexWrap: "wrap-reverse",
-    },
-    stakeButton: {
-        marginTop: 5,
-        alignSelf: "center",
-        justifySelf: "center",
-    },
-    logoWrapper: {
-        height: 45,
-        width: 45,
-        backgroundColor: "white",
-        borderRadius: "50%",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-    },
+
 
     tokenTitle: {
         fontWeight: 500,
@@ -138,8 +90,9 @@ const useStyles = makeStyles((theme) => ({
     },
     tokenAmount: {
         fontWeight: 700,
-        padding: 0,
-        paddingLeft: 10,
+        // padding: 0,
+        // paddingLeft: 10,
+        marginRight: 5,
         fontSize: 18,
         color: "#C80C81",
         display: "flex",
@@ -169,13 +122,13 @@ const useStyles = makeStyles((theme) => ({
     earn: {
         textAlign: "center",
         color: "#bdbdbd",
-        fontSize: 15,
+        fontSize: 12,
         fontWeight: 600,
         border: "1px solid #C80C81",
-        borderRadius: 30,
-        height: 40,
-        width: 110,
-        paddingTop: 8,
+        borderRadius: 25,
+        height: 30,
+        width: 90,
+        paddingTop: 4,
     },
     farmName: {
         textAlign: "center",
@@ -215,7 +168,7 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     tagWrapper: {
-        padding: 10,
+        padding: 8,
     },
     imgWrapper: {
         padding: 15,
@@ -225,17 +178,11 @@ const useStyles = makeStyles((theme) => ({
     },
     tokenTitleDi: {
         fontWeight: 500,
-        padding: 0,
-        paddingLeft: 18,
         fontSize: 16,
         color: "#e5e5e5",
-        paddingTop: 10,
     },
     tokenAmountDi: {
         fontWeight: 700,
-        padding: 0,
-        paddingRight: 10,
-        paddingTop: 10,
         fontSize: 18,
         color: "#C80C81",
         display: "flex",
@@ -277,50 +224,61 @@ const useStyles = makeStyles((theme) => ({
         color: "white",
     },
     harvestButton: {
-        background: "linear-gradient(to right, #C80C81,purple)",
+        backgroundColor: "rgba(224, 7, 125, 0.9)",
         color: "white",
-        padding: 8,
-        paddingLeft: 15,
-        paddingRight: 15,
-        borderRadius: 20,
-        fontWeight: 500,
-        letterSpacing: 0.4,
         textTransform: "none",
-        width: 150,
-        filter: "drop-shadow(0 0 0.5rem #414141)",
-        marginLeft: 20,
+        fontSize: 17,
+        width: 110,
+        borderRadius: 15,
+        willChange: "transform",
+        transition: "transform 450ms ease 0s",
+        transform: "perspective(1px) translateZ(0px)",
+        padding: "8px 50px 8px 50px",
         "&:hover": {
-            background: "#C80C81",
+            background: "rgba(224, 7, 125, 0.7)",
         },
         [theme.breakpoints.down("sm")]: {
-            marginRight: 0,
-            marginLeft: 15,
-            width: 150,
+            fontSize: 14,
+            width: "80%",
         },
+
+    },
+    approveBtn: {
+        backgroundColor: "rgba(224, 7, 125, 0.9)",
+        color: "white",
+        textTransform: "none",
+        fontSize: 17,
+        borderRadius: 15,
+        willChange: "transform",
+        transition: "transform 450ms ease 0s",
+        transform: "perspective(1px) translateZ(0px)",
+        padding: "8px 50px 8px 50px",
+        "&:hover": {
+            background: "rgba(224, 7, 125, 0.7)",
+        },
+        [theme.breakpoints.down("sm")]: {
+            fontSize: 14,
+            width: "80%",
+        },
+
     },
 }));
 function Farm() {
     const classes = useStyles();
     return (
-        <div>
 
-            <Card elevation={10} className={classes.card}>
-                <div style={{ width: "100%" }}>
-                    <div className="d-flex justify-content-between align-items-center pt-2 pb-1">
-                        <div className={classes.imgWrapper}>
-                            <img
-                                className={classes.avatar}
-                                src={
-                                    "https://vampireswap.org/_next/image?url=https%3A%2F%2Fraw.githubusercontent.com%2Fvampireswap%2Ftokens%2Fmaster%2Fblockchains%2Ffantom%2Fassets%2F0x74b23882a30290451A17c44f4F05243b6b58C76d%2Flogo.png&w=48&q=50"
-                                }
-                            />
-                            <img
-                                className={classes.avatar}
-                                src={
-                                    "https://vampireswap.org/_next/image?url=https%3A%2F%2Fraw.githubusercontent.com%2Fvampireswap%2Ftokens%2Fmaster%2Fblockchains%2Ffantom%2Fassets%2F0x321162Cd933E2Be498Cd2267a90534A804051b11%2Flogo.png&w=48&q=50"
-                                }
-                            ></img>
-                        </div>
+
+        <Card elevation={10} className={classes.card}>
+            <div className={classes.cardContents} >
+
+
+                <div className="d-flex justify-content-between align-items-center">
+                    <div className={classes.imgWrapper}>
+                        <TokenIcon className={classes.avatar} symbol="PBR" />
+                        <TokenIcon className={classes.avatar} symbol="ETH" />
+                    </div>
+                    <div>
+                        <div className={classes.farmName}>PBR-ETH</div>
                         <div className={classes.tagWrapper}>
                             {/* <div className={classes.earn}>ETH-USDT</div> */}
                             <div className={classes.earn}>
@@ -333,149 +291,84 @@ function Farm() {
                         </div>
                     </div>
 
-                    <div className="d-flex justify-content-center align-items-center ">
-                        <div
-                            style={{
-                                backgroundColor: "#C80C81",
-                                borderRadius: "50%",
-                                height: "5px",
-                                width: "5px",
-                                marginRight: 5,
-                            }}
-                        ></div>
-                        <div className={classes.farmName}>ETH-USDT</div>
-                    </div>
-                    <div style={{ minHeight: 120, paddingLeft: 10, paddingRight: 10 }}>
-                        <div className="mt-3">
-                            <div className="d-flex justify-content-between mt-1">
-                                <div className="d-flex justify-content-start">
-                                    <div>
-                                        <div className={classes.tokenTitle}>APR</div>
-                                    </div>
-                                </div>
-                                <div className={classes.tokenAmount}>43404%</div>
-                            </div>
-                            <div className="d-flex justify-content-between mt-2">
-                                <div className="d-flex justify-content-start">
-                                    <div>
-                                        <div className={classes.tokenTitle}>EARN</div>
-                                    </div>
-                                </div>
-                                <div className={classes.tokenAmount}>PBR</div>
-                            </div>
-
-                            <div className="d-flex justify-content-between mt-2">
-                                <div className="d-flex justify-content-start">
-                                    <div>
-                                        <div className={classes.tokenTitle}>PBR EARNED</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="mt-1">
-                                <div>
-                                    <input
-                                        style={{
-                                            width: "50%",
-                                            height: 40,
-                                            padding: "12px 20px",
-                                            margin: "8px 0",
-                                            boxSizing: "border-box",
-                                            border: "1px solid grey",
-                                            borderRadius: 30,
-                                            outline: "none",
-                                            backgroundColor: "transparent",
-                                        }}
-                                    />
-                                    <button className={classes.harvestButton}>Harvest</button>
-                                </div>
-                            </div>
-
-                            {/* <div className="d-flex justify-content-between mt-2">
-                <div className="d-flex justify-content-start">
-                  <div>
-                    <div className={classes.tokenTitle}>PBR-USDT LP STAKED</div>
-                  </div>
                 </div>
-              </div> */}
-                            {/* <div className="input-group mb-3">
-                <div className="input-group-prepend">
-                  <span className="input-group-text" id="basic-addon3">
-                    Staked LP
-                  </span>
-                </div>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="basic-url"
-                  aria-describedby="basic-addon3"
-                />
-              </div> */}
 
-                            <div className="d-flex justify-content-center my-4">
-                                <div>
-                                    <h1 className={classes.tokenTitleContract}>
-                                        PBR-ETH LP STAKED
-                                    </h1>
-                                    <Button className={classes.buttonContract}>
-                                        Enable Contract
-                                    </Button>
-                                </div>
-                            </div>
-                        </div>
+                <div className="d-flex justify-content-between align-items-center">
+
+                    <div className={classes.tokenTitle}>APR</div>
+
+                    <div className="d-flex align-items-center">
+                        <div className={classes.tokenAmount}>43404%  </div>
+                        <ShowChartIcon className={classes.tokenAmount} fontSize='small' />
                     </div>
+                </div>
+
+
+                <div className="d-flex justify-content-between align-items-center">
+                    <div className={classes.tokenTitle}>EARN</div>
+                    <div className={classes.tokenAmount}>PBR + Fees </div>
+                </div>
+
+                <div className="d-flex justify-content-between align-items-center">
+                    <div className={classes.tokenTitle}>PBR earned</div>
+                    <div className={classes.tokenAmount}></div>
+                </div>
+
+
+                <div className="d-flex justify-content-between align-items-center">
+                    <div className={classes.tokenTitle}>0.00</div>
+                    <Button
+                        variant="contained"
+                        className={classes.harvestButton}
+                        disabled={true}
+                    >
+                        Harvest
+                    </Button>
+                </div>
+
+                <div className="d-flex justify-content-between align-items-center mt-4">
+                    <div className={classes.tokenTitle}>PBR-ETH LP STAKED</div>
+                    <div className={classes.tokenAmount}></div>
+                </div>
+
+
+                <div className="d-flex justify-content-center align-items-center mt-1">
+                    <Button
+                        variant="contained"
+                        className={classes.approveBtn}
+                    >
+                        Approve LP Tokens
+                    </Button>
+                </div>
+
+                <div className="mt-3">
 
                     <Divider style={{ backgroundColor: "#616161", height: 1 }} />
-                    <div className="d-flex justify-content-between mt-1">
-                        <div className="d-flex justify-content-start">
-                            <div>
-                                <div className={classes.tokenTitleDi}>Total Liquidity</div>
-                            </div>
-                        </div>
-                        <div className={classes.tokenAmountDi}>$428,813,040</div>
-                    </div>
-                    <div className={classes.desktop}>
-                        <div className="text-center mt-2">
-                            <div className={classes.tokenTitle}>
-                                Get ETH-USDT LP{" "}
-                                <img
-                                    style={{ height: 20, width: 20, marginRight: 5 }}
-                                    src={Link}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="text-center mt-2">
-                            <div className={classes.tokenTitle}>
-                                View Contract{" "}
-                                <img
-                                    style={{ height: 20, width: 20, marginRight: 5 }}
-                                    src={Link}
-                                />
-                            </div>
-                        </div>
-                        <div className="text-center mt-2">
-                            <div className={classes.tokenTitle}>
-                                See Pair Info{" "}
-                                <img
-                                    style={{
-                                        height: 20,
-                                        width: 20,
-                                        marginRight: 5,
-                                    }}
-                                    src={Link}
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* <div className={classes.buttons}>
-                        <div className="text-center">
-                            <Wallet />
-                        </div>
-                    </div> */}
                 </div>
-            </Card>
-        </div>
+
+                <div className="d-flex justify-content-between align-items-center mt-4">
+                    <div className={classes.tokenTitle}>Total Liquidity:</div>
+                    <div className={classes.tokenAmount}>$413,690,675</div>
+                </div>
+
+                <div className="d-flex justify-content-between align-items-center mt-1">
+                    <Link to="liquidity">  <div className={classes.tokenTitle}>Get PBR-USDT LP  <OpenInNewIcon fontSize='small' />  </div> </Link>
+                    <div className={classes.tokenAmount}></div>
+                </div>
+
+
+                <div className="d-flex justify-content-between align-items-center ">
+                    <Link to="liquidity">  <div className={classes.tokenTitle}>View Contract  <OpenInNewIcon fontSize='small' />  </div> </Link>
+                    <div className={classes.tokenAmount}></div>
+                </div>
+
+                <div className="d-flex justify-content-between align-items-center ">
+                    <Link to="liquidity">  <div className={classes.tokenTitle}>See Pair Info  <OpenInNewIcon fontSize='small' />  </div> </Link>
+                    <div className={classes.tokenAmount}></div>
+                </div>
+
+            </div>
+        </Card>
     );
 }
 
