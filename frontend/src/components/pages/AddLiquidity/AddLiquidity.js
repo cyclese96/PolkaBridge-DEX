@@ -1,14 +1,14 @@
 import { Button, Card, makeStyles } from "@material-ui/core";
 import { connect } from "react-redux";
 import { useState } from "react";
-import CustomButton from "../../Buttons/CustomButton";
+// import CustomButton from "../../Buttons/CustomButton";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import AddCard from "./AddCard";
 import RemoveCard from "./RemoveCard";
 import TabPage from "../../TabPage";
-import tokenThumbnail from "../../../utils/tokenThumbnail";
-import { SwapHoriz } from "@material-ui/icons";
+// import tokenThumbnail from "../../../utils/tokenThumbnail";
+// import { SwapHoriz } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {

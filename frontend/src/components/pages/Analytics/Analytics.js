@@ -41,7 +41,7 @@ const Analytics = () => {
   return (
     <div>
       <div className="mb-3">
-        <TabPage data={2} />
+        <TabPage data={3} />
       </div>
       {/* <h3 className={classes.heading}>PolkaBridge DEX Overview</h3> */}
       {/* <div className="mt-2 row g-3" style={{ padding: 10 }}>

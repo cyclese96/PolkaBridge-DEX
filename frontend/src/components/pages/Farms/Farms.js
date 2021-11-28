@@ -3,10 +3,22 @@ import { connect } from "react-redux";
 import { useState } from "react";
 
 import TabPage from "../../TabPage";
-import tokenThumbnail from "../../../utils/tokenThumbnail";
 import Farm from "./Farm";
 
 const useStyles = makeStyles((theme) => ({
+
+    title: {
+        textAlign: "center",
+        color: "#bdbdbd",
+        fontSize: 36,
+        fontWeight: 600,
+    },
+    subTitle: {
+        textAlign: "center",
+        color: "#bdbdbd",
+        fontSize: 24,
+        fontWeight: 600,
+    },
 }));
 
 const Farms = ({ account: { balance, loading } }) => {
@@ -15,10 +27,37 @@ const Farms = ({ account: { balance, loading } }) => {
 
     return (
         <>
-            <div className="mb-3">
-                <TabPage data={1} />
+            <div>
+                <TabPage data={2} />
             </div>
-            <Farm />
+            <div className="mt-5 mb-2 container row">
+                {/* <div className={classes.title}>
+                    Farms
+                </div> */}
+                <div className={classes.subTitle}>
+                    Stake LP tokens to earn.
+                </div>
+            </div>
+
+
+            <div className="container row">
+
+                <div className="d-flex flex-wrap justify-content-around align-items-center">
+                    <div className="col-md-4">
+                        <Farm />
+                    </div>
+                    <div className="col-md-4">
+                        <Farm />
+                    </div>
+                    <div className="col-md-4">
+                        <Farm />
+                    </div>
+
+                </div>
+            </div>
+
+
+
         </>
     );
 };
