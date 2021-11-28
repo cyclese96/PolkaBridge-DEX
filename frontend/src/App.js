@@ -20,6 +20,7 @@ import Analytics from "./components/pages/Analytics/Analytics";
 import AllTopToken from "./components/pages/Analytics/components/Tables/AllTopToken";
 import AllTopPool from "./components/pages/Analytics/components/Tables/AllTopPool";
 import Farms from "./components/pages/Farms/Farms";
+import StakeDialogue from "./components/pages/Farms/StakeDialogue";
 
 const useStyles = makeStyles((theme) => ({
   navbar: {
@@ -103,6 +104,7 @@ function App() {
               <Route exact path="/farms" component={Farms} />
               <Route exact path="/liquidity" component={AddLiquidity} />
               <Route exact path="/charts" component={Analytics} />
+              <Route exact path="/dialogue" component={StakeDialogue} />
               {/* <Route exact path="/charts/tokens" component={AllTopToken} />
               <Route exact path="/charts/pools" component={AllTopPool} /> */}
 
