@@ -202,14 +202,14 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
         uint256 amount1In = balance1 > _reserve1 - amount1Out ? balance1 - (_reserve1 - amount1Out) : 0;
         require(amount0In > 0 || amount1In > 0, 'PolkaBridge AMM: INSUFFICIENT_INPUT_AMOUNT');
         { // scope for reserve{0,1}Adjusted, avoids stack too deep errors
-            // uint balance0Adjusted = balance0.mul(1000).sub(amount0In.mul(2));
-            // uint balance1Adjusted = balance1.mul(1000).sub(amount1In.mul(2));
+            uint balance0Adjusted = balance0.mul(1000).sub(amount0In.mul(2));
+            uint balance1Adjusted = balance1.mul(1000).sub(amount1In.mul(2));
             // require(false, string(abi.encodePacked(uint2str(_reserve0), ' : ', uint2str(_reserve1), ' : ', uint2str(balance0), ' : ', uint2str(balance1), ' : ', uint2str(amount0In), ' : ', uint2str(amount1In))));
-            // require(balance0Adjusted.mul(balance1Adjusted) >= uint(_reserve0).mul(_reserve1).mul(1000**2), 'PolkaBridge AMM: K');
+            require(balance0Adjusted.mul(balance1Adjusted) >= uint(_reserve0).mul(_reserve1).mul(1000**2), 'PolkaBridge AMM: K');
         }
 
-        uint256 amount0Treasury = amount0In.mul(4).div(10000);
-        uint256 amount1Treasury = amount1In.mul(4).div(10000);
+        uint256 amount0Treasury = amount0In.div(2500); // amount0In.mul(4).div(10000);
+        uint256 amount1Treasury = amount1In.div(2500); // amount1In.mul(4).div(10000);
         if (amount0Treasury > 0) {
             require(treasury != address(0), 'Treasury address error');
             _safeTransfer(token0, treasury, amount0Treasury);
