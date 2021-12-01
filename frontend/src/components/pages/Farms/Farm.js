@@ -1,8 +1,8 @@
 import {
-    Button,
-    Card,
-    Divider,
-    makeStyles,
+  Button,
+  Card,
+  Divider,
+  makeStyles,
 } from "@material-ui/core";
 
 import ShowChartIcon from '@material-ui/icons/ShowChart';
@@ -10,6 +10,8 @@ import Varified from "../../../assets/check.png";
 import { Link } from "react-router-dom";
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import TokenIcon from "../../common/TokenIcon";
+import { useState } from "react";
+import StakeDialog from "./StakeDialog";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -54,7 +56,23 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 500,
     padding: 0,
     paddingLeft: 10,
-    fontSize: 16,
+    fontSize: 14,
+    paddingBottom: 3,
+    color: "#cecece",
+  },
+  tokenValuesZero: {
+    fontWeight: 500,
+    padding: 0,
+    paddingLeft: 10,
+    fontSize: 24,
+    paddingBottom: 3,
+    color: "#727272",
+  },
+  tokenValues: {
+    fontWeight: 500,
+    padding: 0,
+    paddingLeft: 10,
+    fontSize: 24,
     paddingBottom: 3,
     color: "#e5e5e5",
   },
@@ -235,7 +253,7 @@ const useStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.down("sm")]: {
       fontSize: 14,
-      width: "80%",
+      // width: "80%",
     },
   },
   approveBtn: {
@@ -253,14 +271,57 @@ const useStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.down("sm")]: {
       fontSize: 14,
-      width: "80%",
+      // width: "80%",
+    },
+  },
+  stakeBtn: {
+    backgroundColor: "rgba(224, 7, 125, 0.6)",
+    color: "white",
+    textTransform: "none",
+    fontSize: 28,
+    borderRadius: 15,
+    height: 40,
+    width: 50,
+    willChange: "transform",
+    transition: "transform 450ms ease 0s",
+    transform: "perspective(1px) translateZ(0px)",
+    paddingBottom: 10,
+    "&:hover": {
+      background: "rgba(224, 7, 125, 0.7)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 14,
+      // width: "80%",
     },
   },
 }));
-function Farm() {
+
+
+const Farm = (props) => {
+
+  const { } = props;
   const classes = useStyles();
+
+  const [stakeDialogOpen, setStakeDialog] = useState(false);
+
+
+  const handleApproveLpTokenToFarm = () => {
+    //todo:
+
+  }
+
+  const handleHarvest = () => {
+    //todo:
+  }
+
+  const handleStakeActions = (actionType = "stake") => {
+    //todo:
+    setStakeDialog(true)
+  }
+
   return (
     <Card elevation={10} className={classes.card}>
+      <StakeDialog open={stakeDialogOpen} handleClose={() => setStakeDialog(false)} />
       <div className={classes.cardContents}>
         <div className="d-flex justify-content-between align-items-center">
           <div className={classes.imgWrapper}>
@@ -302,7 +363,7 @@ function Farm() {
         </div>
 
         <div className="d-flex justify-content-between align-items-center">
-          <div className={classes.tokenTitle}>0.00</div>
+          <div className={classes.tokenValues}>2344.12</div>
           <Button
             variant="contained"
             className={classes.harvestButton}
@@ -317,10 +378,23 @@ function Farm() {
           <div className={classes.tokenAmount}></div>
         </div>
 
-        <div className="d-flex justify-content-center align-items-center mt-1">
+        {/* if not approrved */}
+        {/* <div className="d-flex justify-content-center align-items-center mt-1">
           <Button variant="contained" className={classes.approveBtn}>
             Approve LP Tokens
           </Button>
+        </div> */}
+        {/* if approved */}
+        <div className="d-flex justify-content-between align-items-center mt-1">
+          <div className={classes.tokenValues}>0.00</div>
+          <div className="d-flex justify-content-between align-items-center">
+            <Button onClick={handleStakeActions} className={classes.stakeBtn} style={{ marginRight: 5 }}>
+              +
+            </Button>
+            <Button onClick={handleStakeActions} className={classes.stakeBtn}>
+              -
+            </Button>
+          </div>
         </div>
 
         <div className="mt-3">
