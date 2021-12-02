@@ -4,9 +4,9 @@ import { useState } from "react";
 
 import TabPage from "../../TabPage";
 import Farm from "./Farm";
+import { supportedFarmingPools } from "../../../constants";
 
 const useStyles = makeStyles((theme) => ({
-
     title: {
         textAlign: "center",
         color: "#bdbdbd",
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Farms = ({ account: { balance, loading } }) => {
+const Farms = ({ account: { balance, loading, currentNetwork } }) => {
     const classes = useStyles();
     const [showCard, setShowAdd] = useState({ status: false, component: "" });
 
@@ -35,29 +35,19 @@ const Farms = ({ account: { balance, loading } }) => {
                     Farms
                 </div> */}
                 <div className={classes.subTitle}>
-                    Stake LP tokens to earn.
+                    {!supportedFarmingPools?.[currentNetwork] ? "No Farming pools available on " + currentNetwork + " network" : "Stake LP tokens to earn."}
+
                 </div>
             </div>
-
-
             <div className="container row">
-
                 <div className="d-flex flex-wrap justify-content-around align-items-center">
-                    <div className="col-md-4">
-                        <Farm />
-                    </div>
-                    <div className="col-md-4">
-                        <Farm />
-                    </div>
-                    <div className="col-md-4">
-                        <Farm />
-                    </div>
-
+                    {supportedFarmingPools?.[currentNetwork]?.map(farmPool => {
+                        return <div className="col-md-4">
+                            <Farm farmPool={farmPool} />
+                        </div>
+                    })}
                 </div>
             </div>
-
-
-
         </>
     );
 };

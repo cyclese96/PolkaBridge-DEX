@@ -10,9 +10,12 @@ import Varified from "../../../assets/check.png";
 import { Link } from "react-router-dom";
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import TokenIcon from "../../common/TokenIcon";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StakeDialog from "./StakeDialog";
-
+import { allowanceAmount, farmingPoolConstants } from "../../../constants";
+import { connect } from "react-redux";
+import { formatCurrency, formattedNum } from "../../../utils/formatters";
+import { checkLpFarmAllowance, confirmLpFarmAllowance, getFarmInfo } from '../../../actions/farmActions'
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -37,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
 
   cardContents: {},
   avatar: {
-    height: "35px",
+    height: "30px",
   },
   numbers: {
     color: "#E0077D",
@@ -58,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 10,
     fontSize: 14,
     paddingBottom: 3,
-    color: "#cecece",
+    color: "#b7b7b7",
   },
   tokenValuesZero: {
     fontWeight: 500,
@@ -136,13 +139,13 @@ const useStyles = makeStyles((theme) => ({
   earn: {
     textAlign: "center",
     color: "#bdbdbd",
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: 600,
     border: "1px solid #C80C81",
     borderRadius: 25,
     height: 30,
     width: 90,
-    paddingTop: 4,
+    paddingTop: 3,
   },
   farmName: {
     textAlign: "center",
@@ -257,7 +260,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   approveBtn: {
-    backgroundColor: "rgba(224, 7, 125, 0.9)",
+    backgroundColor: "rgba(224, 7, 125, 0.6)",
     color: "white",
     textTransform: "none",
     fontSize: 17,
@@ -296,17 +299,77 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+//redux states for testing
+const famrs = {
+  "PBR-ETH": {
+    apr: '200.0',
+    earned: '20',
+    staked: '100',
+    liquidity: '413690675',
+    pairAddress: '0x3f5d1EE2391850578712C4473D7b8df5A036C2A4'
+  },
+  "ETH-USDT": {
+    apr: '150',
+    earned: '100',
+    staked: '20000',
+    liquidity: '413690675',
+    pairAddress: '0xE3419211dccfb659c6d967a290Fbe5F2eBFA241a'
+  }
+}
+
+const lpApproved = {
+  "PBR-ETH": false,
+  "ETH-USDT": true
+}
+
 
 const Farm = (props) => {
 
-  const { } = props;
+  const {
+    farmPool,
+    account: { currentAccount, currentNetwork },
+    farm: { farms, lpApproved },
+    getFarmInfo,
+    checkLpFarmAllowance,
+    confirmLpFarmAllowance
+  } = props;
   const classes = useStyles();
 
   const [stakeDialogOpen, setStakeDialog] = useState(false);
 
+  useEffect(() => {
+
+    if (!currentAccount || !currentNetwork) {
+      return;
+    }
+
+    async function loadFarmData() {
+      await checkLpFarmAllowance(farmPoolAddress(farmPool), currentAccount, currentNetwork);
+      await getFarmInfo(farmPoolAddress(farmPool), farmPoolId(farmPool), currentAccount, currentNetwork);
+    }
+    loadFarmData();
+
+  }, [currentAccount]);
+
+
+  const farmPoolAddress = (_farmPool) => {
+    return farmingPoolConstants?.ethereum?.[_farmPool]?.address;
+  }
+
+  const farmPoolId = (_farmPool) => {
+    return farmingPoolConstants?.ethereum?.[_farmPool]?.pid;
+  }
+
+  const farmData = (_farmPool) => {
+    if (!Object.keys(famrs).includes(farmPoolAddress(_farmPool))) {
+      return {}
+    }
+    return farms[farmPoolAddress(_farmPool)];
+  }
 
   const handleApproveLpTokenToFarm = () => {
-    //todo:
+
+    confirmLpFarmAllowance(allowanceAmount, farmPoolAddress(farmPool), currentAccount, currentNetwork);
 
   }
 
@@ -325,11 +388,11 @@ const Farm = (props) => {
       <div className={classes.cardContents}>
         <div className="d-flex justify-content-between align-items-center">
           <div className={classes.imgWrapper}>
-            <TokenIcon className={classes.avatar} symbol="PBR" />
-            <TokenIcon className={classes.avatar} symbol="ETH" />
+            <TokenIcon className={classes.avatar} symbol={farmPool?.split("-")?.[0]} />
+            <TokenIcon className={classes.avatar} symbol={farmPool?.split("-")?.[1]} />
           </div>
           <div>
-            <div className={classes.farmName}>PBR-ETH</div>
+            <div className={classes.farmName}>{farmPool}</div>
             <div className={classes.tagWrapper}>
               {/* <div className={classes.earn}>ETH-USDT</div> */}
               <div className={classes.earn}>
@@ -337,17 +400,17 @@ const Farm = (props) => {
                   style={{ height: 20, width: 20, marginRight: 5 }}
                   src={Varified}
                 />
-                Core 40X
+                Core {farmingPoolConstants?.[currentNetwork]?.[farmPool]?.multiplier}
               </div>
             </div>
           </div>
         </div>
 
         <div className="d-flex justify-content-between align-items-center">
-          <div className={classes.tokenTitle}>APR</div>
+          <div className={classes.tokenTitle}>APR </div>
 
           <div className="d-flex align-items-center">
-            <div className={classes.tokenAmount}>43404% </div>
+            <div className={classes.tokenAmount}>{famrs?.[farmPool]?.apr}% </div>
             <ShowChartIcon className={classes.tokenAmount} fontSize="small" />
           </div>
         </div>
@@ -363,7 +426,7 @@ const Farm = (props) => {
         </div>
 
         <div className="d-flex justify-content-between align-items-center">
-          <div className={classes.tokenValues}>2344.12</div>
+          <div className={classes.tokenValues}>{formattedNum(!farmData(farmPool) ? "0.00" : farmData(farmPool).pendingPbr)}</div>
           <Button
             variant="contained"
             className={classes.harvestButton}
@@ -378,24 +441,25 @@ const Farm = (props) => {
           <div className={classes.tokenAmount}></div>
         </div>
 
-        {/* if not approrved */}
-        {/* <div className="d-flex justify-content-center align-items-center mt-1">
-          <Button variant="contained" className={classes.approveBtn}>
-            Approve LP Tokens
-          </Button>
-        </div> */}
-        {/* if approved */}
-        <div className="d-flex justify-content-between align-items-center mt-1">
-          <div className={classes.tokenValues}>0.00</div>
-          <div className="d-flex justify-content-between align-items-center">
-            <Button onClick={handleStakeActions} className={classes.stakeBtn} style={{ marginRight: 5 }}>
-              +
-            </Button>
-            <Button onClick={handleStakeActions} className={classes.stakeBtn}>
-              -
+        {!lpApproved?.[farmPoolAddress(farmPool)] ? (
+          <div className="d-flex justify-content-center align-items-center mt-1">
+            <Button onClick={handleApproveLpTokenToFarm} variant="contained" className={classes.approveBtn}>
+              Approve LP Tokens
             </Button>
           </div>
-        </div>
+        ) : (
+          <div className="d-flex justify-content-between align-items-center mt-1">
+            <div className={classes.tokenValues}>{formattedNum(farmData(farmPool)?.stakeData?.amount)}</div>
+            <div className="d-flex justify-content-between align-items-center">
+              <Button onClick={handleStakeActions} className={classes.stakeBtn} style={{ marginRight: 5 }}>
+                +
+              </Button>
+              <Button onClick={handleStakeActions} className={classes.stakeBtn}>
+                -
+              </Button>
+            </div>
+          </div>
+        )}
 
         <div className="mt-3">
           <Divider style={{ backgroundColor: "#616161", height: 1 }} />
@@ -440,4 +504,9 @@ const Farm = (props) => {
   );
 }
 
-export default Farm;
+const mapStateToProps = (state) => ({
+  account: state.account,
+  farm: state.farm
+})
+
+export default connect(mapStateToProps, { getFarmInfo, checkLpFarmAllowance, confirmLpFarmAllowance })(Farm);
