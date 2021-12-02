@@ -81,6 +81,12 @@ export const factoryAddresses = {
   }
 }
 
+export const farmAddresses = {
+  ethereum: {
+    testnet: '0x8c4a0e798BdB842DbbbA5f4529F8278E2434faAD',
+    mainnet: '0x8c4a0e798BdB842DbbbA5f4529F8278E2434faAD'
+  }
+}
 
 export const ETH = "ETH";
 export const BNB = "BNB";
@@ -400,3 +406,22 @@ export const swapFnConstants = {
 
 export const THRESOLD_VALUE = 0.00001
 export const THRESOLD_WEI_VALUE = 100000000000000
+
+export const supportedFarmingPools = {
+  'ethereum': ["PBR-ETH", "ETH-USDT"],
+};
+
+export const farmingPoolConstants = {
+  'ethereum': {
+    "PBR-ETH": {
+      multiplier: 40,
+      pid: 0,
+      address: '0x3f5d1EE2391850578712C4473D7b8df5A036C2A4'
+    },
+    "ETH-USDT": {
+      multiplier: 10,
+      pid: 1,
+      address: '0xE3419211dccfb659c6d967a290Fbe5F2eBFA241a'
+    }
+  }
+};
