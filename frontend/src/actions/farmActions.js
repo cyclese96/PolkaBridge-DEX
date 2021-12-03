@@ -3,6 +3,7 @@ import {
     SHOW_FARM_LOADING,
     HIDE_FARM_LOADING,
     STAKE_LP_TOKENS,
+    GET_LP_BALANCE_FARM,
 } from "./types";
 import {
     farmContract,
@@ -90,10 +91,6 @@ export const stakeLpTokens = (lpAmount, pid, account, network) => async (dispatc
 
         const _farmContract = farmContract(network);
 
-        dispatch({
-            type: SHOW_FARM_LOADING
-        });
-
         const stakeRes = await _farmContract.methods.stake(pid, lpAmount).send({ from: account });
 
 
@@ -140,6 +137,9 @@ export const getFarmInfo = (pairAddress, pid, account, network) => async (dispat
             type: SHOW_FARM_LOADING
         });
 
+        // getMultiplier(pool.lastRewardBlock, block.number)
+        //
+
         const [pbrPerBlock, poolInfo, pendingPbr, userInfo] = await Promise.all([
             _farmContract.methods.PBRPerBlock().call(),
             _farmContract.methods.poolInfo(pid).call(),
@@ -166,6 +166,27 @@ export const getFarmInfo = (pairAddress, pid, account, network) => async (dispat
     }
 };
 
+
+
+export const getLpBalanceFarm = (pairAddress, account, network) => async (dispatch) => {
+    try {
+
+        const _pairContract = pairContract(pairAddress, network);
+
+        const balWei = await _pairContract.methods.balanceOf(account).call();
+
+        const balObject = {};
+        balObject[pairAddress] = balWei;
+
+        dispatch({
+            type: GET_LP_BALANCE_FARM,
+            payload: balObject
+        });
+
+    } catch (error) {
+        console.log('getLpBalanceFarm ', error)
+    }
+};
 
 
 export const harvestReward = () => async (dispatch) => {
