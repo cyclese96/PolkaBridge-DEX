@@ -65,6 +65,15 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 16,
     fontWeight: 600,
   },
+  sectionLp: {
+    color: "#cecece",
+    fontSize: 16,
+    fontWeight: 600,
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 12,
+      fontWeight: 600,
+    },
+  },
   inputSection: {
     padding: 7,
     width: 420,
@@ -126,30 +135,23 @@ const useStyles = makeStyles((theme) => ({
     outline: "none",
     padding: 10,
     [theme.breakpoints.down("sm")]: {
-      width: 80,
+      width: 170,
       padding: 7,
       fontSize: 15,
       marginTop: 10,
       height: 50,
-      width: 250,
+      marginRight: 5,
     },
   },
 }));
 
-export default function StakeDialog({
-  open,
-  handleClose,
-}
-) {
+export default function StakeDialog({ open, handleClose }) {
   const classes = useStyles();
-  const [inputValue, setInputValue] = React.useState('');
+  const [inputValue, setInputValue] = React.useState("");
 
-  const handleMax = () => {
-
-  }
+  const handleMax = () => {};
 
   return (
-
     <Dialog
       onClose={handleClose}
       open={open}
@@ -158,7 +160,8 @@ export default function StakeDialog({
       color="transparent"
       PaperProps={{
         style: {
-          borderRadius: 15, backgroundColor: "#121827",
+          borderRadius: 15,
+          backgroundColor: "#121827",
           color: "#f9f9f9",
         },
       }}
@@ -176,7 +179,7 @@ export default function StakeDialog({
                   className={classes.closeButton}
                   onClick={handleClose}
                 >
-                  <CloseIcon style={{ color: 'rgba(224, 7, 125, 0.6)' }} />
+                  <CloseIcon style={{ color: "rgba(224, 7, 125, 0.6)" }} />
                 </IconButton>
               </div>
             </div>
@@ -193,7 +196,7 @@ export default function StakeDialog({
                 <h1 className={classes.section}>Balance: 13.8973</h1>
               </div>
             </div>
-            <div className="d-flex flex-wrap justify-content-between align-items-center mt-2">
+            <div className="d-flex justify-content-between align-items-center mt-2">
               <div>
                 {/* <div className={classes.tokenTitle}>0.00</div> */}
                 <input
@@ -204,11 +207,13 @@ export default function StakeDialog({
                   value={inputValue}
                 />
               </div>
-              <div className="d-flex justify-content-between align-items-center mt-2">
-                <Button className={classes.maxButton} onClick={handleMax} >
+              <div className="d-flex flex-wrap justify-content-between align-items-center mt-2">
+                <Button className={classes.maxButton} onClick={handleMax}>
                   Max
                 </Button>
-                <h1 className={classes.section}>PBR-USDT LP</h1>
+                <div className={classes.sectionLp}>
+                  <span>PBR-USDT LP</span>
+                </div>
               </div>
             </div>
           </div>
@@ -223,7 +228,7 @@ export default function StakeDialog({
             <Button
               variant="contained"
               className={classes.confirmButton}
-            // disabled={true}
+              // disabled={true}
             >
               Confirm
             </Button>

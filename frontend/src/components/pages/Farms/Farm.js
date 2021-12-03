@@ -20,7 +20,6 @@ import { checkLpFarmAllowance, confirmLpFarmAllowance, getFarmInfo, getLpBalance
 const useStyles = makeStyles((theme) => ({
   card: {
     width: 350,
-
     borderRadius: 15,
     marginTop: 20,
     background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
@@ -35,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
       // maxWidth: 400,
       width: 300,
       border: "1px solid #212121",
+      marginLeft: 40,
     },
   },
 

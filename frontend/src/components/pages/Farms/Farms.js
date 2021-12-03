@@ -7,49 +7,64 @@ import Farm from "./Farm";
 import { supportedFarmingPools } from "../../../constants";
 
 const useStyles = makeStyles((theme) => ({
-    title: {
-        textAlign: "center",
-        color: "#bdbdbd",
-        fontSize: 36,
-        fontWeight: 600,
+  title: {
+    textAlign: "center",
+    color: "#bdbdbd",
+    fontSize: 36,
+    fontWeight: 600,
+  },
+  subTitle: {
+    textAlign: "center",
+    color: "#bdbdbd",
+    fontSize: 24,
+    fontWeight: 600,
+  },
+  card: {
+    [theme.breakpoints.down("md")]: {
+      display: "flex",
+      justifyContent: "space-around",
+      paddingRight: 65,
     },
-    subTitle: {
-        textAlign: "center",
-        color: "#bdbdbd",
-        fontSize: 24,
-        fontWeight: 600,
+    [theme.breakpoints.down("sm")]: {
+      paddingLeft: 15,
     },
+  },
 }));
 
 const Farms = ({ account: { balance, loading, currentNetwork } }) => {
-    const classes = useStyles();
-    const [showCard, setShowAdd] = useState({ status: false, component: "" });
+  const classes = useStyles();
+  const [showCard, setShowAdd] = useState({ status: false, component: "" });
 
-    return (
-        <>
-            <div>
-                <TabPage data={2} />
-            </div>
-            <div className="mt-5 mb-2 container row">
-                {/* <div className={classes.title}>
+  return (
+    <>
+      <div>
+        <TabPage data={2} />
+      </div>
+      <div className="mt-5 mb-2 container row">
+        {/* <div className={classes.title}>
                     Farms
                 </div> */}
-                <div className={classes.subTitle}>
-                    {!supportedFarmingPools?.[currentNetwork] ? "No Farming pools available on " + currentNetwork + " network" : "Stake LP tokens to earn."}
-
+        <div className={classes.subTitle}>
+          {!supportedFarmingPools?.[currentNetwork]
+            ? "No Farming pools available on " + currentNetwork + " network"
+            : "Stake LP tokens to earn."}
+        </div>
+      </div>
+      <div className={classes.card}>
+        <div className="container row">
+          <div className="d-flex flex-wrap justify-content-between align-items-center">
+            {supportedFarmingPools?.[currentNetwork]?.map((farmPool) => {
+              return (
+                <div className="col-md-4">
+                  <Farm farmPool={farmPool} />
                 </div>
-            </div>
-            <div className="container row">
-                <div className="d-flex flex-wrap justify-content-around align-items-center">
-                    {supportedFarmingPools?.[currentNetwork]?.map(farmPool => {
-                        return <div className="col-md-4">
-                            <Farm farmPool={farmPool} />
-                        </div>
-                    })}
-                </div>
-            </div>
-        </>
-    );
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </>
+  );
 };
 
 const mapStateToProps = (state) => ({
