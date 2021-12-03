@@ -15,7 +15,7 @@ import StakeDialog from "./StakeDialog";
 import { allowanceAmount, farmingPoolConstants } from "../../../constants";
 import { connect } from "react-redux";
 import { formatCurrency, formattedNum } from "../../../utils/formatters";
-import { checkLpFarmAllowance, confirmLpFarmAllowance, getFarmInfo } from '../../../actions/farmActions'
+import { checkLpFarmAllowance, confirmLpFarmAllowance, getFarmInfo, getLpBalanceFarm } from '../../../actions/farmActions'
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -331,7 +331,8 @@ const Farm = (props) => {
     farm: { farms, lpApproved },
     getFarmInfo,
     checkLpFarmAllowance,
-    confirmLpFarmAllowance
+    confirmLpFarmAllowance,
+    getLpBalanceFarm
   } = props;
   const classes = useStyles();
 
@@ -342,10 +343,12 @@ const Farm = (props) => {
     if (!currentAccount || !currentNetwork) {
       return;
     }
+    console.log('farmTest fetching data ', { currentAccount, currentNetwork })
 
     async function loadFarmData() {
-      await checkLpFarmAllowance(farmPoolAddress(farmPool), currentAccount, currentNetwork);
-      await getFarmInfo(farmPoolAddress(farmPool), farmPoolId(farmPool), currentAccount, currentNetwork);
+      checkLpFarmAllowance(farmPoolAddress(farmPool), currentAccount, currentNetwork);
+      getFarmInfo(farmPoolAddress(farmPool), farmPoolId(farmPool), currentAccount, currentNetwork);
+      getLpBalanceFarm(farmPoolAddress(farmPool), currentAccount, currentNetwork);
     }
     loadFarmData();
 
@@ -509,4 +512,4 @@ const mapStateToProps = (state) => ({
   farm: state.farm
 })
 
-export default connect(mapStateToProps, { getFarmInfo, checkLpFarmAllowance, confirmLpFarmAllowance })(Farm);
+export default connect(mapStateToProps, { getFarmInfo, checkLpFarmAllowance, confirmLpFarmAllowance, getLpBalanceFarm })(Farm);
