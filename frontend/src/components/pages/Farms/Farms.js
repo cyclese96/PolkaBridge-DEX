@@ -22,6 +22,16 @@ const useStyles = makeStyles((theme) => ({
         fontSize: 24,
         fontWeight: 600,
     },
+    card: {
+        [theme.breakpoints.down("md")]: {
+            display: "flex",
+            justifyContent: "space-around",
+            paddingRight: 65,
+            [theme.breakpoints.down("sm")]: {
+                paddingLeft: 15,
+            },
+        },
+    }
 }));
 
 const Farms = (props) => {

@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
       // maxWidth: 400,
       width: 300,
       border: "1px solid #212121",
+      arginLeft: 40,
     },
   },
 
