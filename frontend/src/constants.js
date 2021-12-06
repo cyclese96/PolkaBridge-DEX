@@ -416,12 +416,15 @@ export const farmingPoolConstants = {
     "PBR-ETH": {
       multiplier: 40,
       pid: 0,
-      address: '0x3f5d1EE2391850578712C4473D7b8df5A036C2A4'
+      address: '0x33056C64C34cD9c7E27a94C00E2cA2AE8098974a',
+      blocksPerYear: '',
+
     },
     "ETH-USDT": {
       multiplier: 10,
       pid: 1,
-      address: '0xE3419211dccfb659c6d967a290Fbe5F2eBFA241a'
+      address: '0x511De78Ed2171776b30CF268D2C6CAcd28741704',
+      blocksPerYear: '',
     }
   }
 };

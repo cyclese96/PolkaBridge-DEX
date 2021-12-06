@@ -2,6 +2,7 @@ import BigNumber from "bignumber.js";
 import web3 from "../web";
 import axios from "axios";
 import { ethers } from "ethers";
+import { farmingPoolConstants } from "../constants";
 
 const WEI_UNITS = 1000000000000000000;
 const WEI_UNITS_6 = 1000000;
@@ -346,3 +347,47 @@ export const getCachedTokens = () => {
   }
   return JSON.parse(tokens);
 };
+
+
+const coinGecko = "https://api.coingecko.com/api";
+export const calculateApr = async (poolTotalStaked, farmPool, network) => {
+
+  try {
+
+    const { data } = await axios.get(
+      coinGecko +
+      "/v3/simple/price?ids=polkabridge&vs_currencies=usd&include_market_cap=true&include_24hr_vol=false&include_24hr_change=true&include_last_updated_at=true"
+    );
+    // console.log("data");
+    // console.log(data);
+    const tokenPrice = data.polkabridge ? data.polkabridge.usd : '0';
+    const poolStakedUsdValue = '0';
+
+    const blocksPerYear = farmingPoolConstants?.[network]?.[farmPool]?.blocksPerYear;
+    const newReward = '0';
+    const apr = new BigNumber(tokenPrice)
+      .times(!blocksPerYear ? '0' : blocksPerYear)
+      .times(newReward)
+      .div(new BigNumber(poolTotalStaked).times(poolStakedUsdValue))
+      .times(100)
+      .toFixed(1)
+      .toString();
+
+    return apr;
+
+  } catch (error) {
+
+    console.log('calculate apr exeption ', error);
+    return '0';
+  }
+
+  //   pbrPrice
+  //                 .times(new BigNumber(NUMBER_BLOCKS_PER_YEAR))
+  //                 .times(newReward)
+  //                 .div(stakedValue.usdValue)
+  //                 .times(100)
+  //                 .toFixed(1)
+  //                 .toLocaleString()
+
+
+}

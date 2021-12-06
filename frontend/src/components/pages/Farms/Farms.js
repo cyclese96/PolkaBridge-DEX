@@ -1,10 +1,13 @@
 import { makeStyles } from "@material-ui/core";
 import { connect } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import TabPage from "../../TabPage";
 import Farm from "./Farm";
 import { supportedFarmingPools } from "../../../constants";
+import StakeDialog from "./StakeDialog";
+import store from "../../../store";
+import { START_TRANSACTION } from "../../../actions/types";
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -21,9 +24,45 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Farms = ({ account: { balance, loading, currentNetwork } }) => {
+const Farms = (props) => {
+
+    const {
+        account: { balance, loading, currentNetwork },
+        dex: { transaction },
+        farm: { }
+    } = props;
+
     const classes = useStyles();
-    const [showCard, setShowAdd] = useState({ status: false, component: "" });
+    const [stakeDialog, setStakeDialog] = useState({ open: false, type: 'stake', farmPool: null });
+
+
+    const handleStake = (type, pool) => {
+        setStakeDialog({ type: type, farmPool: pool, open: true })
+    }
+
+    // swap status updates
+    useEffect(() => {
+        if (!transaction.hash && !transaction.type) {
+            return;
+        }
+
+        if (
+            transaction.type === "approve" || transaction.type === "stake" &&
+            !stakeDialog.open
+        ) {
+            setStakeDialog({ type: null, farmPool: null, open: true })
+        }
+    }, [transaction]);
+
+    const handleDialogClose = () => {
+        setStakeDialog(false)
+        setTimeout(() => {
+            store.dispatch({ type: START_TRANSACTION });
+        }, 200)
+
+    }
+
+
 
     return (
         <>
@@ -43,9 +82,12 @@ const Farms = ({ account: { balance, loading, currentNetwork } }) => {
                 <div className="d-flex flex-wrap justify-content-around align-items-center">
                     {supportedFarmingPools?.[currentNetwork]?.map(farmPool => {
                         return <div className="col-md-4">
-                            <Farm farmPool={farmPool} />
+                            <Farm farmPool={farmPool} onStake={handleStake} />
                         </div>
                     })}
+                </div>
+                <div>
+                    <StakeDialog open={stakeDialog.open} farmPool={stakeDialog.farmPool} handleClose={handleDialogClose} />
                 </div>
             </div>
         </>
@@ -54,6 +96,8 @@ const Farms = ({ account: { balance, loading, currentNetwork } }) => {
 
 const mapStateToProps = (state) => ({
     account: state.account,
+    dex: state.dex,
+    farm: state.farm
 });
 
 export default connect(mapStateToProps, {})(Farms);

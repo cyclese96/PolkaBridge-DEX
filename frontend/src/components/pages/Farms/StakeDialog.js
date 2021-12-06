@@ -3,6 +3,10 @@ import { Button, Card, Dialog, Divider, IconButton, makeStyles } from "@material
 import { Link } from "react-router-dom";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import CloseIcon from "@material-ui/icons/Close";
+import { fromWei } from "../../../utils/helper";
+import { formattedNum } from "../../../utils/formatters";
+import TransactionStatus from "../../common/TransactionStatus";
+import { connect } from "react-redux";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -136,15 +140,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function StakeDialog({
+const StakeDialog = ({
   open,
   handleClose,
+  dex: { transaction },
+  farm: { lpBalance },
+  farmPool
 }
-) {
+) => {
   const classes = useStyles();
   const [inputValue, setInputValue] = React.useState('');
 
   const handleMax = () => {
+
+  }
+
+  const confirmStake = () => {
 
   }
 
@@ -163,82 +174,101 @@ export default function StakeDialog({
         },
       }}
     >
-      <div className={classes.card}>
-        <div className={classes.cardContents}>
-          <div className="d-flex justify-content-between align-items-center">
-            <div>
-              <h1 className={classes.header}>Stake LP token</h1>
-            </div>
-            <div>
+      {transaction.type === null && (
+        <div className={classes.card}>
+          <div className={classes.cardContents}>
+            <div className="d-flex justify-content-between align-items-center">
               <div>
-                <IconButton
-                  aria-label="close"
-                  className={classes.closeButton}
-                  onClick={handleClose}
-                >
-                  <CloseIcon style={{ color: 'rgba(224, 7, 125, 0.6)' }} />
-                </IconButton>
+                <h1 className={classes.header}>Stake LP token</h1>
+              </div>
+              <div>
+                <div>
+                  <IconButton
+                    aria-label="close"
+                    className={classes.closeButton}
+                    onClick={handleClose}
+                  >
+                    <CloseIcon style={{ color: 'rgba(224, 7, 125, 0.6)' }} />
+                  </IconButton>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="mt-2">
-            <Divider style={{ backgroundColor: "grey", height: 1 }} />
-          </div>
-          <div className={classes.inputSection}>
-            <div className="d-flex justify-content-between align-items-center mt-2">
-              <div>
-                <h1 className={classes.section}>Stake</h1>
-              </div>
-              <div>
-                <h1 className={classes.section}>Balance: 13.8973</h1>
-              </div>
+            <div className="mt-2">
+              <Divider style={{ backgroundColor: "grey", height: 1 }} />
             </div>
-            <div className="d-flex flex-wrap justify-content-between align-items-center mt-2">
-              <div>
-                {/* <div className={classes.tokenTitle}>0.00</div> */}
-                <input
-                  type="text"
-                  className={classes.input}
-                  placeholder="0.00"
-                  onChange={({ target: { value } }) => setInputValue(value)}
-                  value={inputValue}
-                />
-              </div>
+            <div className={classes.inputSection}>
               <div className="d-flex justify-content-between align-items-center mt-2">
-                <Button className={classes.maxButton} onClick={handleMax} >
-                  Max
-                </Button>
-                <h1 className={classes.section}>PBR-USDT LP</h1>
+                <div>
+                  <h1 className={classes.section}>Stake</h1>
+                </div>
+                <div>
+                  <h1 className={classes.section}>Balance: {formattedNum(fromWei(lpBalance))}</h1>
+                </div>
+              </div>
+              <div className="d-flex flex-wrap justify-content-between align-items-center mt-2">
+                <div>
+                  {/* <div className={classes.tokenTitle}>0.00</div> */}
+                  <input
+                    type="text"
+                    className={classes.input}
+                    placeholder="0.00"
+                    onChange={({ target: { value } }) => setInputValue(value)}
+                    value={inputValue}
+                  />
+                </div>
+                <div className="d-flex justify-content-between align-items-center mt-2">
+                  <Button className={classes.maxButton} onClick={handleMax} >
+                    Max
+                  </Button>
+                  <h1 className={classes.section}>PBR-USDT LP</h1>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="d-flex justify-content-around align-items-center mt-3">
-            <Button
-              variant="text"
-              className={classes.cancelButton}
-              onClick={handleClose}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              className={classes.confirmButton}
-            // disabled={true}
-            >
-              Confirm
-            </Button>
-          </div>
-          <div className="d-flex justify-content-center align-items-center mt-4 mb-2">
-            <Link to="liquidity">
-              {" "}
-              <div className={classes.tokenTitle}>
-                Get PBR-USDT LP <OpenInNewIcon fontSize="small" />{" "}
-              </div>{" "}
-            </Link>
-            <div className={classes.tokenAmount}></div>
+            <div className="d-flex justify-content-around align-items-center mt-3">
+              <Button
+                variant="text"
+                className={classes.cancelButton}
+                onClick={handleClose}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                className={classes.confirmButton}
+                onClick={confirmStake}
+              >
+                Confirm
+              </Button>
+            </div>
+            <div className="d-flex justify-content-center align-items-center mt-4 mb-2">
+              <Link to="liquidity">
+                {" "}
+                <div className={classes.tokenTitle}>
+                  Get PBR-USDT LP <OpenInNewIcon fontSize="small" />{" "}
+                </div>{" "}
+              </Link>
+              <div className={classes.tokenAmount}></div>
+            </div>
           </div>
         </div>
+      )}
+
+      <div>
+        {transaction.type !== null && (
+          <div>
+            <TransactionStatus onClose={handleClose} />
+          </div>
+        )}
       </div>
+
     </Dialog>
   );
 }
+
+
+const mapStateToProps = (state) => ({
+  dex: state.dex,
+  farm: state.farm
+});
+
+export default connect(mapStateToProps, {})(StakeDialog);

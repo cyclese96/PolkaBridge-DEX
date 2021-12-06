@@ -9,7 +9,7 @@ const initalState = {
     },
     lpBalance: {
     },
-    loading: false
+    loading: {}//pairAddress:false
 };
 
 export default function (state = initalState, action) {
@@ -42,13 +42,19 @@ export default function (state = initalState, action) {
         case SHOW_FARM_LOADING:
             return {
                 ...state,
-                loading: true
+                loading: {
+                    ...state.loading,
+                    ...action.payload
+                }
             }
         case HIDE_FARM_LOADING:
             return {
                 ...state,
-                loading: false
-            };
+                loading: {
+                    ...state.loading,
+                    ...action.payload
+                }
+            }
         default:
             return state;
     }

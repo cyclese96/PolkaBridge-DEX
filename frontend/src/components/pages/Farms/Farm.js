@@ -16,6 +16,9 @@ import { allowanceAmount, farmingPoolConstants } from "../../../constants";
 import { connect } from "react-redux";
 import { formatCurrency, formattedNum } from "../../../utils/formatters";
 import { checkLpFarmAllowance, confirmLpFarmAllowance, getFarmInfo, getLpBalanceFarm } from '../../../actions/farmActions'
+import BigNumber from "bignumber.js";
+import store from "../../../store";
+import { SHOW_FARM_LOADING } from "../../../actions/types";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -61,6 +64,14 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 10,
     fontSize: 14,
     paddingBottom: 3,
+    color: "#b7b7b7",
+  },
+  link: {
+    fontWeight: 500,
+    padding: 0,
+    paddingLeft: 10,
+    fontSize: 12,
+    paddingBottom: 4,
     color: "#b7b7b7",
   },
   tokenValuesZero: {
@@ -327,8 +338,11 @@ const Farm = (props) => {
 
   const {
     farmPool,
+    handleDialogClose,
+    onStake,
     account: { currentAccount, currentNetwork },
-    farm: { farms, lpApproved },
+    farm: { farms, lpApproved, loading },
+    dex: { transaction },
     getFarmInfo,
     checkLpFarmAllowance,
     confirmLpFarmAllowance,
@@ -336,7 +350,6 @@ const Farm = (props) => {
   } = props;
   const classes = useStyles();
 
-  const [stakeDialogOpen, setStakeDialog] = useState(false);
 
   useEffect(() => {
 
@@ -345,10 +358,15 @@ const Farm = (props) => {
     }
     console.log('farmTest fetching data ', { currentAccount, currentNetwork })
 
+
     async function loadFarmData() {
-      checkLpFarmAllowance(farmPoolAddress(farmPool), currentAccount, currentNetwork);
-      getFarmInfo(farmPoolAddress(farmPool), farmPoolId(farmPool), currentAccount, currentNetwork);
-      getLpBalanceFarm(farmPoolAddress(farmPool), currentAccount, currentNetwork);
+
+      await Promise.all([
+        checkLpFarmAllowance(farmPoolAddress(farmPool), currentAccount, currentNetwork),
+        getFarmInfo(farmPoolAddress(farmPool), farmPoolId(farmPool), currentAccount, currentNetwork),
+        getLpBalanceFarm(farmPoolAddress(farmPool), currentAccount, currentNetwork),
+      ])
+
     }
     loadFarmData();
 
@@ -370,9 +388,9 @@ const Farm = (props) => {
     return farms[farmPoolAddress(_farmPool)];
   }
 
-  const handleApproveLpTokenToFarm = () => {
+  const handleApproveLpTokenToFarm = async () => {
 
-    confirmLpFarmAllowance(allowanceAmount, farmPoolAddress(farmPool), currentAccount, currentNetwork);
+    await confirmLpFarmAllowance(allowanceAmount, farmPoolAddress(farmPool), currentAccount, currentNetwork);
 
   }
 
@@ -381,13 +399,17 @@ const Farm = (props) => {
   }
 
   const handleStakeActions = (actionType = "stake") => {
-    //todo:
-    setStakeDialog(true)
+    onStake(actionType, farmPool);
   }
+
+  const harvestDisableStatus = () => {
+    return loading || new BigNumber(!farmData(farmPool).pendingPbr ? 0 : farmData(farmPool).pendingPbr).eq(0)
+  }
+
 
   return (
     <Card elevation={10} className={classes.card}>
-      <StakeDialog open={stakeDialogOpen} handleClose={() => setStakeDialog(false)} />
+
       <div className={classes.cardContents}>
         <div className="d-flex justify-content-between align-items-center">
           <div className={classes.imgWrapper}>
@@ -433,7 +455,7 @@ const Farm = (props) => {
           <Button
             variant="contained"
             className={classes.harvestButton}
-            disabled={true}
+            disabled={harvestDisableStatus()}
           >
             Harvest
           </Button>
@@ -444,23 +466,40 @@ const Farm = (props) => {
           <div className={classes.tokenAmount}></div>
         </div>
 
-        {!lpApproved?.[farmPoolAddress(farmPool)] ? (
+        {!loading?.[farmPoolAddress(farmPool)] && !lpApproved?.[farmPoolAddress(farmPool)] && (
           <div className="d-flex justify-content-center align-items-center mt-1">
             <Button onClick={handleApproveLpTokenToFarm} variant="contained" className={classes.approveBtn}>
               Approve LP Tokens
             </Button>
           </div>
-        ) : (
+        )}
+
+        {!loading?.[farmPoolAddress(farmPool)] && lpApproved?.[farmPoolAddress(farmPool)] && (
           <div className="d-flex justify-content-between align-items-center mt-1">
             <div className={classes.tokenValues}>{formattedNum(farmData(farmPool)?.stakeData?.amount)}</div>
             <div className="d-flex justify-content-between align-items-center">
-              <Button onClick={handleStakeActions} className={classes.stakeBtn} style={{ marginRight: 5 }}>
+              <Button onClick={() => handleStakeActions('stake')} className={classes.stakeBtn} style={{ marginRight: 5 }}>
                 +
               </Button>
-              <Button onClick={handleStakeActions} className={classes.stakeBtn}>
+              <Button onClick={() => handleStakeActions('unstake')} className={classes.stakeBtn}>
                 -
               </Button>
             </div>
+          </div>
+        )}
+
+        {/* {!loading?.[farmPool] && transaction.type && transaction.status === 'pending' && (
+          <div className="d-flex justify-content-center align-items-center mt-1">
+            <Button onClick={handleStakeActions} variant="contained" className={classes.approveBtn}>
+              Pending transaction...
+            </Button>
+          </div>
+        )} */}
+        {loading?.[farmPoolAddress(farmPool)] && (
+          <div className="d-flex justify-content-center align-items-center mt-1">
+            <Button disabled={true} variant="contained" className={classes.approveBtn}>
+              {transaction.type && transaction.status === 'pending' ? "Pending transaction..." : "Loading pool..."}
+            </Button>
           </div>
         )}
 
@@ -474,32 +513,30 @@ const Farm = (props) => {
         </div>
 
         <div className="d-flex justify-content-between align-items-center mt-1">
-          <Link to="liquidity">
-            {" "}
-            <div className={classes.tokenTitle}>
-              Get PBR-USDT LP <OpenInNewIcon fontSize="small" />{" "}
-            </div>{" "}
+          <Link to="liquidity" className={classes.link}>
+
+            Get PBR-USDT LP <OpenInNewIcon fontSize="small" />{" "}
+
           </Link>
           <div className={classes.tokenAmount}></div>
         </div>
 
         <div className="d-flex justify-content-between align-items-center ">
-          <Link to="liquidity">
-            {" "}
-            <div className={classes.tokenTitle}>
-              View Contract <OpenInNewIcon fontSize="small" />{" "}
-            </div>{" "}
+          <Link to="liquidity" className={classes.link}>
+
+            View Contract <OpenInNewIcon fontSize="small" />{" "}
+
           </Link>
           <div className={classes.tokenAmount}></div>
         </div>
 
         <div className="d-flex justify-content-between align-items-center ">
-          <Link to="liquidity">
-            {" "}
-            <div className={classes.tokenTitle}>
-              See Pair Info <OpenInNewIcon fontSize="small" />{" "}
-            </div>{" "}
-          </Link>
+          <a target='_blank' className={classes.link} href={`https://rinkeby.etherscan.io/address/${farmPoolAddress(farmPool)}`}>
+
+
+            See Pair Info <OpenInNewIcon fontSize="small" />{" "}
+
+          </a>
           <div className={classes.tokenAmount}></div>
         </div>
       </div>
@@ -509,7 +546,8 @@ const Farm = (props) => {
 
 const mapStateToProps = (state) => ({
   account: state.account,
-  farm: state.farm
+  farm: state.farm,
+  dex: state.dex
 })
 
 export default connect(mapStateToProps, { getFarmInfo, checkLpFarmAllowance, confirmLpFarmAllowance, getLpBalanceFarm })(Farm);
