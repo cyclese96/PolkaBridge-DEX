@@ -97,7 +97,7 @@ const Farms = (props) => {
                     })}
                 </div>
                 <div>
-                    <StakeDialog open={stakeDialog.open} farmPool={stakeDialog.farmPool} handleClose={handleDialogClose} />
+                    <StakeDialog open={stakeDialog.open} poolAddress={stakeDialog.farmPool} handleClose={handleDialogClose} />
                 </div>
             </div>
         </>

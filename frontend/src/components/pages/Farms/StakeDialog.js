@@ -69,6 +69,15 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 16,
     fontWeight: 600,
   },
+  sectionLp: {
+    color: "#cecece",
+    fontSize: 16,
+    fontWeight: 600,
+    [theme.breakpoints.down("xs")]: {
+      fontSize: 12,
+      fontWeight: 600,
+    },
+  },
   inputSection: {
     padding: 7,
     width: 420,
@@ -145,7 +154,7 @@ const StakeDialog = ({
   handleClose,
   dex: { transaction },
   farm: { lpBalance },
-  farmPool
+  poolAddress
 }
 ) => {
   const classes = useStyles();
@@ -202,10 +211,10 @@ const StakeDialog = ({
                   <h1 className={classes.section}>Stake</h1>
                 </div>
                 <div>
-                  <h1 className={classes.section}>Balance: {formattedNum(fromWei(lpBalance))}</h1>
+                  <h1 className={classes.section}>Balance: {formattedNum(fromWei(lpBalance?.[poolAddress]?.lpBalance))}</h1>
                 </div>
               </div>
-              <div className="d-flex flex-wrap justify-content-between align-items-center mt-2">
+              <div className="d-flex flex-wrap justify-content-around align-items-center mt-2">
                 <div>
                   {/* <div className={classes.tokenTitle}>0.00</div> */}
                   <input
@@ -216,11 +225,15 @@ const StakeDialog = ({
                     value={inputValue}
                   />
                 </div>
-                <div className="d-flex justify-content-between align-items-center mt-2">
-                  <Button className={classes.maxButton} onClick={handleMax} >
-                    Max
-                  </Button>
-                  <h1 className={classes.section}>PBR-USDT LP</h1>
+                <div className="d-flex justify-content-between align-items-center  mt-2">
+                  <div>
+                    <Button className={classes.maxButton} onClick={handleMax} >
+                      Max
+                    </Button>
+                  </div>
+                  <div >
+                    <h1 className={classes.section}>PBR-USDT LP</h1>
+                  </div>
                 </div>
               </div>
             </div>

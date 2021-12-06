@@ -19,6 +19,7 @@ import { checkLpFarmAllowance, confirmLpFarmAllowance, getFarmInfo, getLpBalance
 import BigNumber from "bignumber.js";
 import store from "../../../store";
 import { SHOW_FARM_LOADING } from "../../../actions/types";
+import { fromWei } from "../../../utils/helper";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -341,7 +342,7 @@ const Farm = (props) => {
     handleDialogClose,
     onStake,
     account: { currentAccount, currentNetwork },
-    farm: { farms, lpApproved, loading },
+    farm: { farms, lpApproved, loading, lpBalance },
     dex: { transaction },
     getFarmInfo,
     checkLpFarmAllowance,
@@ -399,13 +400,17 @@ const Farm = (props) => {
   }
 
   const handleStakeActions = (actionType = "stake") => {
-    onStake(actionType, farmPool);
+    onStake(actionType, farmPoolAddress(farmPool));
   }
 
   const harvestDisableStatus = () => {
     return loading || new BigNumber(!farmData(farmPool).pendingPbr ? 0 : farmData(farmPool).pendingPbr).eq(0)
   }
 
+
+  const getLpUsdEquivalent = (_poolAddress) => {
+    return formattedNum(lpBalance?.[_poolAddress]?.lpBalance);
+  }
 
   return (
     <Card elevation={10} className={classes.card}>
@@ -509,7 +514,7 @@ const Farm = (props) => {
 
         <div className="d-flex justify-content-between align-items-center mt-4">
           <div className={classes.tokenTitle}>Total Liquidity:</div>
-          <div className={classes.tokenAmount}>$413,690,675</div>
+          <div className={classes.tokenAmount}>{formattedNum(fromWei(lpBalance?.[farmPoolAddress(farmPool)]?.lpBalance))}</div>
         </div>
 
         <div className="d-flex justify-content-between align-items-center mt-1">
