@@ -23,7 +23,6 @@ import { SHOW_FARM_LOADING } from "../../../actions/types";
 const useStyles = makeStyles((theme) => ({
   card: {
     width: 350,
-
     borderRadius: 15,
     marginTop: 20,
     background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
