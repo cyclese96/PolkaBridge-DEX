@@ -561,16 +561,9 @@ const Farm = (props) => {
           <Divider style={{ backgroundColor: "#616161", height: 1 }} />
         </div>
 
-        <div className="d-flex justify-content-between align-items-start mt-4">
-          <div className={classes.tokenTitle}>
-            <strong>Total Liquidity:</strong>
-          </div>
-          <div className={classes.tokenAmount}>
-            {formattedNum(
-              fromWei(lpBalance?.[farmPoolAddress(farmPool)]?.lpBalance)
-            )}
-            $
-          </div>
+        <div className="d-flex justify-content-between align-items-center mt-4">
+          <div className={classes.tokenTitle}>Total Liquidity:</div>
+          <div className={classes.tokenAmount}>${formattedNum(lpBalance?.[farmPoolAddress(farmPool)]?.totalLpTokens)}</div>
         </div>
 
         <div className="d-flex justify-content-between align-items-center mt-2">

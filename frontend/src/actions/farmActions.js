@@ -11,8 +11,9 @@ import {
     farmContract,
     pairContract,
 } from "../contracts/connections";
-import { currentConnection, farmAddresses } from "../constants";
+import { currentConnection, farmAddresses, tokenAddresses } from "../constants";
 import BigNumber from "bignumber.js";
+import { fromWei } from "../utils/helper";
 
 
 const getLoadingObject = (_key, flag) => {
@@ -325,14 +326,35 @@ export const getLpBalanceFarm = (pairAddress, account, network) => async (dispat
                 _pairContract.methods.totalSupply().call(),
             ]);
 
-        let reserve = {};
+        const reserve = {};
         reserve[token0Addr] = reservesData._reserve0;
         reserve[token1Addr] = reservesData._reserve1;
+
+
+        // fetch eth price from coingecko
+        const ethPrice = 4000;
+
+        //calculating total liquidity usd value
+        const ethAddress = currentConnection === 'mainnet'
+            ? tokenAddresses.ethereum.ETH.mainnet.toLowerCase()
+            : tokenAddresses.ethereum.ETH.testnet.toLowerCase()
+        let valueOfBaseTokenInFarm = 0;
+
+        if (token0Addr.toLowerCase() === ethAddress) {
+            valueOfBaseTokenInFarm = new BigNumber(reservesData._reserve0).times(ethPrice);
+        } else {
+            valueOfBaseTokenInFarm = new BigNumber(reservesData._reserve1).times(ethPrice);
+        }
+
+        const overallValueOfAllTokensInFarm = new BigNumber(valueOfBaseTokenInFarm).times(2);
+
+        const lpTokenPrice = overallValueOfAllTokensInFarm.div(totalSupply)
+
 
         const balObject = {};
         balObject[pairAddress] = {
             lpBalance,
-            totalLpTokens: totalSupply,
+            totalLpTokens: new BigNumber(fromWei(totalSupply)).times(lpTokenPrice).toFixed(0).toString(),
             poolReserves: reserve
         };
 
