@@ -6,6 +6,7 @@ import {
     GET_LP_BALANCE_FARM,
     UPDATE_TRANSACTION_STATUS,
     START_TRANSACTION,
+    GET_FARM_POOL,
 } from "./types";
 import {
     farmContract,
@@ -14,6 +15,7 @@ import {
 import { currentConnection, farmAddresses, tokenAddresses } from "../constants";
 import BigNumber from "bignumber.js";
 import { fromWei } from "../utils/helper";
+import { getPbrPriceFromCoinGecko } from "../utils/connectionUtils";
 
 
 const getLoadingObject = (_key, flag) => {
@@ -136,6 +138,7 @@ export const stakeLpTokens = (lpAmount, pairAddress, pid, account, network) => a
 
         const _farmContract = farmContract(network);
 
+        console.log({ lpAmount, pairAddress, pid, account, network })
         dispatch({
             type: SHOW_FARM_LOADING,
             payload: getLoadingObject(pairAddress, true)
@@ -143,10 +146,9 @@ export const stakeLpTokens = (lpAmount, pairAddress, pid, account, network) => a
 
         dispatch({ type: START_TRANSACTION })
 
-        const stakeRes = await _farmContract.methods.stake(pid, lpAmount)
+        const stakeRes = await _farmContract.methods.deposit(pid, lpAmount)
             .send({ from: account }, function (error, transactionHash) {
 
-                // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
                 if (error) {
                     dispatch({
                         type: UPDATE_TRANSACTION_STATUS,
@@ -161,7 +163,6 @@ export const stakeLpTokens = (lpAmount, pairAddress, pid, account, network) => a
 
             }).on('receipt', async function (receipt) {
 
-                // console.log('UPDATE_TRANSACTION_STATUS', receipt)
                 dispatch({
                     type: UPDATE_TRANSACTION_STATUS,
                     payload: { type: 'stake', status: 'success' }
@@ -169,7 +170,6 @@ export const stakeLpTokens = (lpAmount, pairAddress, pid, account, network) => a
 
             }).on("error", async function (error) {
 
-                // console.log('UPDATE_TRANSACTION_STATUS error', error)
                 dispatch({
                     type: UPDATE_TRANSACTION_STATUS,
                     payload: { type: 'stake', status: 'failed' }
@@ -205,7 +205,7 @@ export const unstakeLpTokens = (lpAmount, pairAddress, pid, account, network) =>
 
         dispatch({ type: START_TRANSACTION });
 
-        const stakeRes = await _farmContract.methods.unstake(pid, lpAmount)
+        const stakeRes = await _farmContract.methods.withdraw(pid, lpAmount)
             .send({ from: account }, function (error, transactionHash) {
 
                 // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
@@ -271,26 +271,27 @@ export const getFarmInfo = (pairAddress, pid, account, network) => async (dispat
         // getMultiplier(pool.lastRewardBlock, block.number)
         //
 
-        const [pbrPerBlock, poolInfo, pendingPbr, userInfo, totalSupply] = await Promise.all([
+        const [pbrPerBlock, poolInfo, pendingPbr, userInfo, totalAllocPoint, totalSupply] = await Promise.all([
             _farmContract.methods.PBRPerBlock().call(),
             _farmContract.methods.poolInfo(pid).call(),
             _farmContract.methods.pendingPBR(pid, account).call(),
             _farmContract.methods.userInfo(pid, account).call(),
+            _farmContract.methods.totalAllocPoint().call(),
             _pairContract.methods.totalSupply().call()
         ]);
 
 
-        console.log('getFarmInfo ', { pbrPerBlock, poolInfo, pendingPbr, userInfo })
+        // console.log('ethTest getFarmInfo ', { pbrPerBlock, poolInfo, pendingPbr, userInfo })
         const farmPoolObj = {};
         farmPoolObj[pairAddress] = {
             pendingPbr: pendingPbr,
             stakeData: userInfo,
-            poolInfo: { ...poolInfo, pbrPerBlock },
+            poolInfo: { ...poolInfo, pbrPerBlock, totalAllocPoint },
             totalLiquidity: totalSupply
         };
 
         dispatch({
-            type: STAKE_LP_TOKENS,
+            type: GET_FARM_POOL,
             payload: farmPoolObj
         });
 
@@ -317,13 +318,14 @@ export const getLpBalanceFarm = (pairAddress, account, network) => async (dispat
             payload: getLoadingObject(pairAddress, true)
         });
 
-        const [lpBalance, token0Addr, token1Addr, reservesData, totalSupply] =
+        const [lpBalance, token0Addr, token1Addr, reservesData, totalSupply, pbrPriceUSD] =
             await Promise.all([
                 _pairContract.methods.balanceOf(account).call(),
                 _pairContract.methods.token0().call(),
                 _pairContract.methods.token1().call(),
                 _pairContract.methods.getReserves().call(),
                 _pairContract.methods.totalSupply().call(),
+                getPbrPriceFromCoinGecko()
             ]);
 
         const reserve = {};
@@ -354,11 +356,10 @@ export const getLpBalanceFarm = (pairAddress, account, network) => async (dispat
         const balObject = {};
         balObject[pairAddress] = {
             lpBalance,
-            totalLpTokens: new BigNumber(fromWei(totalSupply)).times(lpTokenPrice).toFixed(0).toString(),
-            poolReserves: reserve
+            poolLiquidityUSD: new BigNumber(fromWei(totalSupply)).times(lpTokenPrice).toFixed(0).toString(),
+            pbrPriceUSD
         };
 
-        // console.log('farmTest:  lp bal', { balWei, pairAddress })
         dispatch({
             type: GET_LP_BALANCE_FARM,
             payload: balObject
@@ -376,8 +377,10 @@ export const getLpBalanceFarm = (pairAddress, account, network) => async (dispat
 };
 
 
-export const harvestReward = () => async (dispatch) => {
+export const harvestReward = (network) => async (dispatch) => {
     try {
+
+        const _farmContract = farmContract(network);
         //todo
 
         dispatch({ type: START_TRANSACTION })

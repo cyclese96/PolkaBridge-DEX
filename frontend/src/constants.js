@@ -83,8 +83,8 @@ export const factoryAddresses = {
 
 export const farmAddresses = {
   ethereum: {
-    testnet: '0x8c4a0e798BdB842DbbbA5f4529F8278E2434faAD',
-    mainnet: '0x8c4a0e798BdB842DbbbA5f4529F8278E2434faAD'
+    testnet: '0xBaF15D830ddeB6c11fFae8890d9c902D8dF1f3E7',
+    mainnet: '0xBaF15D830ddeB6c11fFae8890d9c902D8dF1f3E7'
   }
 }
 
@@ -418,13 +418,14 @@ export const farmingPoolConstants = {
       pid: 0,
       address: '0x33056C64C34cD9c7E27a94C00E2cA2AE8098974a',
       blocksPerYear: '',
-
+      lpApr: 20
     },
     "ETH-USDT": {
       multiplier: 10,
       pid: 1,
       address: '0x511De78Ed2171776b30CF268D2C6CAcd28741704',
       blocksPerYear: '',
+      lpApr: 15
     }
   }
 };

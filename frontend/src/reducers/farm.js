@@ -1,4 +1,4 @@
-import { APPROVE_LP_FARM, GET_LP_BALANCE_FARM, HIDE_FARM_LOADING, SHOW_FARM_LOADING, STAKE_LP_TOKENS } from "../actions/types";
+import { APPROVE_LP_FARM, GET_FARM_POOL, GET_LP_BALANCE_FARM, HIDE_FARM_LOADING, SHOW_FARM_LOADING, STAKE_LP_TOKENS } from "../actions/types";
 
 
 const initalState = {
@@ -23,7 +23,7 @@ export default function (state = initalState, action) {
                     ...action.payload
                 }
             };
-        case STAKE_LP_TOKENS:
+        case GET_FARM_POOL:
             return {
                 ...state,
                 farms: {

@@ -42,7 +42,7 @@ const Farms = (props) => {
   const {
     account: { balance, loading, currentNetwork },
     dex: { transaction },
-    farm: {},
+    farm: { },
   } = props;
 
   const classes = useStyles();
@@ -50,10 +50,12 @@ const Farms = (props) => {
     open: false,
     type: "stake",
     farmPool: null,
+    pid: null
   });
 
-  const handleStake = (type, pool) => {
-    setStakeDialog({ type: type, farmPool: pool, open: true });
+  const handleStake = (type, pool, pid) => {
+
+    setStakeDialog({ type: type, farmPool: pool, open: true, pid });
   };
 
   // swap status updates
@@ -66,12 +68,12 @@ const Farms = (props) => {
       transaction.type === "approve" ||
       (transaction.type === "stake" && !stakeDialog.open)
     ) {
-      setStakeDialog({ type: null, farmPool: null, open: true });
+      setStakeDialog({ type: null, farmPool: null, open: true, pid: null });
     }
   }, [transaction]);
 
   const handleDialogClose = () => {
-    setStakeDialog(false);
+    setStakeDialog({ ...stakeDialog, open: false });
     setTimeout(() => {
       store.dispatch({ type: START_TRANSACTION });
     }, 200);
@@ -103,7 +105,9 @@ const Farms = (props) => {
 
         <div>
           <StakeDialog
+            pid={stakeDialog.pid}
             open={stakeDialog.open}
+            type={stakeDialog.type}
             poolAddress={stakeDialog.farmPool}
             handleClose={handleDialogClose}
           />

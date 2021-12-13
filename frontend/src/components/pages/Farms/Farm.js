@@ -5,11 +5,10 @@ import Varified from "../../../assets/check.png";
 import { Link } from "react-router-dom";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import TokenIcon from "../../common/TokenIcon";
-import { useEffect, useState } from "react";
-import StakeDialog from "./StakeDialog";
+import { useEffect, useMemo } from "react";
 import { allowanceAmount, farmingPoolConstants } from "../../../constants";
 import { connect } from "react-redux";
-import { formatCurrency, formattedNum } from "../../../utils/formatters";
+import { formattedNum } from "../../../utils/formatters";
 import {
   checkLpFarmAllowance,
   confirmLpFarmAllowance,
@@ -17,9 +16,8 @@ import {
   getLpBalanceFarm,
 } from "../../../actions/farmActions";
 import BigNumber from "bignumber.js";
-import store from "../../../store";
-import { SHOW_FARM_LOADING } from "../../../actions/types";
-import { fromWei } from "../../../utils/helper";
+import { fromWei, getLpApr, getPbrRewardApr } from "../../../utils/helper";
+
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -130,26 +128,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
   },
-  tokenAmountTvl: {
-    fontWeight: 700,
-    padding: 0,
-    paddingLeft: 10,
-    fontSize: 18,
-    color: "#e5e5e5",
-  },
-  logo: {
-    width: 80,
-    height: 80,
-    marginTop: 5,
-    marginBottom: 10,
-    backgroundColor: "#f9f9f9",
-    padding: 12,
-    [theme.breakpoints.down("sm")]: {
-      width: 50,
-      height: 50,
-      marginBottom: 10,
-    },
-  },
   earn: {
     textAlign: "center",
     color: "#bdbdbd",
@@ -167,37 +145,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 15,
     fontWeight: 600,
   },
-  desktop: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-    paddingLeft: 10,
-    paddingRight: 10,
-    [theme.breakpoints.down("sm")]: {
-      flexDirection: "row",
-    },
-  },
-  borderButton: {
-    background: `transparent`,
-    color: "white",
-    width: "fit-content",
-    height: 32,
-    textTransform: "none",
-    borderRadius: 30,
-    fontSize: 15,
-    marginRight: 5,
-    marginLeft: 5,
-    border: "1px solid rgba(224, 7, 125, 0.3)",
-    padding: "5px 20px 5px 20px",
-    "&:hover": {
-      background: "rgba(224, 7, 125, 0.7)",
-    },
-    [theme.breakpoints.down("sm")]: {
-      width: "fit-content",
-      fontSize: 13,
-    },
-  },
+
   tagWrapper: {
     padding: 8,
   },
@@ -255,7 +203,7 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
   },
   harvestButton: {
-    backgroundColor: "rgba(224, 7, 125, 0.9)",
+    backgroundColor: "rgba(224, 7, 125, 0.6)",
     color: "white",
     textTransform: "none",
     fontSize: 17,
@@ -316,28 +264,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-//redux states for testing
-const famrs = {
-  "PBR-ETH": {
-    apr: "200.0",
-    earned: "20",
-    staked: "100",
-    liquidity: "413690675",
-    pairAddress: "0x3f5d1EE2391850578712C4473D7b8df5A036C2A4",
-  },
-  "ETH-USDT": {
-    apr: "150",
-    earned: "100",
-    staked: "20000",
-    liquidity: "413690675",
-    pairAddress: "0xE3419211dccfb659c6d967a290Fbe5F2eBFA241a",
-  },
-};
-
-const lpApproved = {
-  "PBR-ETH": false,
-  "ETH-USDT": true,
-};
 
 const Farm = (props) => {
   const {
@@ -392,10 +318,15 @@ const Farm = (props) => {
   };
 
   const farmData = (_farmPool) => {
-    if (!Object.keys(famrs).includes(farmPoolAddress(_farmPool))) {
+
+    if (!farmPool) {
+      return null
+    }
+
+    if (!Object.keys(farms).includes(farmPoolAddress(_farmPool))) {
       return {};
     }
-    return farms[farmPoolAddress(_farmPool)];
+    return farms?.[farmPoolAddress(_farmPool)];
   };
 
   const handleApproveLpTokenToFarm = async () => {
@@ -407,26 +338,45 @@ const Farm = (props) => {
     );
   };
 
-  const handleHarvest = () => {
-    //todo:
-  };
+  const getFarmTotalApr = (_address) => {
+
+    if (!_address) {
+      return "";
+    }
+
+    const _totalAlloc = farms?.[_address]?.poolInfo?.totalAllocPoint;
+    const _poolAlloc = farms?.[_address]?.poolInfo?.allocPoint;
+
+    const poolWeight = new BigNumber(_poolAlloc).div(_totalAlloc);
+
+
+    const pbrPerBlock = farms?.[_address]?.poolInfo?.pbrPerBlock;
+    const pbrPerMonth = new BigNumber(_totalAlloc).times(pbrPerBlock);// TOTAL Alloc points for 1 month 100K
+    const pbrPerYear = pbrPerMonth.times(12);
+
+    const totalPoolLiquidityUSD = lpBalance?.[_address]?.poolLiquidityUSD;
+    const pbrPrice = lpBalance?.[_address]?.pbrPriceUSD;
+
+    console.log("ethTest: apr calculation", { _address, poolWeight, pbrPerYear, pbrPrice, totalPoolLiquidityUSD })
+    const pbrRewardApr = getPbrRewardApr(poolWeight, pbrPerYear, pbrPrice, totalPoolLiquidityUSD);
+    const totalApr = new BigNumber(pbrRewardApr).plus(getLpApr(farmPool)).toFixed(0).toString()
+    return totalApr;
+  }
+
+  const farmApr = useMemo(() => getFarmTotalApr(farmPoolAddress(farmPool)), [farmPoolAddress(farmPool), farms, lpBalance])
 
   const handleStakeActions = (actionType = "stake") => {
-    onStake(actionType, farmPoolAddress(farmPool));
+    onStake(actionType, farmPoolAddress(farmPool), farmPoolId(farmPool));
   };
 
   const harvestDisableStatus = () => {
-    return (
-      loading ||
-      new BigNumber(
-        !farmData(farmPool).pendingPbr ? 0 : farmData(farmPool).pendingPbr
-      ).eq(0)
-    );
+    return new BigNumber(!farmData(farmPool).pendingPbr ? 0 : farmData(farmPool).pendingPbr).eq(0)
   };
 
-  const getLpUsdEquivalent = (_poolAddress) => {
-    return formattedNum(lpBalance?.[_poolAddress]?.lpBalance);
-  };
+  const handleHarvest = () => {
+
+  }
+
 
   return (
     <Card elevation={10} className={classes.card}>
@@ -463,7 +413,7 @@ const Farm = (props) => {
 
           <div className="d-flex align-items-center">
             <div className={classes.tokenAmount}>
-              {famrs?.[farmPool]?.apr}%{" "}
+              {farmApr}%{" "}
             </div>
             <ShowChartIcon className={classes.tokenAmount} fontSize="small" />
           </div>
@@ -481,14 +431,13 @@ const Farm = (props) => {
 
         <div className="d-flex justify-content-between align-items-center">
           <div className={classes.tokenValues}>
-            {formattedNum(
-              !farmData(farmPool) ? "0.00" : farmData(farmPool).pendingPbr
-            )}
+            {formattedNum(fromWei(farmData(farmPool)?.pendingPbr))}
           </div>
           <Button
             variant="contained"
             className={classes.harvestButton}
             disabled={harvestDisableStatus()}
+            onClick={handleHarvest}
           >
             Harvest
           </Button>
@@ -563,7 +512,7 @@ const Farm = (props) => {
 
         <div className="d-flex justify-content-between align-items-center mt-4">
           <div className={classes.tokenTitle}>Total Liquidity:</div>
-          <div className={classes.tokenAmount}>${formattedNum(lpBalance?.[farmPoolAddress(farmPool)]?.totalLpTokens)}</div>
+          <div className={classes.tokenAmount}>${formattedNum(lpBalance?.[farmPoolAddress(farmPool)]?.poolLiquidityUSD)}</div>
         </div>
 
         <div className="d-flex justify-content-between align-items-center mt-2">

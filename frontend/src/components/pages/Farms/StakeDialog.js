@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, Card, Dialog, Divider, IconButton, makeStyles } from "@material-ui/core";
+import { Button, Dialog, Divider, IconButton, makeStyles } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import CloseIcon from "@material-ui/icons/Close";
@@ -7,12 +7,12 @@ import { fromWei } from "../../../utils/helper";
 import { formattedNum } from "../../../utils/formatters";
 import TransactionStatus from "../../common/TransactionStatus";
 import { connect } from "react-redux";
+import { stakeLpTokens, unstakeLpTokens } from '../../../actions/farmActions'
 
 
 const useStyles = makeStyles((theme) => ({
   card: {
     width: 450,
-    // height: 270,
     borderRadius: 15,
     marginTop: 20,
     borderRadius: 30,
@@ -60,10 +60,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 22,
     fontWeight: 600,
   },
-  imgCancel: {
-    height: 20,
-    width: 20,
-  },
   section: {
     color: "#cecece",
     fontSize: 16,
@@ -98,7 +94,6 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     textTransform: "none",
     fontSize: 17,
-    // width: 185,
     borderRadius: 15,
     willChange: "transform",
     transition: "transform 450ms ease 0s",
@@ -109,13 +104,11 @@ const useStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.down("sm")]: {
       fontSize: 14,
-      // width: "80%",
     },
   },
   cancelButton: {
     backgroundColor: "#2C2F35",
     color: "white",
-    // width: "100%",
     textTransform: "none",
     fontSize: 17,
     borderRadius: 20,
@@ -151,10 +144,15 @@ const useStyles = makeStyles((theme) => ({
 
 const StakeDialog = ({
   open,
+  pid,
+  type,
   handleClose,
   dex: { transaction },
-  farm: { lpBalance },
-  poolAddress
+  farm: { farms, lpBalance },
+  account: { currentAccount, currentNetwork },
+  poolAddress,
+  stakeLpTokens,
+  unstakeLpTokens
 }
 ) => {
   const classes = useStyles();
@@ -162,10 +160,32 @@ const StakeDialog = ({
 
   const handleMax = () => {
 
+    if (type === 'stake') {
+
+      setInputValue(fromWei(lpBalance?.[poolAddress]?.lpBalance), pid, currentAccount, currentNetwork)
+    } else {
+      setInputValue((farms?.[poolAddress]?.stakeData?.amount), pid, currentAccount, currentNetwork)
+
+    }
+
+
   }
 
-  const confirmStake = () => {
+  const confirmStake = async () => {
 
+    if (type === 'stake') {
+      stakeLpTokens(inputValue, poolAddress, pid, currentAccount, currentNetwork)
+    } else {
+      unstakeLpTokens(inputValue, poolAddress, pid, currentAccount, currentNetwork)
+    }
+
+  }
+
+  const closeAction = () => {
+    handleClose();
+    setTimeout(() => {
+      setInputValue("")
+    }, 500)
   }
 
   return (
@@ -188,14 +208,14 @@ const StakeDialog = ({
           <div className={classes.cardContents}>
             <div className="d-flex justify-content-between align-items-center">
               <div>
-                <h1 className={classes.header}>Stake LP token</h1>
+                <h1 className={classes.header}>{type === 'stake' ? 'Stake' : 'Unstake'} LP token</h1>
               </div>
               <div>
                 <div>
                   <IconButton
                     aria-label="close"
                     className={classes.closeButton}
-                    onClick={handleClose}
+                    onClick={closeAction}
                   >
                     <CloseIcon style={{ color: 'rgba(224, 7, 125, 0.6)' }} />
                   </IconButton>
@@ -208,10 +228,14 @@ const StakeDialog = ({
             <div className={classes.inputSection}>
               <div className="d-flex justify-content-between align-items-center mt-2">
                 <div>
-                  <h1 className={classes.section}>Stake</h1>
+                  <h1 className={classes.section}>{type === 'stake' ? 'Stake' : 'Unstake'}</h1>
                 </div>
                 <div>
-                  <h1 className={classes.section}>Balance: {formattedNum(fromWei(lpBalance?.[poolAddress]?.lpBalance))}</h1>
+                  {type === 'stake'
+                    ? (<h1 className={classes.section}>Balance: {formattedNum(fromWei(lpBalance?.[poolAddress]?.lpBalance))}</h1>)
+                    : (<h1 className={classes.section}>Lp staked: {formattedNum((farms?.[poolAddress]?.stakeData?.amount))}</h1>)
+                  }
+
                 </div>
               </div>
               <div className="d-flex flex-wrap justify-content-around align-items-center mt-2">
@@ -241,7 +265,7 @@ const StakeDialog = ({
               <Button
                 variant="text"
                 className={classes.cancelButton}
-                onClick={handleClose}
+                onClick={closeAction}
               >
                 Cancel
               </Button>
@@ -281,7 +305,8 @@ const StakeDialog = ({
 
 const mapStateToProps = (state) => ({
   dex: state.dex,
-  farm: state.farm
+  farm: state.farm,
+  account: state.account
 });
 
-export default connect(mapStateToProps, {})(StakeDialog);
+export default connect(mapStateToProps, { stakeLpTokens, unstakeLpTokens })(StakeDialog);

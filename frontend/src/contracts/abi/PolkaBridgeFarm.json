@@ -2,18 +2,8 @@
     {
         "inputs": [
             {
-                "internalType": "contract IERC20",
-                "name": "_lpToken",
-                "type": "address"
-            },
-            {
                 "internalType": "contract PolkaBridge",
                 "name": "_polkaBridge",
-                "type": "address"
-            },
-            {
-                "internalType": "address",
-                "name": "_devaddr",
                 "type": "address"
             },
             {
@@ -126,6 +116,19 @@
     },
     {
         "inputs": [],
+        "name": "BONUS_MULTIPLIER",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "PBRPerBlock",
         "outputs": [
             {
@@ -181,32 +184,6 @@
     {
         "inputs": [
             {
-                "internalType": "address",
-                "name": "_devaddr",
-                "type": "address"
-            }
-        ],
-        "name": "dev",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "devaddr",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
                 "internalType": "uint256",
                 "name": "_pid",
                 "type": "uint256"
@@ -221,7 +198,12 @@
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "_pid",
+                "name": "_from",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_to",
                 "type": "uint256"
             }
         ],
@@ -233,33 +215,7 @@
                 "type": "uint256"
             }
         ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_pid",
-                "type": "uint256"
-            }
-        ],
-        "name": "harvest",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_pid",
-                "type": "uint256"
-            }
-        ],
-        "name": "harvestEarnings",
-        "outputs": [],
-        "stateMutability": "nonpayable",
+        "stateMutability": "pure",
         "type": "function"
     },
     {
@@ -436,24 +392,6 @@
         "type": "function"
     },
     {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_pid",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_amount",
-                "type": "uint256"
-            }
-        ],
-        "name": "stake",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
         "inputs": [],
         "name": "startBlock",
         "outputs": [
@@ -488,24 +426,6 @@
             }
         ],
         "name": "transferOwnership",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_pid",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_amount",
-                "type": "uint256"
-            }
-        ],
-        "name": "unstake",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
