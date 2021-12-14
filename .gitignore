@@ -17,3 +17,7 @@ proxy/.secret
 /Treasury/truffle-config.js
 /factory/client
 /router/client
+/farming/truffle-config.js
+/farming/.env
+/farming/build
+/farming/build
