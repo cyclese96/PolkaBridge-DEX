@@ -3,11 +3,16 @@ import { Button, Dialog, Divider, IconButton, makeStyles } from "@material-ui/co
 import { Link } from "react-router-dom";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import CloseIcon from "@material-ui/icons/Close";
-import { fromWei } from "../../../utils/helper";
+import { fromWei, toWei } from "../../../utils/helper";
 import { formattedNum } from "../../../utils/formatters";
 import TransactionStatus from "../../common/TransactionStatus";
 import { connect } from "react-redux";
-import { stakeLpTokens, unstakeLpTokens } from '../../../actions/farmActions'
+import {
+  stakeLpTokens, unstakeLpTokens, getFarmInfo,
+  getLpBalanceFarm,
+} from '../../../actions/farmActions'
+import BigNumber from "bignumber.js";
+import { useMemo } from "react";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -144,40 +149,63 @@ const useStyles = makeStyles((theme) => ({
 
 const StakeDialog = ({
   open,
-  pid,
   type,
+  poolInfo,
   handleClose,
   dex: { transaction },
   farm: { farms, lpBalance },
   account: { currentAccount, currentNetwork },
-  poolAddress,
   stakeLpTokens,
-  unstakeLpTokens
+  unstakeLpTokens,
+  getFarmInfo,
+  getLpBalanceFarm
 }
 ) => {
   const classes = useStyles();
   const [inputValue, setInputValue] = React.useState('');
 
+  const parseLpBalance = useMemo(() => fromWei(lpBalance?.[poolInfo.poolAddress]?.lpBalance, poolInfo.poolDecimals), [poolInfo.pid, lpBalance])
+  const parseStakedAmount = useMemo(() => fromWei(farms?.[poolInfo.poolAddress]?.stakeData?.amount, poolInfo.poolDecimals), [poolInfo.pid, farms])
+
   const handleMax = () => {
 
     if (type === 'stake') {
 
-      setInputValue(fromWei(lpBalance?.[poolAddress]?.lpBalance), pid, currentAccount, currentNetwork)
+      setInputValue(parseLpBalance, poolInfo.pid, currentAccount, currentNetwork)
     } else {
-      setInputValue((farms?.[poolAddress]?.stakeData?.amount), pid, currentAccount, currentNetwork)
+      setInputValue(parseStakedAmount, poolInfo.pid, currentAccount, currentNetwork)
 
     }
-
 
   }
 
   const confirmStake = async () => {
 
-    if (type === 'stake') {
-      stakeLpTokens(inputValue, poolAddress, pid, currentAccount, currentNetwork)
-    } else {
-      unstakeLpTokens(inputValue, poolAddress, pid, currentAccount, currentNetwork)
+    const inputTokens = inputValue ? toWei(inputValue, poolInfo.poolDecimals) : 0;
+
+    if (new BigNumber(inputTokens).lte(0)) {
+      return
     }
+
+    if (type === 'stake' && new BigNumber(inputTokens).gt(lpBalance?.[poolInfo.poolAddress]?.lpBalance)) {
+      return
+    }
+
+    if (type === 'unstake' && new BigNumber(inputTokens).gt(farms?.[poolInfo.poolAddress]?.stakeData?.amount)) {
+      return
+    }
+
+    if (type === 'stake') {
+      await stakeLpTokens(inputTokens, poolInfo.poolAddress, poolInfo.pid, currentAccount, currentNetwork)
+    } else {
+      await unstakeLpTokens(inputTokens, poolInfo.poolAddress, poolInfo.pid, currentAccount, currentNetwork)
+    }
+
+    // update pool after transaction:
+    await Promise.all([
+      getFarmInfo(poolInfo.poolAddress, poolInfo.pid, currentAccount, currentNetwork),
+      getLpBalanceFarm(poolInfo.poolAddress, currentAccount, currentNetwork)
+    ])
 
   }
 
@@ -232,8 +260,8 @@ const StakeDialog = ({
                 </div>
                 <div>
                   {type === 'stake'
-                    ? (<h1 className={classes.section}>Balance: {formattedNum(fromWei(lpBalance?.[poolAddress]?.lpBalance))}</h1>)
-                    : (<h1 className={classes.section}>Lp staked: {formattedNum((farms?.[poolAddress]?.stakeData?.amount))}</h1>)
+                    ? (<h1 className={classes.section}>Balance: {formattedNum(parseLpBalance)}</h1>)
+                    : (<h1 className={classes.section}>Lp staked: {formattedNum((parseStakedAmount))}</h1>)
                   }
 
                 </div>
@@ -309,4 +337,4 @@ const mapStateToProps = (state) => ({
   account: state.account
 });
 
-export default connect(mapStateToProps, { stakeLpTokens, unstakeLpTokens })(StakeDialog);
+export default connect(mapStateToProps, { stakeLpTokens, unstakeLpTokens, getFarmInfo, getLpBalanceFarm })(StakeDialog);

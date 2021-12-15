@@ -375,16 +375,3 @@ export const getLpBalanceFarm = (pairAddress, account, network) => async (dispat
         payload: getLoadingObject(pairAddress, false)
     });
 };
-
-
-export const harvestReward = (network) => async (dispatch) => {
-    try {
-
-        const _farmContract = farmContract(network);
-        //todo
-
-        dispatch({ type: START_TRANSACTION })
-    } catch (error) {
-        console.log('harvestReward', error)
-    }
-};

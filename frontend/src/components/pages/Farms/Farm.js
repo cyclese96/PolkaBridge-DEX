@@ -14,6 +14,7 @@ import {
   confirmLpFarmAllowance,
   getFarmInfo,
   getLpBalanceFarm,
+  stakeLpTokens
 } from "../../../actions/farmActions";
 import BigNumber from "bignumber.js";
 import { fromWei, getLpApr, getPbrRewardApr } from "../../../utils/helper";
@@ -277,6 +278,7 @@ const Farm = (props) => {
     checkLpFarmAllowance,
     confirmLpFarmAllowance,
     getLpBalanceFarm,
+    stakeLpTokens
   } = props;
   const classes = useStyles();
 
@@ -315,6 +317,10 @@ const Farm = (props) => {
 
   const farmPoolId = (_farmPool) => {
     return farmingPoolConstants?.ethereum?.[_farmPool]?.pid;
+  };
+
+  const farmPoolDecimals = (_farmPool) => {
+    return farmingPoolConstants?.ethereum?.[_farmPool]?.decimals;
   };
 
   const farmData = (_farmPool) => {
@@ -357,7 +363,6 @@ const Farm = (props) => {
     const totalPoolLiquidityUSD = lpBalance?.[_address]?.poolLiquidityUSD;
     const pbrPrice = lpBalance?.[_address]?.pbrPriceUSD;
 
-    console.log("ethTest: apr calculation", { _address, poolWeight, pbrPerYear, pbrPrice, totalPoolLiquidityUSD })
     const pbrRewardApr = getPbrRewardApr(poolWeight, pbrPerYear, pbrPrice, totalPoolLiquidityUSD);
     const totalApr = new BigNumber(pbrRewardApr).plus(getLpApr(farmPool)).toFixed(0).toString()
     return totalApr;
@@ -366,17 +371,25 @@ const Farm = (props) => {
   const farmApr = useMemo(() => getFarmTotalApr(farmPoolAddress(farmPool)), [farmPoolAddress(farmPool), farms, lpBalance])
 
   const handleStakeActions = (actionType = "stake") => {
-    onStake(actionType, farmPoolAddress(farmPool), farmPoolId(farmPool));
+    onStake(actionType, farmPoolAddress(farmPool), farmPoolDecimals(farmPool), farmPoolId(farmPool));
   };
 
-  const harvestDisableStatus = () => {
-    return new BigNumber(!farmData(farmPool).pendingPbr ? 0 : farmData(farmPool).pendingPbr).eq(0)
+  const harvestDisableStatus = (_farmPool) => {
+    return loading?.[farmPoolAddress(_farmPool)] || new BigNumber(!farmData(_farmPool).pendingPbr ? 0 : farmData(_farmPool).pendingPbr).eq(0)
   };
 
-  const handleHarvest = () => {
+  const handleHarvest = async (_farmPool) => {
+    await stakeLpTokens('0', farmPoolAddress(_farmPool), farmPoolId(_farmPool), currentAccount, currentNetwork)
 
+    await getFarmInfo(
+      farmPoolAddress(_farmPool),
+      farmPoolId(_farmPool),
+      currentAccount,
+      currentNetwork
+    );
   }
 
+  const parseStakedAmount = useMemo(() => fromWei(farms?.[farmPoolAddress(farmPool)]?.stakeData?.amount, farmPoolDecimals(farmPool)), [farmPool, farms])
 
   return (
     <Card elevation={10} className={classes.card}>
@@ -436,8 +449,8 @@ const Farm = (props) => {
           <Button
             variant="contained"
             className={classes.harvestButton}
-            disabled={harvestDisableStatus()}
-            onClick={handleHarvest}
+            disabled={harvestDisableStatus(farmPool)}
+            onClick={() => handleHarvest(farmPool)}
           >
             Harvest
           </Button>
@@ -465,7 +478,7 @@ const Farm = (props) => {
           lpApproved?.[farmPoolAddress(farmPool)] && (
             <div className="d-flex justify-content-between align-items-center mt-1">
               <div className={classes.tokenValues}>
-                {formattedNum(farmData(farmPool)?.stakeData?.amount)}
+                {formattedNum(parseStakedAmount)}
               </div>
               <div className="d-flex justify-content-between align-items-center">
                 <Button
@@ -559,4 +572,5 @@ export default connect(mapStateToProps, {
   checkLpFarmAllowance,
   confirmLpFarmAllowance,
   getLpBalanceFarm,
+  stakeLpTokens
 })(Farm);

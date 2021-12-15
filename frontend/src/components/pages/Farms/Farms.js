@@ -49,13 +49,12 @@ const Farms = (props) => {
   const [stakeDialog, setStakeDialog] = useState({
     open: false,
     type: "stake",
-    farmPool: null,
-    pid: null
+    poolInfo: {}
   });
 
-  const handleStake = (type, pool, pid) => {
+  const handleStake = (type, poolAddress, poolDecimals, pid) => {
 
-    setStakeDialog({ type: type, farmPool: pool, open: true, pid });
+    setStakeDialog({ type: type, open: true, poolInfo: { poolAddress, poolDecimals, pid } });
   };
 
   // swap status updates
@@ -68,15 +67,19 @@ const Farms = (props) => {
       transaction.type === "approve" ||
       (transaction.type === "stake" && !stakeDialog.open)
     ) {
-      setStakeDialog({ type: null, farmPool: null, open: true, pid: null });
+      setStakeDialog({ type: null, open: true, poolInfo: {} });
     }
   }, [transaction]);
 
   const handleDialogClose = () => {
     setStakeDialog({ ...stakeDialog, open: false });
-    setTimeout(() => {
-      store.dispatch({ type: START_TRANSACTION });
-    }, 200);
+    //check reset transaction on dialog close: don't reset if transaction already pending
+    if ((transaction.type === "approve" || transaction.type === "stake") && transaction.status !== 'pending') {
+      setTimeout(() => {
+        store.dispatch({ type: START_TRANSACTION });
+      }, 200);
+    }
+
   };
 
   return (
@@ -105,10 +108,9 @@ const Farms = (props) => {
 
         <div>
           <StakeDialog
-            pid={stakeDialog.pid}
+            poolInfo={stakeDialog.poolInfo}
             open={stakeDialog.open}
             type={stakeDialog.type}
-            poolAddress={stakeDialog.farmPool}
             handleClose={handleDialogClose}
           />
         </div>
