@@ -349,13 +349,13 @@ export const getCachedTokens = () => {
 };
 
 
-export const getPbrRewardApr = (poolWeight, pbrPerYear, pbrPriceUSD, poolLiquidityUSD) => {
+export const getPbrRewardApr = (pbrPerYear, pbrPriceUSD, poolLiquidityUSD) => {
 
   try {
-    const yearlyRewardAllocation = new BigNumber(poolWeight).times(pbrPerYear);
-    const pbrRewardApr = yearlyRewardAllocation.times(pbrPriceUSD).div(poolLiquidityUSD).times(100);
 
-    return pbrRewardApr.div(new BigNumber(10).exponentiatedBy(18)).toFixed(0).toString();
+    const pbrRewardApr = new BigNumber(pbrPerYear).times(pbrPriceUSD).div(poolLiquidityUSD).times(100);
+
+    return pbrRewardApr.toFixed(0).toString();
 
   } catch (error) {
     console.log('calculate apr exeption ', error);

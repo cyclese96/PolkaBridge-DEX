@@ -12,10 +12,11 @@ import {
     farmContract,
     pairContract,
 } from "../contracts/connections";
-import { currentConnection, farmAddresses, tokenAddresses } from "../constants";
+import { currentConnection, farmAddresses, farmContractConfig, farmContractStartBlock, tokenAddresses } from "../constants";
 import BigNumber from "bignumber.js";
 import { fromWei } from "../utils/helper";
 import { getPbrPriceFromCoinGecko } from "../utils/connectionUtils";
+import { getBlockFromTimestamp } from '../utils/timeUtils'
 
 
 const getLoadingObject = (_key, flag) => {
@@ -261,33 +262,30 @@ export const unstakeLpTokens = (lpAmount, pairAddress, pid, account, network) =>
 export const getFarmInfo = (pairAddress, pid, account, network) => async (dispatch) => {
     try {
         const _farmContract = farmContract(network);
-        const _pairContract = pairContract(pairAddress, network);
 
         dispatch({
             type: SHOW_FARM_LOADING,
             payload: getLoadingObject(pairAddress, true)
         });
-
-        // getMultiplier(pool.lastRewardBlock, block.number)
-        //
-
-        const [pbrPerBlock, poolInfo, pendingPbr, userInfo, totalAllocPoint, totalSupply] = await Promise.all([
+        // 12 hour later block 
+        const endBlockRes = await getBlockFromTimestamp(farmContractConfig.startTimestamp + 12 * 3600 + 100);
+        const [pbrPerBlock, poolInfo, pendingPbr, userInfo, totalAllocPoint, multiplier12hr] = await Promise.all([
             _farmContract.methods.PBRPerBlock().call(),
             _farmContract.methods.poolInfo(pid).call(),
             _farmContract.methods.pendingPBR(pid, account).call(),
             _farmContract.methods.userInfo(pid, account).call(),
             _farmContract.methods.totalAllocPoint().call(),
-            _pairContract.methods.totalSupply().call()
+            _farmContract.methods.getMultiplier(farmContractConfig.startBlock, parseInt(endBlockRes)).call()
         ]);
 
+        // calculate projected 1 year pbr reward based on 12 hour rewards
+        const pbrReward1Year = new BigNumber(multiplier12hr).times(pbrPerBlock).times(2).times(365).times(poolInfo?.allocPoint).div(totalAllocPoint);
 
-        // console.log('ethTest getFarmInfo ', { pbrPerBlock, poolInfo, pendingPbr, userInfo })
         const farmPoolObj = {};
         farmPoolObj[pairAddress] = {
             pendingPbr: pendingPbr,
             stakeData: userInfo,
-            poolInfo: { ...poolInfo, pbrPerBlock, totalAllocPoint },
-            totalLiquidity: totalSupply
+            pbrReward1Year
         };
 
         dispatch({
@@ -296,7 +294,7 @@ export const getFarmInfo = (pairAddress, pid, account, network) => async (dispat
         });
 
     } catch (error) {
-        console.log('getFarmInfo', { error, pid, account, pairAddress })
+        console.log('farmTest: getFarmInfo', { error, pid, account, pairAddress })
     }
 
     dispatch({
@@ -318,14 +316,13 @@ export const getLpBalanceFarm = (pairAddress, account, network) => async (dispat
             payload: getLoadingObject(pairAddress, true)
         });
 
-        const [lpBalance, token0Addr, token1Addr, reservesData, totalSupply, pbrPriceUSD] =
+        const [lpBalance, token0Addr, token1Addr, reservesData, totalSupply] =
             await Promise.all([
                 _pairContract.methods.balanceOf(account).call(),
                 _pairContract.methods.token0().call(),
                 _pairContract.methods.token1().call(),
                 _pairContract.methods.getReserves().call(),
-                _pairContract.methods.totalSupply().call(),
-                getPbrPriceFromCoinGecko()
+                _pairContract.methods.totalSupply().call()
             ]);
 
         const reserve = {};
@@ -333,8 +330,9 @@ export const getLpBalanceFarm = (pairAddress, account, network) => async (dispat
         reserve[token1Addr] = reservesData._reserve1;
 
 
-        // fetch eth price from coingecko
-        const ethPrice = 4000;
+        // eth-pbr price from AMM
+        const ethPrice = 6027.140640678264307674778729851681;
+        const pbrPriceUSD = 6.016;
 
         //calculating total liquidity usd value
         const ethAddress = currentConnection === 'mainnet'

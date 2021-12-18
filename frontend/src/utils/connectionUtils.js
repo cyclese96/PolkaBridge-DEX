@@ -54,7 +54,7 @@ export const getPbrPriceFromCoinGecko = async () => {
     // console.log(data);
     const tokenPrice = data.polkabridge ? data.polkabridge.usd : '0';
 
-    return tokenPrice;
+    return '6.016';
 
   } catch (error) {
 

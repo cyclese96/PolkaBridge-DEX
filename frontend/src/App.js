@@ -7,18 +7,18 @@ import { Provider } from "react-redux";
 import store from "./store";
 import "./web";
 import { Route, Switch, BrowserRouter, Redirect } from "react-router-dom";
-// import { PAIR_BLACKLIST, TOKEN_BLACKLIST } from "./constants";
-// import TokenPage from "./components/pages/Analytics/components/DetailsPage/TokenDetail";
-// import { isAddress } from "./utils/helper";
+import { PAIR_BLACKLIST, TOKEN_BLACKLIST } from "./constants";
+import TokenPage from "./components/pages/Analytics/components/DetailsPage/TokenDetail";
+import { isAddress } from "./utils/helper";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
 import SwapCard from "./components/Cards/SwapCard";
 import AddLiquidity from "./components/pages/AddLiquidity";
-// import PoolDetail from "./components/pages/Analytics/components/DetailsPage/PoolDetail";
+import PoolDetail from "./components/pages/Analytics/components/DetailsPage/PoolDetail";
 import Analytics from "./components/pages/Analytics/Analytics";
-// import AllTopToken from "./components/pages/Analytics/components/Tables/AllTopToken";
-// import AllTopPool from "./components/pages/Analytics/components/Tables/AllTopPool";
+import AllTopToken from "./components/pages/Analytics/components/Tables/AllTopToken";
+import AllTopPool from "./components/pages/Analytics/components/Tables/AllTopPool";
 import Farms from "./components/pages/Farms";
 
 const useStyles = makeStyles((theme) => ({
@@ -103,8 +103,8 @@ function App() {
               <Route exact path="/farms" component={Farms} />
               <Route exact path="/liquidity" component={AddLiquidity} />
               <Route exact path="/charts" component={Analytics} />
-              {/* <Route exact path="/charts/tokens" component={AllTopToken} />
-              <Route exact path="/charts/pools" component={AllTopPool} /> */}
+              <Route exact path="/charts/tokens" component={AllTopToken} />
+              <Route exact path="/charts/pools" component={AllTopPool} />
 
               <Switch>
                 {/* <Route

@@ -23,12 +23,12 @@ import { Link } from "react-router-dom";
 
 const Analytics = () => {
   const classes = useStyles();
-  // const allPairs = useAllPairData();
-  // const allTokens = useAllTokenData();
-  // const transactions = useGlobalTransactions();
-  // const globalData = useGlobalData();
+  const allPairs = useAllPairData();
+  const allTokens = useAllTokenData();
+  const transactions = useGlobalTransactions();
+  const globalData = useGlobalData();
 
-  // const chartData = useGlobalChartData();
+  const chartData = useGlobalChartData();
 
   // useEffect(() => {
   //   if (!transactions) {
@@ -44,7 +44,7 @@ const Analytics = () => {
         <TabPage data={3} />
       </div>
       {/* <h3 className={classes.heading}>PolkaBridge DEX Overview</h3> */}
-      {/* <div className="mt-2 row g-3" style={{ padding: 10 }}>
+      <div className="mt-2 row g-3" style={{ padding: 10 }}>
         <div className="col-md-6">
           <Card elevation={10} className={classes.card}>
             {chartData && globalData && (
@@ -242,13 +242,13 @@ const Analytics = () => {
         <div className="d-flex justify-content-center">
           <Transactions data={transactions} />
         </div>
-      </div> */}
-      <div className="d-flex justify-content-center pt-10">
+      </div>
+      {/* <div className="d-flex justify-content-center pt-10">
         <div className={classes.tokenListHeading}>
 
           Chart is unavailable,
           will be available soon.</div>
-      </div>
+      </div> */}
     </div>
   );
 };

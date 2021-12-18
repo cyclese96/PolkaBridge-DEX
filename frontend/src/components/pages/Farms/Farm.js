@@ -286,7 +286,7 @@ const Farm = (props) => {
     if (!currentAccount || !currentNetwork) {
       return;
     }
-    console.log("farmTest fetching data ", { currentAccount, currentNetwork });
+    // console.log("farmTest fetching data ", { currentAccount, currentNetwork });
 
     async function loadFarmData() {
       await Promise.all([
@@ -350,20 +350,12 @@ const Farm = (props) => {
       return "";
     }
 
-    const _totalAlloc = farms?.[_address]?.poolInfo?.totalAllocPoint;
-    const _poolAlloc = farms?.[_address]?.poolInfo?.allocPoint;
-
-    const poolWeight = new BigNumber(_poolAlloc).div(_totalAlloc);
-
-
-    const pbrPerBlock = farms?.[_address]?.poolInfo?.pbrPerBlock;
-    const pbrPerMonth = new BigNumber(_totalAlloc).times(pbrPerBlock);// TOTAL Alloc points for 1 month 100K
-    const pbrPerYear = pbrPerMonth.times(12);
+    const pbrReward1Year = fromWei(farms?.[_address]?.pbrReward1Year);
 
     const totalPoolLiquidityUSD = lpBalance?.[_address]?.poolLiquidityUSD;
     const pbrPrice = lpBalance?.[_address]?.pbrPriceUSD;
 
-    const pbrRewardApr = getPbrRewardApr(poolWeight, pbrPerYear, pbrPrice, totalPoolLiquidityUSD);
+    const pbrRewardApr = getPbrRewardApr(pbrReward1Year, pbrPrice, totalPoolLiquidityUSD);
     const totalApr = new BigNumber(pbrRewardApr).plus(getLpApr(farmPool)).toFixed(0).toString()
     return totalApr;
   }

@@ -83,10 +83,16 @@ export const factoryAddresses = {
 
 export const farmAddresses = {
   ethereum: {
-    testnet: '0x856BA2012F10602f3A52d86c3d097bE4a6b9EC22',
+    testnet: '0x3845ED2c7C1863975603b71349AFBdF1910E136B',
     mainnet: '0xBaF15D830ddeB6c11fFae8890d9c902D8dF1f3E7'
   }
 }
+
+export const farmContractConfig = {
+  startBlock: 9829062,
+  startTimestamp: 1639730634
+}
+
 
 export const ETH = "ETH";
 export const BNB = "BNB";
