@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "50%",
     color: "#e5e5e5",
     [theme.breakpoints.down("sm")]: {
-      height: 25,
+      height: 22,
     },
   },
 
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 5,
     fontSize: 15,
     [theme.breakpoints.down("sm")]: {
-      fontSize: 15,
+      fontSize: 13,
     },
   },
   dropIcon: {

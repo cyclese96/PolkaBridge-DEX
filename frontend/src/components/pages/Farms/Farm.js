@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: 20,
     paddingTop: 15,
     paddingBottom: 15,
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       paddingLeft: 7,
       paddingRight: 7,
       // width: "90%",
@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 10,
     fontWeight: 400,
     color: "#919191",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       fontSize: 10,
     },
   },
@@ -182,7 +182,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       background: "#C80C81",
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       marginRight: 0,
       marginLeft: 15,
       width: 150,
@@ -234,7 +234,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       background: "rgba(224, 7, 125, 0.7)",
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       fontSize: 14,
       // width: "80%",
     },
@@ -254,7 +254,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       background: "rgba(224, 7, 125, 0.7)",
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       fontSize: 14,
       // width: "80%",
     },

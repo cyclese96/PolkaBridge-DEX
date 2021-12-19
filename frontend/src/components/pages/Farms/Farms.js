@@ -21,19 +21,9 @@ const useStyles = makeStyles((theme) => ({
     color: "#bdbdbd",
     fontSize: 24,
     fontWeight: 600,
-    [theme.breakpoints.down("sm")]: {
-      fontSize: 24,
-      fontWeight: 600,
-    },
-  },
-  card: {
     [theme.breakpoints.down("md")]: {
-      display: "flex",
-      justifyContent: "space-around",
-      paddingRight: 65,
-      [theme.breakpoints.down("sm")]: {
-        paddingLeft: 15,
-      },
+      fontSize: 15,
+      fontWeight: 600,
     },
   },
 }));
@@ -42,19 +32,22 @@ const Farms = (props) => {
   const {
     account: { balance, loading, currentNetwork },
     dex: { transaction },
-    farm: { },
+    farm: {},
   } = props;
 
   const classes = useStyles();
   const [stakeDialog, setStakeDialog] = useState({
     open: false,
     type: "stake",
-    poolInfo: {}
+    poolInfo: {},
   });
 
   const handleStake = (type, poolAddress, poolDecimals, pid) => {
-
-    setStakeDialog({ type: type, open: true, poolInfo: { poolAddress, poolDecimals, pid } });
+    setStakeDialog({
+      type: type,
+      open: true,
+      poolInfo: { poolAddress, poolDecimals, pid },
+    });
   };
 
   // swap status updates
@@ -74,12 +67,14 @@ const Farms = (props) => {
   const handleDialogClose = () => {
     setStakeDialog({ ...stakeDialog, open: false });
     //check reset transaction on dialog close: don't reset if transaction already pending
-    if ((transaction.type === "approve" || transaction.type === "stake") && transaction.status !== 'pending') {
+    if (
+      (transaction.type === "approve" || transaction.type === "stake") &&
+      transaction.status !== "pending"
+    ) {
       setTimeout(() => {
         store.dispatch({ type: START_TRANSACTION });
       }, 200);
     }
-
   };
 
   return (
@@ -100,7 +95,7 @@ const Farms = (props) => {
       >
         {supportedFarmingPools?.[currentNetwork]?.map((farmPool) => {
           return (
-            <div className="col-md-4">
+            <div className="col-12 col-xl-4 col-lg-6">
               <Farm farmPool={farmPool} onStake={handleStake} />
             </div>
           );
