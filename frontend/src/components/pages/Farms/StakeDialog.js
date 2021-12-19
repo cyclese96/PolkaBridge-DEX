@@ -1,5 +1,11 @@
 import * as React from "react";
-import { Button, Dialog, Divider, IconButton, makeStyles } from "@material-ui/core";
+import {
+  Button,
+  Dialog,
+  Divider,
+  IconButton,
+  makeStyles,
+} from "@material-ui/core";
 import { Link } from "react-router-dom";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import CloseIcon from "@material-ui/icons/Close";
@@ -8,18 +14,19 @@ import { formattedNum } from "../../../utils/formatters";
 import TransactionStatus from "../../common/TransactionStatus";
 import { connect } from "react-redux";
 import {
-  stakeLpTokens, unstakeLpTokens, getFarmInfo,
+  stakeLpTokens,
+  unstakeLpTokens,
+  getFarmInfo,
   getLpBalanceFarm,
-} from '../../../actions/farmActions'
+} from "../../../actions/farmActions";
 import BigNumber from "bignumber.js";
 import { useMemo } from "react";
-
 
 const useStyles = makeStyles((theme) => ({
   card: {
     width: 450,
     borderRadius: 15,
-    marginTop: 20,
+
     borderRadius: 30,
     backgroundColor: "transparent",
     filter: "drop-shadow(0 0 0.5rem #212121)",
@@ -41,11 +48,12 @@ const useStyles = makeStyles((theme) => ({
   },
 
   maxButton: {
+    width: "fit-content",
     backgroundColor: "rgba(223, 9, 124,0.5)",
     color: "white",
     textTransform: "none",
     fontSize: 14,
-    padding: "2px 10px 2px 10px",
+    padding: "2px 2px 2px 2px",
     marginBottom: 4,
     marginRight: 4,
     borderRadius: 15,
@@ -81,11 +89,11 @@ const useStyles = makeStyles((theme) => ({
   },
   inputSection: {
     padding: 7,
-    width: 420,
+    width: "100%",
     borderRadius: 30,
     padding: 20,
-    backgroundColor: "rgba(41, 42, 66, 0.3)",
-    border: "1px solid #212121",
+    backgroundColor: "rgba(41, 42, 66, 0.01)",
+
     marginTop: 20,
     borderRadius: 15,
     background: `#29323c`,
@@ -127,12 +135,12 @@ const useStyles = makeStyles((theme) => ({
   input: {
     backgroundColor: "transparent",
     height: 50,
-    width: "auto",
-    borderColor: "rgba(255, 255, 255, 0.1)",
+
+    borderColor: "rgba(255, 255, 255, 0.2)",
     borderRadius: 10,
     borderWidth: "1px",
     fontSize: 18,
-    width: 180,
+    width: 190,
     color: "white",
     outline: "none",
     padding: 10,
@@ -158,66 +166,111 @@ const StakeDialog = ({
   stakeLpTokens,
   unstakeLpTokens,
   getFarmInfo,
-  getLpBalanceFarm
-}
-) => {
+  getLpBalanceFarm,
+}) => {
   const classes = useStyles();
-  const [inputValue, setInputValue] = React.useState('');
+  const [inputValue, setInputValue] = React.useState("");
 
-  const parseLpBalance = useMemo(() => fromWei(lpBalance?.[poolInfo.poolAddress]?.lpBalance, poolInfo.poolDecimals), [poolInfo.pid, lpBalance])
-  const parseStakedAmount = useMemo(() => fromWei(farms?.[poolInfo.poolAddress]?.stakeData?.amount, poolInfo.poolDecimals), [poolInfo.pid, farms])
+  const parseLpBalance = useMemo(
+    () =>
+      fromWei(
+        lpBalance?.[poolInfo.poolAddress]?.lpBalance,
+        poolInfo.poolDecimals
+      ),
+    [poolInfo.pid, lpBalance]
+  );
+  const parseStakedAmount = useMemo(
+    () =>
+      fromWei(
+        farms?.[poolInfo.poolAddress]?.stakeData?.amount,
+        poolInfo.poolDecimals
+      ),
+    [poolInfo.pid, farms]
+  );
 
   const handleMax = () => {
-
-    if (type === 'stake') {
-
-      setInputValue(parseLpBalance, poolInfo.pid, currentAccount, currentNetwork)
+    if (type === "stake") {
+      setInputValue(
+        parseLpBalance,
+        poolInfo.pid,
+        currentAccount,
+        currentNetwork
+      );
     } else {
-      setInputValue(parseStakedAmount, poolInfo.pid, currentAccount, currentNetwork)
-
+      setInputValue(
+        parseStakedAmount,
+        poolInfo.pid,
+        currentAccount,
+        currentNetwork
+      );
     }
-
-  }
+  };
 
   const confirmStake = async () => {
-
-    const inputTokens = inputValue ? toWei(inputValue, poolInfo.poolDecimals) : 0;
+    const inputTokens = inputValue
+      ? toWei(inputValue, poolInfo.poolDecimals)
+      : 0;
 
     if (new BigNumber(inputTokens).lte(0)) {
-      return
+      return;
     }
 
-    if (type === 'stake' && new BigNumber(inputTokens).gt(lpBalance?.[poolInfo.poolAddress]?.lpBalance)) {
-      return
+    if (
+      type === "stake" &&
+      new BigNumber(inputTokens).gt(
+        lpBalance?.[poolInfo.poolAddress]?.lpBalance
+      )
+    ) {
+      return;
     }
 
-    if (type === 'unstake' && new BigNumber(inputTokens).gt(farms?.[poolInfo.poolAddress]?.stakeData?.amount)) {
-      return
+    if (
+      type === "unstake" &&
+      new BigNumber(inputTokens).gt(
+        farms?.[poolInfo.poolAddress]?.stakeData?.amount
+      )
+    ) {
+      return;
     }
 
-    if (type === 'stake') {
-      await stakeLpTokens(inputTokens, poolInfo.poolAddress, poolInfo.pid, currentAccount, currentNetwork)
+    if (type === "stake") {
+      await stakeLpTokens(
+        inputTokens,
+        poolInfo.poolAddress,
+        poolInfo.pid,
+        currentAccount,
+        currentNetwork
+      );
     } else {
-      await unstakeLpTokens(inputTokens, poolInfo.poolAddress, poolInfo.pid, currentAccount, currentNetwork)
+      await unstakeLpTokens(
+        inputTokens,
+        poolInfo.poolAddress,
+        poolInfo.pid,
+        currentAccount,
+        currentNetwork
+      );
     }
 
     // update pool after transaction:
     await Promise.all([
-      getFarmInfo(poolInfo.poolAddress, poolInfo.pid, currentAccount, currentNetwork),
-      getLpBalanceFarm(poolInfo.poolAddress, currentAccount, currentNetwork)
-    ])
-
-  }
+      getFarmInfo(
+        poolInfo.poolAddress,
+        poolInfo.pid,
+        currentAccount,
+        currentNetwork
+      ),
+      getLpBalanceFarm(poolInfo.poolAddress, currentAccount, currentNetwork),
+    ]);
+  };
 
   const closeAction = () => {
     handleClose();
     setTimeout(() => {
-      setInputValue("")
-    }, 500)
-  }
+      setInputValue("");
+    }, 500);
+  };
 
   return (
-
     <Dialog
       onClose={handleClose}
       open={open}
@@ -226,94 +279,102 @@ const StakeDialog = ({
       color="transparent"
       PaperProps={{
         style: {
-          borderRadius: 15, backgroundColor: "#121827",
+          borderRadius: 15,
+          backgroundColor: "#121827",
           color: "#f9f9f9",
         },
       }}
     >
       {transaction.type === null && (
         <div className={classes.card}>
-          <div className={classes.cardContents}>
-            <div className="d-flex justify-content-between align-items-center">
-              <div>
-                <h1 className={classes.header}>{type === 'stake' ? 'Stake' : 'Unstake'} LP token</h1>
-              </div>
-              <div>
-                <div>
-                  <IconButton
-                    aria-label="close"
-                    className={classes.closeButton}
-                    onClick={closeAction}
-                  >
-                    <CloseIcon style={{ color: 'rgba(224, 7, 125, 0.6)' }} />
-                  </IconButton>
-                </div>
-              </div>
-            </div>
-            <div className="mt-2">
-              <Divider style={{ backgroundColor: "grey", height: 1 }} />
-            </div>
-            <div className={classes.inputSection}>
-              <div className="d-flex justify-content-between align-items-center mt-2">
-                <div>
-                  <h1 className={classes.section}>{type === 'stake' ? 'Stake' : 'Unstake'}</h1>
-                </div>
-                <div>
-                  {type === 'stake'
-                    ? (<h1 className={classes.section}>Balance: {formattedNum(parseLpBalance)}</h1>)
-                    : (<h1 className={classes.section}>Lp staked: {formattedNum((parseStakedAmount))}</h1>)
-                  }
-
-                </div>
-              </div>
-              <div className="d-flex flex-wrap justify-content-around align-items-center mt-2">
-                <div>
-                  {/* <div className={classes.tokenTitle}>0.00</div> */}
-                  <input
-                    type="text"
-                    className={classes.input}
-                    placeholder="0.00"
-                    onChange={({ target: { value } }) => setInputValue(value)}
-                    value={inputValue}
-                  />
-                </div>
-                <div className="d-flex justify-content-between align-items-center  mt-2">
-                  <div>
-                    <Button className={classes.maxButton} onClick={handleMax} >
-                      Max
-                    </Button>
-                  </div>
-                  <div >
-                    <h1 className={classes.section}>PBR-USDT LP</h1>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="d-flex justify-content-around align-items-center mt-3">
-              <Button
-                variant="text"
-                className={classes.cancelButton}
+          <div className="d-flex justify-content-between align-items-center">
+            <h1 className={classes.header}>
+              {type === "stake" ? "Stake" : "Unstake"} LP token
+            </h1>
+            <div>
+              <IconButton
+                aria-label="close"
+                className={classes.closeButton}
                 onClick={closeAction}
               >
-                Cancel
-              </Button>
-              <Button
-                variant="contained"
-                className={classes.confirmButton}
-                onClick={confirmStake}
+                <CloseIcon
+                  style={{ color: "rgba(224, 7, 125, 0.9)", padding: 0 }}
+                />
+              </IconButton>
+            </div>
+          </div>
+          <div className="mt-2">
+            <Divider style={{ backgroundColor: "grey", height: 1 }} />
+          </div>
+          <div className={classes.inputSection}>
+            <div className="d-flex justify-content-between align-items-center mt-2">
+              <div>
+                <h1 className={classes.section}>
+                  {type === "stake" ? "Stake" : "Unstake"}
+                </h1>
+              </div>
+              <div>
+                {type === "stake" ? (
+                  <h1 className={classes.section}>
+                    Balance: {formattedNum(parseLpBalance)}
+                  </h1>
+                ) : (
+                  <h1 className={classes.section}>
+                    Lp staked: {formattedNum(parseStakedAmount)}
+                  </h1>
+                )}
+              </div>
+            </div>
+            <div className="d-flex flex-wrap justify-content-between align-items-center mt-2">
+              <div>
+                {/* <div className={classes.tokenTitle}>0.00</div> */}
+                <input
+                  className={classes.input}
+                  placeholder="0.00"
+                  onChange={({ target: { value } }) => setInputValue(value)}
+                  value={inputValue}
+                  type="number"
+                />
+              </div>
+              <div className="d-flex justify-content-between align-items-center mt-2">
+                <div>
+                  <Button className={classes.maxButton} onClick={handleMax}>
+                    Max
+                  </Button>
+                </div>
+                <div>
+                  <h1 className={classes.section}>PBR-USDT LP</h1>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="d-flex justify-content-around align-items-center mt-3">
+            <Button
+              variant="text"
+              className={classes.cancelButton}
+              onClick={closeAction}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              className={classes.confirmButton}
+              onClick={confirmStake}
+            >
+              Confirm
+            </Button>
+          </div>
+          <div className="d-flex justify-content-center align-items-center mt-4 mb-2">
+            <Link to="liquidity">
+              {" "}
+              <div
+                className={classes.tokenTitle}
+                style={{ color: "rgba(223, 9, 124,0.9)" }}
               >
-                Confirm
-              </Button>
-            </div>
-            <div className="d-flex justify-content-center align-items-center mt-4 mb-2">
-              <Link to="liquidity">
-                {" "}
-                <div className={classes.tokenTitle}>
-                  Get PBR-USDT LP <OpenInNewIcon fontSize="small" />{" "}
-                </div>{" "}
-              </Link>
-              <div className={classes.tokenAmount}></div>
-            </div>
+                Get PBR-USDT LP <OpenInNewIcon fontSize="small" />{" "}
+              </div>{" "}
+            </Link>
+            <div className={classes.tokenAmount}></div>
           </div>
         </div>
       )}
@@ -325,16 +386,19 @@ const StakeDialog = ({
           </div>
         )}
       </div>
-
     </Dialog>
   );
-}
-
+};
 
 const mapStateToProps = (state) => ({
   dex: state.dex,
   farm: state.farm,
-  account: state.account
+  account: state.account,
 });
 
-export default connect(mapStateToProps, { stakeLpTokens, unstakeLpTokens, getFarmInfo, getLpBalanceFarm })(StakeDialog);
+export default connect(mapStateToProps, {
+  stakeLpTokens,
+  unstakeLpTokens,
+  getFarmInfo,
+  getLpBalanceFarm,
+})(StakeDialog);

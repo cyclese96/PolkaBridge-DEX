@@ -14,11 +14,10 @@ import {
   confirmLpFarmAllowance,
   getFarmInfo,
   getLpBalanceFarm,
-  stakeLpTokens
+  stakeLpTokens,
 } from "../../../actions/farmActions";
 import BigNumber from "bignumber.js";
 import { fromWei, getLpApr, getPbrRewardApr } from "../../../utils/helper";
-
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -64,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 10,
     fontSize: 15,
     paddingBottom: 3,
-    color: "#b7b7b7",
+    color: "#e5e5e5",
     paddingTop: 2,
   },
   link: {
@@ -124,7 +123,7 @@ const useStyles = makeStyles((theme) => ({
     // paddingLeft: 10,
     marginRight: 5,
     fontSize: 18,
-    color: "rgba(224, 7, 125, 0.9)",
+    color: "rgba(224, 7, 125, 1)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -265,7 +264,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 const Farm = (props) => {
   const {
     farmPool,
@@ -278,7 +276,7 @@ const Farm = (props) => {
     checkLpFarmAllowance,
     confirmLpFarmAllowance,
     getLpBalanceFarm,
-    stakeLpTokens
+    stakeLpTokens,
   } = props;
   const classes = useStyles();
 
@@ -324,9 +322,8 @@ const Farm = (props) => {
   };
 
   const farmData = (_farmPool) => {
-
     if (!farmPool) {
-      return null
+      return null;
     }
 
     if (!Object.keys(farms).includes(farmPoolAddress(_farmPool))) {
@@ -345,7 +342,6 @@ const Farm = (props) => {
   };
 
   const getFarmTotalApr = (_address) => {
-
     if (!_address) {
       return "";
     }
@@ -355,23 +351,49 @@ const Farm = (props) => {
     const totalPoolLiquidityUSD = lpBalance?.[_address]?.poolLiquidityUSD;
     const pbrPrice = lpBalance?.[_address]?.pbrPriceUSD;
 
-    const pbrRewardApr = getPbrRewardApr(pbrReward1Year, pbrPrice, totalPoolLiquidityUSD);
-    const totalApr = new BigNumber(pbrRewardApr).plus(getLpApr(farmPool)).toFixed(0).toString()
+    const pbrRewardApr = getPbrRewardApr(
+      pbrReward1Year,
+      pbrPrice,
+      totalPoolLiquidityUSD
+    );
+    const totalApr = new BigNumber(pbrRewardApr)
+      .plus(getLpApr(farmPool))
+      .toFixed(0)
+      .toString();
     return totalApr;
-  }
+  };
 
-  const farmApr = useMemo(() => getFarmTotalApr(farmPoolAddress(farmPool)), [farmPoolAddress(farmPool), farms, lpBalance])
+  const farmApr = useMemo(
+    () => getFarmTotalApr(farmPoolAddress(farmPool)),
+    [farmPoolAddress(farmPool), farms, lpBalance]
+  );
 
   const handleStakeActions = (actionType = "stake") => {
-    onStake(actionType, farmPoolAddress(farmPool), farmPoolDecimals(farmPool), farmPoolId(farmPool));
+    onStake(
+      actionType,
+      farmPoolAddress(farmPool),
+      farmPoolDecimals(farmPool),
+      farmPoolId(farmPool)
+    );
   };
 
   const harvestDisableStatus = (_farmPool) => {
-    return loading?.[farmPoolAddress(_farmPool)] || new BigNumber(!farmData(_farmPool).pendingPbr ? 0 : farmData(_farmPool).pendingPbr).eq(0)
+    return (
+      loading?.[farmPoolAddress(_farmPool)] ||
+      new BigNumber(
+        !farmData(_farmPool).pendingPbr ? 0 : farmData(_farmPool).pendingPbr
+      ).eq(0)
+    );
   };
 
   const handleHarvest = async (_farmPool) => {
-    await stakeLpTokens('0', farmPoolAddress(_farmPool), farmPoolId(_farmPool), currentAccount, currentNetwork)
+    await stakeLpTokens(
+      "0",
+      farmPoolAddress(_farmPool),
+      farmPoolId(_farmPool),
+      currentAccount,
+      currentNetwork
+    );
 
     await getFarmInfo(
       farmPoolAddress(_farmPool),
@@ -379,9 +401,16 @@ const Farm = (props) => {
       currentAccount,
       currentNetwork
     );
-  }
+  };
 
-  const parseStakedAmount = useMemo(() => fromWei(farms?.[farmPoolAddress(farmPool)]?.stakeData?.amount, farmPoolDecimals(farmPool)), [farmPool, farms])
+  const parseStakedAmount = useMemo(
+    () =>
+      fromWei(
+        farms?.[farmPoolAddress(farmPool)]?.stakeData?.amount,
+        farmPoolDecimals(farmPool)
+      ),
+    [farmPool, farms]
+  );
 
   return (
     <Card elevation={10} className={classes.card}>
@@ -417,9 +446,7 @@ const Farm = (props) => {
           <div className={classes.tokenTitle}>APR </div>
 
           <div className="d-flex align-items-center">
-            <div className={classes.tokenAmount}>
-              {farmApr}%{" "}
-            </div>
+            <div className={classes.tokenAmount}>{farmApr}% </div>
             <ShowChartIcon className={classes.tokenAmount} fontSize="small" />
           </div>
         </div>
@@ -483,6 +510,7 @@ const Farm = (props) => {
                 <Button
                   onClick={() => handleStakeActions("unstake")}
                   className={classes.stakeBtn}
+                  style={{ fontSize: 36 }}
                 >
                   -
                 </Button>
@@ -517,7 +545,12 @@ const Farm = (props) => {
 
         <div className="d-flex justify-content-between align-items-center mt-4">
           <div className={classes.tokenTitle}>Total Liquidity:</div>
-          <div className={classes.tokenAmount}>${formattedNum(lpBalance?.[farmPoolAddress(farmPool)]?.poolLiquidityUSD)}</div>
+          <div className={classes.tokenAmount}>
+            $
+            {formattedNum(
+              lpBalance?.[farmPoolAddress(farmPool)]?.poolLiquidityUSD
+            )}
+          </div>
         </div>
 
         <div className="d-flex justify-content-between align-items-center mt-2">
@@ -564,5 +597,5 @@ export default connect(mapStateToProps, {
   checkLpFarmAllowance,
   confirmLpFarmAllowance,
   getLpBalanceFarm,
-  stakeLpTokens
+  stakeLpTokens,
 })(Farm);
