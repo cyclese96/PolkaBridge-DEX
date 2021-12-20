@@ -32,7 +32,7 @@ const Farms = (props) => {
   const {
     account: { balance, loading, currentNetwork },
     dex: { transaction },
-    farm: {},
+    farm: { },
   } = props;
 
   const classes = useStyles();
@@ -42,11 +42,11 @@ const Farms = (props) => {
     poolInfo: {},
   });
 
-  const handleStake = (type, poolAddress, poolDecimals, pid) => {
+  const handleStake = (farmPool, type, poolAddress, poolDecimals, pid) => {
     setStakeDialog({
       type: type,
       open: true,
-      poolInfo: { poolAddress, poolDecimals, pid },
+      poolInfo: { farmPool, poolAddress, poolDecimals, pid },
     });
   };
 

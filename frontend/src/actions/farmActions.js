@@ -268,7 +268,7 @@ export const getFarmInfo = (pairAddress, pid, account, network) => async (dispat
             payload: getLoadingObject(pairAddress, true)
         });
         // 12 hour later block 
-        const endBlockRes = await getBlockFromTimestamp(farmContractConfig.startTimestamp + 12 * 3600 + 100);
+        const endBlockRes = await getBlockFromTimestamp(farmContractConfig.startTimestamp + 12 * 3600 + 10);
         const [pbrPerBlock, poolInfo, pendingPbr, userInfo, totalAllocPoint, multiplier12hr] = await Promise.all([
             _farmContract.methods.PBRPerBlock().call(),
             _farmContract.methods.poolInfo(pid).call(),

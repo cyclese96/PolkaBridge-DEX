@@ -343,7 +343,7 @@ const StakeDialog = ({
                   </Button>
                 </div>
                 <div>
-                  <h1 className={classes.section}>PBR-USDT LP</h1>
+                  <h1 className={classes.section}>{poolInfo.farmPool} LP</h1>
                 </div>
               </div>
             </div>
@@ -371,7 +371,7 @@ const StakeDialog = ({
                 className={classes.tokenTitle}
                 style={{ color: "rgba(223, 9, 124,0.9)" }}
               >
-                Get PBR-USDT LP <OpenInNewIcon fontSize="small" />{" "}
+                Get {poolInfo.farmPool} LP <OpenInNewIcon fontSize="small" />{" "}
               </div>{" "}
             </Link>
             <div className={classes.tokenAmount}></div>

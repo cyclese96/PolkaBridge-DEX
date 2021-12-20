@@ -370,6 +370,7 @@ const Farm = (props) => {
 
   const handleStakeActions = (actionType = "stake") => {
     onStake(
+      farmPool,
       actionType,
       farmPoolAddress(farmPool),
       farmPoolDecimals(farmPool),
