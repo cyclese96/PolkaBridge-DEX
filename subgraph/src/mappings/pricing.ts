@@ -6,7 +6,7 @@ import { ZERO_BD, factoryContract, ADDRESS_ZERO, ONE_BD, UNTRACKED_PAIRS, testin
 const WETH_ADDRESS = testing ? '0xc778417e063141139fce010982780140aa0cd5ab' : '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
 // const USDC_WETH_PAIR = '0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc' // created 10008355
 // const DAI_WETH_PAIR = '0xa478c2975ab1ea89e8196811f51a7b7ade33eb11' // created block 10042267
-const USDT_WETH_PAIR = testing ? '0xE3419211dccfb659c6d967a290Fbe5F2eBFA241a' : '0xB264a701ace313e052A24BE79D7Cf96Ed8edEB70'  // created block 10093341
+const USDT_WETH_PAIR = testing ? '0x511De78Ed2171776b30CF268D2C6CAcd28741704' : '0xB264a701ace313e052A24BE79D7Cf96Ed8edEB70'  // created block 10093341
 
 
 export function getEthPriceInUSD(): BigDecimal {

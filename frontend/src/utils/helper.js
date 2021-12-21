@@ -2,6 +2,7 @@ import BigNumber from "bignumber.js";
 import web3 from "../web";
 import axios from "axios";
 import { ethers } from "ethers";
+import { farmingPoolConstants } from "../constants";
 
 const WEI_UNITS = 1000000000000000000;
 const WEI_UNITS_6 = 1000000;
@@ -346,3 +347,24 @@ export const getCachedTokens = () => {
   }
   return JSON.parse(tokens);
 };
+
+
+export const getPbrRewardApr = (pbrPerYear, pbrPriceUSD, poolLiquidityUSD) => {
+
+  try {
+
+    const pbrRewardApr = new BigNumber(pbrPerYear).times(pbrPriceUSD).div(poolLiquidityUSD).times(100);
+
+    return pbrRewardApr.toFixed(0).toString();
+
+  } catch (error) {
+    console.log('calculate apr exeption ', error);
+    return '0';
+  }
+
+}
+
+export const getLpApr = (pool) => {
+  const lpApr = farmingPoolConstants.ethereum?.[pool]?.lpApr
+  return lpApr ? lpApr : 0;
+}

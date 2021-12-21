@@ -1,3 +1,4 @@
+import axios from "axios";
 import {
   currentConnection,
   nullAddress,
@@ -33,6 +34,32 @@ export const getPairAddress = async (address0, address1, network) => {
 
     console.log("getPairAddress", error)
     return null;
+  }
+
+};
+
+
+const coinGecko = "https://api.coingecko.com/api";
+
+export const getPbrPriceFromCoinGecko = async () => {
+
+
+  try {
+
+    const { data } = await axios.get(
+      coinGecko +
+      "/v3/simple/price?ids=polkabridge&vs_currencies=usd&include_market_cap=true&include_24hr_vol=false&include_24hr_change=true&include_last_updated_at=true"
+    );
+    // console.log("data");
+    // console.log(data);
+    const tokenPrice = data.polkabridge ? data.polkabridge.usd : '0';
+
+    return '6.016';
+
+  } catch (error) {
+
+    console.log("getTokenPriceFromCoinGecko", error)
+    return 0;
   }
 
 };
