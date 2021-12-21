@@ -7,10 +7,10 @@ import { ERC20NameBytes } from '../../generated/Factory/ERC20NameBytes'
 import { Factory as FactoryContract } from '../../generated/templates/Pair/Factory'
 // import { TokenDefinition } from './tokenDefinition'
 
-export const testing = false;
+export const testing = true;
 
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000"
-export const FACTORY_ADDRESS = testing ? "0xA5d426Fa8C76ecD6F937f84442d1C0B26fb11286" : "0xeff9EcEFe14279C0157f88573Ca9361D253c10bE"
+export const FACTORY_ADDRESS = testing ? "0xAeDa6b39324e658e49959d23153033c6368fB5dc" : "0xeff9EcEFe14279C0157f88573Ca9361D253c10bE"
 
 export let ZERO_BI = BigInt.fromI32(0)
 export let ONE_BI = BigInt.fromI32(1)
