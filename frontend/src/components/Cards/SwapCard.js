@@ -44,7 +44,7 @@ import {
   START_TRANSACTION,
 } from "../../actions/types";
 import { default as NumberFormat } from 'react-number-format';
-import { useAllTokenData } from "../../contexts/TokenData";
+// import { useAllTokenData } from "../../contexts/TokenData";
 import { useLocation } from "react-router";
 
 const useStyles = makeStyles((theme) => ({

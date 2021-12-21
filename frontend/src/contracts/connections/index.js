@@ -3,6 +3,7 @@ import RouterAbi from "../abi/Router.json";
 import FactoryAbi from "../abi/Factory.json";
 import pairAbi from '../abi/pair.json';
 import tokenAbi from '../abi/erc20.json';
+import farmAbi from '../abi/PolkaBridgeFarm.json';
 
 import {
   bscNetwork,
@@ -10,6 +11,7 @@ import {
   etheriumNetwork,
   routerAddresses,
   factoryAddresses,
+  farmAddresses,
 
 } from "../../constants";
 import { isMetaMaskInstalled } from "../../utils/helper";
@@ -73,6 +75,24 @@ export const factoryContract = (network) => {
         : factoryAddresses.ethereum.mainnet;
 
     const abi = FactoryAbi;
+    const connection = getCurrentConnection(network, abi, address);
+    return connection;
+  }
+};
+
+export const farmContract = (network) => {
+  if (network === bscNetwork) {
+    const address = '';
+    const abi = farmAbi; // update for bsc
+    const connection = getCurrentConnection(network, abi, address);
+    return connection;
+  } else {
+    const address =
+      currentConnection === "testnet"
+        ? farmAddresses.ethereum.testnet
+        : farmAddresses.ethereum.mainnet;
+
+    const abi = farmAbi;
     const connection = getCurrentConnection(network, abi, address);
     return connection;
   }
