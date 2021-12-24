@@ -17,7 +17,7 @@ import {
   getCurrentAccount,
 } from "../utils/helper";
 import { CHANGE_NETWORK } from "../actions/types";
-import TabPage from "./TabPage";
+// import TabPage from "./TabPage";
 import { loadTokens } from "../actions/dexActions";
 
 const useStyles = makeStyles((theme) => ({

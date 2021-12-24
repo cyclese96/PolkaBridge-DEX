@@ -4,7 +4,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import SwapCard from "./Cards/SwapCard";
+import Swap from "./pages/Swap";
 import AddLiquidity from "./pages/AddLiquidity";
 import Analytics from "./pages/Analytics/Analytics";
 import { Link } from "react-router-dom";
@@ -104,7 +104,7 @@ export default function TabPage({ data = 1 }) {
       </Tabs>
 
       <TabPanel data={0} index={0}>
-        <SwapCard />
+        <Swap />
       </TabPanel>
       <TabPanel data={1} index={1}>
         <AddLiquidity />
