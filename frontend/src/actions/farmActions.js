@@ -17,6 +17,7 @@ import BigNumber from "bignumber.js";
 import { fromWei } from "../utils/helper";
 import { getPbrPriceFromCoinGecko } from "../utils/connectionUtils";
 import { getBlockFromTimestamp } from '../utils/timeUtils'
+import { getCurrentTokenPriceInEth, getOnlyCurrentEthPrice } from "../contexts/GlobalData";
 
 
 const getLoadingObject = (_key, flag) => {
@@ -310,19 +311,25 @@ export const getLpBalanceFarm = (pairAddress, account, network) => async (dispat
 
         const _pairContract = pairContract(pairAddress, network);
 
+        const pbrAddress = currentConnection === 'testnet'
+            ? tokenAddresses.ethereum.PBR.testnet
+            : tokenAddresses.ethereum.PBR.testnet;
+
 
         dispatch({
             type: SHOW_FARM_LOADING,
             payload: getLoadingObject(pairAddress, true)
         });
 
-        const [lpBalance, token0Addr, token1Addr, reservesData, totalSupply] =
+        const [lpBalance, token0Addr, token1Addr, reservesData, totalSupply, ethPrice, tokenDerivedEth] =
             await Promise.all([
                 _pairContract.methods.balanceOf(account).call(),
                 _pairContract.methods.token0().call(),
                 _pairContract.methods.token1().call(),
                 _pairContract.methods.getReserves().call(),
-                _pairContract.methods.totalSupply().call()
+                _pairContract.methods.totalSupply().call(),
+                getOnlyCurrentEthPrice(),
+                getCurrentTokenPriceInEth(pbrAddress)
             ]);
 
         const reserve = {};
@@ -331,8 +338,10 @@ export const getLpBalanceFarm = (pairAddress, account, network) => async (dispat
 
 
         // eth-pbr price from AMM
-        const ethPrice = 6027.140640678264307674778729851681;
-        const pbrPriceUSD = 6.016;
+        // const ethPrice = ethPrice;
+        const pbrPriceUSD = new BigNumber(ethPrice).times(tokenDerivedEth).toString();
+
+        console.log('farmTest: ', { ethPrice, pbrPriceUSD })
 
         //calculating total liquidity usd value
         const ethAddress = currentConnection === 'mainnet'

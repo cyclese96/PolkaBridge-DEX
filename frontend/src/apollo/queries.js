@@ -679,6 +679,21 @@ export const TOKEN_DATA = (tokenAddress, block) => {
   return gql(queryString);
 };
 
+export const TOKEN_CURRENT_DATA = (tokenAddress) => {
+  const queryString = `
+    ${TokenFields}
+    query tokens {
+      tokens(${false ? `` : ``
+    } where: {id:"${tokenAddress}"}) {
+        ...TokenFields
+      }
+    
+    }
+  `;
+  return gql(queryString);
+};
+
+
 // used for getting top tokens by daily volume
 export const TOKEN_TOP_DAY_DATAS = gql`
   query tokenDayDatas($date: Int) {

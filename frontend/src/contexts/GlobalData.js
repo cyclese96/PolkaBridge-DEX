@@ -25,6 +25,8 @@ import {
   ETH_PRICE,
   ALL_PAIRS,
   ALL_TOKENS,
+  TOKEN_DATA,
+  TOKEN_CURRENT_DATA,
   // TOP_LPS_PER_PAIRS,
 } from "../apollo/queries";
 import weekOfYear from "dayjs/plugin/weekOfYear";
@@ -516,6 +518,53 @@ const getEthPrice = async () => {
   }
 
   return [ethPrice, ethPriceOneDay, priceChangeETH];
+};
+
+/**
+ * Get current eth price
+ */
+export const getOnlyCurrentEthPrice = async () => {
+
+  let ethPrice = 0;
+  try {
+    let result = await client.query({
+      query: ETH_PRICE(),
+      fetchPolicy: "cache-first",
+    });
+
+    const currentPrice = result?.data?.bundles[0]?.ethPrice;
+
+    ethPrice = currentPrice;
+
+  } catch (e) {
+    console.log("getEthPrice", e);
+  }
+
+  return ethPrice;
+};
+
+/**
+ * Get token derived eth value
+ */
+export const getCurrentTokenPriceInEth = async (address) => {
+
+  let tokenPriceInEth = 0;
+  let data = {};
+  try {
+    let result = await client.query({
+      query: TOKEN_CURRENT_DATA(address?.toLowerCase()),
+      fetchPolicy: 'cache-first',
+    })
+    data = result?.data?.tokens?.[0]
+
+    console.log('farmTest current token pricedata ', result)
+    tokenPriceInEth = data?.derivedETH;
+
+  } catch (e) {
+    console.log("farmTest: getCurrentTokenPriceInEth", e);
+  }
+
+  return tokenPriceInEth;
 };
 
 const PAIRS_TO_FETCH = 500;
