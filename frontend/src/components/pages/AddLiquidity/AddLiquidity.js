@@ -1,22 +1,13 @@
 import { Button, Card, makeStyles } from "@material-ui/core";
 import { connect } from "react-redux";
 import { useState } from "react";
-// import CustomButton from "../../Buttons/CustomButton";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import AddCard from "./AddCard";
 import RemoveCard from "./RemoveCard";
 import TabPage from "../../TabPage";
-// import tokenThumbnail from "../../../utils/tokenThumbnail";
-// import { SwapHoriz } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    height: 200,
-  },
-  addButton: {
-    width: 170,
-  },
   card: {
     width: 500,
     height: "100%",
@@ -79,87 +70,9 @@ const useStyles = makeStyles((theme) => ({
       padding: "15px 30px 15px 30px",
     },
   },
-  selectedToken: {
-    color: "white",
-    marginLeft: 5,
-    fontSize: 15,
-    [theme.breakpoints.down("sm")]: {
-      fontSize: 12,
-    },
-  },
-  tokenIcon: {
-    width: "auto",
-    height: 22,
-    marginRight: 2,
-    borderRadius: "50%",
-    color: "#e5e5e5",
-  },
-  token: {
-    display: "flex",
-    alignItems: "center",
-    backgroundColor: "black",
-    border: "0.5px solid #616161",
-    borderRadius: 12,
-    paddingLeft: 8,
-    paddingRight: 8,
-    paddingTop: 2,
-    paddingBottom: 2,
-    height: 35,
-    marginLeft: 10,
-    marginRight: 10,
-    cursor: "pointer",
-    width: "fit-content",
-    "&:hover": {
-      background: "rgba(255, 255, 255, 0.1)",
-    },
-  },
-  cardAddedLiquidity: {
-    width: "100%",
-    marginTop: 14,
-    height: 70,
-    display: "flex",
-    border: "0.5px solid #313131",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    borderRadius: 15,
-    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingTop: 5,
-    paddingBottom: 5,
-
-    [theme.breakpoints.down("sm")]: {
-      paddingLeft: 7,
-      paddingRight: 7,
-      width: "100%",
-    },
-  },
-  removeButton: {
-    backgroundColor: "transparent",
-    color: "white",
-    width: 80,
-    height: 40,
-    border: "1px solid rgba(224, 7, 125, 0.9)",
-    textTransform: "none",
-    fontSize: 14,
-    borderRadius: 10,
-    marginLeft: 10,
-    marginRight: 10,
-    marginTop: 5,
-    marginBottom: 5,
-    "&:hover": {
-      background: "rgba(224, 7, 125, 0.7)",
-    },
-    [theme.breakpoints.down("sm")]: {
-      fontSize: 12,
-      color: "white",
-      width: "fit-content",
-    },
-  },
 }));
 
-const AddLiquidity = ({ account: { balance, loading } }) => {
+const AddLiquidity = ({ account: { loading } }) => {
   const classes = useStyles();
   const [showCard, setShowAdd] = useState({ status: false, component: "" });
 

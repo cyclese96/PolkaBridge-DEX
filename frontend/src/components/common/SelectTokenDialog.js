@@ -88,8 +88,6 @@ const SelectTokenDialog = ({
   const classes = useStyles();
 
   const [filteredTokens, setTokens] = useState([]);
-  // const [showImported, setShowImported] = useState(false);
-  const [_importedTokens, setImported] = useState([]);
   const [filterInput, setFilterInput] = useState("");
 
   const onTokenSelect = (token) => {
@@ -135,12 +133,7 @@ const SelectTokenDialog = ({
     const _value = value.split(" ").join("");
     const filteredList = applyFilter(tokenList, _value);
     setTokens(filteredList);
-    // if (_value.length >= 42 && filteredList.length === 0) {
-    //   setShowImported(true);
-    //   await importToken(_value, currentAccount, currentNetwork);
-    // } else {
-    //   setShowImported(false);
-    // }
+
   };
 
   const resetInputState = () => {
@@ -156,7 +149,6 @@ const SelectTokenDialog = ({
     <Dialog
       onClose={onClose}
       open={open}
-      // onLoad={() => filterTokens("")}
       disableBackdropClick
       className={classes.dialog}
       color="transparent"
@@ -184,7 +176,6 @@ const SelectTokenDialog = ({
           placeholder="Search name or paste address"
           onChange={({ target: { value } }) => handleTokenFilter(value)}
         />
-        {/* <FixedSizeList> */}
         <Divider
           style={{
             width: "100%",
@@ -211,7 +202,6 @@ const SelectTokenDialog = ({
             marginBottom: 10,
           }}
         />
-        {/* </FixedSizeList> */}
         <div className={classes.buttons}>
           <Button
             variant="contained"

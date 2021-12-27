@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import {
   Button,
   Dialog,
@@ -46,7 +46,6 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 3,
     color: "#e5e5e5",
   },
-
   maxButton: {
     width: "fit-content",
     backgroundColor: "rgba(223, 9, 124,0.5)",
@@ -77,15 +76,6 @@ const useStyles = makeStyles((theme) => ({
     color: "#cecece",
     fontSize: 16,
     fontWeight: 600,
-  },
-  sectionLp: {
-    color: "#cecece",
-    fontSize: 16,
-    fontWeight: 600,
-    [theme.breakpoints.down("xs")]: {
-      fontSize: 12,
-      fontWeight: 600,
-    },
   },
   inputSection: {
     padding: 7,
@@ -169,7 +159,7 @@ const StakeDialog = ({
   getLpBalanceFarm,
 }) => {
   const classes = useStyles();
-  const [inputValue, setInputValue] = React.useState("");
+  const [inputValue, setInputValue] = useState("");
 
   const parseLpBalance = useMemo(
     () =>

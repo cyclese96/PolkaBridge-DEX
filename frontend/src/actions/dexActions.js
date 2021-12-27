@@ -6,6 +6,7 @@ import {
   etheriumNetwork,
   nullAddress,
   PBR,
+  routerAddresses,
   swapFnConstants,
   THRESOLD_WEI_VALUE,
   tokenAddresses,
@@ -590,14 +591,12 @@ export const removeLiquidityEth =
   (ethToken, erc20Token, account, lpAmount, deadline, network) =>
     async (dispatch) => {
       try {
-        // const _tokenContract = getTokenContract(network, erc20Token.symbol);
         const _routerContract = routerContract(network);
 
         dispatch({
           type: SHOW_DEX_LOADING,
         });
-        //input params
-        // const etherAmount = ethToken.amount;
+
         const erc20Address = erc20Token.address;
         const etherAmountMin = "0";
         const tokenAmountMin = "0";
@@ -738,7 +737,7 @@ export const confirmAllowance =
   };
 
 export const checkLpAllowance =
-  (token1, token2, pairAddress, account, network) => async (dispatch) => {
+  (token0, token1, pairAddress, account, network) => async (dispatch) => {
     try {
       const _pairContract = pairContract(pairAddress, network);
       const _routerContract = routerContract(network);
@@ -755,12 +754,12 @@ export const checkLpAllowance =
       if (new BigNumber(lpAllowance).gt(0)) {
         dispatch({
           type: APPROVE_LP_TOKENS,
-          payload: { pair: `${token1.symbol}_${token2.symbol}`, status: true },
+          payload: { pair: `${token0.symbol}_${token1.symbol}`, status: true },
         });
       } else {
         dispatch({
           type: APPROVE_LP_TOKENS,
-          payload: { pair: `${token1.symbol}_${token2.symbol}`, status: false },
+          payload: { pair: `${token0.symbol}_${token1.symbol}`, status: false },
         });
       }
       // console.log("Test: lp allowance ", lpAllowance);
@@ -777,23 +776,25 @@ export const checkLpAllowance =
   };
 
 export const confirmLPAllowance =
-  (balance, token1, token2, pairAddress, account, network) => async (dispatch) => {
+  (balance, token0, token1, pairAddress, account, network) => async (dispatch) => {
     try {
       const _pairContract = pairContract(pairAddress, network);
-      const _routerContract = routerContract(network);
+      const _routerContractAddress = currentConnection === 'mainnet'
+        ? routerAddresses.ethereum.mainnet
+        : routerAddresses.ethereum.testnet
 
       dispatch({
         type: SHOW_DEX_LOADING,
       });
-      const lpAllowance = await _pairContract.methods
-        .approve(_routerContract._address, balance)
+      await _pairContract.methods
+        .approve(_routerContractAddress, balance)
         .send({ from: account });
 
       dispatch({
         type: APPROVE_LP_TOKENS,
-        payload: { pair: `${token1.symbol}_${token2.symbol}`, status: true },
+        payload: { pair: `${token0.symbol}_${token1.symbol}`, status: true },
       });
-      // console.log("allowance confirmed ", lpAllowance);
+
     } catch (error) {
       console.log("confirmAllowance ", error);
       dispatch({
@@ -1235,8 +1236,6 @@ const tokenThresoldValue = (decimals) => {
 export const calculatePriceImpact = async (token0, token1, account, network) => {
   try {
 
-    //
-
     const pairAddress = await getPairAddress(token0.address, token1.address);
 
     let reserve, totalSupply, lpBalance;
@@ -1248,15 +1247,8 @@ export const calculatePriceImpact = async (token0, token1, account, network) => 
       totalSupply = pairReserveRes.totalSupply;
       lpBalance = pairReserveRes.lpBalance;
     }
-    // console.log('checkPriceImpact fetched pair  ', { reserve })
 
     if (pairAddress && (reserve && (new BigNumber(reserve[token0.symbol]).gt(tokenThresoldValue(token0.decimals)) || new BigNumber(reserve[token1.symbol]).gt(tokenThresoldValue(token1.decimals))))) {
-
-
-
-      // console.log('checkPriceImpact fetched pair  ', { reserve })
-      // const _token0WeiAmount = toWei(fromWei(token0.amount, token0.decimals)) //DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0.amount, 6)) : token0.amount;
-      // const _token1WeiAmount = toWei(fromWei(token1.amount, token1.decimals)) //DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1.amount, 6)) : token1.amount;
 
       return sellPriceImpact(fromWei(token0.amount, token0.decimals), fromWei(token1.amount, token1.decimals), fromWei(reserve[token0.symbol], token0.decimals))
 
@@ -1264,10 +1256,8 @@ export const calculatePriceImpact = async (token0, token1, account, network) => 
 
       const reserves = await getReservesForPriceImpact(token0, token1, account, network);
 
-      // console.log('checkPriceImpact fetched reserves  ', { reserves })
-
-      const _token0WeiAmount = toWei(fromWei(token0.amount, token0.decimals)) //DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0.amount, 6)) : token0.amount;
-      const _token1WeiAmount = toWei(fromWei(token1.amount, token1.decimals)) //DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1.amount, 6)) : token1.amount;
+      const _token0WeiAmount = toWei(fromWei(token0.amount, token0.decimals))
+      const _token1WeiAmount = toWei(fromWei(token1.amount, token1.decimals))
       // console.log('checkPriceImpact fetched reserves0  ', { _token0WeiAmount, _token1WeiAmount, reserve: reserves[token0.symbol], reserves })
       return sellPriceImpact(fromWei(token0.amount, token0.decimals), fromWei(token1.amount, token1.decimals), fromWei(reserves[token0.symbol], token0.decimals))
 
@@ -1306,22 +1296,11 @@ export const loadPairAddress =
     });
   };
 
-// load token list to be selected
-// pairData = { abi:[], address:"" }
-const WEI_UNITS_6 = 1000000;
-const WEI_UNITS_12 = 1000000000000;
 
-const stablizeTo18Decimals = (token, value) => {
-  // return DECIMAL_6_ADDRESSES.includes(tokenAddress)
-  //   ? new BigNumber(value).multipliedBy(WEI_UNITS_12).toFixed(0).toString() : value
-  const decimal18Stablizer = new BigNumber(10).exponentiatedBy(18 - parseInt(token.decimals));
-  return parseInt(token.decimals) === 18 ? value : new BigNumber(value).multipliedBy(decimal18Stablizer).toFixed(0).toString()
-}
-
-const fetchPairData = async (token1, token2, _pairContract, account) => {
+const fetchPairData = async (token0, token1, _pairContract, account) => {
   try {
 
-    const [lpBalance, token0Addr, token1Addr, reservesData, totalSupply] =
+    const [lpBalance, pairToken0Addr, pairToken1Addr, reservesData, totalSupply] =
       await Promise.all([
         _pairContract.methods.balanceOf(account).call(),
         _pairContract.methods.token0().call(),
@@ -1332,12 +1311,12 @@ const fetchPairData = async (token1, token2, _pairContract, account) => {
 
     let reserve = {};
 
-    if (token1.address.toLowerCase() === token0Addr.toLowerCase()) {
-      reserve[token1.symbol] = reservesData._reserve0//stablizeTo18Decimals(token1, reservesData._reserve0);
-      reserve[token2.symbol] = reservesData._reserve1//stablizeTo18Decimals(token2, reservesData._reserve1);
+    if (token0.address.toLowerCase() === pairToken0Addr.toLowerCase()) {
+      reserve[token0.symbol] = reservesData._reserve0
+      reserve[token1.symbol] = reservesData._reserve1
     } else {
-      reserve[token1.symbol] = reservesData._reserve1//stablizeTo18Decimals(token1, reservesData._reserve1);
-      reserve[token2.symbol] = reservesData._reserve0//stablizeTo18Decimals(token2, reservesData._reserve0);
+      reserve[token0.symbol] = reservesData._reserve1
+      reserve[token1.symbol] = reservesData._reserve0
     }
 
     return { reserve, lpBalance, totalSupply }
@@ -1350,8 +1329,8 @@ const fetchPairData = async (token1, token2, _pairContract, account) => {
 }
 
 export const getLpBalance =
-  (token1, token2, pairAddress, account, network) => async (dispatch) => {
-    // console.log("getting balance", { token1, token2 });
+  (token0, token1, pairAddress, account, network) => async (dispatch) => {
+    // console.log("getting balance", { token0, token1 });
     try {
       const _pairContract = pairContract(pairAddress, network) // pairContract2(pairData, network);
 
@@ -1359,7 +1338,7 @@ export const getLpBalance =
         type: SHOW_DEX_LOADING,
       });
 
-      const { reserve, totalSupply, lpBalance } = await fetchPairData(token1, token2, _pairContract, account);
+      const { reserve, totalSupply, lpBalance } = await fetchPairData(token0, token1, _pairContract, account);
 
       dispatch({
         type: SET_POOL_RESERVES,
@@ -1367,16 +1346,10 @@ export const getLpBalance =
       });
 
       // formatting fix for non 18 decimal tokens
-      const _lpDecimals = (parseInt(token1.decimals) + parseInt(token2.decimals)) / 2;
-      const _lpBalance = lpBalance; //stablizeTo18Decimals({ decimals: _lpDecimals }, lpBalance);
-      const _totalSupply = totalSupply; //stablizeTo18Decimals({ decimals: _lpDecimals }, totalSupply);
-      //49749371855330
-      //75000000
-      // const _lpBalance = (DECIMAL_6_ADDRESSES.includes(token1.address) || DECIMAL_6_ADDRESSES.includes(token2.address))
-      //   ? new BigNumber(lpBalance).multipliedBy(WEI_UNITS_6).toFixed(0).toString() : lpBalance
+      const _lpDecimals = (parseInt(token0.decimals) + parseInt(token1.decimals)) / 2;
+      const _lpBalance = lpBalance;
+      const _totalSupply = totalSupply;
 
-      // const _totalSupply = (DECIMAL_6_ADDRESSES.includes(token1.address) || DECIMAL_6_ADDRESSES.includes(token2.address))
-      //   ? new BigNumber(totalSupply).multipliedBy(WEI_UNITS_6).toFixed(0).toString() : totalSupply
 
       dispatch({
         type: GET_POOL_SHARE,
@@ -1386,11 +1359,11 @@ export const getLpBalance =
       dispatch({
         type: SET_LP_BALANCE,
         payload: {
-          pair: `${token1.symbol}_${token2.symbol}`,
+          pair: `${token0.symbol}_${token1.symbol}`,
           amount: _lpBalance,
         },
       });
-      // console.log("lpBalance ", { lpBalance, _lpBalance });
+
     } catch (error) {
       console.log("lpBalance ", error);
       dispatch({

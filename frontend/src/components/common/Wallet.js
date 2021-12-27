@@ -1,7 +1,6 @@
 import { Button, makeStyles } from "@material-ui/core";
 import {
   AccountBalanceWallet,
-  AccountBalanceWalletOutlined,
 } from "@material-ui/icons";
 import { connect } from "react-redux";
 import { connectWallet } from "../../actions/accountActions";
@@ -24,10 +23,6 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       width: 140,
     },
-  },
-  item: {
-    marginLeft: 10,
-    marginRight: 10,
   },
   navbarButton: {
     background: "linear-gradient(to right, #C80C81,purple)",

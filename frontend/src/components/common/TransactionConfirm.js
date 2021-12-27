@@ -67,15 +67,7 @@ const useStyles = makeStyles((theme) => ({
       maxHeight: "80vh",
     },
   },
-  cardContainer: {
-    backgroundColor: "#121827",
-    color: "#f9f9f9",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    width: "100%",
-    height: "100%",
-  },
+
   heading: {
     fontSize: 18,
     fontWeight: 400,
@@ -99,8 +91,6 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 10,
     paddingBottom: 10,
   },
-  priceCard: {},
-
   buttons: {
     marginTop: 15,
     paddingBottom: 10,
@@ -129,15 +119,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SwapConfirm = (props) => {
+const TransactionConfirm = (props) => {
   const {
     open,
     priceRatio,
     handleClose,
     priceImpact,
     account: { currentAccount, currentNetwork, loading },
+    selectedToken0,
     selectedToken1,
-    selectedToken2,
     token1Value,
     token2Value,
     dex: { swapSettings, dexLoading, transaction },
@@ -150,18 +140,18 @@ const SwapConfirm = (props) => {
 
   const onConfirmSwap = async () => {
 
-    const _amount0InWei = toWei(token1Value, selectedToken1.decimals);
+    const _amount0InWei = toWei(token1Value, selectedToken0.decimals);
     const token0 = {
       amount: _amount0InWei,
-      min: toWei(token1Value.toString(), selectedToken1.decimals),
-      ...selectedToken1,
+      min: toWei(token1Value.toString(), selectedToken0.decimals),
+      ...selectedToken0,
     };
 
-    const _amount1InWei = toWei(token2Value, selectedToken2.decimals);
+    const _amount1InWei = toWei(token2Value, selectedToken1.decimals);
     const token1 = {
       amount: _amount1InWei,
-      min: toWei(token2Value.toString(), selectedToken2.decimals),
-      ...selectedToken2,
+      min: toWei(token2Value.toString(), selectedToken1.decimals),
+      ...selectedToken1,
     };
 
     await swapTokens(
@@ -205,12 +195,12 @@ const SwapConfirm = (props) => {
                   <span className={classes.subheading}> From : </span>
                   {" "}
                   <TokenIcon
-                    symbol={selectedToken1.symbol}
-                    address={selectedToken1.address}
+                    symbol={selectedToken0.symbol}
+                    address={selectedToken0.address}
                   />
                   <span style={{ marginLeft: 2 }}>
                     {" "}
-                    {selectedToken1.symbol}
+                    {selectedToken0.symbol}
                   </span>
                 </div>
                 <span>
@@ -232,12 +222,12 @@ const SwapConfirm = (props) => {
                 <div>
                   <span className={classes.subheading}>To : </span>
                   <TokenIcon
-                    symbol={selectedToken2.symbol}
-                    address={selectedToken2.address}
+                    symbol={selectedToken1.symbol}
+                    address={selectedToken1.address}
                   />
                   <span style={{ marginLeft: 2 }}>
                     {" "}
-                    {selectedToken2.symbol}
+                    {selectedToken1.symbol}
                   </span>
                 </div>
                 <span>
@@ -253,13 +243,13 @@ const SwapConfirm = (props) => {
             <div className="d-flex justify-content-around w-100 mt-2 mb-2 ">
               <span className={classes.subheading}>Swap Price:</span>
               <span className={classes.subheading}>
-                1 {selectedToken1.symbol} {" = "}{" "}
+                1 {selectedToken0.symbol} {" = "}{" "}
                 <NumberFormat
                   displayType="text"
                   value={priceRatio}
                   decimalScale={5}
                 />
-                {" "}{selectedToken2.symbol}
+                {" "}{selectedToken1.symbol}
               </span>
             </div>
 
@@ -284,13 +274,13 @@ const SwapConfirm = (props) => {
                   </span>
                   <span className={classes.detailValue}>
                     <NumberFormat displayType="text" value={getPercentageAmount(token1Value, "0.2 ")} decimalScale={5} />
-                    {" "}{selectedToken1.symbol}
+                    {" "}{selectedToken0.symbol}
                   </span>
                 </div>
                 {/* <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
               <span>Route</span>
               <span>
-                {selectedToken1.symbol} {">"} {selectedToken2.symbol}
+                {selectedToken0.symbol} {">"} {selectedToken1.symbol}
               </span>
             </div> */}
                 <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
@@ -315,7 +305,7 @@ const SwapConfirm = (props) => {
                       decimalScale={5}
                     />
                     {" "}
-                    {selectedToken2.symbol}
+                    {selectedToken1.symbol}
                   </span>
                 </div>
 
@@ -387,4 +377,4 @@ const mapStateToProps = (state) => ({
   dex: state.dex,
 });
 
-export default connect(mapStateToProps, { swapTokens })(SwapConfirm);
+export default connect(mapStateToProps, { swapTokens })(TransactionConfirm);

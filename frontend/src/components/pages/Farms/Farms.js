@@ -1,7 +1,6 @@
 import { makeStyles } from "@material-ui/core";
 import { connect } from "react-redux";
 import { useEffect, useState } from "react";
-
 import TabPage from "../../TabPage";
 import Farm from "./Farm";
 import { supportedFarmingPools } from "../../../constants";
@@ -30,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Farms = (props) => {
   const {
-    account: { balance, loading, currentNetwork },
+    account: { currentNetwork },
     dex: { transaction },
     farm: { },
   } = props;
