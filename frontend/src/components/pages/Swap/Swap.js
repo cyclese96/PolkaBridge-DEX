@@ -29,7 +29,7 @@ import {
     getLpBalance,
     getToken0InAmount,
     getToken1OutAmount,
-    importToken
+    importToken,
 } from "../../../actions/dexActions";
 import { getAccountBalance } from "../../../actions/accountActions";
 import SwapConfirm from "../../common/SwapConfirm";
@@ -43,9 +43,10 @@ import {
     SHOW_DEX_LOADING,
     START_TRANSACTION,
 } from "../../../actions/types";
-import { default as NumberFormat } from 'react-number-format';
+import { default as NumberFormat } from "react-number-format";
 // import { useAllTokenData } from "../../contexts/TokenData";
 import { useLocation } from "react-router";
+import { usePrevious } from "react-use";
 
 const useStyles = makeStyles((theme) => ({
     card: {
@@ -199,7 +200,7 @@ const Swap = (props) => {
             token0In,
             token1Out,
             priceLoading,
-            tokenList
+            tokenList,
         },
         checkAllowance,
         confirmAllowance,
@@ -207,7 +208,7 @@ const Swap = (props) => {
         getAccountBalance,
         getToken0InAmount,
         getToken1OutAmount,
-        importToken
+        importToken,
     } = props;
 
     const classes = useStyles();
@@ -249,8 +250,8 @@ const Swap = (props) => {
 
     const open = Boolean(anchorEl);
     const id = open ? "simple-popper" : undefined;
-    const [_token0PriceUSD, setToken0PriceUSD] = useState(null)
-    const [_token1PriceUSD, setToken1PriceUSD] = useState(null)
+    const [_token0PriceUSD, setToken0PriceUSD] = useState(null);
+    const [_token1PriceUSD, setToken1PriceUSD] = useState(null);
 
     // const allTokens = useAllTokenData();
 
@@ -267,25 +268,32 @@ const Swap = (props) => {
     // }, [allTokens, selectedToken2, selectedToken1])
 
     const getTokenToSelect = (tokenQuery) => {
-        const token = tokenQuery && tokenList && tokenList.find(item => item.symbol.toUpperCase() === tokenQuery.toUpperCase() || item.address.toLowerCase() === tokenQuery.toLowerCase())
+        const token =
+            tokenQuery &&
+            tokenList &&
+            tokenList.find(
+                (item) =>
+                    item.symbol.toUpperCase() === tokenQuery.toUpperCase() ||
+                    item.address.toLowerCase() === tokenQuery.toLowerCase()
+            );
 
         if (token && token.symbol) {
-            return token
+            return token;
         }
 
-        return {}
-    }
+        return {};
+    };
 
     useEffect(() => {
-
         async function initSelection() {
+            setLocalStateLoading(true);
 
-            setLocalStateLoading(true)
-
-            const [token0Query, token1Query] = [query.get('inputCurrency'), query.get('outputCurrency')]
+            const [token0Query, token1Query] = [
+                query.get("inputCurrency"),
+                query.get("outputCurrency"),
+            ];
 
             if (currentNetwork === etheriumNetwork) {
-
                 if (token0Query) {
                     const _token = getTokenToSelect(token0Query);
 
@@ -299,7 +307,6 @@ const Swap = (props) => {
                     setToken1(_token);
                 }
 
-
                 if (token1Query) {
                     const _token = getTokenToSelect(token1Query);
 
@@ -309,21 +316,16 @@ const Swap = (props) => {
 
                     setToken2(_token);
                 }
-
-
             } else {
-
-                const _token = getTokenToSelect(BNB)
+                const _token = getTokenToSelect(BNB);
                 setToken1(_token);
-
             }
             setToken1Value("");
             setToken2Value("");
-            setLocalStateLoading(false)
+            setLocalStateLoading(false);
         }
         initSelection();
     }, [currentNetwork, currentAccount, tokenList]);
-
 
     const clearInputState = () => {
         setToken1Value("");
@@ -331,13 +333,12 @@ const Swap = (props) => {
         setStatus({ disabled: true, message: "Enter Amounts" });
     };
 
-
     useEffect(() => {
         async function loadPair() {
             setLocalStateLoading(true);
 
             if (!selectedToken1.symbol || !selectedToken2.symbol) {
-                localStorage.priceTracker = 'None'
+                localStorage.priceTracker = "None";
                 clearInputState();
             }
 
@@ -353,7 +354,6 @@ const Swap = (props) => {
                 // reset token input on token selection
                 clearInputState();
 
-
                 await checkAllowance(selectedToken1, currentAccount, currentNetwork);
 
                 setLocalStateLoading(false);
@@ -362,8 +362,6 @@ const Swap = (props) => {
         loadPair();
         setLocalStateLoading(false);
     }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
-
-
 
     const verifySwapStatus = (token1, token2) => {
         let message, disabled;
@@ -410,10 +408,9 @@ const Swap = (props) => {
         [] // will be created only once initially
     );
 
-    const token1OutCalling = 'token1OutCalling';
-    const token0InCalling = 'token0InCalling';
-    let input0Typed = false;
-    let input1Typed = false;
+    const token1OutCalling = "token1OutCalling";
+    const token0InCalling = "token0InCalling";
+
     // token 1 input change
     const onToken1InputChange = async (tokens) => {
         setToken1Value(tokens);
@@ -478,18 +475,23 @@ const Swap = (props) => {
         }
     };
 
-    // token out updates
-
+    //On tonen0 input: price update checks and output result updates
+    const prevToken1Out = usePrevious(token2Value)
     useEffect(() => {
+
         if (!token1Out) {
             return;
         }
 
-        if (localStorage.getItem('priceTracker') !== token1OutCalling) {
-            return
+        if (localStorage.getItem("priceTracker") !== token1OutCalling) {
+            return;
         }
 
         const _tokenAmount = token1Out.tokenAmount;
+        if (new BigNumber(_tokenAmount).eq(prevToken1Out)) {
+            return
+        }
+
         setSwapPath(token1Out.selectedPath);
 
         if (new BigNumber(_tokenAmount).gt(0)) {
@@ -500,6 +502,9 @@ const Swap = (props) => {
                 { value: _tokenAmount, selected: selectedToken2 }
             );
         }
+
+        setToken0PriceUSD(token1Out.token0UsdValue);
+        setToken1PriceUSD(token1Out.token1UsdValue);
 
         // balance check before trade
         const _bal0 = Object.keys(balance).includes(selectedToken1.symbol)
@@ -526,31 +531,46 @@ const Swap = (props) => {
 
         // price update tracker on every 1 sec interval
         setTimeout(async () => {
-            if (localStorage.getItem('priceTracker') === token1OutCalling && selectedToken1.symbol && selectedToken2.symbol && new BigNumber(token1Value).gt(0)) {
-                const token1OutParams = [{ ...selectedToken1, amount: toWei(token1Value, selectedToken1.decimals) },
+            if (
+                localStorage.getItem("priceTracker") === token1OutCalling &&
+                selectedToken1.symbol &&
+                selectedToken2.symbol &&
+                new BigNumber(token1Value).gt(0)
+            ) {
+                const token1OutParams = [
+                    {
+                        ...selectedToken1,
+                        amount: toWei(token1Value, selectedToken1.decimals),
+                    },
                     selectedToken2,
                     currentAccount,
-                    currentNetwork]
-                console.log('calling token', token1OutParams)
+                    currentNetwork,
+                ];
+                console.log("calling token", token1OutParams);
 
-                await debouncedToken1OutCall(...token1OutParams)
+                await debouncedToken1OutCall(...token1OutParams);
             }
-
-        }, 1000)
-
+        }, 1000);
 
     }, [token1Out]);
 
+
+    //On token1 input: price update checks and output result updates
+    const prevToken0In = usePrevious(token1Value)
     useEffect(() => {
         if (!token0In) {
             return;
         }
 
-        if (localStorage.getItem('priceTracker') !== token0InCalling) {
-            return
+        if (localStorage.getItem("priceTracker") !== token0InCalling) {
+            return;
         }
 
         const _tokenAmount = token0In.tokenAmount;
+        if (new BigNumber(_tokenAmount).eq(prevToken0In)) {
+            return
+        }
+
         setSwapPath(token0In.selectedPath);
 
         if (new BigNumber(_tokenAmount).gt(0)) {
@@ -562,11 +582,16 @@ const Swap = (props) => {
             );
         }
 
+        setToken0PriceUSD(token0In.token0UsdValue);
+        setToken1PriceUSD(token0In.token1UsdValue);
+
         // balance check before trade
         const _bal0 = Object.keys(balance).includes(selectedToken1.symbol)
             ? balance[selectedToken1.symbol]
             : 0;
-        const bal0Wei = fromWei(_bal0, selectedToken1.decimals); //DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? fromWei(_bal0, 6) : fromWei(_bal0)
+
+        const bal0Wei = fromWei(_bal0, selectedToken1.decimals);
+
         if (new BigNumber(_tokenAmount).gt(bal0Wei)) {
             setStatus({
                 disabled: true,
@@ -601,7 +626,6 @@ const Swap = (props) => {
 
         }, 1000)
 
-
     }, [token0In]);
 
     const onToken1Select = async (token) => {
@@ -630,7 +654,7 @@ const Swap = (props) => {
     };
 
     const handleConfirmAllowance = async () => {
-        const _allowanceAmount = allowanceAmount
+        const _allowanceAmount = allowanceAmount;
         await confirmAllowance(
             _allowanceAmount,
             selectedToken1,
@@ -647,15 +671,14 @@ const Swap = (props) => {
     const checkPriceImpact = async () => {
         let impact;
 
-
-        const _amount0InWei = toWei(token1Value, selectedToken1.decimals); //DECIMAL_6_ADDRESSES.includes(selectedToken1.address) ? toWei(token1Value, 6) : toWei(token1Value);
+        const _amount0InWei = toWei(token1Value, selectedToken1.decimals);
         const token0 = {
             amount: _amount0InWei,
             min: toWei(token1Value.toString(), selectedToken1.decimals),
             ...selectedToken1,
         };
 
-        const _amount1InWei = toWei(token2Value, selectedToken2.decimals); //DECIMAL_6_ADDRESSES.includes(selectedToken2.address) ? toWei(token2Value, 6) : toWei(token2Value);
+        const _amount1InWei = toWei(token2Value, selectedToken2.decimals);
         const token1 = {
             amount: _amount1InWei,
             min: toWei(token2Value.toString(), selectedToken2.decimals),
@@ -680,8 +703,7 @@ const Swap = (props) => {
 
     // swap selected tokens and reset inputs
     const handleSwapInputs = () => {
-
-        localStorage.priceTracker = 'None'
+        localStorage.priceTracker = "None";
 
         setRotate(!rotate);
         const tokenSelected1 = selectedToken1;
@@ -714,7 +736,7 @@ const Swap = (props) => {
             handleConfirmAllowance();
         }
     };
-    // const handleTokenPriceRatio = () => {};
+
     const currentButton = () => {
         if (!connected) {
             return "Connect Wallet";
@@ -741,7 +763,7 @@ const Swap = (props) => {
         }
 
         if (transaction.type === "swap" && transaction.status === "success") {
-            localStorage.priceTracker = 'None'
+            localStorage.priceTracker = "None";
             getAccountBalance(selectedToken1, currentNetwork);
             getAccountBalance(selectedToken2, currentNetwork);
         }
@@ -757,13 +779,7 @@ const Swap = (props) => {
 
     const handleConfirmSwapClose = (value) => {
         setSwapDialog(value);
-        // debouncedGetLpBalance(
-        //   selectedToken1,
-        //   selectedToken2,
-        //   currentPairAddress(),
-        //   currentAccount,
-        //   currentNetwork
-        // );
+
         if (transaction.type === "swap" && transaction.status === "success") {
             store.dispatch({ type: START_TRANSACTION });
             clearInputState();
@@ -853,8 +869,7 @@ const Swap = (props) => {
                                             displayType="text"
                                             value={priceRatio}
                                             decimalScale={5}
-                                        />
-                                        {" "}
+                                        />{" "}
                                         {selectedToken2.symbol}
                                     </span>
                                 ) : (
@@ -922,5 +937,5 @@ export default connect(mapStateToProps, {
     getAccountBalance,
     getToken0InAmount,
     getToken1OutAmount,
-    importToken
+    importToken,
 })(Swap);

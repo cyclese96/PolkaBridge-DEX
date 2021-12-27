@@ -521,7 +521,7 @@ const getEthPrice = async () => {
 };
 
 /**
- * Get current eth price
+ * Get current eth price in usd
  */
 export const getOnlyCurrentEthPrice = async () => {
 

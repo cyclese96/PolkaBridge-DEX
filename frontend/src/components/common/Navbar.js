@@ -2,12 +2,9 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
-// import Button from "@material-ui/core/Button";
-import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import List from "@material-ui/core/List";
-import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import clsx from "clsx";
@@ -15,7 +12,6 @@ import MenuIcon from "@material-ui/icons/Menu";
 import PeopleAltOutlined from "@material-ui/icons/PeopleAltOutlined";
 import FlareOutlined from "@material-ui/icons/FlareOutlined";
 import TouchAppOutlined from "@material-ui/icons/TouchAppOutlined";
-import VpnLockOutlined from "@material-ui/icons/VpnLockOutlined";
 import CategoryIcon from "@material-ui/icons/Category";
 import SwapVertIcon from "@material-ui/icons/SwapVert";
 
@@ -28,7 +24,6 @@ import binanceIcon from "../../assets/binance.png";
 import { etheriumNetwork } from "../../constants";
 import DotCircle from "./DotCircle";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   grow: {

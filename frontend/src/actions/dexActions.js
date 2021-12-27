@@ -13,6 +13,7 @@ import {
   USDC,
   USDT,
 } from "../constants";
+import { getCurrentTokenPriceInEth, getOnlyCurrentEthPrice } from "../contexts/GlobalData";
 import {
   pairContract,
   routerContract,
@@ -927,13 +928,7 @@ export const getToken1OutAmount = (token0, token1, account, network) => async (d
     } else if ([ETH, USDC].includes(token0.symbol) && [ETH, USDC].includes(token1.symbol)) {
       bridgePath = _path3;
     }
-    // if ((DECIMAL_6_ADDRESSES.includes(token0.address) || DECIMAL_6_ADDRESSES.includes(token1.address)) && (token0.symbol === ETH || token1.symbol === ETH)) {
-    //   bridgePath = _path3;
-    // } else {
-    //   bridgePath = (DECIMAL_6_ADDRESSES.includes(token0.address) || DECIMAL_6_ADDRESSES.includes(token1.address))
-    //     ? DECIMAL_6_ADDRESSES.includes(token0.address) ? _path21 : _path2
-    //     : _path1;
-    // }
+
 
     // let amountsOutPair;
     let amountsOutBridge;
@@ -951,9 +946,6 @@ export const getToken1OutAmount = (token0, token1, account, network) => async (d
       totalSupply = pairReserveRes.totalSupply;
       lpBalance = pairReserveRes.lpBalance;
     }
-    // console.log({ reserve, totalSupply, lpBalance })
-
-    // { reserve, totalSupply, lpBalance } = {pairReserveRes}
 
 
     if (pairAddress && (reserve && (new BigNumber(reserve[token0.symbol]).gt(THRESOLD_WEI_VALUE) || new BigNumber(reserve[token1.symbol]).gt(THRESOLD_WEI_VALUE)))) {
@@ -1004,9 +996,21 @@ export const getToken1OutAmount = (token0, token1, account, network) => async (d
 
     }
 
+    // fetch token usd price in AMM,
+    const [token0DerivedEth, token1DerivedEth, ethUsdValue] = await Promise.all([
+      getCurrentTokenPriceInEth(token0.address),
+      getCurrentTokenPriceInEth(token1.address),
+      getOnlyCurrentEthPrice(),
+    ])
+
     dispatch({
       type: GET_TOKEN_1_OUT,
-      payload: { tokenAmount: resultOut, selectedPath }
+      payload: {
+        tokenAmount: resultOut,
+        token0UsdValue: new BigNumber(token0DerivedEth).times(ethUsdValue).toString(),
+        token1UsdValue: new BigNumber(token1DerivedEth).times(ethUsdValue).toString(),
+        selectedPath
+      }
     })
 
 
@@ -1123,9 +1127,21 @@ export const getToken0InAmount = (token0, token1, account, network) => async (di
 
     }
 
+    // fetch token usd price in AMM,
+    const [token0DerivedEth, token1DerivedEth, ethUsdValue] = await Promise.all([
+      getCurrentTokenPriceInEth(token0.address),
+      getCurrentTokenPriceInEth(token1.address),
+      getOnlyCurrentEthPrice(),
+    ])
+
     dispatch({
       type: GET_TOKEN_O_IN,
-      payload: { tokenAmount: resultIn, selectedPath }
+      payload: {
+        tokenAmount: resultIn,
+        token0UsdValue: new BigNumber(token0DerivedEth).times(ethUsdValue).toString(),
+        token1UsdValue: new BigNumber(token1DerivedEth).times(ethUsdValue).toString(),
+        selectedPath
+      }
     })
 
   } catch (error) {
