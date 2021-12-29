@@ -2,7 +2,7 @@ import BigNumber from "bignumber.js";
 import web3 from "../web";
 import axios from "axios";
 import { ethers } from "ethers";
-import { farmingPoolConstants } from "../constants";
+import { farmingPoolConstants, PBR_PER_YEAR } from "../constants";
 
 const WEI_UNITS = 1000000000000000000;
 const WEI_UNITS_6 = 1000000;
@@ -349,11 +349,16 @@ export const getCachedTokens = () => {
 };
 
 
-export const getPbrRewardApr = (pbrPerYear, pbrPriceUSD, poolLiquidityUSD) => {
+export const getPbrRewardApr = (poolWeight, pbrPriceUSD, poolLiquidityUSD) => {
 
   try {
 
-    const pbrRewardApr = new BigNumber(pbrPerYear).times(pbrPriceUSD).div(poolLiquidityUSD).times(100);
+    if (!poolWeight || !pbrPriceUSD || !poolLiquidityUSD) {
+      return '0';
+    }
+
+    const yearlyPbrRewardAllocation = poolWeight ? new BigNumber(poolWeight).times(PBR_PER_YEAR) : new BigNumber(NaN);
+    const pbrRewardApr = yearlyPbrRewardAllocation.times(pbrPriceUSD).div(poolLiquidityUSD).times(100);
 
     return pbrRewardApr.toFixed(0).toString();
 

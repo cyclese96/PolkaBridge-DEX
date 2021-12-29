@@ -17,7 +17,6 @@ import {
   fromWei,
   getPercentAmountWithFloor,
   getPriceRatio,
-  toWei,
 } from "../../../utils/helper";
 import {
   checkLpAllowance,
@@ -38,7 +37,7 @@ import { RESET_POOL_DATA, START_TRANSACTION } from "../../../actions/types";
 import store from "../../../store";
 import { Settings } from "@material-ui/icons";
 import { formatCurrency } from "../../../utils/formatters";
-import SwapConfirm from "../../common/SwapConfirm";
+import TransactionConfirm from "../../common/TransactionConfirm";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -60,17 +59,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
   },
-  avatar: {
-    zIndex: 2,
-    position: "relative",
-    width: "auto",
-    height: 60,
-  },
-  avatar_corgib: {
-    zIndex: 2,
-    width: "auto",
-    height: 160,
-  },
   cardHeading: {
     paddingTop: 5,
     display: "flex",
@@ -87,14 +75,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  cardSubHeading: {
-    display: "flex",
-    width: "95%",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: 0,
-    marginBottom: 2,
-  },
   settingIcon: {
     color: "#f6f6f6",
     fontSize: 22,
@@ -103,72 +83,8 @@ const useStyles = makeStyles((theme) => ({
       fontSize: 17,
     },
   },
-  numbers: {
-    color: "#E0077D",
-    fontSize: 26,
-  },
-  tokenPair: {
-    display: "flex",
-    width: "94%",
-    justifyContent: "space-between",
-    marginTop: 2,
-    marginBottom: 15,
-  },
   selectToken: {
     width: 150,
-  },
-  checkIcon: {
-    color: "#E0077D",
-  },
-  selectPoolContainer: {
-    display: "flex",
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  feeSelectContainer: {
-    width: 140,
-    padding: 6,
-    marginLeft: 5,
-    marginRight: 5,
-    border: "0.5px solid rgba(255, 255, 255, 0.1)",
-    borderRadius: 10,
-    "&:hover": {
-      background: "rgba(255, 255, 255, 0.1)",
-    },
-    [theme.breakpoints.down("sm")]: {
-      width: 100,
-      padding: 2,
-      marginLeft: 2,
-      marginRight: 2,
-    },
-  },
-  feeSelectHeading: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-  },
-  priceRangeCardContainer: {
-    display: "flex",
-    width: "90%",
-    justifyContent: "space-between",
-    marginTop: 2,
-    marginBottom: 15,
-  },
-  feeSelectHeadingP: {
-    fontSize: 14,
-  },
-  feeSelectHeadingSpan: {
-    fontSize: 12,
-  },
-  addButton: {
-    height: 45,
-    width: "90%",
-    marginTop: 30,
-    marginBottom: 5,
   },
   clearButton: {
     color: "#E0077D",
@@ -289,8 +205,8 @@ const RemoveCard = ({
   const [liquidityPercent, setLiquidityPercent] = useState(0);
   const [liquidityInputTemp, setLiquidityInputTemp] = useState("");
   const [settingOpen, setOpen] = useState(false);
-  const [selectedToken1, setToken1] = useState(currentDefaultToken);
-  const [selectedToken2, setToken2] = useState({});
+  const [selectedToken0, setToken1] = useState(currentDefaultToken);
+  const [selectedToken1, setToken2] = useState({});
 
   const [swapDialogOpen, setSwapDialog] = useState(false);
 
@@ -323,12 +239,12 @@ const RemoveCard = ({
   const currentLpApproved = () => {
     if (
       Object.keys(lpApproved).includes(
-        `${selectedToken1.symbol}_${selectedToken2.symbol}`
+        `${selectedToken0.symbol}_${selectedToken1.symbol}`
       )
     ) {
-      return lpApproved[`${selectedToken1.symbol}_${selectedToken2.symbol}`];
+      return lpApproved[`${selectedToken0.symbol}_${selectedToken1.symbol}`];
     } else {
-      return lpApproved[`${selectedToken2.symbol}_${selectedToken1.symbol}`];
+      return lpApproved[`${selectedToken1.symbol}_${selectedToken0.symbol}`];
     }
   };
 
@@ -337,8 +253,8 @@ const RemoveCard = ({
     const pairAddress = currentPairAddress();
     await confirmLPAllowance(
       _allowanceAmount,
+      selectedToken0,
       selectedToken1,
-      selectedToken2,
       pairAddress,
       currentAccount,
       currentNetwork
@@ -348,16 +264,16 @@ const RemoveCard = ({
   const currentLpBalance = () => {
     if (
       Object.keys(lpBalance).includes(
-        `${selectedToken1.symbol}_${selectedToken2.symbol}`
+        `${selectedToken0.symbol}_${selectedToken1.symbol}`
       )
     ) {
-      return lpBalance[`${selectedToken1.symbol}_${selectedToken2.symbol}`];
+      return lpBalance[`${selectedToken0.symbol}_${selectedToken1.symbol}`];
     } else if (
       Object.keys(lpBalance).includes(
-        `${selectedToken2.symbol}_${selectedToken1.symbol}`
+        `${selectedToken1.symbol}_${selectedToken0.symbol}`
       )
     ) {
-      return lpBalance[`${selectedToken2.symbol}_${selectedToken1.symbol}`];
+      return lpBalance[`${selectedToken1.symbol}_${selectedToken0.symbol}`];
     } else {
       return "0";
     }
@@ -366,19 +282,19 @@ const RemoveCard = ({
   const currentPairAddress = () => {
     if (
       Object.keys(pairContractData).includes(
-        `${selectedToken1.symbol}_${selectedToken2.symbol}`
+        `${selectedToken0.symbol}_${selectedToken1.symbol}`
       )
     ) {
       return pairContractData[
-        `${selectedToken1.symbol}_${selectedToken2.symbol}`
+        `${selectedToken0.symbol}_${selectedToken1.symbol}`
       ];
     } else if (
       Object.keys(pairContractData).includes(
-        `${selectedToken2.symbol}_${selectedToken1.symbol}`
+        `${selectedToken1.symbol}_${selectedToken0.symbol}`
       )
     ) {
       return pairContractData[
-        `${selectedToken2.symbol}_${selectedToken1.symbol}`
+        `${selectedToken1.symbol}_${selectedToken0.symbol}`
       ];
     } else {
       return null;
@@ -388,7 +304,7 @@ const RemoveCard = ({
   // new use effect
   useEffect(() => {
     async function loadPair() {
-      if (selectedToken1.symbol && selectedToken2.symbol) {
+      if (selectedToken0.symbol && selectedToken1.symbol) {
         // reset input on token change
         handleClearState();
         store.dispatch({
@@ -397,34 +313,34 @@ const RemoveCard = ({
 
         // load erc20 token abi and balance
         const erc20Token =
-          selectedToken1.symbol === ETH ? selectedToken2 : selectedToken1;
+          selectedToken0.symbol === ETH ? selectedToken1 : selectedToken0;
 
         let _pairAddress = currentPairAddress();
         if (!_pairAddress) {
           _pairAddress = await getPairAddress(
+            selectedToken0.address,
             selectedToken1.address,
-            selectedToken2.address,
             currentNetwork
           );
           loadPairAddress(
+            selectedToken0.symbol,
             selectedToken1.symbol,
-            selectedToken2.symbol,
             _pairAddress,
             currentNetwork
           );
         }
 
         await getLpBalance(
+          selectedToken0,
           selectedToken1,
-          selectedToken2,
           _pairAddress,
           currentAccount,
           currentNetwork
         );
 
         await checkLpAllowance(
+          selectedToken0,
           selectedToken1,
-          selectedToken2,
           _pairAddress,
           currentAccount,
           currentNetwork
@@ -433,7 +349,7 @@ const RemoveCard = ({
     }
 
     loadPair();
-  }, [selectedToken1, selectedToken2, currentNetwork, currentAccount]);
+  }, [selectedToken0, selectedToken1, currentNetwork, currentAccount]);
 
   const onToken1Select = (token) => {
     setToken1(token);
@@ -453,21 +369,17 @@ const RemoveCard = ({
       liquidityPercent
     );
 
-    // check USDC formatting
-    // const _lpAmount = (DECIMAL_6_ADDRESSES.includes(selectedToken1.address)
-    //   || DECIMAL_6_ADDRESSES.includes(selectedToken2.address))
-    //   ? new BigNumber(lpAmount).div(WEI_UNITS_6).toFixed(0).toString() : lpAmount;
     const _lpAmount = lpAmount;
 
-    if (selectedToken1.symbol === ETH || selectedToken2.symbol === ETH) {
+    if (selectedToken0.symbol === ETH || selectedToken1.symbol === ETH) {
       // remove liquidity eth-erc20 || erc20 - eth
       let ethToken, erc20Token;
-      if (selectedToken1.symbol === ETH) {
-        ethToken = selectedToken1;
-        erc20Token = selectedToken2;
-      } else {
-        ethToken = selectedToken2;
+      if (selectedToken0.symbol === ETH) {
+        ethToken = selectedToken0;
         erc20Token = selectedToken1;
+      } else {
+        ethToken = selectedToken1;
+        erc20Token = selectedToken0;
       }
 
       await removeLiquidityEth(
@@ -482,8 +394,8 @@ const RemoveCard = ({
       // remove liquidy erc20 - erc20
 
       await removeLiquidity(
+        selectedToken0,
         selectedToken1,
-        selectedToken2,
         currentAccount,
         _lpAmount,
         swapSettings.deadline,
@@ -493,8 +405,8 @@ const RemoveCard = ({
 
     const pairAddress = currentPairAddress();
     await getLpBalance(
+      selectedToken0,
       selectedToken1,
-      selectedToken2,
       pairAddress,
       currentAccount,
       currentNetwork
@@ -512,15 +424,15 @@ const RemoveCard = ({
 
   const priceRatio1 = () => {
     return getPriceRatio(
-      fromWei(poolReserves[selectedToken2.symbol], selectedToken2.decimals),
-      fromWei(poolReserves[selectedToken1.symbol], selectedToken1.decimals)
+      fromWei(poolReserves[selectedToken1.symbol], selectedToken1.decimals),
+      fromWei(poolReserves[selectedToken0.symbol], selectedToken0.decimals)
     );
   };
 
   const priceRatio2 = () => {
     return getPriceRatio(
-      fromWei(poolReserves[selectedToken1.symbol], selectedToken1.decimals),
-      fromWei(poolReserves[selectedToken2.symbol], selectedToken2.decimals)
+      fromWei(poolReserves[selectedToken0.symbol], selectedToken0.decimals),
+      fromWei(poolReserves[selectedToken1.symbol], selectedToken1.decimals)
     );
   };
 
@@ -531,8 +443,8 @@ const RemoveCard = ({
     }
 
     if (transaction.type === "remove" && transaction.status === "success") {
+      getAccountBalance(selectedToken0, currentNetwork)
       getAccountBalance(selectedToken1, currentNetwork)
-      getAccountBalance(selectedToken2, currentNetwork)
     }
 
     if (
@@ -563,11 +475,11 @@ const RemoveCard = ({
   return (
     <>
       <SwapSettings open={settingOpen} handleClose={close} />
-      <SwapConfirm
+      <TransactionConfirm
         open={swapDialogOpen}
         handleClose={() => handleConfirmSwapClose(false)}
+        selectedToken0={selectedToken0}
         selectedToken1={selectedToken1}
-        selectedToken2={selectedToken2}
         token1Value={0}
         token2Value={0}
         priceImpact={0}
@@ -647,15 +559,15 @@ const RemoveCard = ({
             <div className="d-flex justify-content-between">
               <div className="d-flex">
                 <SelectToken
-                  selectedToken={selectedToken1}
-                  disableToken={selectedToken2}
+                  selectedToken={selectedToken0}
+                  disableToken={selectedToken1}
                   handleTokenSelected={onToken1Select}
                 />
               </div>
               <div className="d-flex">
                 <SelectToken
-                  selectedToken={selectedToken2}
-                  disableToken={selectedToken1}
+                  selectedToken={selectedToken1}
+                  disableToken={selectedToken0}
                   handleTokenSelected={onToken2Select}
                 />
               </div>
@@ -680,16 +592,16 @@ const RemoveCard = ({
                 <div className="d-flex justify-content-between">
                   <span>Price:</span>
                   <span>
-                    1 {selectedToken1.symbol} = {priceRatio1()}
-                    {selectedToken2.symbol}
+                    1 {selectedToken0.symbol} = {priceRatio1()}
+                    {selectedToken1.symbol}
                   </span>
                 </div>
                 <div className="d-flex justify-content-between">
                   <span></span>
                   <span>
                     {" "}
-                    1 {selectedToken2.symbol} = {priceRatio2()}
-                    {selectedToken1.symbol}
+                    1 {selectedToken1.symbol} = {priceRatio2()}
+                    {selectedToken0.symbol}
                   </span>
                 </div>
               </>
@@ -763,20 +675,20 @@ const RemoveCard = ({
                   <div>
                     <img
                       className={classes.tokenIcon}
-                      src={tokenThumbnail(selectedToken1.symbol)}
+                      src={tokenThumbnail(selectedToken0.symbol)}
                       alt={""}
                     />
                     <img
                       className={classes.tokenIcon}
-                      src={tokenThumbnail(selectedToken2.symbol)}
+                      src={tokenThumbnail(selectedToken1.symbol)}
                       alt={""}
                     />
                     <span>
-                      {selectedToken1.symbol}/{selectedToken2.symbol}{" "}
+                      {selectedToken0.symbol}/{selectedToken1.symbol}{" "}
                       {`( LP tokens )`}
                     </span>
                   </div>
-                  <span>{formatCurrency(fromWei(currentLpBalance(), currentPairDecimals(selectedToken1, selectedToken2)))}</span>
+                  <span>{formatCurrency(fromWei(currentLpBalance(), currentPairDecimals(selectedToken0, selectedToken1)))}</span>
                 </div>
                 <div className="d-flex justify-content-between mt-3 mb-3">
                   <div>Your pool share:</div>

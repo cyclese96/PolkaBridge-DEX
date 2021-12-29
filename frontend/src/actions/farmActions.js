@@ -269,24 +269,24 @@ export const getFarmInfo = (pairAddress, pid, account, network) => async (dispat
             payload: getLoadingObject(pairAddress, true)
         });
         // 12 hour later block 
-        const endBlockRes = await getBlockFromTimestamp(farmContractConfig.startTimestamp + 12 * 3600 + 10);
-        const [pbrPerBlock, poolInfo, pendingPbr, userInfo, totalAllocPoint, multiplier12hr] = await Promise.all([
-            _farmContract.methods.PBRPerBlock().call(),
+        // const endBlockRes = await getBlockFromTimestamp(farmContractConfig.startTimestamp + 12 * 3600 + 10);
+        const [poolInfo, pendingPbr, userInfo, totalAllocPoint] = await Promise.all([
             _farmContract.methods.poolInfo(pid).call(),
             _farmContract.methods.pendingPBR(pid, account).call(),
             _farmContract.methods.userInfo(pid, account).call(),
             _farmContract.methods.totalAllocPoint().call(),
-            _farmContract.methods.getMultiplier(farmContractConfig.startBlock, parseInt(endBlockRes)).call()
         ]);
+        // _farmContract.methods.getMultiplier(farmContractConfig.startBlock, parseInt(endBlockRes)).call()
 
-        // calculate projected 1 year pbr reward based on 12 hour rewards
-        const pbrReward1Year = new BigNumber(multiplier12hr).times(pbrPerBlock).times(2).times(365).times(poolInfo?.allocPoint).div(totalAllocPoint);
+        // // calculate projected 1 year pbr reward based on 12 hour rewards
+        // const pbrReward1Year = new BigNumber(multiplier12hr).times(pbrPerBlock).times(2).times(365).times(poolInfo?.allocPoint).div(totalAllocPoint);
+        // console.log('using blocks  ', pbrReward1Year.toString())
 
         const farmPoolObj = {};
         farmPoolObj[pairAddress] = {
             pendingPbr: pendingPbr,
             stakeData: userInfo,
-            pbrReward1Year
+            poolWeight: new BigNumber(poolInfo?.allocPoint).div(totalAllocPoint).toString()
         };
 
         dispatch({

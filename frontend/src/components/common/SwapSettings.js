@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
-import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
-import Typography from "@material-ui/core/Typography";
-import CustomButton from "../Buttons/CustomButton";
 import { connect } from "react-redux";
-import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
-import CustomToolTip from "./CustomToolTip";
 import store from "../../store";
 import { UPDATE_SETTINGS } from "../../actions/types";
 import { defaultSlippage, defaultTransactionDeadline } from "../../constants";
-import { Close, InfoOutlined, InfoRounded } from "@material-ui/icons";
+import { Close, InfoRounded } from "@material-ui/icons";
 import { Button, Tooltip } from "@material-ui/core";
 
 const styles = (theme) => ({
@@ -28,23 +22,6 @@ const styles = (theme) => ({
   },
 });
 
-const DialogTitle = withStyles(styles)((props) => {
-  const { children, classes, onClose, ...other } = props;
-  return (
-    <MuiDialogTitle disableTypography className={classes.root} {...other}>
-      <Typography variant="h6">{children}</Typography>
-      {onClose ? (
-        <IconButton
-          aria-label="close"
-          className={classes.closeButton}
-          onClick={onClose}
-        >
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </MuiDialogTitle>
-  );
-});
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -61,40 +38,6 @@ const useStyles = makeStyles((theme) => ({
 
       paddingBottom: 15,
     },
-  },
-  heading: {
-    fontSize: 18,
-    fontWeight: 400,
-    color: "#919191",
-  },
-  subheading: {
-    fontSize: 12,
-    fontWeight: 400,
-    color: "#919191",
-  },
-  maxBtn: {
-    backgroundColor: "rgba(224, 7, 125, 0.9)",
-    height: 50,
-    borderRadius: 10,
-    marginLeft: 20,
-    color: "#f9f9f9",
-    "&:hover": {
-      background: "rgba(224, 7, 125, 0.7)",
-    },
-  },
-  buttons: {
-    // marginTop: 80,
-    // marginBottom: 20,
-    marginTop: 30,
-  },
-  numbers: {
-    color: "#E0077D",
-    fontSize: 20,
-    marginLeft: 15,
-  },
-  icon: {
-    marginRight: 5,
-    color: "#919191",
   },
   input: {
     backgroundColor: "transparent",

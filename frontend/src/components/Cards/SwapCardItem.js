@@ -1,13 +1,10 @@
-import { Card, CircularProgress, makeStyles } from "@material-ui/core";
+import { Card, makeStyles } from "@material-ui/core";
 import { fromWei, isNumber } from "../../utils/helper";
 import { connect } from "react-redux";
 import SelectToken from "../common/SelectToken";
 import { formatCurrency } from "../../utils/formatters";
-import { useTokenData, useTokenDataContext } from "../../contexts/TokenData";
 import { formattedNum } from "../../utils/timeUtils";
 import BigNumber from "bignumber.js";
-import { tokenAddresses } from "../../constants";
-import { useEffect, useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -82,26 +79,6 @@ const useStyles = makeStyles((theme) => ({
       fontSize: 24,
     },
   },
-  token: {
-    display: "flex",
-    alignItems: "center",
-    border: "0.5px solid white",
-    borderRadius: 12,
-    paddingLeft: 8,
-    paddingRight: 8,
-    paddingTop: 2,
-    paddingBottom: 2,
-    height: 30,
-    cursor: "pointer",
-    "&:hover": {
-      background: "rgba(255, 255, 255, 0.1)",
-    },
-  },
-  tokenIcon: {
-    width: 25,
-    height: "auto",
-    marginRight: 2,
-  },
   maxButton: {
     color: "white",
     cursor: "pointer",
@@ -142,20 +119,7 @@ const SwapCardItem = (props) => {
     const value = event.target.value;
     onInputChange(value);
   };
-  // const [state, { update }] = useTokenDataContext()
-  // const tokenData = state?.[currentToken.address]
 
-  // useEffect(() => {
-  //   if (!tokenDataFetched) {
-  //     return
-  //   }
-  //   setTokenData(tokenDataFetched)
-  //   // return () => {
-  //   //   cleanup
-  //   // }
-  // }, [tokenDataFetched, currentToken])
-
-  // console.log('tokenData', { currTokenData: tokenData })
 
   const handleMax = () => {
 
@@ -211,7 +175,7 @@ const SwapCardItem = (props) => {
           </div>
           {new BigNumber(inputValue).gt(0) && (
             <div className={classes.labelRow}>
-              {/* <p className={classes.hintLabelFont}>~ $ {priceUSD?.priceUSD} {inputValue && formattedNum(new BigNumber(inputValue).multipliedBy(priceUSD).toString())}</p> */}
+              <p className={classes.hintLabelFont}>~ $ {priceUSD?.priceUSD} {inputValue && formattedNum(new BigNumber(inputValue).multipliedBy(priceUSD).toString())}</p>
             </div>
           )}
         </div>

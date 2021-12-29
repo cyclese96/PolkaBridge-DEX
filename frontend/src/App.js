@@ -13,7 +13,7 @@ import { isAddress } from "./utils/helper";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
-import SwapCard from "./components/Cards/SwapCard";
+import Swap from "./components/pages/Swap";
 import AddLiquidity from "./components/pages/AddLiquidity";
 import PoolDetail from "./components/pages/Analytics/components/DetailsPage/PoolDetail";
 import Analytics from "./components/pages/Analytics/Analytics";
@@ -99,7 +99,7 @@ function App() {
           <div className={classes.mainContent}>
             <BrowserRouter>
               <Home />
-              <Route exact path="/" component={SwapCard} />
+              <Route exact path="/" component={Swap} />
               <Route exact path="/farms" component={Farms} />
               <Route exact path="/liquidity" component={AddLiquidity} />
               <Route exact path="/charts" component={Analytics} />

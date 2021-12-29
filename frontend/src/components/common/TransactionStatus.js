@@ -1,6 +1,5 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Close } from "@material-ui/icons";
 import { Button } from "@material-ui/core";
 import { currentConnection } from "../../constants";
 import { connect } from "react-redux";
@@ -26,15 +25,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 15,
     color: "#f9f9f9",
     fontSize: 16,
-  },
-  closeIcon: {
-    position: "absolute",
-    top: 15,
-    right: 10,
-    color: "white",
-    fontSize: 20,
-    textAlign: "right",
-    width: 50,
   },
   image: {
     height: 90,

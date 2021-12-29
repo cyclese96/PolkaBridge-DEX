@@ -1,46 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
-import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
-import Typography from "@material-ui/core/Typography";
 import TokenList from "./TokenList";
 import { importToken } from "../../actions/dexActions";
 import { connect } from "react-redux";
 import { Button, CircularProgress, Divider } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 
-const styles = (theme) => ({
-  root: {
-    margin: 0,
-    padding: theme.spacing(2),
-  },
-  closeButton: {
-    position: "absolute",
-    right: theme.spacing(1),
-    top: theme.spacing(1),
-    color: theme.palette.grey[500],
-  },
-});
-
-const DialogTitle = withStyles(styles)((props) => {
-  const { children, classes, onClose, ...other } = props;
-  return (
-    <MuiDialogTitle disableTypography className={classes.root} {...other}>
-      <Typography variant="h6">{children}</Typography>
-      {onClose ? (
-        <IconButton
-          aria-label="close"
-          className={classes.closeButton}
-          onClick={onClose}
-        >
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </MuiDialogTitle>
-  );
-});
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -66,19 +33,7 @@ const useStyles = makeStyles((theme) => ({
       fontSize: 20,
     },
   },
-  subheading: {
-    fontSize: 12,
-    fontWeight: 400,
-    color: "#919191",
-  },
 
-  notchedOutline: {
-    borderWidth: "1px",
-    borderColor: "#616161 !important",
-  },
-  inputText: {
-    color: "#f8f8f8",
-  },
   input: {
     backgroundColor: "transparent",
     borderRadius: 5,
@@ -100,14 +55,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 7,
   },
 
-  numbers: {
-    color: "#E0077D",
-    fontSize: 20,
-    marginLeft: 15,
-  },
-  icon: {
-    color: "#e5e5e5",
-  },
   closeIcon: {
     color: "#f6f6f6",
     fontSize: 24,
@@ -136,15 +83,11 @@ const SelectTokenDialog = ({
   handleClose,
   handleTokenSelected,
   disableToken,
-  importToken,
   dex: { tokenList, importedToken, dexLoading },
-  account: { currentAccount, currentNetwork },
 }) => {
   const classes = useStyles();
 
   const [filteredTokens, setTokens] = useState([]);
-  const [showImported, setShowImported] = useState(false);
-  const [_importedTokens, setImported] = useState([]);
   const [filterInput, setFilterInput] = useState("");
 
   const onTokenSelect = (token) => {
@@ -190,16 +133,10 @@ const SelectTokenDialog = ({
     const _value = value.split(" ").join("");
     const filteredList = applyFilter(tokenList, _value);
     setTokens(filteredList);
-    if (_value.length >= 42 && filteredList.length === 0) {
-      setShowImported(true);
-      await importToken(_value, currentAccount, currentNetwork);
-    } else {
-      setShowImported(false);
-    }
+
   };
 
   const resetInputState = () => {
-    // setShowImported(false);
     handleTokenFilter("");
   };
 
@@ -212,7 +149,6 @@ const SelectTokenDialog = ({
     <Dialog
       onClose={onClose}
       open={open}
-      // onLoad={() => filterTokens("")}
       disableBackdropClick
       className={classes.dialog}
       color="transparent"
@@ -240,7 +176,6 @@ const SelectTokenDialog = ({
           placeholder="Search name or paste address"
           onChange={({ target: { value } }) => handleTokenFilter(value)}
         />
-        {/* <FixedSizeList> */}
         <Divider
           style={{
             width: "100%",
@@ -267,7 +202,6 @@ const SelectTokenDialog = ({
             marginBottom: 10,
           }}
         />
-        {/* </FixedSizeList> */}
         <div className={classes.buttons}>
           <Button
             variant="contained"
@@ -284,7 +218,6 @@ const SelectTokenDialog = ({
 
 const mapStateToProps = (state) => ({
   dex: state.dex,
-  account: state.account,
 });
 
 export default connect(mapStateToProps, { importToken })(SelectTokenDialog);

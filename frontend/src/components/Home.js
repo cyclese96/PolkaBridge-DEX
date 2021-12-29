@@ -1,4 +1,3 @@
-import makeStyles from "@material-ui/core/styles/makeStyles";
 import React, { useEffect } from "react";
 import { connectWallet } from "../actions/accountActions";
 import PropTypes from "prop-types";
@@ -17,77 +16,10 @@ import {
   getCurrentAccount,
 } from "../utils/helper";
 import { CHANGE_NETWORK } from "../actions/types";
-import TabPage from "./TabPage";
 import { loadTokens } from "../actions/dexActions";
 
-const useStyles = makeStyles((theme) => ({
-  navbar: {
-    position: "relative",
-    top: 0,
-  },
-  mainContent: {
-    marginTop: 10,
-    minHeight: `calc(100vh - 120px)`,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
-  footer: {
-    width: "100vw",
-    display: "flex",
-    justifyContent: "center",
-
-    paddingBottom: 20,
-    [theme.breakpoints.down("sm")]: {
-      fontSize: 12,
-      width: "100%",
-    },
-  },
-  background: {
-    height: "90vh",
-  },
-
-  heading: {
-    textAlign: "center",
-    fontSize: 24,
-    fontWeight: 600,
-    width: "100%",
-    marginTop: 8,
-    marginBottom: 8,
-    [theme.breakpoints.down("sm")]: {
-      fontSize: 12,
-      width: "100%",
-    },
-  },
-  subheading: {
-    fontSize: 16,
-    fontWeight: 400,
-    color: "#919191",
-    [theme.breakpoints.down("sm")]: {
-      fontSize: 12,
-    },
-  },
-  numbers: {
-    color: "#E0077D",
-    fontSize: 26,
-    marginLeft: 5,
-    [theme.breakpoints.down("sm")]: {
-      fontSize: 12,
-    },
-  },
-  logo: {
-    width: 95,
-    height: 95,
-    marginTop: 5,
-    marginBottom: 40,
-    backgroundColor: "#f9f9f9",
-    padding: 12,
-  },
-}));
 
 const Home = ({ connectWallet, loadTokens, account: { currentNetwork } }) => {
-  const classes = useStyles();
 
   const getCurrentNetwork = (networkId) => {
     if (
@@ -126,9 +58,6 @@ const Home = ({ connectWallet, loadTokens, account: { currentNetwork } }) => {
           });
           await connectWallet(false, network);
         });
-
-        // todo: handle more ethereum event
-        //1. on transaction update balance
       }
     }
     listenConnectionUpdate();

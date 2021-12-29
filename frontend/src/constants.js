@@ -437,3 +437,10 @@ export const farmingPoolConstants = {
     }
   }
 };
+
+export const RINKEBY_BLOCK_TIME = 15;
+export const PBR_PER_BLOCK = 0.5;
+export const BLOCKS_PER_YEAR = (60 / RINKEBY_BLOCK_TIME) * 60 * 24 * 365;
+export const PBR_PER_YEAR = PBR_PER_BLOCK * BLOCKS_PER_YEAR;
+
+export const BASE_URL = process.env.NODE_ENV && process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DEVELOPMENT_URL : process.env.REACT_APP_PRODUCTION_URL;

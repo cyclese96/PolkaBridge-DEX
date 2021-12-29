@@ -1,12 +1,11 @@
 import { Button, Card, Divider, makeStyles } from "@material-ui/core";
-
 import ShowChartIcon from "@material-ui/icons/ShowChart";
 import Varified from "../../../assets/check.png";
 import { Link } from "react-router-dom";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import TokenIcon from "../../common/TokenIcon";
 import { useEffect, useMemo } from "react";
-import { allowanceAmount, farmingPoolConstants } from "../../../constants";
+import { allowanceAmount, BASE_URL, farmingPoolConstants } from "../../../constants";
 import { connect } from "react-redux";
 import { formattedNum } from "../../../utils/formatters";
 import {
@@ -32,30 +31,14 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("md")]: {
       paddingLeft: 7,
       paddingRight: 7,
-      // width: "90%",
-      // maxWidth: 400,
       width: 300,
       border: "1px solid #212121",
       arginLeft: 40,
     },
   },
-
   cardContents: {},
   avatar: {
     height: "30px",
-  },
-  numbers: {
-    color: "#E0077D",
-    fontSize: 26,
-  },
-  hint: {
-    paddingTop: 4,
-    fontSize: 10,
-    fontWeight: 400,
-    color: "#919191",
-    [theme.breakpoints.down("md")]: {
-      fontSize: 10,
-    },
   },
   tokenTitle: {
     fontWeight: 500,
@@ -75,14 +58,6 @@ const useStyles = makeStyles((theme) => ({
     color: "#DF097C",
     paddingTop: 2,
   },
-  tokenValuesZero: {
-    fontWeight: 500,
-    padding: 0,
-    paddingLeft: 10,
-    fontSize: 24,
-    paddingBottom: 3,
-    color: "#727272",
-  },
   tokenValues: {
     fontWeight: 500,
     padding: 0,
@@ -91,36 +66,8 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 3,
     color: "#e5e5e5",
   },
-  tokenTitleContract: {
-    fontWeight: 500,
-    fontSize: 16,
-    color: "#e5e5e5",
-  },
-  tokenTitleTvl: {
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 5,
-    paddingBottom: 5,
-    marginLeft: 10,
-    fontSize: 14,
-    fontWeight: 600,
-    color: "#e5e5e5",
-    // backgroundColor: "#C80C81",
-    border: "1px solid rgba(224, 7, 125, 0.6)",
-
-    borderRadius: 14,
-  },
-  tokenSubtitle: {
-    fontWeight: 300,
-    padding: 0,
-    paddingLeft: 10,
-    fontSize: 12,
-    color: "#bdbdbd",
-  },
   tokenAmount: {
     fontWeight: 700,
-    // padding: 0,
-    // paddingLeft: 10,
     marginRight: 5,
     fontSize: 18,
     color: "rgba(224, 7, 125, 1)",
@@ -145,62 +92,11 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 15,
     fontWeight: 600,
   },
-
   tagWrapper: {
     padding: 8,
   },
   imgWrapper: {
     padding: 15,
-  },
-  tokenTitleText: {
-    float: "right",
-  },
-  tokenTitleDi: {
-    fontWeight: 500,
-    fontSize: 16,
-    color: "#e5e5e5",
-  },
-  tokenAmountDi: {
-    fontWeight: 700,
-    fontSize: 18,
-    color: "#C80C81",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonContract: {
-    background: "linear-gradient(to right, #C80C81,purple)",
-    color: "white",
-    padding: 8,
-    paddingLeft: 15,
-    paddingRight: 15,
-    borderRadius: 20,
-    fontWeight: 500,
-    letterSpacing: 0.4,
-    textTransform: "none",
-    filter: "drop-shadow(0 0 0.5rem #414141)",
-    "&:hover": {
-      background: "#C80C81",
-    },
-    [theme.breakpoints.down("md")]: {
-      marginRight: 0,
-      marginLeft: 15,
-      width: 150,
-    },
-  },
-  textField: {
-    border: "1px solid white",
-    borderRadius: 30,
-    marginTop: 10,
-    outlinedRoot: {
-      "&:hover": {
-        border: "1px solid red",
-      },
-    },
-  },
-  contractButton: {
-    fontSize: 15,
-    color: "white",
   },
   harvestButton: {
     backgroundColor: "rgba(224, 7, 125, 0.6)",
@@ -218,7 +114,6 @@ const useStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.down("sm")]: {
       fontSize: 14,
-      // width: "80%",
     },
   },
   approveBtn: {
@@ -236,7 +131,6 @@ const useStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.down("md")]: {
       fontSize: 14,
-      // width: "80%",
     },
   },
   stakeBtn: {
@@ -256,7 +150,6 @@ const useStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.down("md")]: {
       fontSize: 14,
-      // width: "80%",
     },
   },
   icon: {
@@ -284,7 +177,6 @@ const Farm = (props) => {
     if (!currentAccount || !currentNetwork) {
       return;
     }
-    // console.log("farmTest fetching data ", { currentAccount, currentNetwork });
 
     async function loadFarmData() {
       await Promise.all([
@@ -346,13 +238,12 @@ const Farm = (props) => {
       return "";
     }
 
-    const pbrReward1Year = fromWei(farms?.[_address]?.pbrReward1Year);
-
     const totalPoolLiquidityUSD = lpBalance?.[_address]?.poolLiquidityUSD;
     const pbrPrice = lpBalance?.[_address]?.pbrPriceUSD;
+    const poolWeight = farms?.[_address]?.poolWeight;
 
     const pbrRewardApr = getPbrRewardApr(
-      pbrReward1Year,
+      poolWeight,
       pbrPrice,
       totalPoolLiquidityUSD
     );
@@ -430,7 +321,7 @@ const Farm = (props) => {
           <div>
             <div className={classes.farmName}>{farmPool}</div>
             <div className={classes.tagWrapper}>
-              {/* <div className={classes.earn}>ETH-USDT</div> */}
+
               <div className={classes.earn}>
                 <img
                   style={{ height: 20, width: 20, marginRight: 5 }}
@@ -477,7 +368,7 @@ const Farm = (props) => {
         </div>
 
         <div className="d-flex justify-content-between align-items-center mt-4">
-          <div className={classes.tokenTitle}>PBR-ETH LP STAKED</div>
+          <div className={classes.tokenTitle}>{farmPool} LP STAKED</div>
           <div className={classes.tokenAmount}></div>
         </div>
 
@@ -519,13 +410,6 @@ const Farm = (props) => {
             </div>
           )}
 
-        {/* {!loading?.[farmPool] && transaction.type && transaction.status === 'pending' && (
-          <div className="d-flex justify-content-center align-items-center mt-1">
-            <Button onClick={handleStakeActions} variant="contained" className={classes.approveBtn}>
-              Pending transaction...
-            </Button>
-          </div>
-        )} */}
         {loading?.[farmPoolAddress(farmPool)] && (
           <div className="d-flex justify-content-center align-items-center mt-1">
             <Button
@@ -555,18 +439,14 @@ const Farm = (props) => {
         </div>
 
         <div className="d-flex justify-content-between align-items-center mt-2">
-          <Link to="liquidity" className={classes.link}>
-            Get PBR-USDT LP{" "}
+          <a
+            className={classes.link}
+            target='_blank'
+            href={`${BASE_URL}/liquidity?action=add_liquidity&inputCurrency=${farmPool && farmPool.split('-')[0]}&outputCurrency=${farmPool && farmPool.split('-')[1]}`}
+          >
+            Get {farmPool} LP{" "}
             <OpenInNewIcon fontSize="small" className={classes.icon} />{" "}
-          </Link>
-          <div className={classes.tokenAmount}></div>
-        </div>
-
-        <div className="d-flex justify-content-between align-items-center ">
-          <Link to="liquidity" className={classes.link}>
-            View Contract{" "}
-            <OpenInNewIcon fontSize="small" className={classes.icon} />{" "}
-          </Link>
+          </a>
           <div className={classes.tokenAmount}></div>
         </div>
 
@@ -575,6 +455,20 @@ const Farm = (props) => {
             target="_blank"
             className={classes.link}
             href={`https://rinkeby.etherscan.io/address/${farmPoolAddress(
+              farmPool
+            )}`}
+          >
+            View Contract{" "}
+            <OpenInNewIcon fontSize="small" className={classes.icon} />{" "}
+          </a>
+          <div className={classes.tokenAmount}></div>
+        </div>
+
+        <div className="d-flex justify-content-between align-items-center ">
+          <a
+            target="_blank"
+            className={classes.link}
+            href={`http://localhost:3000/pair/${farmPoolAddress(
               farmPool
             )}`}
           >
