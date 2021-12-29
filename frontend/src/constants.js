@@ -437,3 +437,8 @@ export const farmingPoolConstants = {
     }
   }
 };
+
+export const RINKEBY_BLOCK_TIME = 15;
+export const PBR_PER_BLOCK = 0.5;
+export const BLOCKS_PER_YEAR = (60 / RINKEBY_BLOCK_TIME) * 60 * 24 * 365;
+export const PBR_PER_YEAR = PBR_PER_BLOCK * BLOCKS_PER_YEAR;

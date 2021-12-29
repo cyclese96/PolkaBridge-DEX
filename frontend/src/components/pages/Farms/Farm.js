@@ -238,13 +238,12 @@ const Farm = (props) => {
       return "";
     }
 
-    const pbrReward1Year = fromWei(farms?.[_address]?.pbrReward1Year);
-
     const totalPoolLiquidityUSD = lpBalance?.[_address]?.poolLiquidityUSD;
     const pbrPrice = lpBalance?.[_address]?.pbrPriceUSD;
+    const poolWeight = farms?.[_address]?.poolWeight;
 
     const pbrRewardApr = getPbrRewardApr(
-      pbrReward1Year,
+      poolWeight,
       pbrPrice,
       totalPoolLiquidityUSD
     );
