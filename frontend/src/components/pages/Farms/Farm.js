@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import TokenIcon from "../../common/TokenIcon";
 import { useEffect, useMemo } from "react";
-import { allowanceAmount, farmingPoolConstants } from "../../../constants";
+import { allowanceAmount, BASE_URL, farmingPoolConstants } from "../../../constants";
 import { connect } from "react-redux";
 import { formattedNum } from "../../../utils/formatters";
 import {
@@ -439,18 +439,14 @@ const Farm = (props) => {
         </div>
 
         <div className="d-flex justify-content-between align-items-center mt-2">
-          <Link to="liquidity" className={classes.link}>
+          <a
+            className={classes.link}
+            target='_blank'
+            href={`${BASE_URL}/liquidity?action=add_liquidity&inputCurrency=${farmPool && farmPool.split('-')[0]}&outputCurrency=${farmPool && farmPool.split('-')[1]}`}
+          >
             Get {farmPool} LP{" "}
             <OpenInNewIcon fontSize="small" className={classes.icon} />{" "}
-          </Link>
-          <div className={classes.tokenAmount}></div>
-        </div>
-
-        <div className="d-flex justify-content-between align-items-center ">
-          <Link to="liquidity" className={classes.link}>
-            View Contract{" "}
-            <OpenInNewIcon fontSize="small" className={classes.icon} />{" "}
-          </Link>
+          </a>
           <div className={classes.tokenAmount}></div>
         </div>
 
@@ -459,6 +455,20 @@ const Farm = (props) => {
             target="_blank"
             className={classes.link}
             href={`https://rinkeby.etherscan.io/address/${farmPoolAddress(
+              farmPool
+            )}`}
+          >
+            View Contract{" "}
+            <OpenInNewIcon fontSize="small" className={classes.icon} />{" "}
+          </a>
+          <div className={classes.tokenAmount}></div>
+        </div>
+
+        <div className="d-flex justify-content-between align-items-center ">
+          <a
+            target="_blank"
+            className={classes.link}
+            href={`http://localhost:3000/pair/${farmPoolAddress(
               farmPool
             )}`}
           >

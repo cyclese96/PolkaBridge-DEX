@@ -1,11 +1,12 @@
 import { Button, Card, makeStyles } from "@material-ui/core";
 import { connect } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
 import AddCard from "./AddCard";
 import RemoveCard from "./RemoveCard";
 import TabPage from "../../TabPage";
+import { useLocation } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -75,6 +76,17 @@ const useStyles = makeStyles((theme) => ({
 const AddLiquidity = ({ account: { loading } }) => {
   const classes = useStyles();
   const [showCard, setShowAdd] = useState({ status: false, component: "" });
+  const query = new URLSearchParams(useLocation().search);
+
+
+  useEffect(() => {
+    const action = query.get("action");
+    if (action === 'add_liquidity') {
+      setShowAdd({ status: true, component: "AddCard" })
+    } else if (action === 'remove_liquidity') {
+      setShowAdd({ status: true, component: "RemoveCard" })
+    }
+  }, [])
 
   return (
     <>

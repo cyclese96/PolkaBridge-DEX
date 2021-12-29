@@ -12,7 +12,7 @@ import SwapSettings from "../../common/SwapSettings";
 import etherImg from "../../../assets/ether.png";
 import SwapCardItem from "../../Cards/SwapCardItem";
 import AddIcon from "@material-ui/icons/Add";
-import { allowanceAmount, ETH, etheriumNetwork, tokens } from "../../../constants";
+import { allowanceAmount, BNB, ETH, etheriumNetwork, PBR, PWAR } from "../../../constants";
 import {
   fromWei,
   getPercentage,
@@ -28,9 +28,9 @@ import {
   getLpBalance,
   loadPairAddress,
   addLiquidity,
+  importToken
 } from "../../../actions/dexActions";
 import { getAccountBalance } from "../../../actions/accountActions";
-import tokenThumbnail from "../../../utils/tokenThumbnail";
 import BigNumber from "bignumber.js";
 import store from "../../../store";
 import { RESET_POOL_SHARE, START_TRANSACTION } from "../../../actions/types";
@@ -39,6 +39,7 @@ import { getPairAddress } from "../../../utils/connectionUtils";
 import { Settings } from "@material-ui/icons";
 import TransactionConfirm from "../../common/TransactionConfirm";
 import { useAllTokenData } from "../../../contexts/TokenData";
+import { useLocation } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -217,6 +218,7 @@ const AddCard = (props) => {
       poolReserves,
       pairContractData,
       transaction,
+      tokenList
     },
     addLiquidityEth,
     checkAllowance,
@@ -227,6 +229,7 @@ const AddCard = (props) => {
     loadPairAddress,
     getAccountBalance,
     addLiquidity,
+    importToken
   } = props;
 
   const currentDefaultToken = {
@@ -236,8 +239,8 @@ const AddCard = (props) => {
   };
   const classes = useStyles();
   const [settingOpen, setOpen] = useState(false);
-  const [selectedToken0, setToken1] = useState(currentDefaultToken);
-  const [selectedToken1, setToken2] = useState({});
+  const [selectedToken0, setToken0] = useState(currentDefaultToken);
+  const [selectedToken1, setToken1] = useState({});
   const [token1Value, setToken1Value] = useState(""); // token1 for eth only
   const [token2Value, setToken2Value] = useState(""); // token2 for pbr
   const [localStateLoading, setLocalStateLoading] = useState(false);
@@ -273,33 +276,78 @@ const AddCard = (props) => {
     setOpen(false);
   };
 
+  const query = new URLSearchParams(useLocation().search);
+
+  const getTokenToSelect = (tokenQuery) => {
+    const token =
+      tokenQuery &&
+      tokenList &&
+      tokenList.find(
+        (item) =>
+          item.symbol.toUpperCase() === tokenQuery.toUpperCase() ||
+          item.address.toLowerCase() === tokenQuery.toLowerCase()
+      );
+
+    if (token && token.symbol) {
+      return token;
+    }
+
+    return {};
+  };
+
   useEffect(() => {
     async function initSelection() {
-      let defaultToken1, defaultToken2;
+
+      const [token0Query, token1Query] = [
+        query.get("inputCurrency"),
+        query.get("outputCurrency"),
+      ];
+
+      let _token0 = {};
+      let _token1 = {};
       if (currentNetwork === etheriumNetwork) {
-        defaultToken1 = tokens[0];
-        defaultToken2 = tokens[2];
+
+        if (token0Query) {
+          _token0 = getTokenToSelect(token0Query);
+
+          if (!_token0 || !_token0.symbol) {
+            importToken(token0Query, currentAccount, currentNetwork);
+          }
+
+          setToken0(_token0);
+        } else {
+          _token0 = getTokenToSelect(PBR);
+          setToken0(_token0);
+        }
+
+        if (token1Query) {
+          _token1 = getTokenToSelect(token1Query);
+
+          if (!_token1 || !_token1.symbol) {
+            importToken(token1Query, currentAccount, currentNetwork);
+          }
+          setToken1(_token1);
+        } else {
+          _token1 = getTokenToSelect(ETH);
+          setToken1(_token1);
+        }
+
       } else {
-        defaultToken1 = {
-          icon: tokenThumbnail("PWAR"),
-          name: "Polkawar",
-          symbol: "PWAR",
-        };
-        defaultToken2 = {
-          icon: tokenThumbnail("BNB"),
-          name: "Binance",
-          symbol: "BNB",
-        };
+
+        _token0 = getTokenToSelect(BNB)
+        _token1 = getTokenToSelect(PWAR)
+        setToken0(_token0)
+        setToken1(_token1)
+
       }
-      setToken1(defaultToken1);
-      setToken2(defaultToken2);
+
       verifySwapStatus(
-        { value: token1Value, selected: defaultToken1 },
-        { value: token2Value, selected: defaultToken2 }
+        { value: token1Value, selected: _token0 },
+        { value: token2Value, selected: _token1 }
       );
     }
     initSelection();
-  }, [currentNetwork]);
+  }, [currentNetwork, tokenList]);
 
   const currentPairAddress = () => {
     if (
@@ -599,7 +647,7 @@ const AddCard = (props) => {
   };
 
   const onToken1Select = (token) => {
-    setToken1(token);
+    setToken0(token);
     resetInput();
 
     verifySwapStatus(
@@ -609,7 +657,7 @@ const AddCard = (props) => {
   };
 
   const onToken2Select = (token) => {
-    setToken2(token);
+    setToken1(token);
     resetInput();
 
     verifySwapStatus(
@@ -900,4 +948,5 @@ export default connect(mapStateToProps, {
   loadPairAddress,
   getAccountBalance,
   addLiquidity,
+  importToken
 })(AddCard);
