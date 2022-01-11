@@ -147,7 +147,7 @@ export const bscConfig = {
   network_rpc_testnet: "https://data-seed-prebsc-1-s1.binance.org:8545/",
 };
 
-export const supportedNetworks = ["1", "56"];
+export const supportedChains = [1, 4, 42, 56, 97];
 
 export const allowanceAmount = '9999999999999999999999999';
 

@@ -1,11 +1,9 @@
 import BigNumber from "bignumber.js";
-import web3 from "../web";
+// import web3 from "../web";
 import axios from "axios";
-import { ethers } from "ethers";
-import { farmingPoolConstants, PBR_PER_YEAR } from "../constants";
-
-const WEI_UNITS = 1000000000000000000;
-const WEI_UNITS_6 = 1000000;
+import { getAddress } from "ethers/utils/address";
+import { bscNetwork, etheriumNetwork, farmingPoolConstants, PBR_PER_YEAR } from "../constants";
+import Web3 from "web3";
 
 export const fromWei = (tokens, decimals = 18) => {
   try {
@@ -48,9 +46,9 @@ export const getCurrentAccount = async () => {
 };
 
 export const getCurrentNetworkId = async () => {
+  const web3 = new Web3(window.ethereum);
   if (window.ethereum) {
     const id = await window.ethereum.networkVersion;
-
     if (id) {
       return id;
     } else {
@@ -62,6 +60,7 @@ export const getCurrentNetworkId = async () => {
 };
 
 export const getNetworkBalance = async (accountAddress) => {
+  const web3 = new Web3(window.ethereum);
   try {
     const bal = web3.eth.getBalance(accountAddress);
     return bal;
@@ -315,7 +314,7 @@ export const formatFloat = (floatValue) => {
 
 export const isAddress = (value) => {
   try {
-    return ethers.utils.getAddress(value.toLowerCase());
+    return getAddress(value.toLowerCase());
   } catch {
     return false;
   }
@@ -373,3 +372,13 @@ export const getLpApr = (pool) => {
   const lpApr = farmingPoolConstants.ethereum?.[pool]?.lpApr
   return lpApr ? lpApr : 0;
 }
+
+export const getNetworkNameById = (networkId) => {
+  if ([56, 97].includes(parseInt(networkId))) {
+    return bscNetwork;
+  } else if ([1, 42, 4].includes(parseInt(networkId))) {
+    return etheriumNetwork;
+  } else {
+    return etheriumNetwork;
+  }
+};

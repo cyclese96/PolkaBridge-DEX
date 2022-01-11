@@ -113,12 +113,13 @@ const AccountDialog = ({
   open,
   handleClose,
   logout,
+  handleLogout,
   account: { currentAccount, balance, connected, currentNetwork },
 }) => {
   const classes = useStyles();
   const onSingOut = () => {
     localStorage.setItem(`logout${currentAccount}`, currentAccount);
-    logout();
+    // logout();
     handleClose();
   };
 

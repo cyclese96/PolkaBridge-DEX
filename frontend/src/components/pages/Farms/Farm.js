@@ -1,7 +1,6 @@
 import { Button, Card, Divider, makeStyles } from "@material-ui/core";
 import ShowChartIcon from "@material-ui/icons/ShowChart";
 import Varified from "../../../assets/check.png";
-import { Link } from "react-router-dom";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import TokenIcon from "../../common/TokenIcon";
 import { useEffect, useMemo } from "react";
