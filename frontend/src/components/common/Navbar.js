@@ -499,4 +499,4 @@ const Navbar = (props) => {
 const mapStateToProps = (state) => ({
   account: state.account,
 });
-export default connect(mapStateToProps, {})(Navbar);
+export default connect(mapStateToProps, {})(React.memo(Navbar));

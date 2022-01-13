@@ -8,7 +8,6 @@ import { connect } from "react-redux";
 import { Button, CircularProgress, Divider } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 
-
 const useStyles = makeStyles((theme) => ({
   background: {
     backgroundColor: "#121827",
@@ -133,7 +132,6 @@ const SelectTokenDialog = ({
     const _value = value.split(" ").join("");
     const filteredList = applyFilter(tokenList, _value);
     setTokens(filteredList);
-
   };
 
   const resetInputState = () => {
@@ -220,4 +218,6 @@ const mapStateToProps = (state) => ({
   dex: state.dex,
 });
 
-export default connect(mapStateToProps, { importToken })(SelectTokenDialog);
+export default connect(mapStateToProps, { importToken })(
+  React.memo(SelectTokenDialog)
+);

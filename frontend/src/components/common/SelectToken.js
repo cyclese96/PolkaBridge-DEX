@@ -32,7 +32,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     backgroundColor: "rgba(224, 7, 125, 0.9)",
-
     borderRadius: 12,
     paddingLeft: 13,
     paddingRight: 0,
@@ -51,7 +50,6 @@ const useStyles = makeStyles((theme) => ({
       height: 22,
     },
   },
-
   selectToken: {
     fontSize: 15,
     color: "white",
@@ -74,7 +72,6 @@ const useStyles = makeStyles((theme) => ({
 
 const SelectToken = ({
   selectedToken,
-  onClick,
   handleTokenSelected,
   className,
   disableToken,
@@ -136,4 +133,4 @@ const mapStateToProps = (state) => ({
   account: state.account,
 });
 
-export default connect(mapStateToProps, { logout })(SelectToken);
+export default connect(mapStateToProps, { logout })(React.memo(SelectToken));

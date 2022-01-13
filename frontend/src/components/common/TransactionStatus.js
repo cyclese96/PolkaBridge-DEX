@@ -78,9 +78,9 @@ const TransactionStatus = ({ dex: { transaction }, onClose }) => {
             </div>
           )}
           <div className="text-center">
-            {!transaction.hash ? (<h6 style={{ color: "#DF097C", fontSize: 14 }}>
-              Cancelled
-            </h6>) : (
+            {!transaction.hash ? (
+              <h6 style={{ color: "#DF097C", fontSize: 14 }}>Cancelled</h6>
+            ) : (
               <a
                 href={
                   currentConnection === "testnet"
@@ -96,7 +96,6 @@ const TransactionStatus = ({ dex: { transaction }, onClose }) => {
             )}
           </div>
         </div>
-
         <Button
           variant="contained"
           className={classes.closeButton}
@@ -110,7 +109,7 @@ const TransactionStatus = ({ dex: { transaction }, onClose }) => {
 };
 
 const mapStateToProps = (state) => ({
-  dex: state.dex
-})
+  dex: state.dex,
+});
 
-export default connect(mapStateToProps, {})(TransactionStatus);
+export default connect(mapStateToProps, {})(React.memo(TransactionStatus));

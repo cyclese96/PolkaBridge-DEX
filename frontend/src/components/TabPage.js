@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function TabPanel(props) {
+const TabPanel = (props) => {
   const { children, value, index, ...other } = props;
 
   return (
@@ -51,9 +51,9 @@ function TabPanel(props) {
       )}
     </div>
   );
-}
+};
 
-export default function TabPage({ data = 1 }) {
+const TabPage = ({ data = 1 }) => {
   const classes = useStyles();
 
   return (
@@ -83,7 +83,6 @@ export default function TabPage({ data = 1 }) {
             }
             label="Pools"
           />
-
         </Link>
         <Link to="/farms">
           <Tab
@@ -114,10 +113,10 @@ export default function TabPage({ data = 1 }) {
         <Farms />
       </TabPanel>
       <TabPanel data={3} index={3}>
-
         <Analytics />
       </TabPanel>
-
     </>
   );
-}
+};
+
+export default React.memo(TabPage);

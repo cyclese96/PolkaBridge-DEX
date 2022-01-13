@@ -5,6 +5,7 @@ import SelectToken from "../common/SelectToken";
 import { formatCurrency } from "../../utils/formatters";
 import { formattedNum } from "../../utils/timeUtils";
 import BigNumber from "bignumber.js";
+import React from "react";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -104,7 +105,7 @@ const SwapCardItem = (props) => {
     currentToken,
     inputValue,
     disableToken,
-    priceUSD
+    priceUSD,
   } = props;
   const classes = useStyles();
 
@@ -120,11 +121,9 @@ const SwapCardItem = (props) => {
     onInputChange(value);
   };
 
-
   const handleMax = () => {
-
     if (!currentToken.symbol) {
-      return
+      return;
     }
 
     onInputChange(
@@ -175,7 +174,13 @@ const SwapCardItem = (props) => {
           </div>
           {new BigNumber(inputValue).gt(0) && (
             <div className={classes.labelRow}>
-              <p className={classes.hintLabelFont}>~ $ {priceUSD?.priceUSD} {inputValue && formattedNum(new BigNumber(inputValue).multipliedBy(priceUSD).toString())}</p>
+              <p className={classes.hintLabelFont}>
+                ~ $ {priceUSD?.priceUSD}{" "}
+                {inputValue &&
+                  formattedNum(
+                    new BigNumber(inputValue).multipliedBy(priceUSD).toString()
+                  )}
+              </p>
             </div>
           )}
         </div>
@@ -188,4 +193,4 @@ const mapStateToProps = (state) => ({
   account: state.account,
 });
 
-export default connect(mapStateToProps, {})(SwapCardItem);
+export default connect(mapStateToProps, {})(React.memo(SwapCardItem));

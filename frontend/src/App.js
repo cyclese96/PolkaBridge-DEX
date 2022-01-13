@@ -45,46 +45,6 @@ const useStyles = makeStyles((theme) => ({
       width: "100%",
     },
   },
-  background: {
-    height: "90vh",
-  },
-
-  heading: {
-    textAlign: "center",
-    fontSize: 24,
-    fontWeight: 600,
-    width: "100%",
-    marginTop: 8,
-    marginBottom: 8,
-    [theme.breakpoints.down("sm")]: {
-      fontSize: 12,
-      width: "100%",
-    },
-  },
-  subheading: {
-    fontSize: 16,
-    fontWeight: 400,
-    color: "#919191",
-    [theme.breakpoints.down("sm")]: {
-      fontSize: 12,
-    },
-  },
-  numbers: {
-    color: "#E0077D",
-    fontSize: 26,
-    marginLeft: 5,
-    [theme.breakpoints.down("sm")]: {
-      fontSize: 12,
-    },
-  },
-  logo: {
-    width: 95,
-    height: 95,
-    marginTop: 5,
-    marginBottom: 40,
-    backgroundColor: "#f9f9f9",
-    padding: 12,
-  },
 }));
 
 function getLibrary(provider) {
