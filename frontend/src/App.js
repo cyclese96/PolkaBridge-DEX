@@ -74,52 +74,53 @@ function App() {
                 <Route exact path="/charts/pools" component={AllTopPool} />
 
                 <Switch>
-                  {/* <Route
-                  exacts
-                  strict
-                  path="/token/:tokenAddress"
-                  render={({ match }) => {
-                    if (
-                      isAddress(match.params.tokenAddress.toLowerCase()) &&
-                      !Object.keys(TOKEN_BLACKLIST).includes(
-                        match.params.tokenAddress.toLowerCase()
-                      )
-                    ) {
-                      return (
-                        // <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
-                        <TokenPage
-                          address={match.params.tokenAddress.toLowerCase()}
-                        />
-                        // </LayoutWrapper>
-                      );
-                    } else {
-                      return <Redirect to="/" />;
-                    }
-                  }}
-                /> */}
-                  {/* <Route
-                  exacts
-                  strict
-                  path="/pair/:pairAddress"
-                  render={({ match }) => {
-                    if (
-                      isAddress(match.params.pairAddress.toLowerCase()) &&
-                      !Object.keys(PAIR_BLACKLIST).includes(
-                        match.params.pairAddress.toLowerCase()
-                      )
-                    ) {
-                      return (
-                        // <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
-                        <PoolDetail
-                          pairAddress={match.params.pairAddress.toLowerCase()}
-                        />
-                        // </LayoutWrapper>
-                      );
-                    } else {
-                      return <Redirect to="/" />;
-                    }
-                  }}
-                /> */}
+                  <Route
+                    exacts
+                    strict
+                    path="/token/:tokenAddress"
+                    render={({ match }) => {
+                      if (
+                        isAddress(match.params.tokenAddress.toLowerCase()) &&
+                        !Object.keys(TOKEN_BLACKLIST).includes(
+                          match.params.tokenAddress.toLowerCase()
+                        )
+                      ) {
+                        return (
+                          // <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
+                          <TokenPage
+                            address={match.params.tokenAddress.toLowerCase()}
+                          />
+                          // </LayoutWrapper>
+                        );
+                      } else {
+                        return <Redirect to="/" />;
+                      }
+                    }}
+                  />
+
+                  <Route
+                    exacts
+                    strict
+                    path="/pair/:pairAddress"
+                    render={({ match }) => {
+                      if (
+                        isAddress(match.params.pairAddress.toLowerCase()) &&
+                        !Object.keys(PAIR_BLACKLIST).includes(
+                          match.params.pairAddress.toLowerCase()
+                        )
+                      ) {
+                        return (
+                          // <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
+                          <PoolDetail
+                            pairAddress={match.params.pairAddress.toLowerCase()}
+                          />
+                          // </LayoutWrapper>
+                        );
+                      } else {
+                        return <Redirect to="/" />;
+                      }
+                    }}
+                  />
                 </Switch>
               </BrowserRouter>
             </div>
