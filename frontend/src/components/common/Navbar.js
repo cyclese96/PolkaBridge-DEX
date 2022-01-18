@@ -33,7 +33,9 @@ const useStyles = makeStyles((theme) => ({
   },
   appBarBackground: {
     boxShadow: "none",
-    backgroundColor: "#070F23",
+    backgroundColor: "#eef3fa",
+    borderBottom: "1px solid #e5e5e5",
+    paddingBottom: 10,
   },
   menuButton: {
     textTransform: "none",
@@ -48,8 +50,8 @@ const useStyles = makeStyles((theme) => ({
   icon: {},
 
   sectionDesktop: {
-    marginLeft: 150,
-    marginRight: 100,
+    marginLeft: 50,
+    marginRight: 50,
     [theme.breakpoints.down("md")]: {
       marginLeft: 5,
       marginRight: 5,
@@ -109,8 +111,10 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 18,
     textTransform: "none",
     fontSize: 16,
-    fontWeight: 600,
-    color: "#f9f9f9",
+    fontWeight: 500,
+    // color: "#8247e5",
+    color: "#212121",
+    letterSpacing: 0.1,
     [theme.breakpoints.down("md")]: {
       marginLeft: 10,
       marginRight: 10,
@@ -163,11 +167,11 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     marginRight: 30,
     alignItems: "center",
-    border: "0.5px solid white",
+    border: "5px solid rgb(237, 238, 242)",
     borderRadius: 15,
     padding: 4,
-    paddingLeft: 7,
-    paddingRight: 7,
+    paddingLeft: 10,
+    paddingRight: 10,
     // cursor: "pointer",
     "&:hover": {
       background: "rgba(255, 255, 255, 0.1)",
@@ -175,7 +179,8 @@ const useStyles = makeStyles((theme) => ({
   },
   networkIcon: {
     width: "auto",
-    height: 30,
+    height: 25,
+    fontSize: 25,
   },
   menuIcon: {
     color: "rgba(255, 255, 255, 0.5)",
@@ -266,7 +271,7 @@ const Navbar = ({ currentNetwork }) => {
               src={currentNetwork === etheriumNetwork ? etherIcon : binanceIcon}
               alt={currentNetwork}
             />
-            <span style={{ color: "white", marginLeft: 5 }}>
+            <span style={{ color: "black", marginLeft: 5 }}>
               {currentNetwork === etheriumNetwork ? "Ethereum" : "BSC"}
             </span>
           </div>
@@ -294,11 +299,9 @@ const Navbar = ({ currentNetwork }) => {
         <Toolbar className={classes.sectionDesktop}>
           <Avatar
             variant="square"
-            src="img/logo-white.png"
+            src="https://polkabridge.org/logo.png"
             style={{ height: 38, width: 150 }}
           />
-
-          <div className={classes.leftMargin} />
 
           <a href="/" className={classes.navbarItemsDesktop}>
             Staking
@@ -345,7 +348,7 @@ const Navbar = ({ currentNetwork }) => {
               src={currentNetwork === etheriumNetwork ? etherIcon : binanceIcon}
               alt={currentNetwork}
             />
-            <span style={{ color: "white", marginLeft: 5 }}>
+            <span style={{ color: "black", marginLeft: 5 }}>
               {currentNetwork === etheriumNetwork ? "Ethereum" : "BSC"}
             </span>
           </div>

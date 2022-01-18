@@ -58,8 +58,8 @@ import { Settings } from "@material-ui/icons";
 const useStyles = makeStyles((theme) => ({
   card: {
     width: 500,
-    borderRadius: 15,
-    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    borderRadius: 30,
+    background: `linear-gradient(to bottom,#ffffff,#ffffff)`,
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 15,
@@ -91,10 +91,10 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "flex-start",
+    color: "#000000",
   },
   settingIcon: {
-    color: "#f6f6f6",
-    color: "#f6f6f6",
+    color: "#0000000",
     fontSize: 22,
     cursor: "pointer",
     transition: "all 0.4s ease",
@@ -105,20 +105,22 @@ const useStyles = makeStyles((theme) => ({
   iconButton: {
     margin: 0,
     padding: 2,
+    backgroundColor: "#eef3fa",
   },
   swapIcon: {
-    color: "#f6f6f6",
+    color: "#000000",
     marginTop: -12,
     marginBottom: -12,
     borderRadius: "36%",
-    border: "3px solid #212121",
+    border: "3px solid #eef3fa",
     transition: "all 0.4s ease",
     fontSize: 28,
-    backgroundColor: "#191B1E",
+
+    backgroundColor: "#eef3fa",
   },
   swapButton: {
     marginTop: 20,
-    backgroundColor: "rgba(224, 7, 125, 0.9)",
+    backgroundColor: "#e0017d",
     color: "white",
     width: "95%",
     textTransform: "none",
@@ -644,10 +646,10 @@ const SwapCard = (props) => {
         priceImpact={priceImpact}
       />
       <SwapSettings open={settingOpen} handleClose={close} />
-      <Card elevation={20} className={classes.card}>
+      <Card elevation={10} className={classes.card}>
         <div className={classes.cardContents}>
           <div className={classes.cardHeading}>
-            <p>Swap </p>
+            <p style={{ color: "black" }}>Swap </p>
             <IconButton className={classes.iconButton}>
               <Settings
                 fontSize="default"

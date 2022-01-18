@@ -3,7 +3,7 @@ export const theme = createMuiTheme({
   palette: {
     action: {
       disabled: "#919191",
-      disabledBackground: "#2C2F35",
+      disabledBackground: "rgb(237, 238, 242)",
     },
     common: {
       black: "#000",

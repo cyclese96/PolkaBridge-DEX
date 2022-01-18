@@ -7,12 +7,8 @@ const useStyles = makeStyles((theme) => ({
   card: {
     width: 440,
     height: 100,
-    background: ` linear-gradient(
-      to bottom right,
-      rgba(255, 255, 255, 0.1),
-      rgba(255, 255, 255, 0.02)
-    )`,
-    border: "1px solid #414141",
+    background: "white",
+    border: "0.5px solid #e5e5e5",
 
     borderRadius: 15,
     [theme.breakpoints.down("sm")]: {
@@ -35,7 +31,8 @@ const useStyles = makeStyles((theme) => ({
   },
   labelFont: {
     fontSize: 14,
-    color: "#e5e5e5",
+    color: "#757575",
+    fontWeight: 500,
     [theme.breakpoints.down("sm")]: {
       fontSize: 13,
     },
@@ -122,7 +119,7 @@ const SwapCardItem = (props) => {
 
   return (
     <>
-      <Card elevation={1} className={classes.card}>
+      <Card elevation={0} className={classes.card}>
         <div className={classes.cardContents}>
           <div className={classes.labelRow}>
             {inputType ? (

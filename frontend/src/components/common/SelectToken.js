@@ -11,8 +11,8 @@ const useStyles = makeStyles((theme) => ({
   token: {
     display: "flex",
     alignItems: "center",
-    backgroundColor: "black",
-    border: "0.5px solid #616161",
+    backgroundColor: "transparent",
+    border: "0.5px solid #919191",
     borderRadius: 12,
     paddingLeft: 8,
     paddingRight: 0,
@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
       background: "rgba(255, 255, 255, 0.1)",
     },
   },
+
   noToken: {
     display: "flex",
     alignItems: "center",
@@ -56,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   selectedToken: {
-    color: "white",
+    color: "#000000",
     marginLeft: 5,
     fontSize: 15,
     [theme.breakpoints.down("sm")]: {

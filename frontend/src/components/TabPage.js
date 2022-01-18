@@ -11,10 +11,11 @@ import Analytics from "./pages/Analytics";
 
 const useStyles = makeStyles((theme) => ({
   tabs: {
-    paddingTop: 10,
+    paddingTop: 30,
+    paddingBottom: 30,
   },
   default_tabStyle: {
-    color: "rgba(255, 255, 255, 0.5)",
+    color: "#000000",
     fontSize: 14,
     [theme.breakpoints.down("sm")]: {
       fontSize: 11,
@@ -22,9 +23,9 @@ const useStyles = makeStyles((theme) => ({
   },
   active_tabStyle: {
     fontSize: 16,
-    fontWeight: 500,
+    fontWeight: 600,
     borderRadius: 7,
-    color: "white",
+    color: "#E0017D",
     [theme.breakpoints.down("sm")]: {
       fontSize: 13,
     },

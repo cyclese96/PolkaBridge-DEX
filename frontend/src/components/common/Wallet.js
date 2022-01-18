@@ -1,14 +1,15 @@
 import { Button, makeStyles } from "@material-ui/core";
 import { AccountBalanceWalletOutlined } from "@material-ui/icons";
 import { connect } from "react-redux";
-import {connectWallet} from '../../actions/accountActions'
+import { connectWallet } from "../../actions/accountActions";
 import { isMetaMaskInstalled } from "../../utils/helper";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     alignItems: "center",
-    border: "0.5px solid white",
+    border: "5px solid rgb(237, 238, 242)",
+
     borderRadius: 15,
     padding: 2,
     paddingLeft: 10,
@@ -51,10 +52,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Wallet = ({ 
+const Wallet = ({
   connectWallet,
   onWalletClick,
-  account: {connected, currentNetwork,currentAccount },
+  account: { connected, currentNetwork, currentAccount },
 }) => {
   const classes = useStyles();
 
@@ -64,8 +65,8 @@ const Wallet = ({
       return;
     }
     await connectWallet(true, currentNetwork);
-  }
-  
+  };
+
   return (
     <div>
       {!connected ? (
@@ -78,8 +79,7 @@ const Wallet = ({
             {currentAccount ? currentAccount.toString().slice(0, 6) : "."}..
           </strong>
           <AccountBalanceWalletOutlined
-            style={{ color: "#f9f9f9" }}
-            fontSize="large"
+            style={{ color: "#bdbdbd", fontSize: 30 }}
           />
         </a>
       )}
@@ -88,7 +88,7 @@ const Wallet = ({
 };
 
 const mapStateToProps = (state) => ({
-  account: state.account
-})
+  account: state.account,
+});
 
-export default connect(mapStateToProps, {connectWallet})(Wallet);
+export default connect(mapStateToProps, { connectWallet })(Wallet);
