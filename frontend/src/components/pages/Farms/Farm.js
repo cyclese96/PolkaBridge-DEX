@@ -4,7 +4,11 @@ import Varified from "../../../assets/check.png";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import TokenIcon from "../../common/TokenIcon";
 import { useEffect, useMemo } from "react";
-import { allowanceAmount, BASE_URL, farmingPoolConstants } from "../../../constants";
+import {
+  allowanceAmount,
+  BASE_URL,
+  farmingPoolConstants,
+} from "../../../constants";
 import { connect } from "react-redux";
 import { formattedNum } from "../../../utils/formatters";
 import {
@@ -82,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
     border: "1px solid #C80C81",
     borderRadius: 25,
     height: 30,
-    width: 90,
+    width: 100,
     paddingTop: 3,
   },
   farmName: {
@@ -320,7 +324,6 @@ const Farm = (props) => {
           <div>
             <div className={classes.farmName}>{farmPool}</div>
             <div className={classes.tagWrapper}>
-
               <div className={classes.earn}>
                 <img
                   style={{ height: 20, width: 20, marginRight: 5 }}
@@ -328,6 +331,7 @@ const Farm = (props) => {
                 />
                 Core{" "}
                 {farmingPoolConstants?.[currentNetwork]?.[farmPool]?.multiplier}
+                X
               </div>
             </div>
           </div>
@@ -440,8 +444,10 @@ const Farm = (props) => {
         <div className="d-flex justify-content-between align-items-center mt-2">
           <a
             className={classes.link}
-            target='_blank'
-            href={`${BASE_URL}/liquidity?action=add_liquidity&inputCurrency=${farmPool && farmPool.split('-')[0]}&outputCurrency=${farmPool && farmPool.split('-')[1]}`}
+            target="_blank"
+            href={`${BASE_URL}/liquidity?action=add_liquidity&inputCurrency=${
+              farmPool && farmPool.split("-")[0]
+            }&outputCurrency=${farmPool && farmPool.split("-")[1]}`}
           >
             Get {farmPool} LP{" "}
             <OpenInNewIcon fontSize="small" className={classes.icon} />{" "}
@@ -467,9 +473,7 @@ const Farm = (props) => {
           <a
             target="_blank"
             className={classes.link}
-            href={`http://localhost:3000/pair/${farmPoolAddress(
-              farmPool
-            )}`}
+            href={`http://localhost:3000/pair/${farmPoolAddress(farmPool)}`}
           >
             See Pair Info{" "}
             <OpenInNewIcon fontSize="small" className={classes.icon} />{" "}

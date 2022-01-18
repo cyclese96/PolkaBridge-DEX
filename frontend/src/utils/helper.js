@@ -2,7 +2,12 @@ import BigNumber from "bignumber.js";
 // import web3 from "../web";
 import axios from "axios";
 import { getAddress } from "ethers/utils/address";
-import { bscNetwork, etheriumNetwork, farmingPoolConstants, PBR_PER_YEAR } from "../constants";
+import {
+  bscNetwork,
+  etheriumNetwork,
+  farmingPoolConstants,
+  PBR_PER_YEAR,
+} from "../constants";
 import Web3 from "web3";
 
 export const fromWei = (tokens, decimals = 18) => {
@@ -11,7 +16,9 @@ export const fromWei = (tokens, decimals = 18) => {
       return new BigNumber(0).toString();
     }
 
-    return new BigNumber(tokens).div(new BigNumber(10).exponentiatedBy(decimals)).toString();
+    return new BigNumber(tokens)
+      .div(new BigNumber(10).exponentiatedBy(decimals))
+      .toString();
   } catch (error) {
     console.log("exeption in fromWei ", error);
     return null;
@@ -23,7 +30,10 @@ export const toWei = (tokens, decimals = 18) => {
     if (!tokens) {
       return new BigNumber(0).toString();
     }
-    return new BigNumber(tokens).multipliedBy(new BigNumber(10).exponentiatedBy(decimals)).toFixed(0).toString();
+    return new BigNumber(tokens)
+      .multipliedBy(new BigNumber(10).exponentiatedBy(decimals))
+      .toFixed(0)
+      .toString();
   } catch (error) {
     console.log("exeption in toWei , ", error);
     return null;
@@ -100,7 +110,6 @@ export const token1PerToken2 = (token1UsdPrice, token2UsdPrice) => {
   return price;
 };
 
-
 export const getUnixTime = (timeInMintes) => {
   const now = new Date();
   now.setMinutes(now.getMinutes() + timeInMintes); // timestamp
@@ -135,10 +144,13 @@ export const getPercentageAmount = (value, percent) => {
   return percentValue.toString();
 };
 
-
 export const fetchTokenInfo = async (address) => {
   try {
-    const _api = `https://api.etherscan.io/api?module=token&action=tokeninfo&contractaddress=${address}&apikey=${process.env.REACT_APP_ETHER_SCAN_API.split('').reverse().join('')}`;
+    const _api = `https://api.etherscan.io/api?module=token&action=tokeninfo&contractaddress=${address}&apikey=${process.env.REACT_APP_ETHER_SCAN_API.split(
+      ""
+    )
+      .reverse()
+      .join("")}`;
     const res = await axios.get(_api);
     // console.log("api res ", res.data);
     return res.data;
@@ -248,7 +260,11 @@ export const getTokenOutWithReserveRatio = (
     return new BigNumber("0").toFixed(4).toString();
   }
 
-  console.log('getTokenOutWithReserveRatio', { tokenIn, token1Reserve, token2Reserve })
+  console.log("getTokenOutWithReserveRatio", {
+    tokenIn,
+    token1Reserve,
+    token2Reserve,
+  });
 
   try {
     const _out = _token1.div(_token2).multipliedBy(tokenIn);
@@ -347,31 +363,37 @@ export const getCachedTokens = () => {
   return JSON.parse(tokens);
 };
 
-
 export const getPbrRewardApr = (poolWeight, pbrPriceUSD, poolLiquidityUSD) => {
-
   try {
-
     if (!poolWeight || !pbrPriceUSD || !poolLiquidityUSD) {
-      return '0';
+      return "0";
     }
 
-    const yearlyPbrRewardAllocation = poolWeight ? new BigNumber(poolWeight).times(PBR_PER_YEAR) : new BigNumber(NaN);
-    const pbrRewardApr = yearlyPbrRewardAllocation.times(pbrPriceUSD).div(poolLiquidityUSD).times(100);
+    const yearlyPbrRewardAllocation = poolWeight
+      ? new BigNumber(poolWeight).times(PBR_PER_YEAR)
+      : new BigNumber(NaN);
+    console.log({
+      pbrYearly: yearlyPbrRewardAllocation.toString(),
+      poolWeight: poolWeight.toString(),
+      pbrPriceUSD,
+      poolLiquidityUSD,
+    });
+    const pbrRewardApr = yearlyPbrRewardAllocation
+      .times(pbrPriceUSD)
+      .div(poolLiquidityUSD)
+      .times(100);
 
     return pbrRewardApr.toFixed(0).toString();
-
   } catch (error) {
-    console.log('calculate apr exeption ', error);
-    return '0';
+    console.log("calculate apr exeption ", error);
+    return "0";
   }
-
-}
+};
 
 export const getLpApr = (pool) => {
-  const lpApr = farmingPoolConstants.ethereum?.[pool]?.lpApr
+  const lpApr = farmingPoolConstants.ethereum?.[pool]?.lpApr;
   return lpApr ? lpApr : 0;
-}
+};
 
 export const getNetworkNameById = (networkId) => {
   if ([56, 97].includes(parseInt(networkId))) {
