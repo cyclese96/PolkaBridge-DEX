@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core";
+import React from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,4 +64,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+export default React.memo(Footer);

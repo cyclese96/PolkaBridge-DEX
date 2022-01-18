@@ -1,10 +1,10 @@
 import { Button, makeStyles } from "@material-ui/core";
-import {
-  AccountBalanceWallet,
-} from "@material-ui/icons";
+import { AccountBalanceWallet } from "@material-ui/icons";
 import { connect } from "react-redux";
 import { connectWallet } from "../../actions/accountActions";
 import { isMetaMaskInstalled } from "../../utils/helper";
+import { useWeb3React } from "@web3-react/core";
+import React from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,25 +51,25 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Wallet = ({
-  connectWallet,
   onWalletClick,
   account: { connected, currentNetwork, currentAccount },
 }) => {
   const classes = useStyles();
+  const { active, account } = useWeb3React();
 
-  const handleConnectWallet = async () => {
-    if (!isMetaMaskInstalled()) {
-      alert("Please install MetaMask to connect!");
-      return;
-    }
-    await connectWallet(true, currentNetwork);
-  };
+  // const handleConnectWallet = async () => {
+  //   if (!isMetaMaskInstalled()) {
+  //     alert("Please install MetaMask to connect!");
+  //     return;
+  //   }
+  //   await connectWallet(true, currentNetwork);
+  // };
 
   return (
     <div>
-      {!connected ? (
+      {!active ? (
         <Button
-          onClick={handleConnectWallet}
+          onClick={onWalletClick}
           className={classes.navbarButton}
           variant="contained"
         >
@@ -82,11 +82,11 @@ const Wallet = ({
             fontSize="medium"
           />
           <strong className={classes.numbers}>
-            {currentAccount ? <span></span> : "..."}
-            {[...currentAccount.toString()].splice(0, 3)}
+            {account ? <span></span> : "..."}
+            {[...account?.toString()]?.splice(0, 3)}
             {"..."}
-            {[...currentAccount.toString()].splice(
-              [...currentAccount.toString()].length - 4,
+            {[...account?.toString()]?.splice(
+              [...account?.toString()]?.length - 4,
               4
             )}
           </strong>
@@ -100,4 +100,4 @@ const mapStateToProps = (state) => ({
   account: state.account,
 });
 
-export default connect(mapStateToProps, { connectWallet })(Wallet);
+export default connect(mapStateToProps, { connectWallet })(React.memo(Wallet));

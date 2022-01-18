@@ -2,6 +2,7 @@ import { makeStyles } from "@material-ui/core";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import BigNumber from "bignumber.js";
+import React from "react";
 
 const useStyles = makeStyles((theme) => ({
   statPercentageGreen: {
@@ -76,4 +77,4 @@ const PercentLabel = ({ percentValue, className, braces = false }) => {
   );
 };
 
-export default PercentLabel;
+export default React.memo(PercentLabel);

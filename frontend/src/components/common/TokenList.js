@@ -81,4 +81,4 @@ const TokenList = ({ handleItemSelected, tokens, disableToken }) => {
   );
 };
 
-export default TokenList;
+export default React.memo(TokenList);

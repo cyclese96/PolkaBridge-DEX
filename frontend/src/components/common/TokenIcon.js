@@ -1,4 +1,5 @@
 import { makeStyles } from "@material-ui/core";
+import React from "react";
 import { currentConnection } from "../../constants";
 import { isAddress } from "../../utils/helper";
 import tokenThumbnail from "../../utils/tokenThumbnail";
@@ -18,20 +19,25 @@ const TokenIcon = ({ symbol, styles, className, address, size }) => {
     address
   )}/logo.png`;
 
-  const _path = currentConnection === "testnet"
-    ? !symbol ? path : tokenThumbnail(symbol)
-    : path;
+  const _path =
+    currentConnection === "testnet"
+      ? !symbol
+        ? path
+        : tokenThumbnail(symbol)
+      : path;
 
   return (
     <img
       className={[ownClasses.root, className, styles].join(" ")}
       src={_path}
-      onError={(e) => { e.target.onerror = null; e.target.src = tokenThumbnail(symbol ? symbol : '') }}
-
+      onError={(e) => {
+        e.target.onerror = null;
+        e.target.src = tokenThumbnail(symbol ? symbol : "");
+      }}
       alt={""}
       style={{ height: size }}
     />
   );
 };
 
-export default TokenIcon;
+export default React.memo(TokenIcon);

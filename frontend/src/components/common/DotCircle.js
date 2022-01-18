@@ -7,8 +7,10 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 20,
   },
 }));
-export default function DotCircle() {
+const DotCircle = () => {
   const classes = useStyles();
 
   return <font className={classes.circle}>.</font>;
-}
+};
+
+export default React.memo(DotCircle);

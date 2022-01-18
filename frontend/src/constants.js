@@ -5,94 +5,93 @@ import { getTokenAddress } from "./utils/connectionUtils";
 export const tokenAddresses = {
   ethereum: {
     PBR: {
-      testnet: '0xf6c9FF0543f932178262DF8C81A12A3132129b51',
-      mainnet: '0x298d492e8c1d909D3F63Bc4A36C66c64ACB3d695'
+      testnet: "0xf6c9FF0543f932178262DF8C81A12A3132129b51",
+      mainnet: "0x298d492e8c1d909D3F63Bc4A36C66c64ACB3d695",
     },
     USDT: {
-      testnet: '0xe687b0a94c3a20540552d981cd311a6812759df8',
-      mainnet: '0xdac17f958d2ee523a2206206994597c13d831ec7'
+      testnet: "0xe687b0a94c3a20540552d981cd311a6812759df8",
+      mainnet: "0xdac17f958d2ee523a2206206994597c13d831ec7",
     },
     USDC: {
-      testnet: '0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b',
-      mainnet: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
+      testnet: "0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b",
+      mainnet: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
     },
     ETH: {
-      testnet: '0xc778417e063141139fce010982780140aa0cd5ab',
-      mainnet: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
+      testnet: "0xc778417e063141139fce010982780140aa0cd5ab",
+      mainnet: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
     },
     BITE: {
-      testnet: '0xA9Bf3904f7216B4cA2BA862Ac27b9469c030C0eA',
-      mainnet: '0x4eed0fa8de12d5a86517f214c2f11586ba2ed88d'
-    }
+      testnet: "0xA9Bf3904f7216B4cA2BA862Ac27b9469c030C0eA",
+      mainnet: "0x4eed0fa8de12d5a86517f214c2f11586ba2ed88d",
+    },
   },
   bsc: {
     PWAR: {
-      testnet: '0x16153214E683018D5aA318864c8e692b66E16778',
-      mainnet: '0x16153214E683018D5aA318864c8e692b66E16778'
+      testnet: "0x16153214E683018D5aA318864c8e692b66E16778",
+      mainnet: "0x16153214E683018D5aA318864c8e692b66E16778",
     },
     CORGIB: {
-      testnet: '0xE428Cc8A06Cdba0ad5074180f8E80ec6D4083b24',
-      mainnet: '0x1cfd6813a59d7b90c41dd5990ed99c3bf2eb8f55'
-    }
+      testnet: "0xE428Cc8A06Cdba0ad5074180f8E80ec6D4083b24",
+      mainnet: "0x1cfd6813a59d7b90c41dd5990ed99c3bf2eb8f55",
+    },
   },
   polygon: {
     //todo
   },
   harmony: {
     //
-  }
-}
+  },
+};
 
 export const routerAddresses = {
   ethereum: {
-    testnet: '0xbb8331FAAB7E6BA2Ac819262bf4A29E44f4A112B',
-    mainnet: '0x8A2795aE669476Bf119A1a40FbFD75cA71Fd35c4'
+    testnet: "0xbb8331FAAB7E6BA2Ac819262bf4A29E44f4A112B",
+    mainnet: "0x8A2795aE669476Bf119A1a40FbFD75cA71Fd35c4",
   },
   bsc: {
-    testnet: '',
-    mainnet: ''
+    testnet: "",
+    mainnet: "",
   },
   polygon: {
-    testnet: '',
-    mainnet: ''
+    testnet: "",
+    mainnet: "",
   },
   harmony: {
-    testnet: '',
-    mainnet: ''
-  }
-}
+    testnet: "",
+    mainnet: "",
+  },
+};
 
 export const factoryAddresses = {
   ethereum: {
-    testnet: '0xAeDa6b39324e658e49959d23153033c6368fB5dc',
-    mainnet: '0xeff9EcEFe14279C0157f88573Ca9361D253c10bE'
+    testnet: "0xAeDa6b39324e658e49959d23153033c6368fB5dc",
+    mainnet: "0xeff9EcEFe14279C0157f88573Ca9361D253c10bE",
   },
   bsc: {
-    testnet: '',
-    mainnet: ''
+    testnet: "",
+    mainnet: "",
   },
   polygon: {
-    testnet: '',
-    mainnet: ''
+    testnet: "",
+    mainnet: "",
   },
   harmony: {
-    testnet: '',
-    mainnet: ''
-  }
-}
+    testnet: "",
+    mainnet: "",
+  },
+};
 
 export const farmAddresses = {
   ethereum: {
-    testnet: '0x3845ED2c7C1863975603b71349AFBdF1910E136B',
-    mainnet: '0xBaF15D830ddeB6c11fFae8890d9c902D8dF1f3E7'
-  }
-}
+    testnet: "0x797620053834Ee1A6876c2143AB62D8eA69b58f4",
+    mainnet: "0xBaF15D830ddeB6c11fFae8890d9c902D8dF1f3E7",
+  },
+};
 
 export const farmContractConfig = {
   startBlock: 9829062,
-  startTimestamp: 1639730634
-}
-
+  startTimestamp: 1639730634,
+};
 
 export const ETH = "ETH";
 export const BNB = "BNB";
@@ -115,8 +114,16 @@ export const exchangeFee = 0.25;
 export const defaultSlippage = 0.5;
 export const defaultTransactionDeadline = 20; //20 minutes
 
-export const infuraKovenApi = `https://kovan.infura.io/v3/${process.env.REACT_APP_INFURA_KEY.split('').reverse().join('')}`;
-export const infuraMainnetApi = `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY.split('').reverse().join('')}`;
+export const infuraKovenApi = `https://kovan.infura.io/v3/${process.env.REACT_APP_INFURA_KEY.split(
+  ""
+)
+  .reverse()
+  .join("")}`;
+export const infuraMainnetApi = `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY.split(
+  ""
+)
+  .reverse()
+  .join("")}`;
 
 /**
  *
@@ -147,9 +154,9 @@ export const bscConfig = {
   network_rpc_testnet: "https://data-seed-prebsc-1-s1.binance.org:8545/",
 };
 
-export const supportedNetworks = ["1", "56"];
+export const supportedChains = [1, 4, 42, 56, 97];
 
-export const allowanceAmount = '9999999999999999999999999';
+export const allowanceAmount = "9999999999999999999999999";
 
 //pairs
 export const PBR_ETH = "PBR_ETH";
@@ -162,19 +169,19 @@ export const bscTokens = [
     name: "Polkawar",
     symbol: "PWAR",
     address: getTokenAddress(PWAR),
-    decimals: 18
+    decimals: 18,
   },
   {
     name: "Corgib meme coin",
     symbol: "CORGIB",
     address: getTokenAddress(CORGIB),
-    decimals: 18
+    decimals: 18,
   },
   {
     name: "Binance",
     symbol: "BNB",
     address: getTokenAddress(BNB),
-    decimals: 18
+    decimals: 18,
   },
 ];
 export const tokens = [
@@ -182,25 +189,25 @@ export const tokens = [
     name: "Polkabridge",
     symbol: "PBR",
     address: getTokenAddress(PBR),
-    decimals: 18
+    decimals: 18,
   },
   {
     name: "DragonBite",
     symbol: "BITE",
     address: getTokenAddress(BITE),
-    decimals: 18
+    decimals: 18,
   },
   {
     name: "Ethereum",
     symbol: "ETH",
     address: getTokenAddress(ETH),
-    decimals: 18
+    decimals: 18,
   },
   {
     name: "US Tether",
     symbol: "USDT",
     address: getTokenAddress(USDT),
-    decimals: 6
+    decimals: 6,
   },
   // {
   //   name: "US Tether12",
@@ -218,7 +225,7 @@ export const tokens = [
     name: "USD Coin",
     symbol: "USDC",
     address: getTokenAddress(USDC),
-    decimals: 6
+    decimals: 6,
   },
   // {
   //   name: "1INCH Token",
@@ -233,31 +240,31 @@ export const tokens = [
     name: "Dai Stablecoin",
     symbol: "DAI",
     address: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-    decimals: 18
+    decimals: 18,
   },
   {
     name: "Aave Token",
     symbol: "AAVE",
     address: "0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9",
-    decimals: 18
+    decimals: 18,
   },
   {
     name: "Amp",
     symbol: "AMP",
     address: "0xfF20817765cB7f73d4bde2e66e067E58D11095C2",
-    decimals: 18
+    decimals: 18,
   },
   {
     name: "Aragon Network Token",
     symbol: "ANT",
     address: "0xa117000000f279d81a1d3cc75430faa017fa5a2e",
-    decimals: 18
+    decimals: 18,
   },
   {
     name: "Matic Token",
     symbol: "MATIC",
     address: "0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0",
-    decimals: 18
+    decimals: 18,
   },
   {
     name: "Pax Dollar",
@@ -385,7 +392,7 @@ export const DECIMAL_6_ADDRESSES = [
   tokenAddresses.ethereum.USDC.mainnet,
   tokenAddresses.ethereum.USDT.testnet,
   tokenAddresses.ethereum.USDT.mainnet,
-]
+];
 
 export const nullAddress = "0x0000000000000000000000000000000000000000";
 
@@ -409,33 +416,32 @@ export const swapFnConstants = {
   swapTokensForExactTokens: "swapTokensForExactTokens", // case 6
 };
 
-
-export const THRESOLD_VALUE = 0.00001
-export const THRESOLD_WEI_VALUE = 100000000000000
+export const THRESOLD_VALUE = 0.00001;
+export const THRESOLD_WEI_VALUE = 100000000000000;
 
 export const supportedFarmingPools = {
-  'ethereum': ["PBR-ETH", "ETH-USDT"],
+  ethereum: ["PBR-ETH", "ETH-USDT"],
 };
 
 export const farmingPoolConstants = {
-  'ethereum': {
+  ethereum: {
     "PBR-ETH": {
       multiplier: 40,
       pid: 0,
-      address: '0x33056C64C34cD9c7E27a94C00E2cA2AE8098974a',
-      blocksPerYear: '',
+      address: "0x33056C64C34cD9c7E27a94C00E2cA2AE8098974a",
+      blocksPerYear: "",
       lpApr: 0,
-      decimals: 18
+      decimals: 18,
     },
     "ETH-USDT": {
       multiplier: 5,
       pid: 1,
-      address: '0x511De78Ed2171776b30CF268D2C6CAcd28741704',
-      blocksPerYear: '',
+      address: "0x511De78Ed2171776b30CF268D2C6CAcd28741704",
+      blocksPerYear: "",
       lpApr: 0,
-      decimals: 12
-    }
-  }
+      decimals: 12,
+    },
+  },
 };
 
 export const RINKEBY_BLOCK_TIME = 15;
@@ -443,4 +449,7 @@ export const PBR_PER_BLOCK = 0.5;
 export const BLOCKS_PER_YEAR = (60 / RINKEBY_BLOCK_TIME) * 60 * 24 * 365;
 export const PBR_PER_YEAR = PBR_PER_BLOCK * BLOCKS_PER_YEAR;
 
-export const BASE_URL = process.env.NODE_ENV && process.env.NODE_ENV === 'development' ? process.env.REACT_APP_DEVELOPMENT_URL : process.env.REACT_APP_PRODUCTION_URL;
+export const BASE_URL =
+  process.env.NODE_ENV && process.env.NODE_ENV === "development"
+    ? process.env.REACT_APP_DEVELOPMENT_URL
+    : process.env.REACT_APP_PRODUCTION_URL;

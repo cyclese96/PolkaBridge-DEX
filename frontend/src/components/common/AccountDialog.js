@@ -73,27 +73,6 @@ const useStyles = makeStyles((theme) => ({
       fontSize: 11,
     },
   },
-  inputGroup: {
-    marginTop: 40,
-  },
-
-  notchedOutline: {
-    borderWidth: "1px",
-    borderColor: "#616161 !important",
-  },
-  inputText: {
-    color: "#f8f8f8",
-  },
-  maxBtn: {
-    backgroundColor: "rgba(224, 7, 125, 0.9)",
-    height: 50,
-    borderRadius: 10,
-    marginLeft: 20,
-    color: "#f9f9f9",
-    "&:hover": {
-      background: "rgba(224, 7, 125, 0.7)",
-    },
-  },
   buttons: {
     // marginTop: 80,
     // marginBottom: 20,
@@ -113,12 +92,13 @@ const AccountDialog = ({
   open,
   handleClose,
   logout,
+  handleLogout,
   account: { currentAccount, balance, connected, currentNetwork },
 }) => {
   const classes = useStyles();
   const onSingOut = () => {
     localStorage.setItem(`logout${currentAccount}`, currentAccount);
-    logout();
+    // logout();
     handleClose();
   };
 
@@ -143,7 +123,8 @@ const AccountDialog = ({
         color="transparent"
         PaperProps={{
           style: {
-            borderRadius: 15, backgroundColor: "#121827",
+            borderRadius: 15,
+            backgroundColor: "#121827",
             color: "#f9f9f9",
           },
         }}
@@ -199,4 +180,4 @@ const mapStateToProps = (state) => ({
   account: state.account,
 });
 
-export default connect(mapStateToProps, { logout })(AccountDialog);
+export default connect(mapStateToProps, { logout })(React.memo(AccountDialog));

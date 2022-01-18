@@ -12,7 +12,6 @@ import SwapVertIcon from "@material-ui/icons/SwapVert";
 import { useState } from "react";
 import SwapSettings from "../../common/SwapSettings";
 import BigNumber from "bignumber.js";
-import CustomSnackBar from "../../common/CustomSnackbar";
 import {
     allowanceAmount,
     BNB,
@@ -755,11 +754,6 @@ const Swap = (props) => {
         <>
             <TabPage data={0} />
 
-            <CustomSnackBar
-                status={snackAlert.status}
-                message={snackAlert.message}
-                handleClose={hideSnackbar}
-            />
             <TransactionConfirm
                 open={swapDialogOpen}
                 handleClose={() => handleConfirmSwapClose(false)}

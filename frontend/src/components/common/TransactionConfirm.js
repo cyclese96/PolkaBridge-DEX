@@ -9,17 +9,13 @@ import CustomButton from "../Buttons/CustomButton";
 import { connect } from "react-redux";
 import TokenIcon from "./TokenIcon";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
-import {
-  getPercentageAmount,
-  toWei,
-} from "../../utils/helper";
+import { getPercentageAmount, toWei } from "../../utils/helper";
 import { swapTokens } from "../../actions/dexActions";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import TransactionStatus from "./TransactionStatus";
 
-import { default as NumberFormat } from 'react-number-format';
+import { default as NumberFormat } from "react-number-format";
 import BigNumber from "bignumber.js";
-
 
 const styles = (theme) => ({
   root: {
@@ -139,7 +135,6 @@ const TransactionConfirm = (props) => {
   const classes = useStyles();
 
   const onConfirmSwap = async () => {
-
     const _amount0InWei = toWei(token1Value, selectedToken0.decimals);
     const token0 = {
       amount: _amount0InWei,
@@ -192,8 +187,7 @@ const TransactionConfirm = (props) => {
             <div className={classes.tokenCard}>
               <div className="d-flex justify-content-between w-100">
                 <div>
-                  <span className={classes.subheading}> From : </span>
-                  {" "}
+                  <span className={classes.subheading}> From : </span>{" "}
                   <TokenIcon
                     symbol={selectedToken0.symbol}
                     address={selectedToken0.address}
@@ -248,8 +242,8 @@ const TransactionConfirm = (props) => {
                   displayType="text"
                   value={priceRatio}
                   decimalScale={5}
-                />
-                {" "}{selectedToken1.symbol}
+                />{" "}
+                {selectedToken1.symbol}
               </span>
             </div>
 
@@ -273,8 +267,12 @@ const TransactionConfirm = (props) => {
                     Liquidity provider fee
                   </span>
                   <span className={classes.detailValue}>
-                    <NumberFormat displayType="text" value={getPercentageAmount(token1Value, "0.2 ")} decimalScale={5} />
-                    {" "}{selectedToken0.symbol}
+                    <NumberFormat
+                      displayType="text"
+                      value={getPercentageAmount(token1Value, "0.2 ")}
+                      decimalScale={5}
+                    />{" "}
+                    {selectedToken0.symbol}
                   </span>
                 </div>
                 {/* <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
@@ -298,13 +296,11 @@ const TransactionConfirm = (props) => {
                 <div className="d-flex justify-content-between w-100 mt-1 mb-1 ">
                   <span className={classes.detailTitle}>Minimum received</span>
                   <span className={classes.detailValue}>
-
                     <NumberFormat
                       displayType="text"
                       value={token2Value}
                       decimalScale={5}
-                    />
-                    {" "}
+                    />{" "}
                     {selectedToken1.symbol}
                   </span>
                 </div>
@@ -377,4 +373,6 @@ const mapStateToProps = (state) => ({
   dex: state.dex,
 });
 
-export default connect(mapStateToProps, { swapTokens })(TransactionConfirm);
+export default connect(mapStateToProps, { swapTokens })(
+  React.memo(TransactionConfirm)
+);

@@ -1,4 +1,5 @@
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createMuiTheme } from "@mui/material/styles";
+
 export const theme = createMuiTheme({
   palette: {
     action: {

@@ -9,19 +9,18 @@ import { defaultSlippage, defaultTransactionDeadline } from "../../constants";
 import { Close, InfoRounded } from "@material-ui/icons";
 import { Button, Tooltip } from "@material-ui/core";
 
-const styles = (theme) => ({
-  root: {
-    margin: 0,
-    padding: theme.spacing(2),
-  },
-  closeButton: {
-    position: "absolute",
-    right: theme.spacing(1),
-    top: theme.spacing(1),
-    color: theme.palette.grey[500],
-  },
-});
-
+// const styles = (theme) => ({
+//   root: {
+//     margin: 0,
+//     padding: theme.spacing(2),
+//   },
+//   closeButton: {
+//     position: "absolute",
+//     right: theme.spacing(1),
+//     top: theme.spacing(1),
+//     color: theme.palette.grey[500],
+//   },
+// });
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -299,4 +298,4 @@ const mapStateToProps = (state) => ({
   dex: state.dex,
 });
 
-export default connect(mapStateToProps, {})(SwapSettings);
+export default connect(mapStateToProps, {})(React.memo(SwapSettings));

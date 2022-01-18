@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -15,7 +15,6 @@ import TouchAppOutlined from "@material-ui/icons/TouchAppOutlined";
 import CategoryIcon from "@material-ui/icons/Category";
 import SwapVertIcon from "@material-ui/icons/SwapVert";
 
-import CustomSnackBar from "./CustomSnackbar";
 import { EqualizerOutlined } from "@material-ui/icons";
 import Wallet from "./Wallet";
 import AccountDialog from "./AccountDialog";
@@ -24,6 +23,10 @@ import binanceIcon from "../../assets/binance.png";
 import { etheriumNetwork } from "../../constants";
 import DotCircle from "./DotCircle";
 import { connect } from "react-redux";
+import { useWeb3React } from "@web3-react/core";
+import connectors from "../../contracts/connections/connectors";
+import { isMetaMaskInstalled } from "../../utils/helper";
+import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -223,6 +226,53 @@ const Navbar = (props) => {
     setState({ ...state, [anchor]: open });
   };
 
+  const { active, account, activate, deactivate } = useWeb3React();
+
+  const createConnectHandler = async (connector) => {
+    try {
+      // const connector = connectors.injected;
+
+      if (
+        connector instanceof WalletConnectConnector &&
+        connector.walletConnectProvider?.wc?.uri
+      ) {
+        connector.walletConnectProvider = undefined;
+      }
+
+      await activate(connector);
+      localStorage.connected = "yes";
+    } catch (error) {
+      console.error("createConnectHandler", error);
+    }
+  };
+
+  useEffect(() => {
+    if (!active && localStorage.connected === "yes") {
+      if (isMetaMaskInstalled()) {
+        createConnectHandler(connectors.injected);
+      } else {
+        createConnectHandler(connectors.walletconnect);
+      }
+    }
+  }, [active]);
+
+  const handleLogout = () => {
+    localStorage.connected = "none";
+    deactivate();
+  };
+
+  const handleWalletClick = () => {
+    if (active) {
+      setAccountDialog(true);
+    } else {
+      if (isMetaMaskInstalled()) {
+        createConnectHandler(connectors.injected);
+      } else {
+        createConnectHandler(connectors.walletconnect);
+      }
+    }
+  };
+
   const handleClose = () => {
     showAlert({ status: false, message: "" });
   };
@@ -295,7 +345,7 @@ const Navbar = (props) => {
           </div>
         </ListItem>
         <ListItem button style={{ paddingLeft: 35 }}>
-          <Wallet onWalletClick={() => setAccountDialog(true)} />
+          <Wallet onWalletClick={handleWalletClick} />
         </ListItem>
       </List>
     </div>
@@ -303,13 +353,9 @@ const Navbar = (props) => {
 
   return (
     <div className={classes.grow}>
-      <CustomSnackBar
-        handleClose={handleClose}
-        status={alertObject.status}
-        message={alertObject.message}
-      />
       <AccountDialog
         open={accountDialog}
+        handleLogout={handleLogout}
         handleClose={() => setAccountDialog(false)}
       />
       <AppBar
@@ -399,7 +445,7 @@ const Navbar = (props) => {
               {currentNetwork === etheriumNetwork ? "Ethereum" : "BSC"}
             </span>
           </div>
-          <Wallet onWalletClick={() => setAccountDialog(true)} />
+          <Wallet onWalletClick={handleWalletClick} />
         </Toolbar>
 
         <Toolbar className={classes.sectionMobile}>
@@ -453,4 +499,4 @@ const Navbar = (props) => {
 const mapStateToProps = (state) => ({
   account: state.account,
 });
-export default connect(mapStateToProps, {})(Navbar);
+export default connect(mapStateToProps, {})(React.memo(Navbar));
