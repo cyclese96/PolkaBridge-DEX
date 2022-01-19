@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
   appBarBackground: {
     boxShadow: "none",
-    backgroundColor: "#eef3fa",
+
     borderBottom: "1px solid #e5e5e5",
   },
   menuButton: {
