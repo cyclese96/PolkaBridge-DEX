@@ -59,7 +59,8 @@ const useStyles = makeStyles((theme) => ({
   card: {
     width: 500,
     borderRadius: 30,
-    background: `linear-gradient(to bottom,#ffffff,#ffffff)`,
+    boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+    background: "#ffffff",
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 15,
@@ -652,7 +653,7 @@ const SwapCard = (props) => {
         priceImpact={priceImpact}
       />
       <SwapSettings open={settingOpen} handleClose={close} />
-      <Card elevation={10} className={classes.card}>
+      <Card className={classes.card}>
         <div className={classes.cardContents}>
           <div className={classes.cardHeading}>
             <div className={classes.swapHeading}>Swap </div>

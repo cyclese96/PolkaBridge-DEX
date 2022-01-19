@@ -11,8 +11,8 @@ const useStyles = makeStyles((theme) => ({
   token: {
     display: "flex",
     alignItems: "center",
-    backgroundColor: "transparent",
-    border: "0.5px solid #919191",
+    backgroundColor: "#eeeeee",
+
     borderRadius: 12,
     paddingLeft: 8,
     paddingRight: 0,
@@ -60,12 +60,13 @@ const useStyles = makeStyles((theme) => ({
     color: "#000000",
     marginLeft: 5,
     fontSize: 15,
+    fontWeight: 400,
     [theme.breakpoints.down("sm")]: {
       fontSize: 12,
     },
   },
   dropIcon: {
-    color: "#e5e5e5",
+    color: "#bdbdbd",
   },
 }));
 
