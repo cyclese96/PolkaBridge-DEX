@@ -78,6 +78,9 @@ contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
         uint256 indexed pid,
         uint256 amount
     );
+    event LogPoolAddition(uint256 indexed pid, uint256 allocPoint, IERC20 indexed lpToken, bool withUpdate);
+    event LogSetPool(uint256 indexed pid, uint256 allocPoint, bool withUpdate);
+    event LogUpdatePool(uint256 indexed pid, uint256 lastRewardBlock, uint256 lpSupply, uint256 accPBRPerShare);
 
     constructor(
         address _polkaBridge,
@@ -114,6 +117,7 @@ contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
                 accPBRPerShare: 0
             })
         );
+        emit LogPoolAddition(poolInfo.length.sub(1), _allocPoint, _lpToken, _withUpdate);
     }
 
     // Update the given pool's PBR allocation point. Can only be called by the owner.
@@ -122,13 +126,16 @@ contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
         uint256 _allocPoint,
         bool _withUpdate
     ) public onlyOwner {
-        if (_withUpdate) {
+        if(_withUpdate) {
             massUpdatePools();
+        } else {
+            updatePool(_pid);
         }
         totalAllocPoint = totalAllocPoint.sub(poolInfo[_pid].allocPoint).add(
             _allocPoint
         );
         poolInfo[_pid].allocPoint = _allocPoint;
+        emit LogSetPool(_pid, _allocPoint, _withUpdate);
     }
 
     // Set the migrator contract. Can only be called by the owner.
@@ -206,6 +213,7 @@ contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
             PBRReward.mul(1e18).div(lpSupply)
         );
         pool.lastRewardBlock = block.number;
+        emit LogUpdatePool(_pid, pool.lastRewardBlock, lpSupply, pool.accPBRPerShare);
     }
 
     // Deposit LP tokens to PolkaBridgeFarm for PBR allocation.
