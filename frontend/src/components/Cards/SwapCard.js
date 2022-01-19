@@ -94,7 +94,7 @@ const useStyles = makeStyles((theme) => ({
     color: "#000000",
   },
   settingIcon: {
-    color: "#0000000",
+    color: "#757575",
     fontSize: 22,
     cursor: "pointer",
     transition: "all 0.4s ease",
@@ -106,6 +106,7 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
     padding: 2,
     backgroundColor: "#eef3fa",
+    borderRadius: 7,
   },
   swapIcon: {
     color: "#000000",
@@ -163,6 +164,11 @@ const useStyles = makeStyles((theme) => ({
   },
   resetIcon: {
     cursor: "pointer",
+  },
+  swapHeading: {
+    fontSize: 16,
+    fontWeight: 500,
+    paddingBottom: 15,
   },
 }));
 
@@ -649,14 +655,14 @@ const SwapCard = (props) => {
       <Card elevation={10} className={classes.card}>
         <div className={classes.cardContents}>
           <div className={classes.cardHeading}>
-            <p style={{ color: "black" }}>Swap </p>
-            <IconButton className={classes.iconButton}>
+            <div className={classes.swapHeading}>Swap </div>
+            <div className={classes.iconButton}>
               <Settings
                 fontSize="default"
                 onClick={handleSettings}
                 className={classes.settingIcon}
               />
-            </IconButton>
+            </div>
           </div>
 
           <SwapCardItem

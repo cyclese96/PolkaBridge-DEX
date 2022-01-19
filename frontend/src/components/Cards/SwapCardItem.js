@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme) => ({
     width: 440,
     height: 100,
     background: "white",
-    border: "0.5px solid #e5e5e5",
+    border: "0.5px solid rgba(224, 224, 224,0.6)",
 
     borderRadius: 15,
     [theme.breakpoints.down("sm")]: {
@@ -31,8 +31,10 @@ const useStyles = makeStyles((theme) => ({
   },
   labelFont: {
     fontSize: 14,
-    color: "#757575",
+    color: "rgba(86, 90, 105,0.8)",
     fontWeight: 500,
+    fontFamily: "Roboto",
+
     [theme.breakpoints.down("sm")]: {
       fontSize: 13,
     },
@@ -44,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
   },
   inputRow: {
     padding: 0,
-
+    color: "#212121",
     display: "flex",
     width: "95%",
     alignItems: "center",
@@ -56,8 +58,9 @@ const useStyles = makeStyles((theme) => ({
   input: {
     backgroundColor: "transparent",
     borderColor: "transparent",
-    fontSize: 22,
-    color: "white",
+    fontSize: 23,
+    fontWeight: 600,
+    color: "#454545",
     maxWidth: 200,
     outline: "none",
     [theme.breakpoints.down("sm")]: {
@@ -86,10 +89,20 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 2,
   },
   maxButton: {
-    color: "#E0077D",
+    color: "#0000000",
     cursor: "pointer",
+    background: "rgba(224, 1, 125, 0.1)",
+    borderRadius: 10,
+    paddingTop: 3,
+    paddingBottom: 3,
+    paddingLeft: 6,
+    paddingRight: 6,
     marginLeft: 2,
     marginRight: 4,
+    fontSize: 14,
+    "&:hover": {
+      background: "rgba(224, 1, 125, 0.2)",
+    },
     [theme.breakpoints.down("sm")]: {
       fontSize: 13,
     },
@@ -142,10 +155,11 @@ const SwapCardItem = (props) => {
               value={inputValue}
               placeholder="0.0"
             />
-
-            <span className={classes.maxButton} onClick={handleMax}>
-              Max
-            </span>
+            {inputType === "from" && (
+              <span className={classes.maxButton} onClick={handleMax}>
+                MAX
+              </span>
+            )}
 
             <SelectToken
               selectedToken={currentToken}

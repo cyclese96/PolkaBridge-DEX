@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     height: 35,
     cursor: "pointer",
     "&:hover": {
-      background: "rgba(255, 255, 255, 0.1)",
+      background: "rgba(224, 1, 125, 0.7)",
     },
   },
   tokenIcon: {

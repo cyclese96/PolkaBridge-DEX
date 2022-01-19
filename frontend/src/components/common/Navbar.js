@@ -35,7 +35,6 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "none",
     backgroundColor: "#eef3fa",
     borderBottom: "1px solid #e5e5e5",
-    paddingBottom: 10,
   },
   menuButton: {
     textTransform: "none",
@@ -52,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
   sectionDesktop: {
     marginLeft: 50,
     marginRight: 50,
+    height: 65,
     [theme.breakpoints.down("md")]: {
       marginLeft: 5,
       marginRight: 5,
@@ -105,12 +105,15 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 16,
   },
   navbarItemsDesktop: {
-    paddingTop: 15,
-    height: 35,
-    marginLeft: 18,
-    marginRight: 18,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: 7,
+    height: "100%",
+    marginLeft: 15,
+    marginRight: 15,
     textTransform: "none",
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 500,
     // color: "#8247e5",
     color: "#212121",
@@ -124,7 +127,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#f9f9f9",
     color: "#C80C81",
     borderRadius: 10,
-    height: 35,
+    height: "100%",
     marginRight: 40,
     padding: 20,
     fontSize: 14,
@@ -165,21 +168,25 @@ const useStyles = makeStyles((theme) => ({
   },
   network: {
     display: "flex",
-    marginRight: 30,
+    justifyContent: "space-between",
     alignItems: "center",
-    border: "5px solid rgb(237, 238, 242)",
+    background: "#ffffff",
     borderRadius: 15,
-    padding: 4,
-    paddingLeft: 10,
-    paddingRight: 10,
-    // cursor: "pointer",
+    padding: 6,
+    paddingLeft: 15,
+    paddingRight: 15,
+    fontSize: 14,
+    fontWeight: 700,
+    cursor: "pointer",
+    marginRight: 20,
+
     "&:hover": {
-      background: "rgba(255, 255, 255, 0.1)",
+      background: "rgba(224, 208, 217,1)",
     },
   },
   networkIcon: {
     width: "auto",
-    height: 25,
+    height: 20,
     fontSize: 25,
   },
   menuIcon: {
@@ -297,11 +304,7 @@ const Navbar = ({ currentNetwork }) => {
         className={classes.appBarBackground}
       >
         <Toolbar className={classes.sectionDesktop}>
-          <Avatar
-            variant="square"
-            src="https://polkabridge.org/logo.png"
-            style={{ height: 38, width: 150 }}
-          />
+          <img src="https://polkabridge.org/logo.png" style={{ height: 44 }} />
 
           <a href="/" className={classes.navbarItemsDesktop}>
             Staking
@@ -324,7 +327,11 @@ const Navbar = ({ currentNetwork }) => {
             Launchpad
           </a>
 
-          <a href="#" className={classes.navbarItemsDesktop}>
+          <a
+            href="#"
+            className={classes.navbarItemsDesktop}
+            style={{ fontWeight: 700 }}
+          >
             Swap
           </a>
 

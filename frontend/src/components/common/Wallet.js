@@ -5,18 +5,18 @@ import { connectWallet } from "../../actions/accountActions";
 import { isMetaMaskInstalled } from "../../utils/helper";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  walletConnected: {
     display: "flex",
+    justifyContent: "space-between",
     alignItems: "center",
-    border: "5px solid rgb(237, 238, 242)",
-
+    background: "#ffffff",
     borderRadius: 15,
-    padding: 2,
-    paddingLeft: 10,
-    paddingRight: 10,
+    padding: 6,
+    paddingLeft: 15,
+    paddingRight: 15,
     cursor: "pointer",
     "&:hover": {
-      background: "rgba(255, 255, 255, 0.1)",
+      background: "rgba(224, 208, 217,1)",
     },
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 30,
@@ -46,9 +46,9 @@ const useStyles = makeStyles((theme) => ({
       width: 150,
     },
   },
-  numbers: {
-    color: "#E0077D",
-    fontSize: 12,
+  account: {
+    color: "#000000",
+    fontSize: 15,
   },
 }));
 
@@ -74,14 +74,22 @@ const Wallet = ({
           Unlock Wallet
         </Button>
       ) : (
-        <a onClick={onWalletClick} className={classes.root}>
-          <strong className={classes.numbers}>
-            {currentAccount ? currentAccount.toString().slice(0, 6) : "."}..
+        <div onClick={onWalletClick} className={classes.walletConnected}>
+          <strong className={classes.account}>
+            {currentAccount ? (
+              <span>
+                {currentAccount.toString().slice(0, 4)} ...
+                {currentAccount.substr(currentAccount.length - 6)}
+              </span>
+            ) : (
+              "."
+            )}
           </strong>
-          <AccountBalanceWalletOutlined
-            style={{ color: "#bdbdbd", fontSize: 30 }}
+          <img
+            src="https://cdn-icons.flaticon.com/png/512/4825/premium/4825181.png?token=exp=1642571217~hmac=da1764858b8fd01e78e25568a85228a5"
+            style={{ height: 26, padding: 4, marginTop: -2 }}
           />
-        </a>
+        </div>
       )}
     </div>
   );
