@@ -5,7 +5,6 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 // import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./ReentrancyGuard.sol";
 
@@ -30,7 +29,6 @@ interface IMigratorChef {
 //
 // Have fun reading it. Hopefully it's bug-free. God bless.
 contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
-    using SafeMath for uint256;
     using SafeERC20 for IERC20;
     // Info of each user.
     struct UserInfo {
@@ -81,6 +79,7 @@ contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
     event LogPoolAddition(uint256 indexed pid, uint256 allocPoint, IERC20 indexed lpToken, bool withUpdate);
     event LogSetPool(uint256 indexed pid, uint256 allocPoint, bool withUpdate);
     event LogUpdatePool(uint256 indexed pid, uint256 lastRewardBlock, uint256 lpSupply, uint256 accPBRPerShare);
+    event LogSetMigrator(IMigratorChef indexed migrator);
 
     constructor(
         address _polkaBridge,
@@ -102,13 +101,13 @@ contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
         uint256 _allocPoint,
         IERC20 _lpToken,
         bool _withUpdate
-    ) public onlyOwner {
+    ) external onlyOwner {
         if (_withUpdate) {
             massUpdatePools();
         }
         uint256 lastRewardBlock =
             block.number > startBlock ? block.number : startBlock;
-        totalAllocPoint = totalAllocPoint.add(_allocPoint);
+        totalAllocPoint = totalAllocPoint + _allocPoint;
         poolInfo.push(
             PoolInfo({
                 lpToken: _lpToken,
@@ -117,7 +116,7 @@ contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
                 accPBRPerShare: 0
             })
         );
-        emit LogPoolAddition(poolInfo.length.sub(1), _allocPoint, _lpToken, _withUpdate);
+        emit LogPoolAddition(poolInfo.length - 1, _allocPoint, _lpToken, _withUpdate);
     }
 
     // Update the given pool's PBR allocation point. Can only be called by the owner.
@@ -125,26 +124,25 @@ contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
         uint256 _pid,
         uint256 _allocPoint,
         bool _withUpdate
-    ) public onlyOwner {
+    ) external onlyOwner {
         if(_withUpdate) {
             massUpdatePools();
         } else {
             updatePool(_pid);
         }
-        totalAllocPoint = totalAllocPoint.sub(poolInfo[_pid].allocPoint).add(
-            _allocPoint
-        );
+        totalAllocPoint = totalAllocPoint - poolInfo[_pid].allocPoint + _allocPoint;
         poolInfo[_pid].allocPoint = _allocPoint;
         emit LogSetPool(_pid, _allocPoint, _withUpdate);
     }
 
     // Set the migrator contract. Can only be called by the owner.
-    function setMigrator(IMigratorChef _migrator) public onlyOwner {
+    function setMigrator(IMigratorChef _migrator) external onlyOwner {
         migrator = _migrator;
+        emit LogSetMigrator(_migrator);
     }
 
     // Migrate lp token to another lp contract. Can be called by anyone. We trust that migrator contract is good.
-    function migrate(uint256 _pid) public {
+    function migrate(uint256 _pid) external {
         require(address(migrator) != address(0), "migrate: no migrator");
         PoolInfo storage pool = poolInfo[_pid];
         IERC20 lpToken = pool.lpToken;
@@ -157,7 +155,7 @@ contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
 
     // Return reward multiplier over the given _from to _to block.
     function getMultiplier(uint256 _from, uint256 _to) public pure returns (uint256) {        
-        return _to.sub(_from).mul(BONUS_MULTIPLIER);
+        return _to - _from * BONUS_MULTIPLIER;
     }
 
     // View function to see pending PBRs on frontend.
@@ -174,15 +172,10 @@ contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
         if (block.number > pool.lastRewardBlock && lpSupply != 0) {
             uint256 multiplier =
                 getMultiplier(pool.lastRewardBlock, block.number);
-            uint256 PBRReward =
-                multiplier.mul(PBRPerBlock).mul(pool.allocPoint).div(
-                    totalAllocPoint
-                );
-            accPBRPerShare = accPBRPerShare.add(
-                PBRReward.mul(1e18).div(lpSupply)
-            );
+            uint256 PBRReward = multiplier * PBRPerBlock * pool.allocPoint / totalAllocPoint;
+            accPBRPerShare = accPBRPerShare + PBRReward * 1e18 / lpSupply;
         }
-        return user.amount.mul(accPBRPerShare).div(1e18).sub(user.rewardDebt);
+        return user.amount * accPBRPerShare / 1e18 - user.rewardDebt;
     }
 
     // Update reward vairables for all pools. Be careful of gas spending!
@@ -205,27 +198,19 @@ contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
             return;
         }
         uint256 multiplier = getMultiplier(pool.lastRewardBlock, block.number);
-        uint256 PBRReward =
-            multiplier.mul(PBRPerBlock).mul(pool.allocPoint).div(
-                totalAllocPoint
-            );
-        pool.accPBRPerShare = pool.accPBRPerShare.add(
-            PBRReward.mul(1e18).div(lpSupply)
-        );
+        uint256 PBRReward = multiplier * PBRPerBlock * pool.allocPoint / totalAllocPoint;
+        pool.accPBRPerShare = pool.accPBRPerShare + PBRReward * 1e18 / lpSupply;
         pool.lastRewardBlock = block.number;
         emit LogUpdatePool(_pid, pool.lastRewardBlock, lpSupply, pool.accPBRPerShare);
     }
 
     // Deposit LP tokens to PolkaBridgeFarm for PBR allocation.
-    function deposit(uint256 _pid, uint256 _amount) public nonReentrant {
+    function deposit(uint256 _pid, uint256 _amount) external nonReentrant {
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
         updatePool(_pid);
         if (user.amount > 0) {
-            uint256 pending =
-                user.amount.mul(pool.accPBRPerShare).div(1e18).sub(
-                    user.rewardDebt
-                );
+            uint256 pending = user.amount * pool.accPBRPerShare / 1e18 - user.rewardDebt;
             IERC20(polkaBridge).safeTransfer(msg.sender, pending);
         }
         pool.lpToken.safeTransferFrom(
@@ -233,30 +218,27 @@ contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
             address(this),
             _amount
         );
-        user.amount = user.amount.add(_amount);
-        user.rewardDebt = user.amount.mul(pool.accPBRPerShare).div(1e18);
+        user.amount = user.amount + _amount;
+        user.rewardDebt = user.amount * pool.accPBRPerShare / 1e18;
         emit Deposit(msg.sender, _pid, _amount);
     }
 
     // Withdraw LP tokens from PolkaBridgeFarm.
-    function withdraw(uint256 _pid, uint256 _amount) public nonReentrant {
+    function withdraw(uint256 _pid, uint256 _amount) external nonReentrant {
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
         require(user.amount >= _amount, "withdraw: not good");
         updatePool(_pid);
-        uint256 pending =
-            user.amount.mul(pool.accPBRPerShare).div(1e18).sub(
-                user.rewardDebt
-            );
+        uint256 pending = user.amount * pool.accPBRPerShare / 1e18 - user.rewardDebt;
         IERC20(polkaBridge).safeTransfer(msg.sender, pending);
-        user.amount = user.amount.sub(_amount);
-        user.rewardDebt = user.amount.mul(pool.accPBRPerShare).div(1e18);
+        user.amount = user.amount - _amount;
+        user.rewardDebt = user.amount * pool.accPBRPerShare / 1e18;
         pool.lpToken.safeTransfer(address(msg.sender), _amount);
         emit Withdraw(msg.sender, _pid, _amount);
     }
 
     // Withdraw without caring about rewards. EMERGENCY ONLY.
-    function emergencyWithdraw(uint256 _pid) public {
+    function emergencyWithdraw(uint256 _pid) external {
         PoolInfo storage pool = poolInfo[_pid];
         UserInfo storage user = userInfo[_pid][msg.sender];
         pool.lpToken.safeTransfer(address(msg.sender), user.amount);

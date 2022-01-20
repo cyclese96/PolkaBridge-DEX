@@ -163,7 +163,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         uint256 amountETHMin,
         address to,
         uint256 deadline
-    ) public virtual override ensure(deadline) returns (uint256 amountToken, uint256 amountETH) {
+    ) external virtual override ensure(deadline) returns (uint256 amountToken, uint256 amountETH) {
         (amountToken, amountETH) = removeLiquidity(
             token,
             WETH,
@@ -524,7 +524,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         uint256 amountA,
         uint256 reserveA,
         uint256 reserveB
-    ) public pure virtual override returns (uint256 amountB) {
+    ) external pure virtual override returns (uint256 amountB) {
         return UniswapV2Library.quote(amountA, reserveA, reserveB);
     }
 
@@ -532,7 +532,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         uint256 amountIn,
         uint256 reserveIn,
         uint256 reserveOut
-    ) public pure virtual override returns (uint256 amountOut) {
+    ) external pure virtual override returns (uint256 amountOut) {
         return UniswapV2Library.getAmountOut(amountIn, reserveIn, reserveOut);
     }
 
@@ -540,12 +540,12 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
         uint256 amountOut,
         uint256 reserveIn,
         uint256 reserveOut
-    ) public pure virtual override returns (uint256 amountIn) {
+    ) external pure virtual override returns (uint256 amountIn) {
         return UniswapV2Library.getAmountIn(amountOut, reserveIn, reserveOut);
     }
 
     function getAmountsOut(uint256 amountIn, address[] memory path)
-        public
+        external
         view
         virtual
         override
@@ -555,7 +555,7 @@ contract UniswapV2Router02 is IUniswapV2Router02 {
     }
 
     function getAmountsIn(uint256 amountOut, address[] memory path)
-        public
+        external
         view
         virtual
         override
