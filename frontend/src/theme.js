@@ -35,9 +35,11 @@ export const theme = createMuiTheme({
       textDark: "#e5e5e5",
     },
     primary: {
-      pbr: "rgba(89, 210, 188, 1)",
+      pbr: "#E32687",
       iconBack: "rgb(237, 238, 242)",
       iconColor: "#212121",
+      appLink: "#212121",
+      buttonText: "#ffffff",
       light: "rgba(89, 210, 188, 1)",
       main: "#674293",
     },
