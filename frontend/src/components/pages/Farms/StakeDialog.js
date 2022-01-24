@@ -372,7 +372,7 @@ const StakeDialog = ({
       <div>
         {transaction.type !== null && (
           <div>
-            <TransactionStatus onClose={handleClose} />
+            <TransactionStatus onClose={closeAction} />
           </div>
         )}
       </div>

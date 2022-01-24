@@ -83,7 +83,7 @@ export const factoryAddresses = {
 
 export const farmAddresses = {
   ethereum: {
-    testnet: "0x797620053834Ee1A6876c2143AB62D8eA69b58f4",
+    testnet: "0xf49c7F516314d84a4c9e02EB2711Da6a6f56f0D1",
     mainnet: "0xBaF15D830ddeB6c11fFae8890d9c902D8dF1f3E7",
   },
 };
