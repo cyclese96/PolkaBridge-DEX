@@ -39,6 +39,7 @@ export const theme = createMuiTheme({
       iconBack: "rgb(237, 238, 242)",
       iconColor: "#212121",
       appLink: "#212121",
+      bgCard: "#ffffff",
       buttonText: "#ffffff",
       light: "rgba(89, 210, 188, 1)",
       main: "#674293",

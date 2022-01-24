@@ -106,7 +106,7 @@ const useStyles = makeStyles((theme) => ({
   },
   navbarItemsDesktop: {
     paddingRight: 10,
-    fontWeight: 600,
+    fontWeight: 500,
     lineHeight: "24px",
     verticalAlign: "baseline",
     letterSpacing: "-1px",

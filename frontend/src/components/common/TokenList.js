@@ -15,8 +15,11 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: 380,
   },
   tokenIcon: {
-    height: 30,
+    height: 40,
+    width: 40,
+    padding: 5,
     borderRadius: "50%",
+    backgroundColor: theme.palette.primary.iconBack,
     [theme.breakpoints.down("sm")]: {
       height: 32,
     },
@@ -24,14 +27,14 @@ const useStyles = makeStyles((theme) => ({
   tokenTitle: {
     padding: 0,
     margin: 0,
-    color: "white",
+    color: theme.palette.primary.iconColor,
     fontSize: 15,
     [theme.breakpoints.down("sm")]: {
       fontSize: 15,
     },
   },
   tokenSubtitle: {
-    color: "rgba(255, 255, 255, 0.7)",
+    color: theme.palette.primary.iconColor,
     fontWeight: 300,
     fontSize: 12,
     [theme.breakpoints.down("sm")]: {

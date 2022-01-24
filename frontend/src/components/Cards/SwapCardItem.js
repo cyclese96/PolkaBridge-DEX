@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
     border: "0.5px solid rgba(224, 224, 224,0.6)",
 
     borderRadius: 15,
+    paddingBottom: 0,
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 0,
       paddingRight: 0,
@@ -29,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-evenly",
 
     padding: 10,
+    paddingBottom: 0,
     [theme.breakpoints.down("sm")]: {
       padding: 5,
     },
@@ -36,13 +38,14 @@ const useStyles = makeStyles((theme) => ({
   labelFont: {
     fontSize: 14,
     color: theme.palette.textColors.subheading,
+
     [theme.breakpoints.down("sm")]: {
       fontSize: 14,
     },
   },
   hintLabelFont: {
-    fontSize: 14,
-    color: "#a0a0a0",
+    fontSize: 11,
+    color: theme.palette.textColors.light,
     [theme.breakpoints.down("sm")]: {
       fontSize: 14,
     },
@@ -54,9 +57,10 @@ const useStyles = makeStyles((theme) => ({
   },
   inputRow: {
     padding: 0,
-
-    display: "flex",
     width: "95%",
+    display: "flex",
+
+    paddingBottom: 0,
     alignItems: "center",
     justifyContent: "space-between",
     [theme.breakpoints.down("sm")]: {
@@ -68,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "transparent",
     borderColor: "transparent",
     fontSize: 22,
-    color: "white",
+    color: theme.palette.textColors.heading,
     maxWidth: 200,
     outline: "none",
     [theme.breakpoints.down("sm")]: {
