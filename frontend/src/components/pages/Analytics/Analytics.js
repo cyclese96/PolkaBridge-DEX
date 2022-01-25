@@ -40,7 +40,7 @@ const Analytics = () => {
 
   return (
     <div>
-      <div className="mb-3">
+      <div className="mb-3 d-flex justify-content-center">
         <TabPage data={3} />
       </div>
       {/* <h3 className={classes.heading}>PolkaBridge DEX Overview</h3> */}
@@ -93,8 +93,8 @@ const Analytics = () => {
                         !globalData
                           ? "0"
                           : isNaN(globalData.oneDayVolumeUSD)
-                            ? globalData.totalVolumeUSD
-                            : globalData.oneDayVolumeUSD
+                          ? globalData.totalVolumeUSD
+                          : globalData.oneDayVolumeUSD
                       )}
                   </p>
                   <p
@@ -198,9 +198,9 @@ const Analytics = () => {
               paddingLeft: 2,
               fontWeight: 500,
               letterSpacing: 0.7,
-              cursor: 'pointer',
+              cursor: "pointer",
               minWidth: 100,
-              textAlign: 'right'
+              textAlign: "right",
             }}
           >
             <Link to="charts/tokens">View All</Link>
@@ -224,9 +224,9 @@ const Analytics = () => {
               paddingLeft: 2,
               fontWeight: 500,
               letterSpacing: 0.7,
-              cursor: 'pointer',
+              cursor: "pointer",
               minWidth: 100,
-              textAlign: 'right'
+              textAlign: "right",
             }}
           >
             <Link to="charts/pools">View All</Link>
