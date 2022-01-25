@@ -10,8 +10,9 @@ import React from "react";
 const useStyles = makeStyles((theme) => ({
   card: {
     width: 440,
-    height: 100,
-    background: "white",
+    height: "100%",
+    minHeight: 100,
+    backgroundColor: theme.palette.primary.bgCard,
     border: "0.5px solid rgba(224, 224, 224,0.6)",
 
     borderRadius: 15,
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
   labelFont: {
     fontSize: 14,
-    color: theme.palette.textColors.subheading,
+    color: theme.palette.textColors.heading,
 
     [theme.breakpoints.down("sm")]: {
       fontSize: 14,
@@ -71,9 +72,10 @@ const useStyles = makeStyles((theme) => ({
   input: {
     backgroundColor: "transparent",
     borderColor: "transparent",
-    fontSize: 22,
+    fontSize: 20,
+    fontWeight: 500,
     color: theme.palette.textColors.heading,
-    maxWidth: 200,
+    maxWidth: 150,
     outline: "none",
     [theme.breakpoints.down("sm")]: {
       maxWidth: 150,
@@ -81,9 +83,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   maxButton: {
-    color: "#0000000",
+    color: theme.palette.textColors.pbr,
     cursor: "pointer",
-    background: "rgba(224, 1, 125, 0.1)",
+
     borderRadius: 10,
     paddingTop: 3,
     paddingBottom: 3,
@@ -91,7 +93,7 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: 6,
     marginLeft: 2,
     marginRight: 4,
-    fontSize: 14,
+    fontSize: 13,
     "&:hover": {
       background: "rgba(224, 1, 125, 0.2)",
     },
@@ -145,7 +147,7 @@ const SwapCardItem = (props) => {
           <div className={classes.labelRow}>
             {inputType ? (
               <p className={classes.labelFont} hidden={inputType === null}>
-                {inputType === "from" ? "From:" : "To:"}
+                {inputType === "from" ? "From:" : "To (estimate):"}
               </p>
             ) : (
               ""

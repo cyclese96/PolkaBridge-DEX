@@ -17,9 +17,9 @@ const useStyles = makeStyles((theme) => ({
   tokenIcon: {
     height: 40,
     width: 40,
-    padding: 5,
+    padding: 3,
     borderRadius: "50%",
-    backgroundColor: theme.palette.primary.iconBack,
+    backgroundColor: theme.palette.primary.tokenBack,
     [theme.breakpoints.down("sm")]: {
       height: 32,
     },
@@ -27,15 +27,15 @@ const useStyles = makeStyles((theme) => ({
   tokenTitle: {
     padding: 0,
     margin: 0,
-    color: theme.palette.primary.iconColor,
+    color: theme.palette.textColors.heading,
     fontSize: 15,
     [theme.breakpoints.down("sm")]: {
       fontSize: 15,
     },
   },
   tokenSubtitle: {
-    color: theme.palette.primary.iconColor,
-    fontWeight: 300,
+    color: theme.palette.textColors.subheading,
+    fontWeight: 400,
     fontSize: 12,
     [theme.breakpoints.down("sm")]: {
       fontSize: 12,

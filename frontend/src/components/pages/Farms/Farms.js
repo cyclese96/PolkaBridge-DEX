@@ -11,13 +11,13 @@ import { START_TRANSACTION } from "../../../actions/types";
 const useStyles = makeStyles((theme) => ({
   title: {
     textAlign: "center",
-    color: "#bdbdbd",
+    color: theme.palette.textColors.heading,
     fontSize: 36,
     fontWeight: 600,
   },
   subTitle: {
     textAlign: "center",
-    color: "#bdbdbd",
+    color: theme.palette.textColors.subheading,
     fontSize: 24,
     fontWeight: 600,
     [theme.breakpoints.down("md")]: {
@@ -31,7 +31,7 @@ const Farms = (props) => {
   const {
     account: { currentNetwork },
     dex: { transaction },
-    farm: { },
+    farm: {},
   } = props;
 
   const classes = useStyles();
