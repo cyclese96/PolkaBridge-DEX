@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
     width: 500,
     borderRadius: 30,
     boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
-    background: "#ffffff",
+    backgroundColor: theme.palette.primary.bgCard,
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 15,
@@ -168,6 +168,8 @@ const useStyles = makeStyles((theme) => ({
   heading: {
     color: theme.palette.textColors.heading,
     letterSpacing: -0.7,
+    fontSize: 18,
+    fontWeight: 500,
   },
 }));
 

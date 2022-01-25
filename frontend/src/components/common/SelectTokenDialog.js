@@ -201,11 +201,7 @@ const SelectTokenDialog = ({
           }}
         />
         <div className={classes.buttons}>
-          <Button
-            variant="contained"
-            onClick={onClose}
-            className={classes.cancelButton}
-          >
+          <Button onClick={onClose} className={classes.cancelButton}>
             Cancel
           </Button>
         </div>

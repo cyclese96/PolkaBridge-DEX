@@ -12,8 +12,8 @@ const useStyles = makeStyles((theme) => ({
   token: {
     display: "flex",
     alignItems: "center",
-    backgroundColor: "#eeeeee",
-    borderRadius: 12,
+    backgroundColor: theme.palette.primary.iconBack,
+    borderRadius: 20,
     paddingLeft: 8,
     paddingRight: 0,
     paddingTop: 2,

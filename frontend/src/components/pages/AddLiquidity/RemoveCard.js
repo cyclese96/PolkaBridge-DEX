@@ -12,7 +12,12 @@ import etherImg from "../../../assets/ether.png";
 import bnbImg from "../../../assets/binance.png";
 import CustomButton from "../../Buttons/CustomButton";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
-import { allowanceAmount, ETH, etheriumNetwork, tokens } from "../../../constants";
+import {
+  allowanceAmount,
+  ETH,
+  etheriumNetwork,
+  tokens,
+} from "../../../constants";
 import {
   fromWei,
   getPercentAmountWithFloor,
@@ -26,7 +31,7 @@ import {
   loadPairAddress,
   removeLiquidity,
 } from "../../../actions/dexActions";
-import { getAccountBalance } from '../../../actions/accountActions'
+import { getAccountBalance } from "../../../actions/accountActions";
 import pwarImg from "../../../assets/pwar.png";
 import SelectToken from "../../common/SelectToken";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
@@ -43,7 +48,8 @@ const useStyles = makeStyles((theme) => ({
   card: {
     width: 500,
     borderRadius: 15,
-    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+    backgroundColor: theme.palette.primary.bgCard,
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 15,
@@ -76,7 +82,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   settingIcon: {
-    color: "#f6f6f6",
+    color: theme.palette.primary.iconColor,
     fontSize: 22,
     cursor: "pointer",
     [theme.breakpoints.down("sm")]: {
@@ -87,7 +93,7 @@ const useStyles = makeStyles((theme) => ({
     width: 150,
   },
   clearButton: {
-    color: "#E0077D",
+    color: theme.palette.textColors.pbr,
     cursor: "pointer",
     fontSize: 16,
     [theme.breakpoints.down("sm")]: {
@@ -101,7 +107,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "start",
     width: "95%",
 
-    border: "1px solid #414141",
+    border: "0.5px solid rgba(224, 224, 224,0.6)",
     borderRadius: 15,
     padding: 7,
   },
@@ -112,7 +118,8 @@ const useStyles = makeStyles((theme) => ({
     textAlign: "right",
     borderColor: "transparent",
     fontSize: 50,
-    color: "white",
+    color: theme.palette.textColors.heading,
+
     outline: "none",
     marginTop: 5,
     marginBlock: 15,
@@ -125,7 +132,8 @@ const useStyles = makeStyles((theme) => ({
   percentageSymbol: {
     fontSize: 20,
     paddingTop: 20,
-    color: "#fce4ec",
+
+    color: theme.palette.textColors.pbr,
     [theme.breakpoints.down("sm")]: {
       fontSize: 17,
       paddingTop: 10,
@@ -138,7 +146,8 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 10,
   },
   percentInputBtn: {
-    color: "#E0077D",
+    color: theme.palette.textColors.pbr,
+
     cursor: "pointer",
     border: "0.1px solid rgba(255, 255, 255, 0.1)",
     borderRadius: 15,
@@ -167,11 +176,75 @@ const useStyles = makeStyles((theme) => ({
   priceContainer: {
     width: "95%",
     padding: 15,
-    color: "#bdbdbd",
+    color: theme.palette.textColors.light,
+
     fontSize: 13,
   },
   spinner: {
-    color: "#E0077D",
+    color: theme.palette.textColors.pbr,
+  },
+  heading: {
+    color: theme.palette.textColors.heading,
+  },
+  itemHeading: {
+    color: theme.palette.textColors.heading,
+    fontSize: 15,
+  },
+  itemValues: {
+    color: theme.palette.textColors.heading,
+    fontSize: 15,
+  },
+  priceValues: {
+    color: theme.palette.textColors.subheading,
+    fontSize: 14,
+    paddingTop: 3,
+  },
+  iconButton: {
+    margin: 0,
+    padding: 2,
+    backgroundColor: theme.palette.primary.iconBack,
+    borderRadius: "30%",
+  },
+  removeBtn: {
+    marginTop: 30,
+    backgroundColor: theme.palette.primary.pbr,
+    color: theme.palette.primary.buttonText,
+
+    width: "fit-content",
+    textTransform: "none",
+    fontSize: 17,
+    borderRadius: 20,
+    willChange: "transform",
+    transition: "transform 450ms ease 0s",
+    transform: "perspective(1px) translateZ(0px)",
+    padding: "12px 30px 12px 30px",
+    "&:hover": {
+      background: "rgba(224, 7, 125, 0.7)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 14,
+    },
+  },
+  approveBtn: {
+    marginTop: 30,
+    backgroundColor: theme.palette.primary.pbr,
+    color: theme.palette.primary.buttonText,
+
+    width: "fit-content",
+    textTransform: "none",
+    fontSize: 17,
+
+    borderRadius: 20,
+    willChange: "transform",
+    transition: "transform 450ms ease 0s",
+    transform: "perspective(1px) translateZ(0px)",
+    padding: "12px 30px 12px 30px",
+    "&:hover": {
+      background: "rgba(224, 7, 125, 0.7)",
+    },
+    [theme.breakpoints.down("sm")]: {
+      fontSize: 14,
+    },
   },
 }));
 
@@ -194,7 +267,7 @@ const RemoveCard = ({
   removeLiquidityEth,
   loadPairAddress,
   removeLiquidity,
-  getAccountBalance
+  getAccountBalance,
 }) => {
   const currentDefaultToken = {
     icon: etherImg,
@@ -363,7 +436,6 @@ const RemoveCard = ({
   };
 
   const handleRemoveLiquidity = async () => {
-
     const lpAmount = getPercentAmountWithFloor(
       currentLpBalance(),
       liquidityPercent
@@ -443,8 +515,8 @@ const RemoveCard = ({
     }
 
     if (transaction.type === "remove" && transaction.status === "success") {
-      getAccountBalance(selectedToken0, currentNetwork)
-      getAccountBalance(selectedToken1, currentNetwork)
+      getAccountBalance(selectedToken0, currentNetwork);
+      getAccountBalance(selectedToken1, currentNetwork);
     }
 
     if (
@@ -470,7 +542,7 @@ const RemoveCard = ({
 
   const currentPairDecimals = (token1, token2) => {
     return (parseInt(token1.decimals) + parseInt(token2.decimals)) / 2;
-  }
+  };
 
   return (
     <>
@@ -493,10 +565,11 @@ const RemoveCard = ({
                 className={classes.settingIcon}
               />
             </IconButton>
-            <h6 style={{ paddingTop: 5 }}>Remove Liquidity</h6>
+            <h6 className={classes.heading}>Remove Liquidity</h6>
             <IconButton
               onClick={handleSettings}
               style={{ margin: 0, padding: 0 }}
+              className={classes.iconButton}
             >
               <Settings fontSize="default" className={classes.settingIcon} />
             </IconButton>
@@ -504,10 +577,10 @@ const RemoveCard = ({
 
           <div className={classes.inputWrapper}>
             <div className={classes.cardFeature}>
-              <span style={{ color: "#bdbdbd" }}>Amount</span>
-              <span className={classes.clearButton} onClick={handleClearState}>
+              <div className={classes.heading}>Amount</div>
+              <div className={classes.clearButton} onClick={handleClearState}>
                 Clear
-              </span>
+              </div>
             </div>
 
             <div className="d-flex justify-content-center align-items-center">
@@ -585,20 +658,24 @@ const RemoveCard = ({
               </div>
             ) : new BigNumber(priceRatio1()).eq(0) && !connected ? (
               <div className="d-flex justify-content-center">
-                <span>{connected ? "No liquidity available for selected pool" : "Connect wallet first"}</span>
+                <span>
+                  {connected
+                    ? "No liquidity available for selected pool"
+                    : "Connect your wallet first"}
+                </span>
               </div>
             ) : (
               <>
                 <div className="d-flex justify-content-between">
-                  <span>Price:</span>
-                  <span>
+                  <span className={classes.heading}>Price:</span>
+                  <span className={classes.priceValues}>
                     1 {selectedToken0.symbol} = {priceRatio1()}
                     {selectedToken1.symbol}
                   </span>
                 </div>
                 <div className="d-flex justify-content-between">
                   <span></span>
-                  <span>
+                  <span className={classes.priceValues}>
                     {" "}
                     1 {selectedToken1.symbol} = {priceRatio2()}
                     {selectedToken0.symbol}
@@ -614,7 +691,7 @@ const RemoveCard = ({
               (new BigNumber(liquidityPercent).eq(0) &&
                 "* Choose your amount of first to remove liquidity.")}
           </div>
-          <div className="d-flex ">
+          <div className="d-flex justify-content-center">
             <CustomButton
               variant="light"
               className={classes.approveBtn}
@@ -666,13 +743,13 @@ const RemoveCard = ({
             ) : (
               <>
                 <div className="d-flex justify-content-center">
-                  <div style={{ fontSize: 15, textAlign: "center" }}>
+                  <div className={classes.heading} style={{ fontSize: 20 }}>
                     Your Position
                   </div>
                 </div>
 
-                <div className="d-flex justify-content-between my-2">
-                  <div>
+                <div className="d-flex justify-content-between my-2 align-items-center">
+                  <div className="d-flex justify-content-between align-items-center">
                     <img
                       className={classes.tokenIcon}
                       src={tokenThumbnail(selectedToken0.symbol)}
@@ -683,16 +760,26 @@ const RemoveCard = ({
                       src={tokenThumbnail(selectedToken1.symbol)}
                       alt={""}
                     />
-                    <span>
+                    <span
+                      className={classes.itemHeading}
+                      style={{ paddingTop: 5 }}
+                    >
                       {selectedToken0.symbol}/{selectedToken1.symbol}{" "}
                       {`( LP tokens )`}
                     </span>
                   </div>
-                  <span>{formatCurrency(fromWei(currentLpBalance(), currentPairDecimals(selectedToken0, selectedToken1)))}</span>
+                  <span className={classes.itemValues}>
+                    {formatCurrency(
+                      fromWei(
+                        currentLpBalance(),
+                        currentPairDecimals(selectedToken0, selectedToken1)
+                      )
+                    )}
+                  </span>
                 </div>
                 <div className="d-flex justify-content-between mt-3 mb-3">
-                  <div>Your pool share:</div>
-                  <div>{poolShare}%</div>
+                  <div className={classes.itemHeading}>Your pool share:</div>
+                  <div className={classes.itemValues}>{poolShare}%</div>
                 </div>
               </>
             )}
@@ -715,5 +802,5 @@ export default connect(mapStateToProps, {
   removeLiquidityEth,
   loadPairAddress,
   removeLiquidity,
-  getAccountBalance
+  getAccountBalance,
 })(RemoveCard);

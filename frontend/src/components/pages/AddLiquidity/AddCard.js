@@ -52,9 +52,8 @@ const useStyles = makeStyles((theme) => ({
   card: {
     width: 500,
     borderRadius: 15,
+    boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
     backgroundColor: theme.palette.primary.bgCard,
-
-    // background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 15,
