@@ -10,20 +10,17 @@ import React from "react";
 const useStyles = makeStyles((theme) => ({
   card: {
     width: 440,
-    height: 120,
-    background: ` linear-gradient(
-      to bottom right,
-      rgba(255, 255, 255, 0.1),
-      rgba(255, 255, 255, 0.02)
-    )`,
-    border: "1px solid #414141",
+    height: 100,
+    background: "white",
+    border: "0.5px solid rgba(224, 224, 224,0.6)",
 
     borderRadius: 15,
+    paddingBottom: 0,
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 0,
       paddingRight: 0,
-      width: "96%",
-      height: 110,
+      width: 290,
+      height: 80,
     },
   },
   cardContents: {
@@ -33,20 +30,22 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-evenly",
 
     padding: 10,
+    paddingBottom: 0,
     [theme.breakpoints.down("sm")]: {
       padding: 5,
     },
   },
   labelFont: {
     fontSize: 14,
-    color: "#e5e5e5",
+    color: theme.palette.textColors.subheading,
+
     [theme.breakpoints.down("sm")]: {
       fontSize: 14,
     },
   },
   hintLabelFont: {
-    fontSize: 14,
-    color: "#a0a0a0",
+    fontSize: 11,
+    color: theme.palette.textColors.light,
     [theme.breakpoints.down("sm")]: {
       fontSize: 14,
     },
@@ -58,9 +57,10 @@ const useStyles = makeStyles((theme) => ({
   },
   inputRow: {
     padding: 0,
-
-    display: "flex",
     width: "95%",
+    display: "flex",
+
+    paddingBottom: 0,
     alignItems: "center",
     justifyContent: "space-between",
     [theme.breakpoints.down("sm")]: {
@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "transparent",
     borderColor: "transparent",
     fontSize: 22,
-    color: "white",
+    color: theme.palette.textColors.heading,
     maxWidth: 200,
     outline: "none",
     [theme.breakpoints.down("sm")]: {
@@ -81,17 +81,22 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   maxButton: {
-    color: "white",
+    color: "#0000000",
     cursor: "pointer",
-    backgroundColor: "rgba(223, 9, 124,0.5)",
-    borderRadius: 7,
-    padding: "1px 5px 1px 5px",
+    background: "rgba(224, 1, 125, 0.1)",
+    borderRadius: 10,
+    paddingTop: 3,
+    paddingBottom: 3,
+    paddingLeft: 6,
+    paddingRight: 6,
     marginLeft: 2,
-    marginRight: 7,
-    fontSize: 15,
-
+    marginRight: 4,
+    fontSize: 14,
+    "&:hover": {
+      background: "rgba(224, 1, 125, 0.2)",
+    },
     [theme.breakpoints.down("sm")]: {
-      fontSize: 14,
+      fontSize: 13,
     },
   },
 }));
@@ -135,7 +140,7 @@ const SwapCardItem = (props) => {
 
   return (
     <>
-      <Card elevation={1} className={classes.card}>
+      <Card elevation={0} className={classes.card}>
         <div className={classes.cardContents}>
           <div className={classes.labelRow}>
             {inputType ? (
@@ -163,7 +168,7 @@ const SwapCardItem = (props) => {
 
             <div className="d-flex align-items-center">
               <span className={classes.maxButton} onClick={handleMax}>
-                Max
+                MAX
               </span>
               <SelectToken
                 selectedToken={currentToken}

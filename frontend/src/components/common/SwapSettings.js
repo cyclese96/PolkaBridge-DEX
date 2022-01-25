@@ -24,32 +24,34 @@ import { Button, Tooltip } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   background: {
-    backgroundColor: "#121827",
-    color: "#f9f9f9",
+    backgroundColor: "#ffffff",
+    color: theme.palette.primary.iconColor,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    width: 320,
-    height: 350,
+    paddingBottom: 20,
+
+    width: 315,
+    height: "100%",
+    minHeight: 320,
     [theme.breakpoints.down("sm")]: {
       width: 240,
       height: "100%",
-
       paddingBottom: 15,
     },
   },
   input: {
     backgroundColor: "transparent",
+    color: theme.palette.primary.iconColor,
     height: 40,
     width: "auto",
-    borderColor: "rgba(255, 255, 255, 0.1)",
+    border: "1px solid rgba(224, 224, 224,1)",
     borderRadius: 10,
-    borderWidth: "1px",
+    // outline: "none",
+    padding: 10,
     fontSize: 18,
     width: 150,
-    color: "white",
-    outline: "none",
-    padding: 10,
+
     [theme.breakpoints.down("sm")]: {
       width: 80,
       padding: 7,
@@ -58,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   closeIcon: {
-    color: "#f6f6f6",
+    color: theme.palette.primary.iconColor,
     fontSize: 24,
     [theme.breakpoints.down("sm")]: {
       fontSize: 18,
@@ -75,17 +77,22 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     cursor: "pointer",
-    color: "#919191",
+    color: theme.palette.primary.iconColor,
     marginBottom: 10,
+    fontSize: 14,
+    fontWeight: 400,
   },
   slippageItem: {
-    color: "#E0077D",
+    color: theme.palette.primary.iconColor,
     cursor: "pointer",
-    border: "0.1px solid rgba(255, 255, 255, 0.1)",
+    border: "1px solid rgba(224, 224, 224,1)",
+    background: theme.palette.primary.iconBack,
+
     borderRadius: 10,
     padding: 10,
     marginLeft: 2,
     marginRight: 5,
+
     "&:hover": {
       background: "rgba(255, 255, 255, 0.1)",
     },
@@ -102,12 +109,13 @@ const useStyles = makeStyles((theme) => ({
   },
   applyButton: {
     marginTop: 20,
-    backgroundColor: "rgba(224, 7, 125, 0.9)",
-    color: "white",
-    width: "90%",
+    backgroundColor: theme.palette.primary.pbr,
+
+    color: theme.palette.primary.buttonText,
+    width: "84%",
     textTransform: "none",
     fontSize: 17,
-    borderRadius: 20,
+    borderRadius: 15,
     willChange: "transform",
     transition: "transform 450ms ease 0s",
     transform: "perspective(1px) translateZ(0px)",
@@ -119,6 +127,10 @@ const useStyles = makeStyles((theme) => ({
       fontSize: 14,
       width: "80%",
     },
+  },
+  heading: {
+    color: theme.palette.primary.iconColor,
+    paddingTop: 10,
   },
 }));
 
@@ -206,7 +218,7 @@ const SwapSettings = ({
       >
         <div className={classes.background}>
           <div className={classes.cardHeading}>
-            <h6 style={{ paddingTop: 5, color: "#bdbdbd" }}>Settings</h6>
+            <h6 className={classes.heading}>Settings</h6>
             <IconButton
               onClick={() => handleClose()}
               style={{ margin: 0, padding: 0 }}
@@ -228,7 +240,14 @@ const SwapSettings = ({
                   </span>
                 }
               >
-                <InfoRounded style={{ marginLeft: 10 }} />
+                <InfoRounded
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 18,
+                    marginTop: 3,
+                    color: "#919191",
+                  }}
+                />
               </Tooltip>
             </span>
             <div>
@@ -258,13 +277,20 @@ const SwapSettings = ({
               Transaction deadline
               <Tooltip
                 title={
-                  <span style={{ fontSize: 12 }}>
+                  <span style={{ fontSize: 13 }}>
                     Your transaction will revert if it is pending for more than
                     this long.
                   </span>
                 }
               >
-                <InfoRounded style={{ marginLeft: 10 }} />
+                <InfoRounded
+                  style={{
+                    marginLeft: 10,
+                    fontSize: 18,
+                    marginTop: 3,
+                    color: "#919191",
+                  }}
+                />
               </Tooltip>
             </span>
             <div>
@@ -275,16 +301,19 @@ const SwapSettings = ({
                 onChange={({ target: { value } }) => handleDeadlingInput(value)}
                 value={deadline}
               />
-              <span style={{ fontSize: 12, marginLeft: 10, color: "#919191" }}>
+              <span
+                style={{
+                  fontSize: 12,
+                  marginLeft: 10,
+                  color: "#454545",
+                  fontWeight: 600,
+                }}
+              >
                 Minutes
               </span>
             </div>
           </div>
-          <Button
-            variant="contained"
-            onClick={onApply}
-            className={classes.applyButton}
-          >
+          <Button onClick={onApply} className={classes.applyButton}>
             Apply
           </Button>
         </div>
