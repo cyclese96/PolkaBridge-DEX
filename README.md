@@ -6,21 +6,13 @@ PolkaWar is a Multichain & Cross-Chain Decentralized All-In-One PLatform To Incl
 
 Swap page view of PolkaBridge:
 
-![dex](https://user-images.githubusercontent.com/20106622/150976480-22690d5c-565c-4b5f-9922-f573ac3e0ce6.png)
-
-
+![Swap Screenshot](frontend/.png)
 
 Add Liquidity Page view:
-![pool](https://user-images.githubusercontent.com/20106622/150976515-ce7767ac-a8f0-473e-ad35-a7d95d2c13eb.png)
-
-
-
+![Pool Screenshot](frontend/pool.png)
 
 Farm Page View:
-
-![farm](https://user-images.githubusercontent.com/20106622/150976532-e630f9b8-f9f0-4fd4-b8b3-01f27d52d4e4.png)
-
-
+![Farm Screenshot](frontend/.png)
 
 Following features are developed:
 
