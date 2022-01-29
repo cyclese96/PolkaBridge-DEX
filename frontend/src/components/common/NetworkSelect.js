@@ -8,13 +8,11 @@ import {
   ethereumNetworkDetail,
   harmonyNetworkDetail,
   moonriverNetworkDetail,
-  polygonNetworkDetail
+  polygonNetworkDetail,
 } from "../../utils/networkConstants";
 import { setupNetwork } from "../../utils/connectionUtils";
 import { currentConnection } from "../../constants";
 import config from "../../utils/config";
-
-
 
 // import etherIcon from "../assets/ether.png";
 // import binanceIcon from "../assets/binance.png";
@@ -123,7 +121,7 @@ export default function NetworkSelect({ selectedNetwork }) {
       <FormControl className={classes.root}>
         <Select
           className={classes.main}
-          value={selectedNetwork}
+          value={parseInt(selectedNetwork)}
           disableUnderline={true}
           notched={true}
           id="adornment-weight"

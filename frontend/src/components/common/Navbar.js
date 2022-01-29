@@ -210,7 +210,6 @@ const useStyles = makeStyles((theme) => ({
 const Navbar = (props) => {
   const {
     account: { currentNetwork },
-    chainId,
   } = props;
   const classes = useStyles();
 
@@ -229,7 +228,7 @@ const Navbar = (props) => {
     setState({ ...state, [anchor]: open });
   };
 
-  const { active, account, activate, deactivate } = useWeb3React();
+  const { active, account, chainId, activate, deactivate } = useWeb3React();
 
   const createConnectHandler = async (connector) => {
     try {
@@ -265,6 +264,7 @@ const Navbar = (props) => {
   };
 
   const handleWalletClick = () => {
+    console.log("active", active);
     if (active) {
       setAccountDialog(true);
     } else {
@@ -449,7 +449,7 @@ const Navbar = (props) => {
             </span>
           </div> */}
           <NetworkSelect selectedNetwork={chainId} />
-          <Wallet onWalletClick={() => setAccountDialog(true)} />
+          <Wallet onWalletClick={handleWalletClick} />
         </Toolbar>
 
         <Toolbar className={classes.sectionMobile}>
