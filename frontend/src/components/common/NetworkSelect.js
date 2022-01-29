@@ -14,11 +14,6 @@ import { setupNetwork } from "../../utils/connectionUtils";
 import { currentConnection } from "../../constants";
 import config from "../../utils/config";
 
-// import etherIcon from "../assets/ether.png";
-// import binanceIcon from "../assets/binance.png";
-// import harmonyIcon from "../assets/one.png";
-// import polygonIcon from "../assets/polygon.png";
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -39,8 +34,15 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   main: {
-    color: "white",
-    backgroundColor: "#100525",
+    backgroundColor: "#f9f9f9",
+    color: "#C80C81",
+    borderRadius: 10,
+    textTransform: "none",
+    "&:hover": {
+      background: "rgba(255, 255, 255, 0.7)",
+    },
+    fontSize: 14,
+    fontWeight: 700,
     border: "1px solid rgba(224, 7, 125, 0.7)",
     borderRadius: 60,
     paddingLeft: 15,
