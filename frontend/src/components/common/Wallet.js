@@ -2,7 +2,6 @@ import { Button, makeStyles } from "@material-ui/core";
 import { AccountBalanceWallet } from "@material-ui/icons";
 import { connect } from "react-redux";
 import { connectWallet } from "../../actions/accountActions";
-import { isMetaMaskInstalled } from "../../utils/helper";
 import { useWeb3React } from "@web3-react/core";
 import React from "react";
 
@@ -51,10 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Wallet = ({
-  onWalletClick,
-  account: { connected, currentNetwork, currentAccount },
-}) => {
+const Wallet = ({ onWalletClick }) => {
   const classes = useStyles();
   const { active, account } = useWeb3React();
 
