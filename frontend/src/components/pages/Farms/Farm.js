@@ -36,8 +36,6 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft: 7,
       paddingRight: 7,
       width: 300,
-      border: "1px solid #212121",
-      arginLeft: 40,
     },
   },
   cardContents: {},

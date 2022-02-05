@@ -38,10 +38,14 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       background: "rgba(255, 255, 255, 0.7)",
     },
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       marginRight: 0,
-      marginLeft: 15,
-      width: 150,
+      marginLeft: 25,
+      width: "fit-content",
+      backgroundColor: theme.palette.primary.buttonColor,
+      padding: 6,
+      paddingLeft: 10,
+      paddingRight: 10,
     },
   },
   numbers: {

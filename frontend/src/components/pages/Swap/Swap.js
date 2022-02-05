@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 7,
       paddingRight: 7,
-      width: "100%",
+      width: "96%",
     },
   },
   cardContents: {

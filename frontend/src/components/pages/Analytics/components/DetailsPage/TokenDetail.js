@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 20,
   },
   breadcrumbsTitle: {
-    color: "white",
+    color: theme.palette.textColors.heading,
     fontSize: 16,
     fontWeight: 400,
   },
@@ -47,7 +47,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   tokenTitle: {
-    color: "white",
+    color: theme.palette.textColors.heading,
+
     fontSize: 32,
     [theme.breakpoints.down("sm")]: {
       fontSize: 18,
@@ -72,7 +73,8 @@ const useStyles = makeStyles((theme) => ({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 400,
-    color: "white",
+    color: theme.palette.textColors.subheading,
+
     paddingTop: 5,
     paddingBottom: 10,
   },
@@ -201,7 +203,6 @@ function TokenPage({ address }) {
     console.log("alltransaction token page ", { oneDayVolumeUSD });
   }, []);
 
-
   useEffect(() => {
     window.scrollTo({
       behavior: "smooth",
@@ -282,13 +283,20 @@ function TokenPage({ address }) {
         <div className={classes.background}>
           <div for="breadcrumbs" className={classes.breadcrumbs}>
             <h6 className={classes.breadcrumbsTitle}>
-              <Link to="/charts">Tokens </Link>→{" "}
+              <Link to="/charts" style={{ color: "black" }}>
+                Tokens{" "}
+              </Link>
+              →{" "}
               <span>
                 {symbol}
                 <a
                   style={{ color: "#DF097C", paddingLeft: 5 }}
                   target="_blank"
-                  href={currentConnection === 'testnet' ? `https://rinkeby.etherscan.io/address/${id}` : `https://etherscan.io/address/${id}`}
+                  href={
+                    currentConnection === "testnet"
+                      ? `https://rinkeby.etherscan.io/address/${id}`
+                      : `https://etherscan.io/address/${id}`
+                  }
                 >
                   ({id && id.slice(0, 8)})
                 </a>
@@ -335,7 +343,9 @@ function TokenPage({ address }) {
                 <Card elevation={10} className={classes.liquidityCard}>
                   <h6 className={classes.cardTitle}>Volume (24Hrs)</h6>
                   <div className="d-flex justify-content-between">
-                    <h6 className={classes.cardValue}>${formattedNum(oneDayVolumeUSD)}</h6>
+                    <h6 className={classes.cardValue}>
+                      ${formattedNum(oneDayVolumeUSD)}
+                    </h6>
                     <p className={classes.cardChangeIndicator}>
                       {parseFloat(volumeChangeUSD).toFixed(2)}%
                     </p>

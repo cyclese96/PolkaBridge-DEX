@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#ffffff",
     display: "flex",
     alignItems: "center",
+    borderBottom: "0.5px solid #e5e5e5",
   },
   menuButton: {
     textTransform: "none",
@@ -55,11 +56,11 @@ const useStyles = makeStyles((theme) => ({
   sectionDesktop: {
     marginLeft: 40,
     marginRight: 40,
+    display: "block",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
     [theme.breakpoints.down("md")]: {
-      marginLeft: 5,
-      marginRight: 5,
-    },
-    [theme.breakpoints.down("sm")]: {
       display: "none",
     },
   },
@@ -89,22 +90,16 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 15,
   },
 
-  list: {
-    width: "250px",
-    height: "100%",
-    backgroundColor: "transparent",
-    color: "#f9f9f9",
-  },
   fullList: {
     width: "auto",
   },
   menuTitleMobile: {
     paddingLeft: 25,
-    fontWeight: 400,
+    fontWeight: 600,
     verticalAlign: "baseline",
     textAlign: "left",
     fontSize: 16,
-    color: "#eeeeee",
+    color: theme.palette.primary.iconColor,
   },
   navbarItemsDesktop: {
     paddingRight: 10,
@@ -165,8 +160,10 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    background: theme.palette.primary.iconBack,
-    borderRadius: 15,
+    // background: `linear-gradient(to bottom, rgba(224, 1, 125, 0.06), #f5f3f3)`,
+
+    backgroundColor: theme.palette.primary.buttonColor,
+    borderRadius: 14,
     padding: 6,
     paddingLeft: 8,
     paddingRight: 15,
@@ -186,7 +183,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 25,
   },
   menuIcon: {
-    color: "rgba(255, 255, 255, 0.5)",
+    color: theme.palette.primary.iconColor,
   },
   logo: {
     height: 44,
@@ -201,9 +198,13 @@ const useStyles = makeStyles((theme) => ({
     width: "250px",
     borderLeft: "5px solid pink",
     borderColor: "#3A1242",
-    // borderColor: "#220c3d",
     height: "100%",
-    backgroundColor: "#100525",
+    backgroundColor: theme.palette.primary.iconBack,
+    color: theme.palette.primary.iconColor,
+  },
+  networkText: {
+    marginRight: 5,
+    color: theme.palette.textColors.heading,
   },
 }));
 
@@ -342,12 +343,12 @@ const Navbar = (props) => {
               src={currentNetwork === etheriumNetwork ? etherIcon : binanceIcon}
               alt={currentNetwork}
             />
-            <span style={{ color: "white", marginLeft: 5 }}>
+            <span className={classes.networkText}>
               {currentNetwork === etheriumNetwork ? "Ethereum" : "BSC"}
             </span>
           </div>
         </ListItem>
-        <ListItem button style={{ paddingLeft: 35 }}>
+        <ListItem button style={{ paddingLeft: 5 }}>
           <Wallet onWalletClick={handleWalletClick} />
         </ListItem>
       </List>

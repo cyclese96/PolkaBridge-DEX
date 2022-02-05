@@ -157,7 +157,7 @@ const useStyles = makeStyles((theme) => ({
 
   tokenListHeading: {
     width: "100%",
-    color: "#bdbdbd",
+    color: theme.palette.textColors.heading,
     marginTop: 150,
     marginBottom: 10,
     paddingLeft: 2,
