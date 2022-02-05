@@ -27,6 +27,9 @@ const useStyles = makeStyles((theme) => ({
     // borderWidth: "7px",
     // borderColor: theme.palette.primary.iconBack,
     // borderStyle: "solid",
+    [theme.breakpoints.down("sm")]: {
+      width: "90%",
+    },
   },
   default_tabStyle: {
     display: "flex",
@@ -45,8 +48,8 @@ const useStyles = makeStyles((theme) => ({
       background: "#e5e5e5",
     },
     [theme.breakpoints.down("sm")]: {
-      paddingLeft: 30,
-      paddingRight: 30,
+      paddingLeft: 10,
+      paddingRight: 10,
     },
   },
   noDecoration: {
@@ -67,6 +70,10 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 7,
     "&:hover": {
       background: "#e5e5e5",
+    },
+    [theme.breakpoints.down("sm")]: {
+      paddingLeft: 10,
+      paddingRight: 10,
     },
   },
 }));
