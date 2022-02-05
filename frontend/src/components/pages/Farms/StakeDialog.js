@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 15,
 
     borderRadius: 30,
-    backgroundColor: "transparent",
+    backgroundColor: theme.palette.primary.bgCard,
     filter: "drop-shadow(0 0 0.5rem #212121)",
     paddingLeft: 20,
     paddingRight: 20,
@@ -44,7 +44,8 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 500,
     fontSize: 16,
     paddingBottom: 3,
-    color: "#e5e5e5",
+
+    color: theme.palette.textColors.heading,
   },
   maxButton: {
     width: "fit-content",
@@ -68,12 +69,14 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   header: {
-    color: "white",
+    color: theme.palette.textColors.heading,
+
     fontSize: 22,
     fontWeight: 600,
   },
   section: {
-    color: "#cecece",
+    color: theme.palette.textColors.subheading,
+
     fontSize: 16,
     fontWeight: 600,
   },
@@ -86,7 +89,7 @@ const useStyles = makeStyles((theme) => ({
 
     marginTop: 20,
     borderRadius: 15,
-    background: `#29323c`,
+    // background: `#29323c`,
     [theme.breakpoints.down("xs")]: {
       padding: 15,
       width: "100%",
@@ -123,10 +126,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   input: {
-    backgroundColor: "transparent",
+    backgroundColor: "#ffffff",
     height: 50,
 
-    borderColor: "rgba(255, 255, 255, 0.2)",
+    borderColor: "#e5e5e5",
     borderRadius: 10,
     borderWidth: "1px",
     fontSize: 18,
@@ -310,7 +313,7 @@ const StakeDialog = ({
                   </h1>
                 ) : (
                   <h1 className={classes.section}>
-                    Lp staked: {formattedNum(parseStakedAmount)}
+                    LP Staked: {formattedNum(parseStakedAmount)}
                   </h1>
                 )}
               </div>
@@ -346,11 +349,7 @@ const StakeDialog = ({
             >
               Cancel
             </Button>
-            <Button
-              variant="contained"
-              className={classes.confirmButton}
-              onClick={confirmStake}
-            >
+            <Button className={classes.confirmButton} onClick={confirmStake}>
               Confirm
             </Button>
           </div>

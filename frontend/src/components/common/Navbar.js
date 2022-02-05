@@ -176,6 +176,12 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       background: "rgba(224, 208, 217,1)",
     },
+    [theme.breakpoints.down("md")]: {
+      padding: 3,
+      paddingLeft: 8,
+      paddingRight: 8,
+      height: 35,
+    },
   },
   networkIcon: {
     width: "auto",
@@ -336,18 +342,7 @@ const Navbar = (props) => {
             </ListItem>
           </a>
         ))}
-        <ListItem button>
-          <div className={classes.network}>
-            <img
-              className={classes.networkIcon}
-              src={currentNetwork === etheriumNetwork ? etherIcon : binanceIcon}
-              alt={currentNetwork}
-            />
-            <span className={classes.networkText}>
-              {currentNetwork === etheriumNetwork ? "Ethereum" : "BSC"}
-            </span>
-          </div>
-        </ListItem>
+
         <ListItem button style={{ paddingLeft: 5 }}>
           <Wallet onWalletClick={handleWalletClick} />
         </ListItem>
@@ -468,7 +463,8 @@ const Navbar = (props) => {
             </div>
 
             {/* <Wallet onWalletClick={() => setAccountDialog(true)} /> */}
-            <div>
+            <div className="d-flex justify-content-between align-items-center">
+              <NetworkSelect selectedNetwork={chainId} />
               {["right"].map((anchor) => (
                 <React.Fragment key={anchor}>
                   <IconButton
