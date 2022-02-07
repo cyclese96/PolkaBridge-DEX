@@ -26,7 +26,8 @@ const useStyles = makeStyles((theme) => ({
     width: 350,
     borderRadius: 15,
     marginTop: 20,
-    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+    backgroundColor: theme.palette.primary.bgCard,
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 15,
@@ -35,8 +36,6 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft: 7,
       paddingRight: 7,
       width: 300,
-      border: "1px solid #212121",
-      arginLeft: 40,
     },
   },
   cardContents: {},
@@ -47,9 +46,9 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 500,
     padding: 0,
     paddingLeft: 10,
-    fontSize: 15,
+    fontSize: 14,
     paddingBottom: 3,
-    color: "#e5e5e5",
+    color: theme.palette.textColors.heading,
     paddingTop: 2,
   },
   link: {
@@ -67,20 +66,22 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 10,
     fontSize: 24,
     paddingBottom: 3,
-    color: "#e5e5e5",
+
+    color: theme.palette.textColors.subheading,
   },
   tokenAmount: {
-    fontWeight: 700,
+    fontWeight: 600,
     marginRight: 5,
-    fontSize: 18,
-    color: "rgba(224, 7, 125, 1)",
+    fontSize: 16,
+    color: theme.palette.textColors.pbr,
+
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
   },
   earn: {
     textAlign: "center",
-    color: "#bdbdbd",
+    color: theme.palette.textColors.subheading,
     fontSize: 14,
     fontWeight: 600,
     border: "1px solid #C80C81",
@@ -91,7 +92,8 @@ const useStyles = makeStyles((theme) => ({
   },
   farmName: {
     textAlign: "center",
-    color: "#bdbdbd",
+    color: theme.palette.textColors.heading,
+
     fontSize: 15,
     fontWeight: 600,
   },
@@ -102,8 +104,8 @@ const useStyles = makeStyles((theme) => ({
     padding: 15,
   },
   harvestButton: {
-    backgroundColor: "rgba(224, 7, 125, 0.6)",
-    color: "white",
+    backgroundColor: theme.palette.primary.iconBack,
+    color: theme.palette.textColors.heading,
     textTransform: "none",
     fontSize: 17,
     width: 110,
@@ -120,8 +122,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   approveBtn: {
-    backgroundColor: "rgba(224, 7, 125, 0.6)",
-    color: "white",
+    backgroundColor: theme.palette.primary.pbr,
+    color: theme.palette.primary.buttonText,
     textTransform: "none",
     fontSize: 17,
     borderRadius: 15,
@@ -137,8 +139,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   stakeBtn: {
-    backgroundColor: "rgba(224, 7, 125, 0.6)",
-    color: "white",
+    backgroundColor: theme.palette.primary.pbr,
+    color: theme.palette.primary.buttonText,
     textTransform: "none",
     fontSize: 28,
     borderRadius: 15,
@@ -361,7 +363,6 @@ const Farm = (props) => {
             {formattedNum(fromWei(farmData(farmPool)?.pendingPbr))}
           </div>
           <Button
-            variant="contained"
             className={classes.harvestButton}
             disabled={harvestDisableStatus(farmPool)}
             onClick={() => handleHarvest(farmPool)}
@@ -380,7 +381,6 @@ const Farm = (props) => {
             <div className="d-flex justify-content-center align-items-center mt-1">
               <Button
                 onClick={handleApproveLpTokenToFarm}
-                variant="contained"
                 className={classes.approveBtn}
               >
                 Approve LP Tokens
@@ -415,11 +415,7 @@ const Farm = (props) => {
 
         {loading?.[farmPoolAddress(farmPool)] && (
           <div className="d-flex justify-content-center align-items-center mt-1">
-            <Button
-              disabled={true}
-              variant="contained"
-              className={classes.approveBtn}
-            >
+            <Button disabled={true} className={classes.approveBtn}>
               {transaction.type && transaction.status === "pending"
                 ? "Pending transaction..."
                 : "Loading pool..."}

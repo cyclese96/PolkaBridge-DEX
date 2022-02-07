@@ -17,7 +17,8 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 15,
-    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+    backgroundColor: theme.palette.primary.bgCard,
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 20,
@@ -42,7 +43,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   icon: {
-    color: "#f6f6f6",
+    color: theme.palette.primary.iconColor,
+
     fontSize: 24,
     [theme.breakpoints.down("sm")]: {
       fontSize: 18,
@@ -50,7 +52,8 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     backgroundColor: "rgba(255, 255, 255, 0.1)",
-    color: "#f6f6f6",
+    backgroundColor: theme.palette.primary.iconBack,
+    color: theme.palette.primary.iconColor,
     borderColor: "#f6f6f6",
     height: 50,
     textTransform: "none",
@@ -71,6 +74,9 @@ const useStyles = makeStyles((theme) => ({
       padding: "15px 30px 15px 30px",
     },
   },
+  heading: {
+    color: theme.palette.primary.iconColor,
+  },
 }));
 
 const AddLiquidity = ({ account: { loading } }) => {
@@ -78,15 +84,14 @@ const AddLiquidity = ({ account: { loading } }) => {
   const [showCard, setShowAdd] = useState({ status: false, component: "" });
   const query = new URLSearchParams(useLocation().search);
 
-
   useEffect(() => {
     const action = query.get("action");
-    if (action === 'add_liquidity') {
-      setShowAdd({ status: true, component: "AddCard" })
-    } else if (action === 'remove_liquidity') {
-      setShowAdd({ status: true, component: "RemoveCard" })
+    if (action === "add_liquidity") {
+      setShowAdd({ status: true, component: "AddCard" });
+    } else if (action === "remove_liquidity") {
+      setShowAdd({ status: true, component: "RemoveCard" });
     }
-  }, [])
+  }, []);
 
   return (
     <>
@@ -97,7 +102,7 @@ const AddLiquidity = ({ account: { loading } }) => {
       {!showCard.status ? (
         <div>
           <Card elevation={10} className={classes.card}>
-            <h4>Pools</h4>
+            <h4 className={classes.heading}>Pools</h4>
 
             <div className={classes.buttonsWrapper}>
               <Button

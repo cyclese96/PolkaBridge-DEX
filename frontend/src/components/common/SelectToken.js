@@ -12,9 +12,8 @@ const useStyles = makeStyles((theme) => ({
   token: {
     display: "flex",
     alignItems: "center",
-    backgroundColor: "black",
-    border: "0.5px solid #616161",
-    borderRadius: 12,
+    backgroundColor: theme.palette.primary.iconBack,
+    borderRadius: 20,
     paddingLeft: 8,
     paddingRight: 0,
     paddingTop: 2,
@@ -24,14 +23,12 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       background: "rgba(255, 255, 255, 0.1)",
     },
-    [theme.breakpoints.down("sm")]: {
-      height: 40,
-    },
   },
   noToken: {
     display: "flex",
     alignItems: "center",
     backgroundColor: "rgba(224, 7, 125, 0.9)",
+
     borderRadius: 12,
     paddingLeft: 13,
     paddingRight: 0,
@@ -39,6 +36,9 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 2,
     height: 35,
     cursor: "pointer",
+    "&:hover": {
+      background: "rgba(224, 1, 125, 0.7)",
+    },
   },
   tokenIcon: {
     width: "auto",
@@ -54,19 +54,20 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 15,
     color: "white",
     [theme.breakpoints.down("sm")]: {
-      fontSize: 14,
+      fontSize: 12,
     },
   },
   selectedToken: {
-    color: "white",
+    color: "#000000",
     marginLeft: 5,
     fontSize: 15,
+    fontWeight: 400,
     [theme.breakpoints.down("sm")]: {
-      fontSize: 13,
+      fontSize: 12,
     },
   },
   dropIcon: {
-    color: "#e5e5e5",
+    color: "#bdbdbd",
   },
 }));
 
@@ -89,13 +90,7 @@ const SelectToken = ({
   };
 
   return (
-    <Card
-      elevation={30}
-      style={{
-        backgroundColor: "transparent",
-        filter: `drop-shadow(0 0 0.5rem #212121)`,
-      }}
-    >
+    <div>
       <SelectTokenDialog
         open={tokensOpen}
         handleClose={tokensClose}
@@ -125,7 +120,7 @@ const SelectToken = ({
         )}
         <ArrowDropDownIcon className={classes.dropIcon} />
       </span>
-    </Card>
+    </div>
   );
 };
 

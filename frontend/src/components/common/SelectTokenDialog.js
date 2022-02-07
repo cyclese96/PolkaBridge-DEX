@@ -10,8 +10,8 @@ import { Close } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   background: {
-    backgroundColor: "#121827",
-    color: "#f9f9f9",
+    backgroundColor: "#ffffff",
+    color: theme.palette.primary.iconColor,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -27,7 +27,8 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 18,
     fontWeight: 400,
     textAlign: "left",
-    color: "#e5e5e5",
+
+    color: theme.palette.primary.iconColor,
     [theme.breakpoints.down("sm")]: {
       fontSize: 20,
     },
@@ -38,11 +39,11 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
     height: 50,
     width: "auto",
-    borderColor: "rgba(255, 255, 255, 0.1)",
+    border: "1px solid rgba(224, 224, 224,1)",
     borderRadius: 15,
     fontSize: 18,
     width: "90%",
-    color: "white",
+    color: theme.palette.primary.iconColor,
     padding: 10,
     outline: "none",
     [theme.breakpoints.down("sm")]: {
@@ -62,13 +63,12 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   cancelButton: {
-    backgroundColor: "#2C2F35",
-    color: "white",
+    backgroundColor: theme.palette.primary.iconBack,
+    color: theme.palette.primary.iconColor,
     width: "100%",
     textTransform: "none",
     fontSize: 17,
     borderRadius: 20,
-
     padding: "8px 50px 8px 50px",
 
     [theme.breakpoints.down("sm")]: {
@@ -201,11 +201,7 @@ const SelectTokenDialog = ({
           }}
         />
         <div className={classes.buttons}>
-          <Button
-            variant="contained"
-            onClick={onClose}
-            className={classes.cancelButton}
-          >
+          <Button onClick={onClose} className={classes.cancelButton}>
             Cancel
           </Button>
         </div>

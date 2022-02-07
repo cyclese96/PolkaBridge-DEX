@@ -27,6 +27,8 @@ import { useWeb3React } from "@web3-react/core";
 import connectors from "../../contracts/connections/connectors";
 import { isMetaMaskInstalled } from "../../utils/helper";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
+// import { Link } from "react-router-dom";
+import NetworkSelect from "./NetworkSelect";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -34,9 +36,10 @@ const useStyles = makeStyles((theme) => ({
   },
   appBarBackground: {
     boxShadow: "none",
-    backgroundColor: "#100525",
+    backgroundColor: "#ffffff",
     display: "flex",
     alignItems: "center",
+    borderBottom: "0.5px solid #e5e5e5",
   },
   menuButton: {
     textTransform: "none",
@@ -53,11 +56,11 @@ const useStyles = makeStyles((theme) => ({
   sectionDesktop: {
     marginLeft: 40,
     marginRight: 40,
+    display: "block",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
     [theme.breakpoints.down("md")]: {
-      marginLeft: 5,
-      marginRight: 5,
-    },
-    [theme.breakpoints.down("sm")]: {
       display: "none",
     },
   },
@@ -87,33 +90,28 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 15,
   },
 
-  list: {
-    width: "250px",
-    height: "100%",
-    backgroundColor: "transparent",
-    color: "#f9f9f9",
-  },
   fullList: {
     width: "auto",
   },
   menuTitleMobile: {
     paddingLeft: 25,
-    fontWeight: 400,
+    fontWeight: 600,
     verticalAlign: "baseline",
     textAlign: "left",
     fontSize: 16,
-    color: "#eeeeee",
+    color: theme.palette.primary.iconColor,
   },
   navbarItemsDesktop: {
     paddingRight: 10,
-    fontWeight: 400,
+    fontWeight: 500,
     lineHeight: "24px",
     verticalAlign: "baseline",
     letterSpacing: "-1px",
     margin: 0,
     padding: "9px 14px 0px",
     cursor: "pointer",
-    fontSize: "1.2vw",
+    fontSize: "1.05vw",
+    color: theme.palette.primary.appLink,
   },
   navbarButton: {
     backgroundColor: "#f9f9f9",
@@ -160,35 +158,36 @@ const useStyles = makeStyles((theme) => ({
   },
   network: {
     display: "flex",
-    marginLeft: 20,
-    marginRight: 10,
+    justifyContent: "space-between",
     alignItems: "center",
-    border: "0.5px solid #919191",
-    borderRadius: 20,
-    padding: 6,
-    paddingLeft: 6,
-    paddingRight: 10,
-    letterSpacing: 0.4,
+    // background: `linear-gradient(to bottom, rgba(224, 1, 125, 0.06), #f5f3f3)`,
 
-    // cursor: "pointer",
+    backgroundColor: theme.palette.primary.buttonColor,
+    borderRadius: 14,
+    padding: 6,
+    paddingLeft: 8,
+    paddingRight: 15,
+    fontSize: 14,
+    fontWeight: 700,
+    cursor: "pointer",
+    marginRight: 5,
+    marginLeft: 15,
+
     "&:hover": {
-      background: "rgba(255, 255, 255, 0.1)",
-    },
-    [theme.breakpoints.down("sm")]: {
-      width: 140,
+      background: "rgba(224, 208, 217,1)",
     },
   },
   networkIcon: {
     width: "auto",
-    height: 25,
+    height: 20,
+    fontSize: 25,
   },
   menuIcon: {
-    color: "#bdbdbd",
-    fontSize: 26,
+    color: theme.palette.primary.iconColor,
   },
   logo: {
-    height: 38,
-    width: 150,
+    height: 44,
+
     [theme.breakpoints.down("sm")]: {
       height: 30,
       width: "auto",
@@ -199,9 +198,13 @@ const useStyles = makeStyles((theme) => ({
     width: "250px",
     borderLeft: "5px solid pink",
     borderColor: "#3A1242",
-    // borderColor: "#220c3d",
     height: "100%",
-    backgroundColor: "#100525",
+    backgroundColor: theme.palette.primary.iconBack,
+    color: theme.palette.primary.iconColor,
+  },
+  networkText: {
+    marginRight: 5,
+    color: theme.palette.textColors.heading,
   },
 }));
 
@@ -226,7 +229,7 @@ const Navbar = (props) => {
     setState({ ...state, [anchor]: open });
   };
 
-  const { active, account, activate, deactivate } = useWeb3React();
+  const { active, account, chainId, activate, deactivate } = useWeb3React();
 
   const createConnectHandler = async (connector) => {
     try {
@@ -262,6 +265,7 @@ const Navbar = (props) => {
   };
 
   const handleWalletClick = () => {
+    console.log("active", active);
     if (active) {
       setAccountDialog(true);
     } else {
@@ -339,12 +343,12 @@ const Navbar = (props) => {
               src={currentNetwork === etheriumNetwork ? etherIcon : binanceIcon}
               alt={currentNetwork}
             />
-            <span style={{ color: "white", marginLeft: 5 }}>
+            <span className={classes.networkText}>
               {currentNetwork === etheriumNetwork ? "Ethereum" : "BSC"}
             </span>
           </div>
         </ListItem>
-        <ListItem button style={{ paddingLeft: 35 }}>
+        <ListItem button style={{ paddingLeft: 5 }}>
           <Wallet onWalletClick={handleWalletClick} />
         </ListItem>
       </List>
@@ -368,7 +372,7 @@ const Navbar = (props) => {
             {" "}
             <img
               alt="logo"
-              src="/img/logo-white.png"
+              src="https://polkabridge.org/logo.png"
               className={classes.logo}
             />
           </a>
@@ -435,16 +439,17 @@ const Navbar = (props) => {
           </div>
 
           <div className={classes.grow} />
-          <div className={classes.network}>
+          {/* <div className={classes.network}>
             <img
               className={classes.networkIcon}
               src={currentNetwork === etheriumNetwork ? etherIcon : binanceIcon}
               alt={currentNetwork}
             />
-            <span style={{ color: "#eeeeee", marginLeft: 5 }}>
+            <span style={{ color: "#212121", marginLeft: 5 }}>
               {currentNetwork === etheriumNetwork ? "Ethereum" : "BSC"}
             </span>
-          </div>
+          </div> */}
+          <NetworkSelect selectedNetwork={chainId} />
           <Wallet onWalletClick={handleWalletClick} />
         </Toolbar>
 
@@ -456,7 +461,7 @@ const Navbar = (props) => {
                 <img
                   alt="logo"
                   variant="square"
-                  src="/img/logo-white.png"
+                  src="https://polkabridge.org/logo.png"
                   className={classes.logo}
                 />
               </a>

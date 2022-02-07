@@ -12,7 +12,14 @@ import SwapSettings from "../../common/SwapSettings";
 import etherImg from "../../../assets/ether.png";
 import SwapCardItem from "../../Cards/SwapCardItem";
 import AddIcon from "@material-ui/icons/Add";
-import { allowanceAmount, BNB, ETH, etheriumNetwork, PBR, PWAR } from "../../../constants";
+import {
+  allowanceAmount,
+  BNB,
+  ETH,
+  etheriumNetwork,
+  PBR,
+  PWAR,
+} from "../../../constants";
 import {
   fromWei,
   getPercentage,
@@ -28,7 +35,7 @@ import {
   getLpBalance,
   loadPairAddress,
   addLiquidity,
-  importToken
+  importToken,
 } from "../../../actions/dexActions";
 import { getAccountBalance } from "../../../actions/accountActions";
 import BigNumber from "bignumber.js";
@@ -45,7 +52,8 @@ const useStyles = makeStyles((theme) => ({
   card: {
     width: 500,
     borderRadius: 15,
-    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+    backgroundColor: theme.palette.primary.bgCard,
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 15,
@@ -69,6 +77,8 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+    color: theme.palette.primary.iconColor,
+
     [theme.breakpoints.down("sm")]: {
       paddingTop: 0,
     },
@@ -82,7 +92,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   cardSubHeading: {
-    color: "#ffffff",
+    color: theme.palette.primary.iconColor,
+
     display: "flex",
     width: "95%",
     alignItems: "center",
@@ -91,21 +102,22 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 2,
   },
   settingIcon: {
-    color: "#f6f6f6",
+    color: theme.palette.primary.iconColor,
     fontSize: 22,
     [theme.breakpoints.down("sm")]: {
       fontSize: 20,
     },
   },
   addIcon: {
-    color: "#f6f6f6",
+    color: theme.palette.primary.iconColor,
     marginTop: -12,
     marginBottom: -12,
     borderRadius: "36%",
-    border: "3px solid #212121",
+
     transition: "all 0.4s ease",
     fontSize: 28,
-    backgroundColor: "#191B1E",
+    padding: 4,
+    backgroundColor: theme.palette.primary.iconBack,
   },
   selectPoolContainer: {
     display: "flex",
@@ -120,10 +132,10 @@ const useStyles = makeStyles((theme) => ({
     padding: 6,
     marginLeft: 5,
     marginRight: 5,
-    border: "0.5px solid rgba(255, 255, 255, 0.1)",
+    border: "0.5px solid rgba(224, 224, 224, 0.8)",
     borderRadius: 10,
     "&:hover": {
-      background: "rgba(255, 255, 255, 0.1)",
+      background: "rgba(250, 250, 250, 0.1)",
     },
     [theme.breakpoints.down("sm")]: {
       width: 90,
@@ -140,7 +152,7 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     fontSize: 15,
     fontWeight: 500,
-    color: "#e5e5e5",
+    color: theme.palette.textColors.subheading,
     [theme.breakpoints.down("sm")]: {
       fontSize: 14,
     },
@@ -163,20 +175,25 @@ const useStyles = makeStyles((theme) => ({
   title: {
     paddingTop: 5,
     fontSize: 18,
+    color: theme.palette.textColors.heading,
+
     [theme.breakpoints.down("sm")]: {
       fontSize: 18,
     },
   },
   cardTitle: {
     fontSize: 16,
-    color: "#bdbdbd",
+
+    color: theme.palette.textColors.subheading,
+
     [theme.breakpoints.down("sm")]: {
       fontSize: 16,
     },
   },
   hintStyle: {
     fontSize: 13,
-    color: "#e5e5e5",
+    color: theme.palette.textColors.subheading,
+
     marginTop: 20,
     [theme.breakpoints.down("sm")]: {
       marginTop: 10,
@@ -218,7 +235,7 @@ const AddCard = (props) => {
       poolReserves,
       pairContractData,
       transaction,
-      tokenList
+      tokenList,
     },
     addLiquidityEth,
     checkAllowance,
@@ -229,7 +246,7 @@ const AddCard = (props) => {
     loadPairAddress,
     getAccountBalance,
     addLiquidity,
-    importToken
+    importToken,
   } = props;
 
   const currentDefaultToken = {
@@ -247,21 +264,23 @@ const AddCard = (props) => {
 
   const [swapDialogOpen, setSwapDialog] = useState(false);
 
-  const [_token0PriceUSD, setToken0PriceUSD] = useState(null)
-  const [_token1PriceUSD, setToken1PriceUSD] = useState(null)
-
+  const [_token0PriceUSD, setToken0PriceUSD] = useState(null);
+  const [_token1PriceUSD, setToken1PriceUSD] = useState(null);
 
   const allTokens = useAllTokenData();
 
   useEffect(() => {
     if (!allTokens) {
-      return
+      return;
     }
 
-    setToken0PriceUSD(allTokens?.[selectedToken0.address?.toLowerCase()]?.priceUSD)
-    setToken1PriceUSD(allTokens?.[selectedToken1.address?.toLowerCase()]?.priceUSD)
-
-  }, [allTokens, selectedToken1, selectedToken0])
+    setToken0PriceUSD(
+      allTokens?.[selectedToken0.address?.toLowerCase()]?.priceUSD
+    );
+    setToken1PriceUSD(
+      allTokens?.[selectedToken1.address?.toLowerCase()]?.priceUSD
+    );
+  }, [allTokens, selectedToken1, selectedToken0]);
 
   const [addStatus, setStatus] = useState({
     message: "Please select tokens",
@@ -297,7 +316,6 @@ const AddCard = (props) => {
 
   useEffect(() => {
     async function initSelection() {
-
       const [token0Query, token1Query] = [
         query.get("inputCurrency"),
         query.get("outputCurrency"),
@@ -306,7 +324,6 @@ const AddCard = (props) => {
       let _token0 = {};
       let _token1 = {};
       if (currentNetwork === etheriumNetwork) {
-
         if (token0Query) {
           _token0 = getTokenToSelect(token0Query);
 
@@ -331,14 +348,11 @@ const AddCard = (props) => {
           _token1 = getTokenToSelect(ETH);
           setToken1(_token1);
         }
-
       } else {
-
-        _token0 = getTokenToSelect(BNB)
-        _token1 = getTokenToSelect(PWAR)
-        setToken0(_token0)
-        setToken1(_token1)
-
+        _token0 = getTokenToSelect(BNB);
+        _token1 = getTokenToSelect(PWAR);
+        setToken0(_token0);
+        setToken1(_token1);
       }
 
       verifySwapStatus(
@@ -379,7 +393,6 @@ const AddCard = (props) => {
   };
 
   const currentTokenApprovalStatus = () => {
-
     if (isApproved(selectedToken0) && isApproved(selectedToken1)) {
       return true;
     }
@@ -441,7 +454,6 @@ const AddCard = (props) => {
         setLocalStateLoading(true);
         clearInputState();
 
-
         await Promise.all([
           getAccountBalance(selectedToken0, currentNetwork),
           getAccountBalance(selectedToken1, currentNetwork),
@@ -458,7 +470,6 @@ const AddCard = (props) => {
   }, [selectedToken0, selectedToken1, currentNetwork, currentAccount]);
 
   const handleConfirmAllowance = async () => {
-
     const _allowanceAmount = allowanceAmount;
     if (!approvedTokens[selectedToken0.symbol]) {
       await confirmAllowance(
@@ -781,8 +792,8 @@ const AddCard = (props) => {
     }
 
     if (transaction.type === "add" && transaction.status === "success") {
-      getAccountBalance(selectedToken0, currentNetwork)
-      getAccountBalance(selectedToken1, currentNetwork)
+      getAccountBalance(selectedToken0, currentNetwork);
+      getAccountBalance(selectedToken1, currentNetwork);
     }
 
     if (
@@ -791,7 +802,6 @@ const AddCard = (props) => {
     ) {
       setSwapDialog(true);
     }
-
   }, [transaction]);
 
   const handleConfirmSwapClose = (value) => {
@@ -948,5 +958,5 @@ export default connect(mapStateToProps, {
   loadPairAddress,
   getAccountBalance,
   addLiquidity,
-  importToken
+  importToken,
 })(AddCard);

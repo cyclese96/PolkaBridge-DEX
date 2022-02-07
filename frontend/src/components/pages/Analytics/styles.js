@@ -14,6 +14,8 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
     border: "1px solid #616161",
     background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    // background: theme.palette.primary.bgCard,
+
     borderRadius: 15,
     paddingLeft: 10,
     paddingRight: 10,
@@ -155,7 +157,7 @@ const useStyles = makeStyles((theme) => ({
 
   tokenListHeading: {
     width: "100%",
-    color: "#bdbdbd",
+    color: theme.palette.textColors.heading,
     marginTop: 150,
     marginBottom: 10,
     paddingLeft: 2,
@@ -181,12 +183,12 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 500,
     letterSpacing: 0.7,
     fontSize: 18,
-    display: 'flex',
-    justifyContent: 'flex-end',
+    display: "flex",
+    justifyContent: "flex-end",
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 10,
     },
-  }
+  },
 }));
 
 export default useStyles;

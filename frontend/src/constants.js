@@ -48,6 +48,10 @@ export const routerAddresses = {
     testnet: "0xbb8331FAAB7E6BA2Ac819262bf4A29E44f4A112B",
     mainnet: "0x8A2795aE669476Bf119A1a40FbFD75cA71Fd35c4",
   },
+  moonriver: {
+    testnet: "0x2fc26998c0EB0CC67DC9d41f7f1F4508dE214292",
+    mainnet: "",
+  },
   bsc: {
     testnet: "",
     mainnet: "",
@@ -67,6 +71,10 @@ export const factoryAddresses = {
     testnet: "0xAeDa6b39324e658e49959d23153033c6368fB5dc",
     mainnet: "0xeff9EcEFe14279C0157f88573Ca9361D253c10bE",
   },
+  moonriver: {
+    testnet: "0x2fc26998c0EB0CC67DC9d41f7f1F4508dE214292",
+    mainnet: "",
+  },
   bsc: {
     testnet: "",
     mainnet: "",
@@ -83,7 +91,7 @@ export const factoryAddresses = {
 
 export const farmAddresses = {
   ethereum: {
-    testnet: "0x797620053834Ee1A6876c2143AB62D8eA69b58f4",
+    testnet: "0xf49c7F516314d84a4c9e02EB2711Da6a6f56f0D1",
     mainnet: "0xBaF15D830ddeB6c11fFae8890d9c902D8dF1f3E7",
   },
 };
@@ -133,10 +141,10 @@ export const infuraMainnetApi = `https://mainnet.infura.io/v3/${process.env.REAC
 const testing = true;
 
 export const currentConnection = testing ? "testnet" : "mainnet";
-// export const currentConnection = "mainnet";
 
 export const etheriumNetwork = "ethereum";
 export const bscNetwork = "bsc";
+export const moonriverNetwork = "moonriver";
 
 export const etherConfig = {
   network_id: {
@@ -154,7 +162,7 @@ export const bscConfig = {
   network_rpc_testnet: "https://data-seed-prebsc-1-s1.binance.org:8545/",
 };
 
-export const supportedChains = [1, 4, 42, 56, 97];
+export const supportedChains = [1, 4, 42, 56, 97, 1285, 1287];
 
 export const allowanceAmount = "9999999999999999999999999";
 
@@ -386,6 +394,428 @@ export const tokens = [
     decimals: 18,
   },
 ];
+
+const moonriverTokens = [
+  {
+    name: "Wrapped Moonriver",
+    symbol: "WMOVR",
+    address: testing ? "" : "0x98878b06940ae243284ca214f92bb71a2b032b8a",
+    decimals: 18,
+  },
+  {
+    name: "USD Coin",
+    symbol: "USDC",
+    address: testing ? "" : "",
+    decimals: 6,
+  },
+  {
+    name: "US Tether",
+    symbol: "USDT",
+    address: testing ? "" : "",
+    decimals: 6,
+  },
+  {
+    name: "Wrapped Ether",
+    symbol: "WETH",
+    address: testing ? "" : "",
+    decimals: 6,
+  },
+  {
+    name: "Frax",
+    symbol: "FRAX",
+    address: testing ? "" : "0x853d955acef822db058eb8505911ed77f175b99e",
+    decimals: 6,
+  },
+  {
+    name: "MIM",
+    symbol: "MIN",
+    address: testing ? "" : "",
+    decimals: 6,
+  },
+  {
+    name: "Wrapped Bitcoin",
+    symbol: "WBTC",
+    address: testing ? "" : "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    decimals: 18,
+  },
+  {
+    name: "Sushi Swap",
+    symbol: "SUSHI",
+    address: testing ? "" : "",
+    decimals: 18,
+  },
+  {
+    name: "Aave Token",
+    symbol: "AAVE",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Ad Ex Network",
+    symbol: "ADX",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Aergo",
+    symbol: "Aergo",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "ankr Eth",
+    symbol: "aETHc",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "ag EUR",
+    symbol: "ag EUR",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Adventure Gold",
+    symbol: "AGLD",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Akropolis",
+    symbol: "AKRO",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Alchemix",
+    symbol: "ALCX",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Aleph",
+    symbol: "ALEPH",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Alpha Finance",
+    symbol: "ALPHA",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Alchemix USD",
+    symbol: "al USD",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "AMP",
+    symbol: "AMP",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Ampleforth",
+    symbol: "AMPL",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Angle",
+    symbol: "ANGLE",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Ankr Network",
+    symbol: "ANKR",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Arogon",
+    symbol: "ANT",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Any Swap",
+    symbol: "ANY",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "API3",
+    symbol: "API3",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "apWine Token",
+    symbol: "APW",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Archer DAO",
+    symbol: "ARCH",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "ARC Governance",
+    symbol: "ARCx",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Armor",
+    symbol: "ARMOR",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Armor NXM",
+    symbol: "arNXM",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Asgard",
+    symbol: "ASG",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Assy Index",
+    symbol: "ASSY",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Attrace",
+    symbol: "ATTR",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Bounce Token",
+    symbol: "AUCTION",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Avastars",
+    symbol: "AVASTR",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Axie Infinity Shard",
+    symbol: "AXS",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Basis Bond",
+    symbol: "BAB",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Basis Cash",
+    symbol: "BAB",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "ag EUR",
+    symbol: "ag EUR",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Alpha Rome",
+    symbol: "aROME",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Avax-AnySwap",
+    symbol: "AVAX",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "MoonBeans",
+    symbol: "BEANS",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "BEPRO Network",
+    symbol: "BEPRO",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Beefy Finance",
+    symbol: "BIFI",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "ag EUR",
+    symbol: "ag EUR",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "BNB-Meter",
+    symbol: "BNB",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Binance USD",
+    symbol: "BUSD",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Curve DAO Token",
+    symbol: "CRV",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Dai Stablecoin",
+    symbol: "DAI",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Fantom",
+    symbol: "FTM",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "ChainLink Token",
+    symbol: "Link",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Mai Mi Matic",
+    symbol: "MAI",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Matic",
+    symbol: "MATIC",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Magic Internet Money",
+    symbol: "MIM",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Meter Governance",
+    symbol: "MTRG",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "PolkaMarkets",
+    symbol: "POLK",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Relay",
+    symbol: "RELAY",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "RivrDoge",
+    symbol: "RivrDoge",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Rivr Shiba",
+    symbol: "RIVRSHIBA",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Synthetix Network Token",
+    symbol: "SNX",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Sushi Token",
+    symbol: "SUSHI",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "USD Coin",
+    symbol: "USDC",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Tether USD",
+    symbol: "USDT",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Wrapped Bitcoin",
+    symbol: "WBTC",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+  {
+    name: "Wrapped Ether",
+    symbol: "WETH",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+
+  {
+    name: "yearn.finance",
+    symbol: "YFI",
+    address: testing ? " " : "",
+    decimals: 18,
+  },
+];
+
+export const allNetworkTokens = {
+  ethereum: tokens,
+  moonriver: moonriverTokens,
+};
+
+export const blocksExplorer = {
+  ethereum: {
+    testnet: "https://rinkeby.etherscan.io",
+    mainnet: "https://etherscan.io",
+  },
+  moonriver: {
+    testnet: "https://moonbase.moonscan.io",
+    mainnet: "https://moonriver.moonscan.io",
+  },
+};
 
 export const DECIMAL_6_ADDRESSES = [
   tokenAddresses.ethereum.USDC.testnet,

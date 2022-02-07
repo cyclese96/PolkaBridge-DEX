@@ -13,22 +13,67 @@ import Farms from "./pages/Farms/Farms";
 
 const useStyles = makeStyles((theme) => ({
   tabs: {
-    paddingTop: 10,
-  },
-  default_tabStyle: {
-    color: "rgba(255, 255, 255, 0.5)",
-    fontSize: 14,
+    marginTop: 30,
+    marginBottom: 30,
+    borderRadius: 15,
+    // padding: 7,
+    display: "flex",
+    width: 400,
+    justifyContent: "space-between",
+    alignItems: "center",
+    background: "#ffffff",
+    padding: 7,
+    // border: "7px solid #bdbdbd",
+    // borderWidth: "7px",
+    // borderColor: theme.palette.primary.iconBack,
+    // borderStyle: "solid",
     [theme.breakpoints.down("sm")]: {
-      fontSize: 14,
+      width: "90%",
     },
   },
-  active_tabStyle: {
-    fontSize: 16,
-    fontWeight: 500,
+  default_tabStyle: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    background: "#ffffff",
+    color: theme.palette.primary.iconColor,
+    padding: 3,
+    paddingLeft: 15,
+    paddingRight: 15,
+    cursor: "pointer",
+    fontWeight: 600,
+    fontSize: 15,
     borderRadius: 7,
-    color: "white",
+    "&:hover": {
+      background: "#e5e5e5",
+    },
     [theme.breakpoints.down("sm")]: {
-      fontSize: 16,
+      paddingLeft: 10,
+      paddingRight: 10,
+    },
+  },
+  noDecoration: {
+    textDecoration: "none",
+  },
+  active_tabStyle: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    background: theme.palette.primary.iconBack,
+    color: theme.palette.primary.iconColor,
+    padding: 3,
+    paddingLeft: 15,
+    paddingRight: 15,
+    cursor: "pointer",
+    fontWeight: 600,
+    fontSize: 15,
+    borderRadius: 7,
+    "&:hover": {
+      background: "#e5e5e5",
+    },
+    [theme.breakpoints.down("sm")]: {
+      paddingLeft: 10,
+      paddingRight: 10,
     },
   },
 }));
@@ -58,49 +103,50 @@ const TabPage = ({ data = 1 }) => {
 
   return (
     <>
-      <Tabs
-        value={data}
-        TabIndicatorProps={{
-          style: {
-            backgroundColor: "#E0077D",
-          },
-        }}
-        centered
-        className={classes.tabs}
-      >
-        <Link to="/">
-          <Tab
+      <div className={classes.tabs}>
+        <Link to="/" className={classes.noDecoration}>
+          {" "}
+          <div
             className={
               data === 0 ? classes.active_tabStyle : classes.default_tabStyle
             }
-            label="Swap"
-          />
+          >
+            Swap{" "}
+          </div>
         </Link>
-        <Link to="/liquidity">
-          <Tab
+        <Link to="/liquidity" className={classes.noDecoration}>
+          <div
             className={
               data === 1 ? classes.active_tabStyle : classes.default_tabStyle
             }
-            label="Pools"
-          />
+          >
+            Pools{" "}
+          </div>
         </Link>
-        <Link to="/farms">
-          <Tab
+        <Link to="/farms" className={classes.noDecoration}>
+          <div
             className={
               data === 2 ? classes.active_tabStyle : classes.default_tabStyle
             }
-            label="Farms"
-          />
+          >
+            Farms{" "}
+          </div>
         </Link>
-        <Link to="/charts">
-          <Tab
+        <Link to="/charts" className={classes.noDecoration}>
+          {" "}
+          <div
             className={
               data === 3 ? classes.active_tabStyle : classes.default_tabStyle
             }
-            label="Charts"
-          />
+          >
+            Charts{" "}
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/478/478544.png"
+              style={{ height: 16, marginTop: -5, marginLeft: 5 }}
+            />
+          </div>
         </Link>
-      </Tabs>
+      </div>
 
       <TabPanel data={0} index={0}>
         <Swap />

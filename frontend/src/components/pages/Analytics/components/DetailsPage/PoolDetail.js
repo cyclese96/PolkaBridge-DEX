@@ -6,9 +6,7 @@ import {
   usePairTransactions,
 } from "../../../../../contexts/PairData";
 import { formattedNum, formattedPercent } from "../../../../../utils/timeUtils";
-import {
-  useEthPrice,
-} from "../../../../../contexts/GlobalData";
+import { useEthPrice } from "../../../../../contexts/GlobalData";
 import { Button, Card } from "@material-ui/core";
 import TokenIcon from "../../../../common/TokenIcon";
 // import { formatCurrency } from "../../../utils/helper";
@@ -36,7 +34,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   breadcrumbsTitle: {
-    color: "white",
+    color: theme.palette.textColors.heading,
+
     fontSize: 14,
     fontWeight: 400,
   },
@@ -57,7 +56,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 10,
   },
   tokenTitle: {
-    color: "white",
+    color: theme.palette.textColors.heading,
+
     fontSize: "2rem",
     [theme.breakpoints.down("sm")]: {
       fontSize: 17,
@@ -101,13 +101,15 @@ const useStyles = makeStyles((theme) => ({
     background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
   },
   cardTitle: {
-    color: "white",
+    color: theme.palette.textColors.textPrimary,
+
     fontSize: 14,
     textAlign: "left",
     paddingBottom: 7,
   },
   cardValue: {
-    color: "white",
+    color: theme.palette.textColors.textPrimary,
+
     fontSize: 32,
     textAlign: "left",
     [theme.breakpoints.down("sm")]: {
@@ -115,7 +117,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   cardTokenValue: {
-    color: "white",
+    color: theme.palette.textColors.textPrimary,
+
     fontSize: 20,
     textAlign: "left",
   },
@@ -262,8 +265,7 @@ function PoolDetail({ pairAddress }) {
     !oneDayVolumeUSD ? oneDayVolumeUSD : usingUtVolume
   );
   // Total gas fees collected
-  const fees =
-    formattedNum(oneDayVolumeUSD * 0.002)
+  const fees = formattedNum(oneDayVolumeUSD * 0.002);
 
   const isLoaded = () => {
     return (poolInfo && poolInfo.token1?.symbol) || (token0 && token0.address);
@@ -285,13 +287,20 @@ function PoolDetail({ pairAddress }) {
         <div className={classes.background}>
           <div for="breadcrumbs" className={classes.breadcrumbs}>
             <h6 className={classes.breadcrumbsTitle}>
-              <Link to="/charts">Pair</Link>→{" "}
+              <Link to="/charts" style={{ color: "black" }}>
+                Pair
+              </Link>
+              →{" "}
               <span>
                 {poolInfo.token0?.symbol} - {poolInfo.token1?.symbol}
                 <a
                   style={{ color: "#DF097C", paddingLeft: 5 }}
                   target="_blank"
-                  href={currentConnection === 'testnet' ? `https://rinkeby.etherscan.io/address/${pairAddress}` : `https://etherscan.io/address/${pairAddress}`}
+                  href={
+                    currentConnection === "testnet"
+                      ? `https://rinkeby.etherscan.io/address/${pairAddress}`
+                      : `https://etherscan.io/address/${pairAddress}`
+                  }
                 >
                   ({pairAddress && pairAddress.slice(0, 8)})
                 </a>
