@@ -8,19 +8,6 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./ReentrancyGuard.sol";
 
-interface IMigratorChef {
-    // Perform LP token migration from legacy UniswapV2 to PolkaBridgeSwap.
-    // Take the current LP token address and return the new LP token address.
-    // Migrator should have full access to the caller's LP token.
-    // Return the new LP token address.
-    //
-    // XXX Migrator must have allowance access to UniswapV2 LP tokens.
-    // PolkaBridgeSwap must mint EXACTLY the same amount of PolkaBridgeSwap LP tokens or
-    // else something bad will happen. Traditional UniswapV2 does not
-    // do that so be careful!
-    function migrate(IERC20 token) external returns (IERC20);
-}
-
 // PolkaBridgeFarm is the master of PolkaBridge. He can make PolkaBridge and he is a fair guy.
 //
 // Note that it's ownable and the owner wields tremendous power. The ownership
@@ -59,8 +46,6 @@ contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
     uint256 public PBRPerBlock;
     // Bonus muliplier for early polkaBridge makers.
     uint256 public constant BONUS_MULTIPLIER = 1;
-    // The migrator contract. It has a lot of power. Can only be set through governance (owner).
-    IMigratorChef public migrator;
     // Info of each pool.
     PoolInfo[] public poolInfo;
     // Info of each user that stakes LP tokens.
@@ -79,7 +64,6 @@ contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
     event LogPoolAddition(uint256 indexed pid, uint256 allocPoint, IERC20 indexed lpToken, bool withUpdate);
     event LogSetPool(uint256 indexed pid, uint256 allocPoint, bool withUpdate);
     event LogUpdatePool(uint256 indexed pid, uint256 lastRewardBlock, uint256 lpSupply, uint256 accPBRPerShare);
-    event LogSetMigrator(IMigratorChef indexed migrator);
 
     constructor(
         address _polkaBridge,
@@ -133,24 +117,6 @@ contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
         totalAllocPoint = totalAllocPoint - poolInfo[_pid].allocPoint + _allocPoint;
         poolInfo[_pid].allocPoint = _allocPoint;
         emit LogSetPool(_pid, _allocPoint, _withUpdate);
-    }
-
-    // Set the migrator contract. Can only be called by the owner.
-    function setMigrator(IMigratorChef _migrator) external onlyOwner {
-        migrator = _migrator;
-        emit LogSetMigrator(_migrator);
-    }
-
-    // Migrate lp token to another lp contract. Can be called by anyone. We trust that migrator contract is good.
-    function migrate(uint256 _pid) external {
-        require(address(migrator) != address(0), "migrate: no migrator");
-        PoolInfo storage pool = poolInfo[_pid];
-        IERC20 lpToken = pool.lpToken;
-        uint256 bal = lpToken.balanceOf(address(this));
-        lpToken.safeApprove(address(migrator), bal);
-        IERC20 newLpToken = migrator.migrate(lpToken);
-        require(bal == newLpToken.balanceOf(address(this)), "migrate: bad");
-        pool.lpToken = newLpToken;
     }
 
     // Return reward multiplier over the given _from to _to block.
