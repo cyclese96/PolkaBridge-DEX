@@ -273,7 +273,7 @@ const Swap = (props) => {
 
           setToken1(_token);
         } else {
-          const _token = getTokenToSelect('WMOVR');
+          const _token = getTokenToSelect("WMOVR");
           setToken1(_token);
         }
 
@@ -855,7 +855,6 @@ const Swap = (props) => {
             </div>
           )}
           <Button
-            variant="contained"
             disabled={disableStatus()}
             className={classes.swapButton}
             onClick={handleAction}
