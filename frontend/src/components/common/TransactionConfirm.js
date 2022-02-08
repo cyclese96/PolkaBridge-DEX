@@ -50,8 +50,8 @@ const DialogTitle = withStyles(styles)((props) => {
 
 const useStyles = makeStyles((theme) => ({
   background: {
-    backgroundColor: "#121827",
-    color: "#f9f9f9",
+    backgroundColor: theme.palette.primary.bgCard,
+    color: theme.palette.textColors.heading,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -67,12 +67,13 @@ const useStyles = makeStyles((theme) => ({
   heading: {
     fontSize: 18,
     fontWeight: 400,
-    color: "#f4f4f4",
+
+    color: theme.palette.textColors.heading,
   },
   subheading: {
     fontSize: 13,
     fontWeight: 400,
-    color: "#989898",
+    color: theme.palette.textColors.subheading,
   },
 
   tokenCard: {
@@ -80,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     // alignItems: "space-between",
     width: "90%",
-    border: "0.1px solid rgba(255, 255, 255, 0.1)",
+    border: "0.5px solid rgba(224, 224, 224,0.6)",
     borderRadius: 10,
     paddingLeft: 15,
     paddingRight: 15,
@@ -107,11 +108,12 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 12,
   },
   icon: {
-    color: "#f6f6f6",
+    color: theme.palette.primary.iconColor,
 
     transition: "all 0.4s ease",
     fontSize: 22,
-    backgroundColor: "#191B1E",
+    borderRadius: 30,
+    // backgroundColor: theme.palette.primary.iconBack,
   },
 }));
 

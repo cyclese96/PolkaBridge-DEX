@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   background: {
-    color: "#f9f9f9",
+    backgroundColor: theme.palette.primary.bgCard,
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-around",
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
   message: {
     marginTop: 15,
-    color: "#f9f9f9",
+    color: theme.palette.textColors.heading,
     fontSize: 16,
   },
   image: {
@@ -49,6 +49,12 @@ const useStyles = makeStyles((theme) => ({
       width: "80%",
     },
   },
+  heading: {
+    fontSize: 18,
+    fontWeight: 400,
+
+    color: theme.palette.textColors.heading,
+  },
 }));
 
 const TransactionStatus = ({ dex: { transaction }, onClose }) => {
@@ -57,7 +63,7 @@ const TransactionStatus = ({ dex: { transaction }, onClose }) => {
   return (
     <div>
       <div className={classes.background}>
-        <h6 style={{ fontSize: 18 }}>Transaction Status</h6>{" "}
+        <h6 className={classes.heading}>Transaction Status</h6>{" "}
         <div className="mt-4 ">
           {transaction.status === "pending" && (
             <div className="text-center">
@@ -96,11 +102,7 @@ const TransactionStatus = ({ dex: { transaction }, onClose }) => {
             )}
           </div>
         </div>
-        <Button
-          variant="contained"
-          className={classes.closeButton}
-          onClick={onClose}
-        >
+        <Button className={classes.closeButton} onClick={onClose}>
           Close
         </Button>
       </div>
