@@ -21,8 +21,9 @@ const useStyles = makeStyles((theme) => ({
       background: "rgba(224, 208, 217,1)",
     },
     [theme.breakpoints.down("sm")]: {
-      paddingLeft: 30,
-      paddingRight: 30,
+      paddingLeft: 15,
+      paddingRight: 15,
+      marginLeft: 25,
     },
   },
   navbarButton: {
