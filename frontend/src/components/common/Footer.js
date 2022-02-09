@@ -5,16 +5,32 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     alignItems: "center",
+    justifyContent: "center",
+    flexWrap: "wrap",
   },
   item: {
     marginLeft: 10,
     marginRight: 10,
     fontSize: 13,
+    color: theme.palette.primary.iconColor,
     [theme.breakpoints.down("sm")]: {
       fontSize: 9,
       marginLeft: 5,
       marginRight: 5,
     },
+  },
+  ankrLabel: {
+    textAlign: "center",
+    color: theme.palette.primary.iconColor,
+    fontSize: 12,
+    paddingTop: 3,
+    marginLeft: 10,
+    // marginBottom: 4,
+  },
+  icon: {
+    width: 25,
+    height: "100%",
+    marginRight: 10,
   },
 }));
 
@@ -60,6 +76,14 @@ const Footer = () => {
       >
         Landing Page
       </a>
+
+      <div className={classes.ankrLabel}>
+        <img
+          src="https://assets.coingecko.com/coins/images/4324/small/U85xTl2.png?1608111978"
+          className={classes.icon}
+        />
+        RPC powered by ANKR protocol
+      </div>
     </div>
   );
 };

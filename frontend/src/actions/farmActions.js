@@ -9,17 +9,10 @@ import {
   GET_FARM_POOL,
 } from "./types";
 import { farmContract, pairContract } from "../contracts/connections";
-import {
-  currentConnection,
-  farmAddresses,
-  farmContractConfig,
-  farmContractStartBlock,
-  tokenAddresses,
-} from "../constants";
+import { currentConnection, farmAddresses, tokenAddresses } from "../constants";
 import BigNumber from "bignumber.js";
 import { fromWei } from "../utils/helper";
-import { getPbrPriceFromCoinGecko } from "../utils/connectionUtils";
-import { getBlockFromTimestamp } from "../utils/timeUtils";
+
 import {
   getCurrentTokenPriceInEth,
   getOnlyCurrentEthPrice,
@@ -40,10 +33,7 @@ export const checkLpFarmAllowance =
         network,
       });
       const _pairContract = pairContract(pairAddress, network);
-      const _farmAddress =
-        currentConnection === "mainnet"
-          ? farmAddresses.ethereum.mainnet
-          : farmAddresses.ethereum.testnet;
+      const _farmAddress = farmAddresses?.[network];
 
       dispatch({
         type: SHOW_FARM_LOADING,
@@ -80,10 +70,7 @@ export const confirmLpFarmAllowance =
   (allowanceAmount, pairAddress, account, network) => async (dispatch) => {
     try {
       const _pairContract = pairContract(pairAddress, network);
-      const _farmAddress =
-        currentConnection === "mainnet"
-          ? farmAddresses.ethereum.mainnet
-          : farmAddresses.ethereum.testnet;
+      const _farmAddress = farmAddresses?.[network];
 
       dispatch({
         type: SHOW_FARM_LOADING,
