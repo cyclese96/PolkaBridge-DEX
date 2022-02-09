@@ -6,9 +6,6 @@ import tokenAbi from "../abi/erc20.json";
 import farmAbi from "../abi/PolkaBridgeFarm.json";
 
 import {
-  bscNetwork,
-  currentConnection,
-  etheriumNetwork,
   routerAddresses,
   factoryAddresses,
   farmAddresses,

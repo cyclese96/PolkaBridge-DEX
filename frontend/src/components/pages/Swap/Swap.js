@@ -178,6 +178,27 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 18,
     fontWeight: 500,
   },
+  certikLabel: {
+    textAlign: "center",
+    color: theme.palette.primary.iconColor,
+    fontWeight: 600,
+    fontSize: 14,
+    paddingTop: 3,
+    // marginBottom: 4,
+  },
+  ankrLabel: {
+    textAlign: "center",
+    color: theme.palette.primary.iconColor,
+
+    fontSize: 12,
+    paddingTop: 3,
+    // marginBottom: 4,
+  },
+  icon: {
+    width: 25,
+    height: "100%",
+    marginRight: 10,
+  },
 }));
 
 const Swap = (props) => {
@@ -772,6 +793,12 @@ const Swap = (props) => {
 
   return (
     <>
+      <a href="https://certik.org/projects/polkabridge" target="_blank">
+        <div className={classes.certikLabel}>
+          <img src="img/certik.png" className={classes.icon} />
+          AMM audited by Certik and Hacken
+        </div>
+      </a>
       <TabPage data={0} />
 
       <TransactionConfirm
