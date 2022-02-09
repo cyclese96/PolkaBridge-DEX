@@ -1,0 +1,84 @@
+{
+  "ethereum": [
+    {
+      "name": "Polkabridge",
+      "symbol": "PBR",
+      "address": "0xf6c9FF0543f932178262DF8C81A12A3132129b51",
+      "decimals": 18
+    },
+    {
+      "name": "Ethereum",
+      "symbol": "ETH",
+      "address": "0xc778417e063141139fce010982780140aa0cd5ab",
+      "decimals": 18
+    },
+    {
+      "name": "US Tether",
+      "symbol": "USDT",
+      "address": "0xe687b0a94c3a20540552d981cd311a6812759df8",
+      "decimals": 6
+    },
+    {
+      "name": "USD Coin",
+      "symbol": "USDC",
+      "address": "0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b",
+      "decimals": 6
+    },
+    {
+      "name": "US Tether12",
+      "symbol": "USDT12",
+      "address": "0xb6083cf9c33ccde1711ecb63cff1b0dd2cf06c09",
+      "decimals": 12
+    },
+    {
+      "name": "US Tether8",
+      "symbol": "USDT8",
+      "address": "0x1793fbb125512015099261d339ed2e2f3fe94b2d",
+      "decimals": 8
+    },
+    {
+      "name": "1INCH Token",
+      "symbol": "1INCH",
+      "address": "0xcc521406C8F796169DCe1D10bDe6AaA60847FB63",
+      "decimals": 18
+    }
+  ],
+  "moonriver": [
+    {
+      "name": "Wrapped Moonriver",
+      "symbol": "WMOVR",
+      "address": "0x7A2d1a8Ee512De3810b153883257Bf865CA0ec3f",
+      "decimals": 18
+    },
+    {
+      "name": "USD Coin",
+      "symbol": "USDC",
+      "address": "0xe3f5a90f9cb311505cd691a46596599aa1a0ad7d",
+      "decimals": 6
+    },
+    {
+      "name": "US Tether",
+      "symbol": "USDT",
+      "address": "",
+      "decimals": 6
+    },
+    {
+      "name": "Wrapped Ether",
+      "symbol": "WETH",
+      "address": "",
+      "decimals": 6
+    },
+    {
+      "name": "Frax",
+      "symbol": "FRAX",
+      "address": "0x853d955acef822db058eb8505911ed77f175b99e",
+      "decimals": 6
+    },
+    {
+      "name": "MIM",
+      "symbol": "MIN",
+      "address": "",
+      "decimals": 6
+    }
+  ]
+}

@@ -1,0 +1,405 @@
+[
+  {
+    "name": "Wrapped Moonriver",
+    "symbol": "WMOVR",
+    "address": "0x98878b06940ae243284ca214f92bb71a2b032b8a",
+    "decimals": 18
+  },
+  {
+    "name": "USD Coin",
+    "symbol": "USDC",
+    "address": "0xe3f5a90f9cb311505cd691a46596599aa1a0ad7d",
+    "decimals": 6
+  },
+  {
+    "name": "US Tether",
+    "symbol": "USDT",
+    "address": "",
+    "decimals": 6
+  },
+  {
+    "name": "Wrapped Ether",
+    "symbol": "WETH",
+    "address": "",
+    "decimals": 6
+  },
+  {
+    "name": "Frax",
+    "symbol": "FRAX",
+    "address": "0x853d955acef822db058eb8505911ed77f175b99e",
+    "decimals": 6
+  },
+  {
+    "name": "MIM",
+    "symbol": "MIN",
+    "address": "",
+    "decimals": 6
+  },
+  {
+    "name": "Wrapped Bitcoin",
+    "symbol": "WBTC",
+    "address": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "decimals": 18
+  },
+  {
+    "name": "Sushi Swap",
+    "symbol": "SUSHI",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Aave Token",
+    "symbol": "AAVE",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Ad Ex Network",
+    "symbol": "ADX",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Aergo",
+    "symbol": "Aergo",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "ankr Eth",
+    "symbol": "aETHc",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "ag EUR",
+    "symbol": "ag EUR",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Adventure Gold",
+    "symbol": "AGLD",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Akropolis",
+    "symbol": "AKRO",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Alchemix",
+    "symbol": "ALCX",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Aleph",
+    "symbol": "ALEPH",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Alpha Finance",
+    "symbol": "ALPHA",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Alchemix USD",
+    "symbol": "al USD",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "AMP",
+    "symbol": "AMP",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Ampleforth",
+    "symbol": "AMPL",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Angle",
+    "symbol": "ANGLE",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Ankr Network",
+    "symbol": "ANKR",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Arogon",
+    "symbol": "ANT",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Any Swap",
+    "symbol": "ANY",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "API3",
+    "symbol": "API3",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "apWine Token",
+    "symbol": "APW",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Archer DAO",
+    "symbol": "ARCH",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "ARC Governance",
+    "symbol": "ARCx",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Armor",
+    "symbol": "ARMOR",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Armor NXM",
+    "symbol": "arNXM",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Asgard",
+    "symbol": "ASG",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Assy Index",
+    "symbol": "ASSY",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Attrace",
+    "symbol": "ATTR",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Bounce Token",
+    "symbol": "AUCTION",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Avastars",
+    "symbol": "AVASTR",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Axie Infinity Shard",
+    "symbol": "AXS",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Basis Bond",
+    "symbol": "BAB",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Basis Cash",
+    "symbol": "BAB",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "ag EUR",
+    "symbol": "ag EUR",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Alpha Rome",
+    "symbol": "aROME",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Avax-AnySwap",
+    "symbol": "AVAX",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "MoonBeans",
+    "symbol": "BEANS",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "BEPRO Network",
+    "symbol": "BEPRO",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Beefy Finance",
+    "symbol": "BIFI",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "ag EUR",
+    "symbol": "ag EUR",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "BNB-Meter",
+    "symbol": "BNB",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Binance USD",
+    "symbol": "BUSD",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Curve DAO Token",
+    "symbol": "CRV",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Dai Stablecoin",
+    "symbol": "DAI",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Fantom",
+    "symbol": "FTM",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "ChainLink Token",
+    "symbol": "Link",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Mai Mi Matic",
+    "symbol": "MAI",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Matic",
+    "symbol": "MATIC",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Magic Internet Money",
+    "symbol": "MIM",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Meter Governance",
+    "symbol": "MTRG",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "PolkaMarkets",
+    "symbol": "POLK",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Relay",
+    "symbol": "RELAY",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "RivrDoge",
+    "symbol": "RivrDoge",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Rivr Shiba",
+    "symbol": "RIVRSHIBA",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Synthetix Network Token",
+    "symbol": "SNX",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Sushi Token",
+    "symbol": "SUSHI",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "USD Coin",
+    "symbol": "USDC",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Tether USD",
+    "symbol": "USDT",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Wrapped Bitcoin",
+    "symbol": "WBTC",
+    "address": "",
+    "decimals": 18
+  },
+  {
+    "name": "Wrapped Ether",
+    "symbol": "WETH",
+    "address": "",
+    "decimals": 18
+  },
+
+  {
+    "name": "yearn.finance",
+    "symbol": "YFI",
+    "address": "",
+    "decimals": 18
+  }
+]

@@ -1,9 +1,9 @@
 import Web3 from "web3";
 import RouterAbi from "../abi/Router.json";
 import FactoryAbi from "../abi/Factory.json";
-import pairAbi from '../abi/pair.json';
-import tokenAbi from '../abi/erc20.json';
-import farmAbi from '../abi/PolkaBridgeFarm.json';
+import pairAbi from "../abi/pair.json";
+import tokenAbi from "../abi/erc20.json";
+import farmAbi from "../abi/PolkaBridgeFarm.json";
 
 import {
   bscNetwork,
@@ -12,20 +12,16 @@ import {
   routerAddresses,
   factoryAddresses,
   farmAddresses,
-
 } from "../../constants";
 import { isMetaMaskInstalled } from "../../utils/helper";
-
-
+import config from "../../utils/config";
 
 export const pairContract = (pairAddress, network) => {
-
   const _pairAbi = pairAbi;
   const _pairAddress = pairAddress;
   const connection = getCurrentConnection(network, _pairAbi, _pairAddress);
   return connection;
 };
-
 
 //get connecttion of imported contract
 export const tokenContract = (address, network) => {
@@ -37,85 +33,33 @@ export const tokenContract = (address, network) => {
 };
 
 export const routerContract = (network) => {
-  if (network === bscNetwork) {
-    const address =
-      currentConnection === "testnet"
-        ? routerAddresses.bsc.testnet
-        : routerAddresses.bsc.mainnet;
-
-    const abi = RouterAbi; // update for bsc
-    const connection = getCurrentConnection(network, abi, address);
-    return connection;
-  } else {
-    const address =
-      currentConnection === "testnet"
-        ? routerAddresses.ethereum.testnet
-        : routerAddresses.ethereum.mainnet;
-
-    const abi = RouterAbi;
-    const connection = getCurrentConnection(network, abi, address);
-    return connection;
-  }
+  const _routerAddress = routerAddresses?.[network];
+  const abi = RouterAbi;
+  const connection = getCurrentConnection(network, abi, _routerAddress);
+  return connection;
 };
 
 export const factoryContract = (network) => {
-  if (network === bscNetwork) {
-    const address =
-      currentConnection === "testnet"
-        ? factoryAddresses.bsc.testnet
-        : factoryAddresses.bsc.mainnet;
-
-    const abi = FactoryAbi; // update for bsc
-    const connection = getCurrentConnection(network, abi, address);
-    return connection;
-  } else {
-    const address =
-      currentConnection === "testnet"
-        ? factoryAddresses.ethereum.testnet
-        : factoryAddresses.ethereum.mainnet;
-
-    const abi = FactoryAbi;
-    const connection = getCurrentConnection(network, abi, address);
-    return connection;
-  }
+  const _factoryAddress = factoryAddresses?.[network];
+  const abi = FactoryAbi;
+  const connection = getCurrentConnection(network, abi, _factoryAddress);
+  return connection;
 };
 
 export const farmContract = (network) => {
-  if (network === bscNetwork) {
-    const address = '';
-    const abi = farmAbi; // update for bsc
-    const connection = getCurrentConnection(network, abi, address);
-    return connection;
-  } else {
-    const address =
-      currentConnection === "testnet"
-        ? farmAddresses.ethereum.testnet
-        : farmAddresses.ethereum.mainnet;
-
-    const abi = farmAbi;
-    const connection = getCurrentConnection(network, abi, address);
-    return connection;
-  }
+  const _farmAddress = farmAddresses?.ethereum;
+  const abi = farmAbi;
+  const connection = getCurrentConnection(network, abi, _farmAddress);
+  return connection;
 };
 
 const getCurrentConnection = (blockChainNetwork, abi, contractAddress) => {
-  if (blockChainNetwork === etheriumNetwork) {
-    if (isMetaMaskInstalled()) {
-      const web3 = new Web3(window.ethereum);
-      return new web3.eth.Contract(abi, contractAddress);
-    } else {
-      const infura =
-        currentConnection === "testnet"
-          ? `https://kovan.infura.io/v3/${process.env.REACT_APP_INFURA_KEY.split('').reverse().join('')}`
-          : `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY.split('').reverse().join('')}`;
-
-      const web3 = new Web3(new Web3.providers.HttpProvider(infura));
-      return new web3.eth.Contract(abi, contractAddress);
-    }
+  let web3;
+  if (isMetaMaskInstalled()) {
+    web3 = new Web3(window.ethereum);
   } else {
-    // const web3 = new Web3(new Web3.providers.HttpProvider(bscConfig.network_rpc_testnet));
-    // const web3 = new Web3('https://data-seed-prebsc-1-s1.binance.org:8545');
-    const web3 = new Web3(window.ethereum);
-    return new web3.eth.Contract(abi, contractAddress);
+    web3 = new Web3(new Web3.providers.HttpProvider(config.ankrEthereumRpc));
   }
+
+  return new web3.eth.Contract(abi, contractAddress);
 };

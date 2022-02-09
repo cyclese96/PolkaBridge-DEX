@@ -1,17 +1,13 @@
 import BigNumber from "bignumber.js";
 import {
-  allNetworkTokens,
-  bscTokens,
   currentConnection,
   ETH,
   etheriumNetwork,
-  nullAddress,
   PBR,
   routerAddresses,
   swapFnConstants,
   THRESOLD_WEI_VALUE,
   tokenAddresses,
-  tokens,
   USDC,
   USDT,
 } from "../constants";
@@ -55,20 +51,22 @@ import {
   START_TRANSACTION,
   STOP_PRICE_LOADING,
   UPDATE_TRANSACTION_STATUS,
-  VERIFY_SLIPPAGE,
 } from "./types";
+import ethereumTokens from "../tokenList/tokenListEthereum.json";
+import moonriverTokens from "../tokenList/tokenListMoonriver.json";
+import testTokens from "../tokenList/tokenListTest.json";
 
-const getCurrentGasLimit = (path) => {
-  if (path.length < 3) {
-    return 200000;
-  } else if (path.length === 3) {
-    return 250000;
-  } else if (path.length === 4) {
-    return 300000;
-  } else {
-    return 200000;
-  }
-};
+// const getCurrentGasLimit = (path) => {
+//   if (path.length < 3) {
+//     return 200000;
+//   } else if (path.length === 3) {
+//     return 250000;
+//   } else if (path.length === 4) {
+//     return 300000;
+//   } else {
+//     return 200000;
+//   }
+// };
 
 // swap transaction function
 export const swapTokens =
@@ -806,24 +804,31 @@ export const loadTokens = (network) => async (dispatch) => {
       type: SHOW_LOADING,
     });
 
-    // const currentSupportedTokens =
-    //   network === etheriumNetwork ? tokens : bscTokens;
+    let localTokens = [];
+    if (network === etheriumNetwork) {
+      localTokens =
+        currentConnection === "testnet"
+          ? testTokens?.[network]
+          : ethereumTokens;
+    } else {
+      localTokens =
+        currentConnection === "testnet"
+          ? testTokens?.[network]
+          : moonriverTokens;
+    }
 
-    const currentSupportedTokens = Object.keys(allNetworkTokens).includes(network) ? allNetworkTokens?.[network] : []
-
-    console.log('load tokens ', { currentSupportedTokens, network })
+    console.log("load tokens ", { localTokens, network });
     const cachedTokens = getCachedTokens();
     const allTokens =
       cachedTokens.length > 0
-        ? [...cachedTokens, ...currentSupportedTokens]
-        : [...currentSupportedTokens];
+        ? [...cachedTokens, ...localTokens]
+        : [...localTokens];
     dispatch({
       type: LOAD_TOKEN_LIST,
       payload: allTokens,
     });
   } catch (error) {
     console.log("loadTokens ", error);
-
   }
   dispatch({
     type: HIDE_LOADING,

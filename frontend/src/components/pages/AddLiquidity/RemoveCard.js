@@ -8,20 +8,19 @@ import { connect } from "react-redux";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import { useEffect, useState } from "react";
 import SwapSettings from "../../common/SwapSettings";
-import etherImg from "../../../assets/ether.png";
-import bnbImg from "../../../assets/binance.png";
 import CustomButton from "../../Buttons/CustomButton";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import {
   allowanceAmount,
+  defaultPoolToken0,
+  defaultPoolToken1,
   ETH,
-  etheriumNetwork,
-  tokens,
 } from "../../../constants";
 import {
   fromWei,
   getPercentAmountWithFloor,
   getPriceRatio,
+  getTokenToSelect,
 } from "../../../utils/helper";
 import {
   checkLpAllowance,
@@ -30,9 +29,9 @@ import {
   removeLiquidityEth,
   loadPairAddress,
   removeLiquidity,
+  importToken,
 } from "../../../actions/dexActions";
 import { getAccountBalance } from "../../../actions/accountActions";
-import pwarImg from "../../../assets/pwar.png";
 import SelectToken from "../../common/SelectToken";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import tokenThumbnail from "../../../utils/tokenThumbnail";
@@ -43,6 +42,7 @@ import store from "../../../store";
 import { Settings } from "@material-ui/icons";
 import { formatCurrency } from "../../../utils/formatters";
 import TransactionConfirm from "../../common/TransactionConfirm";
+import { useLocation } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -259,6 +259,7 @@ const RemoveCard = ({
     swapSettings,
     pairContractData,
     transaction,
+    tokenList,
   },
   handleBack,
   checkLpAllowance,
@@ -268,20 +269,17 @@ const RemoveCard = ({
   loadPairAddress,
   removeLiquidity,
   getAccountBalance,
+  importToken,
 }) => {
-  const currentDefaultToken = {
-    icon: etherImg,
-    name: "Ethereum",
-    symbol: "ETH",
-  };
   const classes = useStyles();
   const [liquidityPercent, setLiquidityPercent] = useState(0);
   const [liquidityInputTemp, setLiquidityInputTemp] = useState("");
   const [settingOpen, setOpen] = useState(false);
-  const [selectedToken0, setToken1] = useState(currentDefaultToken);
-  const [selectedToken1, setToken2] = useState({});
+  const [selectedToken0, setToken0] = useState({});
+  const [selectedToken1, setToken1] = useState({});
 
   const [swapDialogOpen, setSwapDialog] = useState(false);
+  const query = new URLSearchParams(useLocation().search);
 
   const handleSettings = () => {
     setOpen(true);
@@ -292,22 +290,49 @@ const RemoveCard = ({
   };
 
   useEffect(() => {
-    if (currentNetwork === etheriumNetwork) {
-      setToken1(tokens[0]);
-      setToken2(tokens[2]);
-    } else {
-      setToken1({
-        icon: bnbImg,
-        name: "Binance",
-        symbol: "BNB",
-      });
-      setToken2({
-        icon: pwarImg,
-        name: "Polkawar",
-        symbol: "PWAR",
-      });
+    async function initSelection() {
+      const [token0Query, token1Query] = [
+        query.get("inputCurrency"),
+        query.get("outputCurrency"),
+      ];
+
+      if (!tokenList || !currentAccount || !currentNetwork) {
+        return;
+      }
+
+      if (token0Query) {
+        const _token = getTokenToSelect(tokenList, token0Query);
+
+        if (!_token || !_token.symbol) {
+          importToken(token0Query, currentAccount, currentNetwork);
+        }
+        setToken0(_token);
+      } else {
+        const _token = getTokenToSelect(
+          tokenList,
+          defaultPoolToken0?.[currentNetwork]
+        );
+        setToken0(_token);
+      }
+
+      if (token1Query) {
+        const _token = getTokenToSelect(tokenList, token1Query);
+
+        if (!_token || !_token.symbol) {
+          importToken(token1Query, currentAccount, currentNetwork);
+        }
+
+        setToken1(_token);
+      } else {
+        const _token = getTokenToSelect(
+          tokenList,
+          defaultPoolToken1?.[currentNetwork]
+        );
+        setToken1(_token);
+      }
     }
-  }, [currentNetwork]);
+    initSelection();
+  }, [currentNetwork, currentAccount, tokenList]);
 
   const currentLpApproved = () => {
     if (
@@ -425,10 +450,10 @@ const RemoveCard = ({
   }, [selectedToken0, selectedToken1, currentNetwork, currentAccount]);
 
   const onToken1Select = (token) => {
-    setToken1(token);
+    setToken0(token);
   };
   const onToken2Select = (token) => {
-    setToken2(token);
+    setToken1(token);
   };
 
   const handleClearState = () => {
@@ -803,4 +828,5 @@ export default connect(mapStateToProps, {
   loadPairAddress,
   removeLiquidity,
   getAccountBalance,
+  importToken,
 })(RemoveCard);

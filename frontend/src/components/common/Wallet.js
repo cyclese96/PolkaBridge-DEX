@@ -1,9 +1,8 @@
 import { Button, makeStyles } from "@material-ui/core";
 import { AccountBalanceWallet } from "@material-ui/icons";
 import { connect } from "react-redux";
-import { connectWallet } from "../../actions/accountActions";
 import { useWeb3React } from "@web3-react/core";
-import React from "react";
+import React, { useCallback } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,22 +58,18 @@ const Wallet = ({ onWalletClick }) => {
   const classes = useStyles();
   const { active, account } = useWeb3React();
 
-  // const handleConnectWallet = async () => {
-  //   if (!isMetaMaskInstalled()) {
-  //     alert("Please install MetaMask to connect!");
-  //     return;
-  //   }
-  //   await connectWallet(true, currentNetwork);
-  // };
+  const handleWalletConnect = useCallback(() => {
+    onWalletClick();
+  }, [onWalletClick]);
 
   return (
     <div>
       {!active ? (
-        <Button onClick={onWalletClick} className={classes.navbarButton}>
+        <Button onClick={handleWalletConnect} className={classes.navbarButton}>
           Connect Wallet
         </Button>
       ) : (
-        <Button onClick={onWalletClick} className={classes.root}>
+        <Button onClick={handleWalletConnect} className={classes.root}>
           <AccountBalanceWallet
             style={{ marginRight: 5, fontSize: 20 }}
             fontSize="medium"
@@ -98,4 +93,4 @@ const mapStateToProps = (state) => ({
   account: state.account,
 });
 
-export default connect(mapStateToProps, { connectWallet })(React.memo(Wallet));
+export default connect(mapStateToProps, {})(React.memo(Wallet));

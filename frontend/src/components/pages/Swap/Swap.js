@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import {
   Button,
   Card,
@@ -6,7 +6,7 @@ import {
   makeStyles,
   Popper,
 } from "@material-ui/core";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import SwapCardItem from "../../Cards/SwapCardItem";
 import SwapVertIcon from "@material-ui/icons/SwapVert";
 import { useState } from "react";
@@ -15,12 +15,19 @@ import BigNumber from "bignumber.js";
 import {
   allowanceAmount,
   BNB,
+  defaultSwapInputToken,
   ETH,
   etheriumNetwork,
+  PBR,
   swapFnConstants,
   THRESOLD_VALUE,
 } from "../../../constants";
-import { fromWei, getPriceRatio, toWei } from "../../../utils/helper";
+import {
+  fromWei,
+  getPriceRatio,
+  getTokenToSelect,
+  toWei,
+} from "../../../utils/helper";
 import {
   calculatePriceImpact,
   checkAllowance,
@@ -237,59 +244,61 @@ const Swap = (props) => {
 
   const query = new URLSearchParams(useLocation().search);
 
-  const getTokenToSelect = (tokenQuery) => {
-    const token =
-      tokenQuery &&
-      tokenList &&
-      tokenList.find(
-        (item) =>
-          item.symbol.toUpperCase() === tokenQuery.toUpperCase() ||
-          item.address.toLowerCase() === tokenQuery.toLowerCase()
-      );
+  const [token0Query, token1Query] = [
+    query.get("inputCurrency"),
+    query.get("outputCurrency"),
+  ];
 
-    if (token && token.symbol) {
-      return token;
-    }
+  // const getTokenToSelect = (tokenQuery) => {
+  //   const token =
+  //     tokenQuery &&
+  //     tokenList &&
+  //     tokenList.find(
+  //       (item) =>
+  //         item.symbol.toUpperCase() === tokenQuery.toUpperCase() ||
+  //         item.address.toLowerCase() === tokenQuery.toLowerCase()
+  //     );
 
-    return {};
-  };
+  //   if (token && token.symbol) {
+  //     return token;
+  //   }
+
+  //   return {};
+  // };
 
   useEffect(() => {
     async function initSelection() {
+      if (!tokenList || !currentAccount || !currentNetwork) {
+        return;
+      }
+
       setLocalStateLoading(true);
 
-      const [token0Query, token1Query] = [
-        query.get("inputCurrency"),
-        query.get("outputCurrency"),
-      ];
+      if (token0Query) {
+        const _token = getTokenToSelect(tokenList, token0Query);
 
-      if (currentNetwork === etheriumNetwork) {
-        if (token0Query) {
-          const _token = getTokenToSelect(token0Query);
-
-          if (!_token || !_token.symbol) {
-            importToken(token0Query, currentAccount, currentNetwork);
-          }
-
-          setToken1(_token);
-        } else {
-          const _token = getTokenToSelect("WMOVR");
-          setToken1(_token);
+        if (!_token || !_token.symbol) {
+          importToken(token0Query, currentAccount, currentNetwork);
         }
-
-        if (token1Query) {
-          const _token = getTokenToSelect(token1Query);
-
-          if (!_token || !_token.symbol) {
-            importToken(token1Query, currentAccount, currentNetwork);
-          }
-
-          setToken2(_token);
-        }
+        setToken1(_token);
       } else {
-        const _token = getTokenToSelect(BNB);
+        const _token = getTokenToSelect(
+          tokenList,
+          defaultSwapInputToken?.[currentNetwork]
+        );
         setToken1(_token);
       }
+
+      if (token1Query) {
+        const _token = getTokenToSelect(tokenList, token1Query);
+
+        if (!_token || !_token.symbol) {
+          importToken(token1Query, currentAccount, currentNetwork);
+        }
+
+        setToken2(_token);
+      }
+
       setToken1Value("");
       setToken2Value("");
       setLocalStateLoading(false);
