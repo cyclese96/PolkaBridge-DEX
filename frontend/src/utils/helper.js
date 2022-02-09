@@ -6,6 +6,7 @@ import {
   bscNetwork,
   etheriumNetwork,
   farmingPoolConstants,
+  moonriverNetwork,
   PBR_PER_YEAR,
 } from "../constants";
 import Web3 from "web3";
@@ -70,12 +71,15 @@ export const getCurrentNetworkId = async () => {
 };
 
 export const getNetworkBalance = async (accountAddress) => {
-  const web3 = new Web3(window.ethereum);
+  if (!isMetaMaskInstalled() || !accountAddress) {
+    return 0;
+  }
   try {
-    const bal = web3.eth.getBalance(accountAddress);
+    const web3 = new Web3(window.ethereum);
+    const bal = await web3.eth.getBalance(accountAddress);
     return bal;
   } catch (error) {
-    console.log("getAccountBalance", error);
+    console.log("getNetworkBalance", error);
     return null;
   }
 };
@@ -400,7 +404,27 @@ export const getNetworkNameById = (networkId) => {
     return bscNetwork;
   } else if ([1, 42, 4].includes(parseInt(networkId))) {
     return etheriumNetwork;
+  } else if ([1285, 1287].includes(parseInt(networkId))) {
+    return moonriverNetwork;
   } else {
     return etheriumNetwork;
   }
+};
+
+export const getTokenToSelect = (tokenList, tokenQuery) => {
+  if (!tokenList || !tokenQuery) {
+    return {};
+  }
+
+  const token = tokenList.find(
+    (item) =>
+      item.symbol.toUpperCase() === tokenQuery.toUpperCase() ||
+      item.address.toLowerCase() === tokenQuery.toLowerCase()
+  );
+
+  if (token && token.symbol) {
+    return token;
+  }
+
+  return {};
 };

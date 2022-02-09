@@ -15,6 +15,8 @@ import AddIcon from "@material-ui/icons/Add";
 import {
   allowanceAmount,
   BNB,
+  defaultPoolToken0,
+  defaultPoolToken1,
   ETH,
   etheriumNetwork,
   PBR,
@@ -25,6 +27,7 @@ import {
   getPercentage,
   getPriceRatio,
   getTokenOutWithReserveRatio,
+  getTokenToSelect,
   toWei,
 } from "../../../utils/helper";
 import {
@@ -297,22 +300,22 @@ const AddCard = (props) => {
 
   const query = new URLSearchParams(useLocation().search);
 
-  const getTokenToSelect = (tokenQuery) => {
-    const token =
-      tokenQuery &&
-      tokenList &&
-      tokenList.find(
-        (item) =>
-          item.symbol.toUpperCase() === tokenQuery.toUpperCase() ||
-          item.address.toLowerCase() === tokenQuery.toLowerCase()
-      );
+  // const getTokenToSelect = (tokenQuery) => {
+  //   const token =
+  //     tokenQuery &&
+  //     tokenList &&
+  //     tokenList.find(
+  //       (item) =>
+  //         item.symbol.toUpperCase() === tokenQuery.toUpperCase() ||
+  //         item.address.toLowerCase() === tokenQuery.toLowerCase()
+  //     );
 
-    if (token && token.symbol) {
-      return token;
-    }
+  //   if (token && token.symbol) {
+  //     return token;
+  //   }
 
-    return {};
-  };
+  //   return {};
+  // };
 
   useEffect(() => {
     async function initSelection() {
@@ -321,47 +324,43 @@ const AddCard = (props) => {
         query.get("outputCurrency"),
       ];
 
-      let _token0 = {};
-      let _token1 = {};
-      if (currentNetwork === etheriumNetwork) {
-        if (token0Query) {
-          _token0 = getTokenToSelect(token0Query);
-
-          if (!_token0 || !_token0.symbol) {
-            importToken(token0Query, currentAccount, currentNetwork);
-          }
-
-          setToken0(_token0);
-        } else {
-          _token0 = getTokenToSelect(PBR);
-          setToken0(_token0);
-        }
-
-        if (token1Query) {
-          _token1 = getTokenToSelect(token1Query);
-
-          if (!_token1 || !_token1.symbol) {
-            importToken(token1Query, currentAccount, currentNetwork);
-          }
-          setToken1(_token1);
-        } else {
-          _token1 = getTokenToSelect(ETH);
-          setToken1(_token1);
-        }
-      } else {
-        _token0 = getTokenToSelect(BNB);
-        _token1 = getTokenToSelect(PWAR);
-        setToken0(_token0);
-        setToken1(_token1);
+      if (!tokenList || !currentAccount || !currentNetwork) {
+        return;
       }
 
-      verifySwapStatus(
-        { value: token1Value, selected: _token0 },
-        { value: token2Value, selected: _token1 }
-      );
+      if (token0Query) {
+        const _token = getTokenToSelect(tokenList, token0Query);
+
+        if (!_token || !_token.symbol) {
+          importToken(token0Query, currentAccount, currentNetwork);
+        }
+        setToken0(_token);
+      } else {
+        const _token = getTokenToSelect(
+          tokenList,
+          defaultPoolToken0?.[currentNetwork]
+        );
+        setToken0(_token);
+      }
+
+      if (token1Query) {
+        const _token = getTokenToSelect(tokenList, token1Query);
+
+        if (!_token || !_token.symbol) {
+          importToken(token1Query, currentAccount, currentNetwork);
+        }
+
+        setToken1(_token);
+      } else {
+        const _token = getTokenToSelect(
+          tokenList,
+          defaultPoolToken1?.[currentNetwork]
+        );
+        setToken1(_token);
+      }
     }
     initSelection();
-  }, [currentNetwork, tokenList]);
+  }, [currentNetwork, currentAccount, tokenList]);
 
   const currentPairAddress = () => {
     if (
