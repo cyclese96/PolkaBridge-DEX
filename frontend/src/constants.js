@@ -182,3 +182,10 @@ export const BASE_URL =
   process.env.NODE_ENV && process.env.NODE_ENV === "development"
     ? process.env.REACT_APP_DEVELOPMENT_URL
     : process.env.REACT_APP_PRODUCTION_URL;
+
+export const SWAP_BASES = {
+  1: ["USDT", "USDC", "ETH"], //eth chains
+  42: ["USDT", "USDC", "ETH"],
+  1285: ["USDT", "MOVR"],
+  1287: ["USDT", "MOVR"],
+};

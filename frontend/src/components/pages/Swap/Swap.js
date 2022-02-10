@@ -6,7 +6,7 @@ import {
   makeStyles,
   Popper,
 } from "@material-ui/core";
-import { connect, useSelector } from "react-redux";
+import { connect } from "react-redux";
 import SwapCardItem from "../../Cards/SwapCardItem";
 import SwapVertIcon from "@material-ui/icons/SwapVert";
 import { useState } from "react";
@@ -14,11 +14,8 @@ import SwapSettings from "../../common/SwapSettings";
 import BigNumber from "bignumber.js";
 import {
   allowanceAmount,
-  BNB,
   defaultSwapInputToken,
   ETH,
-  etheriumNetwork,
-  PBR,
   swapFnConstants,
   THRESOLD_VALUE,
 } from "../../../constants";
@@ -189,15 +186,18 @@ const useStyles = makeStyles((theme) => ({
   ankrLabel: {
     textAlign: "center",
     color: theme.palette.primary.iconColor,
-
     fontSize: 12,
     paddingTop: 3,
-    // marginBottom: 4,
+  },
+  hackenLabel: {
+    textAlign: "center",
+    color: "#50DDA0",
+    fontSize: 12,
+    paddingTop: 3,
   },
   icon: {
     width: 25,
     height: "100%",
-    marginRight: 10,
   },
 }));
 
@@ -269,23 +269,6 @@ const Swap = (props) => {
     query.get("inputCurrency"),
     query.get("outputCurrency"),
   ];
-
-  // const getTokenToSelect = (tokenQuery) => {
-  //   const token =
-  //     tokenQuery &&
-  //     tokenList &&
-  //     tokenList.find(
-  //       (item) =>
-  //         item.symbol.toUpperCase() === tokenQuery.toUpperCase() ||
-  //         item.address.toLowerCase() === tokenQuery.toLowerCase()
-  //     );
-
-  //   if (token && token.symbol) {
-  //     return token;
-  //   }
-
-  //   return {};
-  // };
 
   useEffect(() => {
     async function initSelection() {
@@ -426,7 +409,7 @@ const Swap = (props) => {
     }
 
     // calculate resetpective value of token 2 if selected
-    let _token2Value = "";
+    // let _token2Value = "";
     // const pairAddress = currentPairAddress();
 
     if (selectedToken1.symbol && new BigNumber(tokens).gt(0)) {
@@ -545,7 +528,7 @@ const Swap = (props) => {
           currentAccount,
           currentNetwork,
         ];
-        console.log("calling token", token1OutParams);
+        // console.log("calling token", token1OutParams);
 
         await debouncedToken1OutCall(...token1OutParams);
       }
@@ -624,7 +607,7 @@ const Swap = (props) => {
           currentAccount,
           currentNetwork,
         ];
-        console.log("calling token", token0InParams);
+        // console.log("calling token", token0InParams);
 
         await debouncedToken0InCall(...token0InParams);
       }
@@ -697,6 +680,7 @@ const Swap = (props) => {
     );
     store.dispatch({ type: HIDE_DEX_LOADING });
 
+    console.log("price impact ", impact);
     setPriceImpact(impact);
   };
 
@@ -793,12 +777,6 @@ const Swap = (props) => {
 
   return (
     <>
-      <a href="https://certik.org/projects/polkabridge" target="_blank">
-        <div className={classes.certikLabel}>
-          <img src="img/certik.png" className={classes.icon} />
-          AMM audited by Certik and Hacken
-        </div>
-      </a>
       <TabPage data={0} />
 
       <TransactionConfirm

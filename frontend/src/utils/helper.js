@@ -4,10 +4,12 @@ import axios from "axios";
 import { getAddress } from "ethers/utils/address";
 import {
   bscNetwork,
+  currentConnection,
   etheriumNetwork,
   farmingPoolConstants,
   moonriverNetwork,
   PBR_PER_YEAR,
+  tokenAddresses,
 } from "../constants";
 import Web3 from "web3";
 
@@ -427,4 +429,13 @@ export const getTokenToSelect = (tokenList, tokenQuery) => {
   }
 
   return {};
+};
+
+export const getTokenWithSymbol = (symbol, network = etheriumNetwork) => {
+  const tokenAddress =
+    currentConnection === "testnet"
+      ? tokenAddresses?.[network]?.[symbol]?.testnet
+      : tokenAddresses?.[network]?.[symbol]?.mainnet;
+
+  return { address: tokenAddress, symbol: symbol };
 };
