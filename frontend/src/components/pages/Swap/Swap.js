@@ -6,7 +6,7 @@ import {
   makeStyles,
   Popper,
 } from "@material-ui/core";
-import { connect, useSelector } from "react-redux";
+import { connect } from "react-redux";
 import SwapCardItem from "../../Cards/SwapCardItem";
 import SwapVertIcon from "@material-ui/icons/SwapVert";
 import { useState } from "react";
@@ -14,11 +14,8 @@ import SwapSettings from "../../common/SwapSettings";
 import BigNumber from "bignumber.js";
 import {
   allowanceAmount,
-  BNB,
   defaultSwapInputToken,
   ETH,
-  etheriumNetwork,
-  PBR,
   swapFnConstants,
   THRESOLD_VALUE,
 } from "../../../constants";
@@ -273,23 +270,6 @@ const Swap = (props) => {
     query.get("outputCurrency"),
   ];
 
-  // const getTokenToSelect = (tokenQuery) => {
-  //   const token =
-  //     tokenQuery &&
-  //     tokenList &&
-  //     tokenList.find(
-  //       (item) =>
-  //         item.symbol.toUpperCase() === tokenQuery.toUpperCase() ||
-  //         item.address.toLowerCase() === tokenQuery.toLowerCase()
-  //     );
-
-  //   if (token && token.symbol) {
-  //     return token;
-  //   }
-
-  //   return {};
-  // };
-
   useEffect(() => {
     async function initSelection() {
       if (!tokenList || !currentAccount || !currentNetwork) {
@@ -429,7 +409,7 @@ const Swap = (props) => {
     }
 
     // calculate resetpective value of token 2 if selected
-    let _token2Value = "";
+    // let _token2Value = "";
     // const pairAddress = currentPairAddress();
 
     if (selectedToken1.symbol && new BigNumber(tokens).gt(0)) {
@@ -548,7 +528,7 @@ const Swap = (props) => {
           currentAccount,
           currentNetwork,
         ];
-        console.log("calling token", token1OutParams);
+        // console.log("calling token", token1OutParams);
 
         await debouncedToken1OutCall(...token1OutParams);
       }
@@ -627,7 +607,7 @@ const Swap = (props) => {
           currentAccount,
           currentNetwork,
         ];
-        console.log("calling token", token0InParams);
+        // console.log("calling token", token0InParams);
 
         await debouncedToken0InCall(...token0InParams);
       }
@@ -700,6 +680,7 @@ const Swap = (props) => {
     );
     store.dispatch({ type: HIDE_DEX_LOADING });
 
+    console.log("price impact ", impact);
     setPriceImpact(impact);
   };
 
@@ -796,31 +777,6 @@ const Swap = (props) => {
 
   return (
     <>
-      <div className="d-flex">
-        <div className={classes.certikLabel}>
-          AMM audited by{" "}
-          <a
-            className={classes.certikLabel}
-            href="https://certik.org/projects/polkabridge"
-            target="_blank"
-          >
-            <img src="img/certik.png" className={classes.icon} />
-            Certik
-          </a>{" "}
-          and{" "}
-          <a
-            className={classes.hackenLabel}
-            href="https://hacken.io/audits/#polkabridge"
-            target="_blank"
-          >
-            <img
-              src="https://hacken.io/wp-content/themes/hacken/assets/img/token-ico-min.png"
-              className={classes.icon}
-            />{" "}
-            Hacken
-          </a>
-        </div>
-      </div>
       <TabPage data={0} />
 
       <TransactionConfirm

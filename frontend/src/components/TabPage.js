@@ -1,14 +1,11 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Swap from "./pages/Swap";
 import AddLiquidity from "./pages/AddLiquidity";
 import Analytics from "./pages/Analytics/Analytics";
 import { Link } from "react-router-dom";
-
 import Farms from "./pages/Farms/Farms";
 
 const useStyles = makeStyles((theme) => ({
@@ -16,17 +13,12 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 30,
     marginBottom: 30,
     borderRadius: 15,
-    // padding: 7,
     display: "flex",
     width: 400,
     justifyContent: "space-between",
     alignItems: "center",
     background: "#ffffff",
     padding: 7,
-    // border: "7px solid #bdbdbd",
-    // borderWidth: "7px",
-    // borderColor: theme.palette.primary.iconBack,
-    // borderStyle: "solid",
     [theme.breakpoints.down("sm")]: {
       width: "90%",
     },
@@ -76,6 +68,30 @@ const useStyles = makeStyles((theme) => ({
       paddingRight: 10,
     },
   },
+  certikLabel: {
+    textAlign: "center",
+    color: theme.palette.primary.iconColor,
+    fontWeight: 600,
+    fontSize: 14,
+    paddingTop: 3,
+    // marginBottom: 4,
+  },
+  ankrLabel: {
+    textAlign: "center",
+    color: theme.palette.primary.iconColor,
+    fontSize: 12,
+    paddingTop: 3,
+  },
+  hackenLabel: {
+    textAlign: "center",
+    color: "#50DDA0",
+    fontSize: 12,
+    paddingTop: 3,
+  },
+  icon: {
+    width: 25,
+    height: "100%",
+  },
 }));
 
 const TabPanel = (props) => {
@@ -102,7 +118,33 @@ const TabPage = ({ data = 1 }) => {
   const classes = useStyles();
 
   return (
-    <>
+    <div className="d-flex flex-column align-items-center justify-centent-center">
+      <div className="d-flex">
+        <div className={classes.certikLabel}>
+          AMM audited by{" "}
+          <a
+            className={classes.certikLabel}
+            href="https://certik.org/projects/polkabridge"
+            target="_blank"
+            style={{ color: "rgba(224, 7, 125, 1)" }}
+          >
+            <img src="img/certik.png" className={classes.icon} />
+            Certik
+          </a>{" "}
+          and{" "}
+          <a
+            className={classes.hackenLabel}
+            href="https://hacken.io/audits/#polkabridge"
+            target="_blank"
+          >
+            <img
+              src="https://hacken.io/wp-content/themes/hacken/assets/img/token-ico-min.png"
+              className={classes.icon}
+            />{" "}
+            Hacken
+          </a>
+        </div>
+      </div>
       <div className={classes.tabs}>
         <Link to="/" className={classes.noDecoration}>
           {" "}
@@ -161,7 +203,7 @@ const TabPage = ({ data = 1 }) => {
       <TabPanel data={3} index={3}>
         <Analytics />
       </TabPanel>
-    </>
+    </div>
   );
 };
 

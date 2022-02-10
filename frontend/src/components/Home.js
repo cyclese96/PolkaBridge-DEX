@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import store from "../store";
-
 import { getNetworkNameById } from "../utils/helper";
 import { CHANGE_NETWORK, CONNECT_WALLET } from "../actions/types";
 import { loadTokens } from "../actions/dexActions";
