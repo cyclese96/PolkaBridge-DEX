@@ -189,15 +189,18 @@ const useStyles = makeStyles((theme) => ({
   ankrLabel: {
     textAlign: "center",
     color: theme.palette.primary.iconColor,
-
     fontSize: 12,
     paddingTop: 3,
-    // marginBottom: 4,
+  },
+  hackenLabel: {
+    textAlign: "center",
+    color: "#50DDA0",
+    fontSize: 12,
+    paddingTop: 3,
   },
   icon: {
     width: 25,
     height: "100%",
-    marginRight: 10,
   },
 }));
 
@@ -793,12 +796,31 @@ const Swap = (props) => {
 
   return (
     <>
-      <a href="https://certik.org/projects/polkabridge" target="_blank">
+      <div className="d-flex">
         <div className={classes.certikLabel}>
-          <img src="img/certik.png" className={classes.icon} />
-          AMM audited by Certik and Hacken
+          AMM audited by{" "}
+          <a
+            className={classes.certikLabel}
+            href="https://certik.org/projects/polkabridge"
+            target="_blank"
+          >
+            <img src="img/certik.png" className={classes.icon} />
+            Certik
+          </a>{" "}
+          and{" "}
+          <a
+            className={classes.hackenLabel}
+            href="https://hacken.io/audits/#polkabridge"
+            target="_blank"
+          >
+            <img
+              src="https://hacken.io/wp-content/themes/hacken/assets/img/token-ico-min.png"
+              className={classes.icon}
+            />{" "}
+            Hacken
+          </a>
         </div>
-      </a>
+      </div>
       <TabPage data={0} />
 
       <TransactionConfirm
