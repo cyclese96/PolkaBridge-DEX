@@ -170,6 +170,26 @@ contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
         emit LogUpdatePool(_pid, pool.lastRewardBlock, lpSupply, pool.accPBRPerShare);
     }
 
+
+    // Harvest
+    function harvest(uint256 _pid) external nonReentrant {
+        PoolInfo storage pool = poolInfo[_pid];
+        UserInfo storage user = userInfo[_pid][msg.sender];
+        updatePool(_pid);
+        if (user.amount > 0) {
+            uint256 pending = user.amount * pool.accPBRPerShare / 1e18 - user.rewardDebt;
+            IERC20(polkaBridge).safeTransfer(msg.sender, pending);
+        }
+        // pool.lpToken.safeTransferFrom(
+        //     address(msg.sender),
+        //     address(this),
+        //     _amount
+        // );
+        // user.amount = user.amount + _amount;
+        user.rewardDebt = user.amount * pool.accPBRPerShare / 1e18;
+        // emit Deposit(msg.sender, _pid, _amount);
+    }
+
     // Deposit LP tokens to PolkaBridgeFarm for PBR allocation.
     function deposit(uint256 _pid, uint256 _amount) external nonReentrant {
         PoolInfo storage pool = poolInfo[_pid];

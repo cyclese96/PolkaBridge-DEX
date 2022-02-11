@@ -78,13 +78,6 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
         treasury = _treasury;
     }
 
-    // function skim(address to) external override lock {
-    //     address _token0 = token0; // gas savings
-    //     address _token1 = token1; // gas savings
-    //     _safeTransfer(_token0, to, IERC20(_token0).balanceOf(address(this)) - reserve0);
-    //     _safeTransfer(_token1, to, IERC20(_token1).balanceOf(address(this)) - reserve1);
-    // }
-
     // force reserves to match balances
     function sync() external override lock {
         _update(IERC20(token0).balanceOf(address(this)), IERC20(token1).balanceOf(address(this)), reserve0, reserve1);
@@ -105,29 +98,6 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
         blockTimestampLast = blockTimestamp;
         emit Sync(reserve0, reserve1);
     }
-
-    // if fee is on, mint liquidity equivalent to 1/6th of the growth in sqrt(k)
-    // function _mintFee(uint112 _reserve0, uint112 _reserve1) private returns (bool feeOn) {
-    //     // address feeTo = address(0);//IUniswapV2Factory(factory).feeTo();
-    //     // feeOn = feeTo != address(0);
-    //     // uint _kLast = kLast; // gas savings
-    //     // if (feeOn) {
-    //     //     if (_kLast != 0) {
-    //     //         uint rootK = Math.sqrt(uint(_reserve0) * _reserve1);
-    //     //         uint rootKLast = Math.sqrt(_kLast);
-    //     //         if (rootK > rootKLast) {
-    //     //             uint numerator = totalSupply * (rootK - rootKLast);
-    //     //             uint denominator = rootK * 5 + rootKLast;
-    //     //             uint liquidity = numerator / denominator;
-    //     //             if (liquidity > 0) _mint(feeTo, liquidity);
-    //     //         }
-    //     //     }
-    //     // } else if (_kLast != 0) {
-    //     //     kLast = 0;
-    //     // }
-    //     feeOn = false;
-    //     kLast = 0;
-    // }
 
     // this low-level function should be called from a contract which performs important safety checks
     function mint(address to) external override lock returns (uint256 liquidity) {
@@ -224,13 +194,4 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
         emit Swap(msg.sender, amount0In, amount1In, amount0Out, amount1Out, to);
     }
 
-    // function setTreasuryAddress(address _treasury) external override {
-    //     require(msg.sender == ownerAddress, 'Only ownerAddress can set treasury');
-    //     {
-    //         require(block.timestamp - releaseTime >= lockTime, "current time is before release time");
-    //         treasury = _treasury;
-    //         releaseTime = block.timestamp;
-    //         emit TreasurySet(_treasury);
-    //     }
-    // }
 }

@@ -20,4 +20,4 @@ proxy/.secret
 /farming/truffle-config.js
 /farming/.env
 /farming/build
-/farming/build
+/farming/node_modules
