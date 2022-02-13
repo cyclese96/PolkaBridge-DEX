@@ -768,16 +768,18 @@ export const checkLpAllowance =
 export const confirmLPAllowance =
   (balance, token0, token1, pairAddress, account, network) =>
   async (dispatch) => {
+    dispatch({
+      type: SHOW_DEX_LOADING,
+    });
+
     try {
       const _pairContract = pairContract(pairAddress, network);
-      const _routerContractAddress =
-        currentConnection === "mainnet"
-          ? routerAddresses.ethereum.mainnet
-          : routerAddresses.ethereum.testnet;
+      const _routerContractAddress = Object.keys(routerAddresses).includes(
+        network
+      )
+        ? routerAddresses?.[network]
+        : routerAddresses.ethereum;
 
-      dispatch({
-        type: SHOW_DEX_LOADING,
-      });
       await _pairContract.methods
         .approve(_routerContractAddress, balance)
         .send({ from: account });
@@ -787,11 +789,11 @@ export const confirmLPAllowance =
         payload: { pair: `${token0.symbol}_${token1.symbol}`, status: true },
       });
     } catch (error) {
-      console.log("confirmAllowance ", error);
-      dispatch({
-        type: DEX_ERROR,
-        payload: "Failed to confirm allowance",
-      });
+      console.log("confirmLPAllowance ", error);
+      // dispatch({
+      //   type: DEX_ERROR,
+      //   payload: "Failed to confirm allowance",
+      // });
     }
     dispatch({
       type: HIDE_DEX_LOADING,
@@ -1307,124 +1309,6 @@ const fetchReservesForPriceImpactCalculation = async (
     return { ...pairReserves.reserve };
   }
 };
-
-// const getReservesForPriceImpact = async (token0, token1, account, network) => {
-//   if (
-//     [PBR, USDT].includes(token0.symbol) &&
-//     [PBR, USDT].includes(token1.symbol)
-//   ) {
-//     // fetch all reserves
-//     const wethAddress =
-//       currentConnection === "testnet"
-//         ? tokenAddresses.ethereum.ETH.testnet
-//         : tokenAddresses.ethereum.ETH.mainnet;
-//     const pbrAddress = token0.symbol === PBR ? token0.address : token1.address;
-//     const usdtAddress =
-//       token0.symbol === USDT ? token0.address : token1.address;
-
-//     //pbr-eth
-//     const pair0Address = await getPairAddress(pbrAddress, wethAddress);
-//     const pair0Contract = pairContract(pair0Address, network);
-//     const pair0Reserves = await fetchPairData(
-//       { address: pbrAddress, symbol: PBR },
-//       { address: wethAddress, symbol: ETH },
-//       pair0Contract,
-//       account
-//     );
-
-//     //eth-usdt
-//     const pair1Address = await getPairAddress(usdtAddress, wethAddress);
-//     const pair1Contract = pairContract(pair1Address, network);
-//     const pair1Reserves = await fetchPairData(
-//       { address: wethAddress, symbol: ETH },
-//       { address: usdtAddress, symbol: USDT },
-//       pair1Contract,
-//       account
-//     );
-
-//     return { ...pair0Reserves.reserve, ...pair1Reserves.reserve };
-//   } else if (
-//     [PBR, USDC].includes(token0.symbol) &&
-//     [PBR, USDC].includes(token0.symbol)
-//   ) {
-//     // console.log('getting reserves for pbr usdt ')
-//     //
-//     const wethAddress =
-//       currentConnection === "testnet"
-//         ? tokenAddresses.ethereum.ETH.testnet
-//         : tokenAddresses.ethereum.ETH.mainnet;
-//     const usdtAddress =
-//       currentConnection === "testnet"
-//         ? tokenAddresses.ethereum.USDT.testnet
-//         : tokenAddresses.ethereum.USDT.mainnet;
-//     const usdcAddress =
-//       token0.symbol === USDC ? token0.address : token1.address;
-//     const pbrAddress = token0.symbol === PBR ? token0.address : token1.address;
-
-//     // //pbr-eth
-//     const pair0Address = await getPairAddress(pbrAddress, wethAddress);
-//     const pair0Contract = pairContract(pair0Address, network);
-//     const pair0Reserves = await fetchPairData(
-//       { address: pbrAddress, symbol: PBR },
-//       { address: wethAddress, symbol: ETH },
-//       pair0Contract,
-//       account
-//     );
-
-//     // console.log('usdc-pbr pair ', pair0Address)
-//     // //eth-usdt
-//     // const pair1Address = await getPairAddress(usdtAddress, wethAddress)
-//     // const pair1Contract = pairContract(pair1Address, network)
-//     // const pair1Reserves = await fetchPairData({ address: wethAddress, symbol: ETH }, { address: usdtAddress, symbol: USDT }, pair1Contract, account);
-
-//     //usdt-usdc
-//     const pair2Address = await getPairAddress(usdtAddress, usdcAddress);
-//     const pair2Contract = pairContract(pair2Address, network);
-//     const pair2Reserves = await fetchPairData(
-//       { address: usdtAddress, symbol: USDT },
-//       { address: usdcAddress, symbol: USDC },
-//       pair2Contract,
-//       account
-//     );
-
-//     // console.log('checkPriceImpact:  ', { pair2Reserves })
-//     return { ...pair2Reserves.reserve, ...pair0Reserves.reserve };
-//   } else if (
-//     [ETH, USDC].includes(token0.symbol) &&
-//     [ETH, USDC].includes(token1.symbol)
-//   ) {
-//     //
-//     const usdtAddress =
-//       currentConnection === "testnet"
-//         ? tokenAddresses.ethereum.USDT.testnet
-//         : tokenAddresses.ethereum.USDT.mainnet;
-//     const ethAddress = token0.symbol === ETH ? token0.address : token1.address;
-//     const usdcAddress =
-//       token0.symbol === USDC ? token0.address : token1.address;
-
-//     //eth-usdt
-//     const pair0Address = await getPairAddress(ethAddress, usdtAddress);
-//     const pair0Contract = pairContract(pair0Address, network);
-//     const pair0Reserves = await fetchPairData(
-//       { address: ethAddress, symbol: ETH },
-//       { address: usdtAddress, symbol: USDT },
-//       pair0Contract,
-//       account
-//     );
-
-//     //usdt-usdc
-//     const pair1Address = await getPairAddress(usdcAddress, usdtAddress);
-//     const pair1Contract = pairContract(pair1Address, network);
-//     const pair1Reserves = await fetchPairData(
-//       { address: usdtAddress, symbol: USDT },
-//       { address: usdcAddress, symbol: USDC },
-//       pair1Contract,
-//       account
-//     );
-
-//     return { ...pair0Reserves.reserve, ...pair1Reserves.reserve };
-//   }
-// };
 
 const tokenThresoldValue = (decimals) => {
   return new BigNumber(10).exponentiatedBy(parseInt(decimals) - 3);

@@ -126,15 +126,15 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   input: {
-    backgroundColor: "#ffffff",
+    backgroundColor: "#eeeeee",
     height: 50,
 
-    borderColor: "#e5e5e5",
+    border: "1px solid #e5e5e5",
     borderRadius: 10,
-    borderWidth: "1px",
+
     fontSize: 18,
     width: 190,
-    color: "white",
+    color: theme.palette.textColors.heading,
     outline: "none",
     padding: 10,
     [theme.breakpoints.down("sm")]: {
@@ -272,8 +272,8 @@ const StakeDialog = ({
       color="transparent"
       PaperProps={{
         style: {
-          borderRadius: 15,
-          backgroundColor: "#121827",
+          borderRadius: 30,
+          backgroundColor: "transparent",
           color: "#f9f9f9",
         },
       }}
@@ -326,7 +326,7 @@ const StakeDialog = ({
                   placeholder="0.00"
                   onChange={({ target: { value } }) => setInputValue(value)}
                   value={inputValue}
-                  type="number"
+                  type="text"
                 />
               </div>
               <div className="d-flex justify-content-between align-items-center mt-2">

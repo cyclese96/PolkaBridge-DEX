@@ -1,62 +1,78 @@
 /* eslint-disable prefer-const */
-import { log, BigInt, BigDecimal, Address, ethereum } from '@graphprotocol/graph-ts'
-import { ERC20 } from '../../generated/Factory/ERC20'
-import { ERC20SymbolBytes } from '../../generated/Factory/ERC20SymbolBytes'
-import { ERC20NameBytes } from '../../generated/Factory/ERC20NameBytes'
+import {
+  log,
+  BigInt,
+  BigDecimal,
+  Address,
+  ethereum,
+} from "@graphprotocol/graph-ts";
+import { ERC20 } from "../../generated/Factory/ERC20";
+import { ERC20SymbolBytes } from "../../generated/Factory/ERC20SymbolBytes";
+import { ERC20NameBytes } from "../../generated/Factory/ERC20NameBytes";
 // import { Bundle, Token, Pair } from '../../generated/schema'
-import { Factory as FactoryContract } from '../../generated/templates/Pair/Factory'
+import { Factory as FactoryContract } from "../../generated/templates/Pair/Factory";
 // import { TokenDefinition } from './tokenDefinition'
 
 export const testing = true;
 
-export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000"
-export const FACTORY_ADDRESS = testing ? "0xAeDa6b39324e658e49959d23153033c6368fB5dc" : "0xeff9EcEFe14279C0157f88573Ca9361D253c10bE"
+export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
+export const FACTORY_ADDRESS = testing
+  ? "0xa068d176d079a3B7213558DE0bAD285435D11C76"
+  : "0xeff9EcEFe14279C0157f88573Ca9361D253c10bE";
 
-export let ZERO_BI = BigInt.fromI32(0)
-export let ONE_BI = BigInt.fromI32(1)
-export let ZERO_BD = BigDecimal.fromString('0')
-export let ONE_BD = BigDecimal.fromString('1')
-export let BI_18 = BigInt.fromI32(18)
+export let ZERO_BI = BigInt.fromI32(0);
+export let ONE_BI = BigInt.fromI32(1);
+export let ZERO_BD = BigDecimal.fromString("0");
+export let ONE_BD = BigDecimal.fromString("1");
+export let BI_18 = BigInt.fromI32(18);
 
-export let factoryContract = FactoryContract.bind(Address.fromString(FACTORY_ADDRESS))
+export let factoryContract = FactoryContract.bind(
+  Address.fromString(FACTORY_ADDRESS)
+);
 
 // rebass tokens, dont count in tracked volume
-export let UNTRACKED_PAIRS: string[] = []
+export let UNTRACKED_PAIRS: string[] = [];
 
 export function exponentToBigDecimal(decimals: BigInt): BigDecimal {
-  let bd = BigDecimal.fromString('1')
+  let bd = BigDecimal.fromString("1");
   for (let i = ZERO_BI; i.lt(decimals as BigInt); i = i.plus(ONE_BI)) {
-    bd = bd.times(BigDecimal.fromString('10'))
+    bd = bd.times(BigDecimal.fromString("10"));
   }
-  return bd
+  return bd;
 }
 
 export function bigDecimalExp18(): BigDecimal {
-  return BigDecimal.fromString('1000000000000000000')
+  return BigDecimal.fromString("1000000000000000000");
 }
 
 export function convertEthToDecimal(eth: BigInt): BigDecimal {
-  return eth.toBigDecimal().div(exponentToBigDecimal(BI_18))
+  return eth.toBigDecimal().div(exponentToBigDecimal(BI_18));
 }
 
-export function convertTokenToDecimal(tokenAmount: BigInt, exchangeDecimals: BigInt): BigDecimal {
+export function convertTokenToDecimal(
+  tokenAmount: BigInt,
+  exchangeDecimals: BigInt
+): BigDecimal {
   if (exchangeDecimals == ZERO_BI) {
-    return tokenAmount.toBigDecimal()
+    return tokenAmount.toBigDecimal();
   }
-  return tokenAmount.toBigDecimal().div(exponentToBigDecimal(exchangeDecimals))
+  return tokenAmount.toBigDecimal().div(exponentToBigDecimal(exchangeDecimals));
 }
 
 export function equalToZero(value: BigDecimal): boolean {
-  const formattedVal = parseFloat(value.toString())
-  const zero = parseFloat(ZERO_BD.toString())
+  const formattedVal = parseFloat(value.toString());
+  const zero = parseFloat(ZERO_BD.toString());
   if (zero == formattedVal) {
-    return true
+    return true;
   }
-  return false
+  return false;
 }
 
 export function isNullEthValue(value: string): boolean {
-  return value == "0x0000000000000000000000000000000000000000000000000000000000000001"
+  return (
+    value ==
+    "0x0000000000000000000000000000000000000000000000000000000000000001"
+  );
 }
 
 export function fetchTokenSymbol(tokenAddress: Address): string {
@@ -133,7 +149,7 @@ export function fetchTokenDecimals(tokenAddress: Address): BigInt {
 //     user = new User(address.toHexString())
 //     user.dailyVolumeETH = ZERO_BD
 //     user.dailyVolumeUSD = ZERO_BD
-//     user.user = 
+//     user.user =
 //     user.save()
 //   }
 // }

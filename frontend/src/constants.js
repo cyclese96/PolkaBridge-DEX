@@ -45,7 +45,7 @@ export const tokenAddresses = {
 
 export const routerAddresses = {
   ethereum: testing
-    ? "0xbb8331FAAB7E6BA2Ac819262bf4A29E44f4A112B"
+    ? "0xE3BFa6c9deF71c92123BB35bF91A5e3AB5202233" //"0xbb8331FAAB7E6BA2Ac819262bf4A29E44f4A112B"
     : "0x8A2795aE669476Bf119A1a40FbFD75cA71Fd35c4",
   moonriver: testing
     ? "0x1C586Bc16e9Aa5fdf45F4dB3F37Bd97cA25A5aE9"
@@ -54,7 +54,7 @@ export const routerAddresses = {
 
 export const factoryAddresses = {
   ethereum: testing
-    ? "0xAeDa6b39324e658e49959d23153033c6368fB5dc"
+    ? "0xa068d176d079a3B7213558DE0bAD285435D11C76" //"0xAeDa6b39324e658e49959d23153033c6368fB5dc"
     : "0xeff9EcEFe14279C0157f88573Ca9361D253c10bE",
   moonriver: testing
     ? "0x2fc26998c0EB0CC67DC9d41f7f1F4508dE214292"
@@ -63,7 +63,7 @@ export const factoryAddresses = {
 
 export const farmAddresses = {
   ethereum: testing
-    ? "0xf49c7F516314d84a4c9e02EB2711Da6a6f56f0D1"
+    ? "0x7053993577E8782fB4465Dff4713335bbAe8c9c0" //"0xf49c7F516314d84a4c9e02EB2711Da6a6f56f0D1"
     : "0xBaF15D830ddeB6c11fFae8890d9c902D8dF1f3E7",
 };
 
