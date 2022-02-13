@@ -1253,31 +1253,28 @@ const fetchReservesForPriceImpactCalculation = async (
   const token0Address = token0?.address;
 
   const baseToken =
-    token0.symbol === ETH || token1.symbol === ETH
+    token0.symbol === ETH ? getTokenWithSymbol(USDT) : getTokenWithSymbol(ETH);
+
+  const baseToken1 =
+    token0.symbol === USDC
       ? getTokenWithSymbol(USDT)
-      : getTokenWithSymbol(ETH);
+      : getTokenWithSymbol(USDC);
 
   const token1Address = token1?.address;
 
-  console.log("reserveTest ", { token0, token1, baseToken });
   //check pair token0 token1
   let pairAddress = await getPairAddress(token0Address, token1Address, network);
-  console.log("reserveTest pairAddress ", pairAddress);
   let _pairContract;
   let pairReserves = {};
   if (pairAddress) {
     // fetch reserves from pair and return
     _pairContract = pairContract(pairAddress, network);
-    console.log("reserveTest pair contract ", _pairContract);
     pairReserves = await fetchPairData(token0, token1, _pairContract, account);
 
-    console.log("reserveTest pair found with reserves ", pairReserves);
     return { ...pairReserves.reserve };
   }
   // check pair token0+baseToken
   pairAddress = await getPairAddress(token0Address, baseToken.address, network);
-
-  console.log("reserveTest pairAddress token0+baseToken", pairAddress);
 
   if (pairAddress) {
     _pairContract = pairContract(pairAddress, network);
@@ -1292,14 +1289,17 @@ const fetchReservesForPriceImpactCalculation = async (
   }
 
   // check pair token1+baseToken
-  pairAddress = await getPairAddress(token1Address, baseToken.address, network);
+  pairAddress = await getPairAddress(
+    token0Address,
+    baseToken1.address,
+    network
+  );
 
-  console.log("reserveTest pairAddress token1+baseToken", pairAddress);
   if (pairAddress) {
     _pairContract = pairContract(pairAddress, network);
     pairReserves = await fetchPairData(
-      token1,
-      baseToken,
+      token0,
+      baseToken1,
       _pairContract,
       account
     );
