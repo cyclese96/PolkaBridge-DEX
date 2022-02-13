@@ -327,7 +327,7 @@ const TransactionConfirm = (props) => {
               <span className={classes.subheading}>
                 {isValidSlippage()
                   ? ""
-                  : "Your slippage is less than price impact"}
+                  : "Price impact is more than your slippage!"}
               </span>
             </div>
             <div className={classes.buttons}>

@@ -16,6 +16,7 @@ import {
   confirmLpFarmAllowance,
   getFarmInfo,
   getLpBalanceFarm,
+  harvestRewards,
   stakeLpTokens,
 } from "../../../actions/farmActions";
 import BigNumber from "bignumber.js";
@@ -175,6 +176,7 @@ const Farm = (props) => {
     confirmLpFarmAllowance,
     getLpBalanceFarm,
     stakeLpTokens,
+    harvestRewards,
   } = props;
   const classes = useStyles();
 
@@ -284,8 +286,7 @@ const Farm = (props) => {
   };
 
   const handleHarvest = async (_farmPool) => {
-    await stakeLpTokens(
-      "0",
+    await harvestRewards(
       farmPoolAddress(_farmPool),
       farmPoolId(_farmPool),
       currentAccount,
@@ -492,4 +493,5 @@ export default connect(mapStateToProps, {
   confirmLpFarmAllowance,
   getLpBalanceFarm,
   stakeLpTokens,
+  harvestRewards,
 })(Farm);

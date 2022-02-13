@@ -240,6 +240,62 @@ export const unstakeLpTokens =
     });
   };
 
+export const harvestRewards =
+  (pairAddress, pid, account, network) => async (dispatch) => {
+    try {
+      const _farmContract = farmContract(network);
+
+      console.log("onHarvest ", { pairAddress, pid, account, network });
+      dispatch({
+        type: SHOW_FARM_LOADING,
+        payload: getLoadingObject(pairAddress, true),
+      });
+
+      dispatch({ type: START_TRANSACTION });
+
+      const harvestRes = await _farmContract.methods
+        .harvest(pid)
+        .send({ from: account }, function (error, transactionHash) {
+          if (error) {
+            dispatch({
+              type: UPDATE_TRANSACTION_STATUS,
+              payload: { type: "harvest", hash: null, status: "failed" },
+            });
+          } else {
+            dispatch({
+              type: UPDATE_TRANSACTION_STATUS,
+              payload: { type: "harvest", hash: transactionHash },
+            });
+          }
+        })
+        .on("receipt", async function (receipt) {
+          dispatch({
+            type: UPDATE_TRANSACTION_STATUS,
+            payload: { type: "harvest", status: "success" },
+          });
+        })
+        .on("error", async function (error) {
+          dispatch({
+            type: UPDATE_TRANSACTION_STATUS,
+            payload: { type: "harvest", status: "failed" },
+          });
+        });
+
+      // console.log("stakeLpTokens staked amount ", stakeRes);
+
+      // dispatch({
+      //   type: STAKE_LP_TOKENS,
+      //   payload: lpAmount,
+      // });
+    } catch (error) {
+      console.log("stakeLpTokens", error);
+    }
+    dispatch({
+      type: HIDE_FARM_LOADING,
+      payload: getLoadingObject(pairAddress, false),
+    });
+  };
+
 export const getFarmInfo =
   (pairAddress, pid, account, network) => async (dispatch) => {
     try {
