@@ -259,36 +259,29 @@ export const harvestRewards =
           if (error) {
             dispatch({
               type: UPDATE_TRANSACTION_STATUS,
-              payload: { type: "harvest", hash: null, status: "failed" },
+              payload: { type: "stake", hash: null, status: "failed" },
             });
           } else {
             dispatch({
               type: UPDATE_TRANSACTION_STATUS,
-              payload: { type: "harvest", hash: transactionHash },
+              payload: { type: "stake", hash: transactionHash },
             });
           }
         })
         .on("receipt", async function (receipt) {
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
-            payload: { type: "harvest", status: "success" },
+            payload: { type: "stake", status: "success" },
           });
         })
         .on("error", async function (error) {
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
-            payload: { type: "harvest", status: "failed" },
+            payload: { type: "stake", status: "failed" },
           });
         });
-
-      // console.log("stakeLpTokens staked amount ", stakeRes);
-
-      // dispatch({
-      //   type: STAKE_LP_TOKENS,
-      //   payload: lpAmount,
-      // });
     } catch (error) {
-      console.log("stakeLpTokens", error);
+      console.log("harvestRewards ", error);
     }
     dispatch({
       type: HIDE_FARM_LOADING,
