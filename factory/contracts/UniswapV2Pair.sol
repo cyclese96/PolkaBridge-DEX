@@ -174,7 +174,7 @@ contract UniswapV2Pair is IUniswapV2Pair, UniswapV2ERC20 {
             uint balance0Adjusted = balance0 * 1000 - amount0In * 2;
             uint balance1Adjusted = balance1 * 1000 - amount1In * 2;
             // require(false, string(abi.encodePacked(uint2str(_reserve0), ' : ', uint2str(_reserve1), ' : ', uint2str(balance0), ' : ', uint2str(balance1), ' : ', uint2str(amount0In), ' : ', uint2str(amount1In))));
-            require(balance0Adjusted - balance1Adjusted >= uint(_reserve0) * _reserve1 * (1000**2), 'PolkaBridge AMM: K');
+            require(balance0Adjusted * balance1Adjusted >= uint(_reserve0) * _reserve1 * (1000**2), 'PolkaBridge AMM: K');
         }
 
         uint256 amount0Treasury = amount0In / 2500; // amount0In * 4 / 10000;
