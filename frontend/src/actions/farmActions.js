@@ -13,11 +13,6 @@ import { currentConnection, farmAddresses, tokenAddresses } from "../constants";
 import BigNumber from "bignumber.js";
 import { fromWei } from "../utils/helper";
 
-import {
-  getCurrentTokenPriceInEth,
-  getOnlyCurrentEthPrice,
-} from "../contexts/GlobalData";
-
 const getLoadingObject = (_key, flag) => {
   const obj = {};
   obj[_key] = flag;
@@ -27,11 +22,6 @@ const getLoadingObject = (_key, flag) => {
 export const checkLpFarmAllowance =
   (pairAddress, account, network) => async (dispatch) => {
     try {
-      console.log("farmTest  checking allowance", {
-        pairAddress,
-        account,
-        network,
-      });
       const _pairContract = pairContract(pairAddress, network);
       const _farmAddress = farmAddresses?.[network];
 
@@ -44,7 +34,6 @@ export const checkLpFarmAllowance =
         .allowance(account, _farmAddress)
         .call();
 
-      console.log("farmTest allowance ", lpAllowance);
       const apprvedObj = {};
       if (new BigNumber(lpAllowance).gt(0)) {
         apprvedObj[pairAddress] = true;
@@ -69,6 +58,8 @@ export const checkLpFarmAllowance =
 export const confirmLpFarmAllowance =
   (allowanceAmount, pairAddress, account, network) => async (dispatch) => {
     try {
+      // const _testPbrToken = tokenAddresses?.ethereum.PBR.testnet;
+
       const _pairContract = pairContract(pairAddress, network);
       const _farmAddress = farmAddresses?.[network];
 
@@ -82,7 +73,6 @@ export const confirmLpFarmAllowance =
       await _pairContract.methods
         .approve(_farmAddress, allowanceAmount)
         .send({ from: account }, function (error, transactionHash) {
-          // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
           if (error) {
             dispatch({
               type: UPDATE_TRANSACTION_STATUS,
@@ -96,14 +86,12 @@ export const confirmLpFarmAllowance =
           }
         })
         .on("receipt", async function (receipt) {
-          // console.log('UPDATE_TRANSACTION_STATUS', receipt)
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: { type: "approve", status: "success" },
           });
         })
         .on("error", async function (error) {
-          // console.log('UPDATE_TRANSACTION_STATUS error', error)
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: { type: "approve", status: "failed" },
@@ -130,7 +118,6 @@ export const stakeLpTokens =
     try {
       const _farmContract = farmContract(network);
 
-      console.log({ lpAmount, pairAddress, pid, account, network });
       dispatch({
         type: SHOW_FARM_LOADING,
         payload: getLoadingObject(pairAddress, true),
@@ -166,8 +153,6 @@ export const stakeLpTokens =
           });
         });
 
-      console.log("stakeLpTokens staked amount ", stakeRes);
-
       dispatch({
         type: STAKE_LP_TOKENS,
         payload: lpAmount,
@@ -196,7 +181,6 @@ export const unstakeLpTokens =
       const stakeRes = await _farmContract.methods
         .withdraw(pid, lpAmount)
         .send({ from: account }, function (error, transactionHash) {
-          // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
           if (error) {
             dispatch({
               type: UPDATE_TRANSACTION_STATUS,
@@ -210,21 +194,17 @@ export const unstakeLpTokens =
           }
         })
         .on("receipt", async function (receipt) {
-          // console.log('UPDATE_TRANSACTION_STATUS', receipt)
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: { type: "stake", status: "success" },
           });
         })
         .on("error", async function (error) {
-          // console.log('UPDATE_TRANSACTION_STATUS error', error)
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: { type: "stake", status: "failed" },
           });
         });
-
-      console.log("unstaked amount ", stakeRes);
 
       dispatch({
         type: STAKE_LP_TOKENS,
@@ -245,7 +225,6 @@ export const harvestRewards =
     try {
       const _farmContract = farmContract(network);
 
-      console.log("onHarvest ", { pairAddress, pid, account, network });
       dispatch({
         type: SHOW_FARM_LOADING,
         payload: getLoadingObject(pairAddress, true),
@@ -298,8 +277,7 @@ export const getFarmInfo =
         type: SHOW_FARM_LOADING,
         payload: getLoadingObject(pairAddress, true),
       });
-      // 12 hour later block
-      // const endBlockRes = await getBlockFromTimestamp(farmContractConfig.startTimestamp + 12 * 3600 + 10);
+
       const [poolInfo, pendingPbr, userInfo, totalAllocPoint] =
         await Promise.all([
           _farmContract.methods.poolInfo(pid).call(),
@@ -307,11 +285,6 @@ export const getFarmInfo =
           _farmContract.methods.userInfo(pid, account).call(),
           _farmContract.methods.totalAllocPoint().call(),
         ]);
-      // _farmContract.methods.getMultiplier(farmContractConfig.startBlock, parseInt(endBlockRes)).call()
-
-      // // calculate projected 1 year pbr reward based on 12 hour rewards
-      // const pbrReward1Year = new BigNumber(multiplier12hr).times(pbrPerBlock).times(2).times(365).times(poolInfo?.allocPoint).div(totalAllocPoint);
-      // console.log('using blocks  ', pbrReward1Year.toString())
 
       const farmPoolObj = {};
       farmPoolObj[pairAddress] = {
@@ -344,47 +317,29 @@ export const getFarmInfo =
 export const getLpBalanceFarm =
   (pairAddress, account, network) => async (dispatch) => {
     try {
-      const _pairContract = pairContract(pairAddress, network);
+      if (!pairAddress || !network) {
+        return;
+      }
 
-      const pbrAddress =
-        currentConnection === "testnet"
-          ? tokenAddresses.ethereum.PBR.testnet
-          : tokenAddresses.ethereum.PBR.testnet;
+      const _pairContract = pairContract(pairAddress, network);
 
       dispatch({
         type: SHOW_FARM_LOADING,
         payload: getLoadingObject(pairAddress, true),
       });
 
-      const [
-        lpBalance,
-        token0Addr,
-        token1Addr,
-        reservesData,
-        totalSupply,
-        ethPrice,
-        tokenDerivedEth,
-      ] = await Promise.all([
-        _pairContract.methods.balanceOf(account).call(),
-        _pairContract.methods.token0().call(),
-        _pairContract.methods.token1().call(),
-        _pairContract.methods.getReserves().call(),
-        _pairContract.methods.totalSupply().call(),
-        getOnlyCurrentEthPrice(),
-        getCurrentTokenPriceInEth(pbrAddress),
-      ]);
+      const [lpBalance, token0Addr, token1Addr, reservesData, totalSupply] =
+        await Promise.all([
+          _pairContract.methods.balanceOf(account).call(),
+          _pairContract.methods.token0().call(),
+          _pairContract.methods.token1().call(),
+          _pairContract.methods.getReserves().call(),
+          _pairContract.methods.totalSupply().call(),
+        ]);
 
       const reserve = {};
       reserve[token0Addr] = reservesData._reserve0;
       reserve[token1Addr] = reservesData._reserve1;
-
-      // eth-pbr price from AMM
-      // const ethPrice = ethPrice;
-      const pbrPriceUSD = new BigNumber(ethPrice)
-        .times(tokenDerivedEth)
-        .toString();
-
-      console.log("farmTest: ", { ethPrice, pbrPriceUSD });
 
       //calculating total liquidity usd value
       const ethAddress =
@@ -392,15 +347,11 @@ export const getLpBalanceFarm =
           ? tokenAddresses.ethereum.ETH.mainnet.toLowerCase()
           : tokenAddresses.ethereum.ETH.testnet.toLowerCase();
       let valueOfBaseTokenInFarm = 0;
-
+      // base in this calculation is eth token
       if (token0Addr.toLowerCase() === ethAddress) {
-        valueOfBaseTokenInFarm = new BigNumber(reservesData._reserve0).times(
-          ethPrice
-        );
+        valueOfBaseTokenInFarm = reservesData._reserve0;
       } else {
-        valueOfBaseTokenInFarm = new BigNumber(reservesData._reserve1).times(
-          ethPrice
-        );
+        valueOfBaseTokenInFarm = reservesData._reserve1;
       }
 
       const overallValueOfAllTokensInFarm = new BigNumber(
@@ -412,11 +363,10 @@ export const getLpBalanceFarm =
       const balObject = {};
       balObject[pairAddress] = {
         lpBalance,
-        poolLiquidityUSD: new BigNumber(fromWei(totalSupply))
+        poolLpTokens: new BigNumber(fromWei(totalSupply))
           .times(lpTokenPrice)
           .toFixed(0)
           .toString(),
-        pbrPriceUSD,
       };
 
       dispatch({

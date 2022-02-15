@@ -7,7 +7,9 @@ import { useEffect, useMemo } from "react";
 import {
   allowanceAmount,
   BASE_URL,
+  currentConnection,
   farmingPoolConstants,
+  tokenAddresses,
 } from "../../../constants";
 import { connect } from "react-redux";
 import { formattedNum } from "../../../utils/formatters";
@@ -17,10 +19,11 @@ import {
   getFarmInfo,
   getLpBalanceFarm,
   harvestRewards,
-  stakeLpTokens,
 } from "../../../actions/farmActions";
 import BigNumber from "bignumber.js";
 import { fromWei, getLpApr, getPbrRewardApr } from "../../../utils/helper";
+import { useTokenData } from "../../../contexts/TokenData";
+import { useEthPrice } from "../../../contexts/GlobalData";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -166,7 +169,6 @@ const useStyles = makeStyles((theme) => ({
 const Farm = (props) => {
   const {
     farmPool,
-    handleDialogClose,
     onStake,
     account: { currentAccount, currentNetwork },
     farm: { farms, lpApproved, loading, lpBalance },
@@ -175,10 +177,34 @@ const Farm = (props) => {
     checkLpFarmAllowance,
     confirmLpFarmAllowance,
     getLpBalanceFarm,
-    stakeLpTokens,
     harvestRewards,
   } = props;
   const classes = useStyles();
+
+  const pbrPriceData = useTokenData(
+    currentConnection === "testnet"
+      ? tokenAddresses.ethereum.PBR.testnet.toLowerCase()
+      : tokenAddresses.ethereum.PBR.mainnet.toLowerCase()
+  );
+
+  const pbrPriceUsd = useMemo(() => {
+    if (!pbrPriceData) {
+      return "0";
+    }
+    return pbrPriceData?.priceUSD;
+  }, [pbrPriceData]);
+
+  const ethPrice = useEthPrice();
+
+  const farmPoolAddress = useMemo(
+    () => farmingPoolConstants?.ethereum?.[farmPool]?.address,
+    [farmPool, farmingPoolConstants]
+  );
+
+  const farmPoolId = useMemo(
+    () => farmingPoolConstants?.ethereum?.[farmPool]?.pid,
+    [farmPool, farmingPoolConstants]
+  );
 
   useEffect(() => {
     if (!currentAccount || !currentNetwork) {
@@ -187,72 +213,84 @@ const Farm = (props) => {
 
     async function loadFarmData() {
       await Promise.all([
-        checkLpFarmAllowance(
-          farmPoolAddress(farmPool),
-          currentAccount,
-          currentNetwork
-        ),
+        checkLpFarmAllowance(farmPoolAddress, currentAccount, currentNetwork),
         getFarmInfo(
-          farmPoolAddress(farmPool),
-          farmPoolId(farmPool),
+          farmPoolAddress,
+          farmPoolId,
           currentAccount,
           currentNetwork
         ),
-        getLpBalanceFarm(
-          farmPoolAddress(farmPool),
-          currentAccount,
-          currentNetwork
-        ),
+        getLpBalanceFarm(farmPoolAddress, currentAccount, currentNetwork),
       ]);
     }
     loadFarmData();
-  }, [currentAccount]);
-
-  const farmPoolAddress = (_farmPool) => {
-    return farmingPoolConstants?.ethereum?.[_farmPool]?.address;
-  };
-
-  const farmPoolId = (_farmPool) => {
-    return farmingPoolConstants?.ethereum?.[_farmPool]?.pid;
-  };
+  }, [currentAccount, farmPoolAddress, farmPoolId]);
 
   const farmPoolDecimals = (_farmPool) => {
     return farmingPoolConstants?.ethereum?.[_farmPool]?.decimals;
   };
 
-  const farmData = (_farmPool) => {
-    if (!farmPool) {
-      return null;
-    }
-
-    if (!Object.keys(farms).includes(farmPoolAddress(_farmPool))) {
+  const farmData = useMemo(() => {
+    if (!farmPool || !farmPoolAddress) {
       return {};
     }
-    return farms?.[farmPoolAddress(_farmPool)];
-  };
+
+    return farms?.[farmPoolAddress];
+  }, [farmPool, farmPoolAddress, farms]);
+
+  const totalPoolLiquidityUSDValue = useMemo(() => {
+    if (!ethPrice || !lpBalance) {
+      return "0";
+    }
+    const poolTotalLpTokens = lpBalance?.[farmPoolAddress]?.poolLpTokens;
+    const usdValue = new BigNumber(poolTotalLpTokens)
+      .times(ethPrice?.[0])
+      .toString();
+
+    return usdValue;
+  }, [ethPrice, lpBalance, farmPoolAddress]);
+
+  const parseStakedAmount = useMemo(
+    () =>
+      farms &&
+      fromWei(
+        farms?.[farmPoolAddress]?.stakeData?.amount,
+        farmPoolDecimals(farmPool)
+      ),
+    [farmPool, farms, farmPoolAddress]
+  );
+
+  const isPoolApproved = useMemo(() => {
+    if (!lpApproved || !farmPoolAddress) {
+      return false;
+    }
+    return lpApproved?.[farmPoolAddress];
+  }, [lpApproved, farmPoolAddress]);
+
+  const isPoolLoading = useMemo(() => {
+    return loading && loading?.[farmPoolAddress];
+  }, [loading, farmPoolAddress]);
 
   const handleApproveLpTokenToFarm = async () => {
     await confirmLpFarmAllowance(
       allowanceAmount,
-      farmPoolAddress(farmPool),
+      farmPoolAddress,
       currentAccount,
       currentNetwork
     );
   };
 
-  const getFarmTotalApr = (_address) => {
+  const calculateTotalApr = (_address) => {
     if (!_address) {
       return "";
     }
 
-    const totalPoolLiquidityUSD = lpBalance?.[_address]?.poolLiquidityUSD;
-    const pbrPrice = lpBalance?.[_address]?.pbrPriceUSD;
     const poolWeight = farms?.[_address]?.poolWeight;
 
     const pbrRewardApr = getPbrRewardApr(
       poolWeight,
-      pbrPrice,
-      totalPoolLiquidityUSD
+      pbrPriceUsd,
+      totalPoolLiquidityUSDValue
     );
     const totalApr = new BigNumber(pbrRewardApr)
       .plus(getLpApr(farmPool))
@@ -262,53 +300,42 @@ const Farm = (props) => {
   };
 
   const farmApr = useMemo(
-    () => getFarmTotalApr(farmPoolAddress(farmPool)),
-    [farmPoolAddress(farmPool), farms, lpBalance]
+    () => calculateTotalApr(farmPoolAddress),
+    [farmPool, pbrPriceUsd, farms, totalPoolLiquidityUSDValue]
   );
 
   const handleStakeActions = (actionType = "stake") => {
     onStake(
       farmPool,
       actionType,
-      farmPoolAddress(farmPool),
+      farmPoolAddress,
       farmPoolDecimals(farmPool),
-      farmPoolId(farmPool)
+      farmPoolId
     );
   };
 
-  const harvestDisableStatus = (_farmPool) => {
+  const harvestDisableStatus = useMemo(() => {
     return (
-      loading?.[farmPoolAddress(_farmPool)] ||
-      new BigNumber(
-        !farmData(_farmPool).pendingPbr ? 0 : farmData(_farmPool).pendingPbr
-      ).eq(0)
+      loading?.[farmPoolAddress] ||
+      new BigNumber(!farmData?.pendingPbr ? 0 : farmData.pendingPbr).eq(0)
     );
-  };
+  }, [farmData, farmPoolAddress, loading]);
 
-  const handleHarvest = async (_farmPool) => {
+  const handleHarvest = async () => {
     await harvestRewards(
-      farmPoolAddress(_farmPool),
-      farmPoolId(_farmPool),
+      farmPoolAddress,
+      farmPoolId,
       currentAccount,
       currentNetwork
     );
 
     await getFarmInfo(
-      farmPoolAddress(_farmPool),
-      farmPoolId(_farmPool),
+      farmPoolAddress,
+      farmPoolId,
       currentAccount,
       currentNetwork
     );
   };
-
-  const parseStakedAmount = useMemo(
-    () =>
-      fromWei(
-        farms?.[farmPoolAddress(farmPool)]?.stakeData?.amount,
-        farmPoolDecimals(farmPool)
-      ),
-    [farmPool, farms]
-  );
 
   return (
     <Card elevation={10} className={classes.card}>
@@ -361,12 +388,12 @@ const Farm = (props) => {
 
         <div className="d-flex justify-content-between align-items-center">
           <div className={classes.tokenValues}>
-            {formattedNum(fromWei(farmData(farmPool)?.pendingPbr))}
+            {formattedNum(fromWei(farmData?.pendingPbr))}
           </div>
           <Button
             className={classes.harvestButton}
-            disabled={harvestDisableStatus(farmPool)}
-            onClick={() => handleHarvest(farmPool)}
+            disabled={harvestDisableStatus}
+            onClick={handleHarvest}
           >
             Harvest
           </Button>
@@ -377,44 +404,42 @@ const Farm = (props) => {
           <div className={classes.tokenAmount}></div>
         </div>
 
-        {!loading?.[farmPoolAddress(farmPool)] &&
-          !lpApproved?.[farmPoolAddress(farmPool)] && (
-            <div className="d-flex justify-content-center align-items-center mt-1">
+        {!isPoolApproved && !isPoolLoading && (
+          <div className="d-flex justify-content-center align-items-center mt-1">
+            <Button
+              onClick={handleApproveLpTokenToFarm}
+              className={classes.approveBtn}
+            >
+              Approve LP Tokens
+            </Button>
+          </div>
+        )}
+
+        {isPoolApproved && !isPoolLoading && (
+          <div className="d-flex justify-content-between align-items-center mt-1">
+            <div className={classes.tokenValues}>
+              {formattedNum(parseStakedAmount)}
+            </div>
+            <div className="d-flex justify-content-between align-items-center">
               <Button
-                onClick={handleApproveLpTokenToFarm}
-                className={classes.approveBtn}
+                onClick={() => handleStakeActions("stake")}
+                className={classes.stakeBtn}
+                style={{ marginRight: 5 }}
               >
-                Approve LP Tokens
+                +
+              </Button>
+              <Button
+                onClick={() => handleStakeActions("unstake")}
+                className={classes.stakeBtn}
+                style={{ fontSize: 36 }}
+              >
+                -
               </Button>
             </div>
-          )}
+          </div>
+        )}
 
-        {!loading?.[farmPoolAddress(farmPool)] &&
-          lpApproved?.[farmPoolAddress(farmPool)] && (
-            <div className="d-flex justify-content-between align-items-center mt-1">
-              <div className={classes.tokenValues}>
-                {formattedNum(parseStakedAmount)}
-              </div>
-              <div className="d-flex justify-content-between align-items-center">
-                <Button
-                  onClick={() => handleStakeActions("stake")}
-                  className={classes.stakeBtn}
-                  style={{ marginRight: 5 }}
-                >
-                  +
-                </Button>
-                <Button
-                  onClick={() => handleStakeActions("unstake")}
-                  className={classes.stakeBtn}
-                  style={{ fontSize: 36 }}
-                >
-                  -
-                </Button>
-              </div>
-            </div>
-          )}
-
-        {loading?.[farmPoolAddress(farmPool)] && (
+        {isPoolLoading && (
           <div className="d-flex justify-content-center align-items-center mt-1">
             <Button disabled={true} className={classes.approveBtn}>
               {transaction.type && transaction.status === "pending"
@@ -431,10 +456,7 @@ const Farm = (props) => {
         <div className="d-flex justify-content-between align-items-center mt-4">
           <div className={classes.tokenTitle}>Total Liquidity:</div>
           <div className={classes.tokenAmount}>
-            $
-            {formattedNum(
-              lpBalance?.[farmPoolAddress(farmPool)]?.poolLiquidityUSD
-            )}
+            ${formattedNum(totalPoolLiquidityUSDValue)}
           </div>
         </div>
 
@@ -456,9 +478,7 @@ const Farm = (props) => {
           <a
             target="_blank"
             className={classes.link}
-            href={`https://rinkeby.etherscan.io/address/${farmPoolAddress(
-              farmPool
-            )}`}
+            href={`https://rinkeby.etherscan.io/address/${farmPoolAddress}`}
           >
             View Contract{" "}
             <OpenInNewIcon fontSize="small" className={classes.icon} />{" "}
@@ -470,7 +490,7 @@ const Farm = (props) => {
           <a
             target="_blank"
             className={classes.link}
-            href={`http://localhost:3000/pair/${farmPoolAddress(farmPool)}`}
+            href={`http://localhost:3000/pair/${farmPoolAddress}`}
           >
             See Pair Info{" "}
             <OpenInNewIcon fontSize="small" className={classes.icon} />{" "}
@@ -492,6 +512,5 @@ export default connect(mapStateToProps, {
   checkLpFarmAllowance,
   confirmLpFarmAllowance,
   getLpBalanceFarm,
-  stakeLpTokens,
   harvestRewards,
 })(Farm);

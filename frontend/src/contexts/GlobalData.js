@@ -257,7 +257,9 @@ async function getGlobalData(ethPrice, oldEthPrice) {
       fetchPolicy: "cache-first",
     });
 
-    data = !result.data.polkabridgeAmmFactories[0] ? {} : result.data.polkabridgeAmmFactories[0];
+    data = !result.data.polkabridgeAmmFactories[0]
+      ? {}
+      : result.data.polkabridgeAmmFactories[0];
 
     // fetch the historical data
     let oneDayResult = await client.query({
@@ -265,27 +267,35 @@ async function getGlobalData(ethPrice, oldEthPrice) {
       fetchPolicy: "cache-first",
     });
 
-    oneDayData = !oneDayResult.data.polkabridgeAmmFactories[0] ? {} : oneDayResult.data.polkabridgeAmmFactories[0];
+    oneDayData = !oneDayResult.data.polkabridgeAmmFactories[0]
+      ? {}
+      : oneDayResult.data.polkabridgeAmmFactories[0];
 
     let twoDayResult = await client.query({
       query: GLOBAL_DATA(twoDayBlock?.number),
       fetchPolicy: "cache-first",
     });
 
-    twoDayData = !twoDayResult.data.polkabridgeAmmFactories[0] ? {} : twoDayResult.data.polkabridgeAmmFactories[0];
+    twoDayData = !twoDayResult.data.polkabridgeAmmFactories[0]
+      ? {}
+      : twoDayResult.data.polkabridgeAmmFactories[0];
 
     let oneWeekResult = await client.query({
       query: GLOBAL_DATA(oneWeekBlock?.number),
       fetchPolicy: "cache-first",
     });
-    const oneWeekData = !oneWeekResult.data.polkabridgeAmmFactories[0] ? {} : oneWeekResult.data.polkabridgeAmmFactories[0];
+    const oneWeekData = !oneWeekResult.data.polkabridgeAmmFactories[0]
+      ? {}
+      : oneWeekResult.data.polkabridgeAmmFactories[0];
 
     let twoWeekResult = await client.query({
       query: GLOBAL_DATA(twoWeekBlock?.number),
       fetchPolicy: "cache-first",
     });
 
-    const twoWeekData = !twoWeekResult.data.polkabridgeAmmFactories[0] ? {} : twoWeekResult.data.polkabridgeAmmFactories[0];
+    const twoWeekData = !twoWeekResult.data.polkabridgeAmmFactories[0]
+      ? {}
+      : twoWeekResult.data.polkabridgeAmmFactories[0];
 
     // console.log('ApiTest:  data  --> ', { data, oneDayData, twoDayData, twoWeekData })
     if (data && oneDayData && twoDayData && twoWeekData) {
@@ -524,7 +534,6 @@ const getEthPrice = async () => {
  * Get current eth price in usd
  */
 export const getOnlyCurrentEthPrice = async () => {
-
   let ethPrice = 0;
   try {
     let result = await client.query({
@@ -535,7 +544,6 @@ export const getOnlyCurrentEthPrice = async () => {
     const currentPrice = result?.data?.bundles[0]?.ethPrice;
 
     ethPrice = currentPrice;
-
   } catch (e) {
     console.log("getEthPrice", e);
   }
@@ -547,19 +555,17 @@ export const getOnlyCurrentEthPrice = async () => {
  * Get token derived eth value
  */
 export const getCurrentTokenPriceInEth = async (address) => {
-
   let tokenPriceInEth = 0;
   let data = {};
   try {
     let result = await client.query({
       query: TOKEN_CURRENT_DATA(address?.toLowerCase()),
-      fetchPolicy: 'cache-first',
-    })
-    data = result?.data?.tokens?.[0]
+      fetchPolicy: "cache-first",
+    });
+    data = result?.data?.tokens?.[0];
 
-    console.log('farmTest current token pricedata ', result)
+    // console.log('farmTest current token pricedata ', result)
     tokenPriceInEth = data?.derivedETH;
-
   } catch (e) {
     console.log("farmTest: getCurrentTokenPriceInEth", e);
   }
@@ -646,7 +652,10 @@ export function useGlobalData() {
 
   useEffect(() => {
     async function fetchData() {
-      console.log("analyticsTest: fetching global data...", { ethPrice, oldEthPrice });
+      console.log("analyticsTest: fetching global data...", {
+        ethPrice,
+        oldEthPrice,
+      });
       let globalData = await getGlobalData(ethPrice, oldEthPrice);
 
       // console.log('analyticsTest: fetched global data ', globalData)
@@ -753,7 +762,7 @@ export function useEthPrice() {
   const ethPriceOld = state?.["oneDayPrice"];
   useEffect(() => {
     async function checkForEthPrice() {
-      console.log('allPairs', ethPrice)
+      console.log("allPairs", ethPrice);
       if (!ethPrice) {
         let [newPrice, oneDayPrice, priceChange] = await getEthPrice();
         updateEthPrice(newPrice, oneDayPrice, priceChange);

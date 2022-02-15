@@ -63,7 +63,7 @@ export const factoryAddresses = {
 
 export const farmAddresses = {
   ethereum: testing
-    ? "0x7053993577E8782fB4465Dff4713335bbAe8c9c0" //"0xf49c7F516314d84a4c9e02EB2711Da6a6f56f0D1"
+    ? "0xA5ffa99519A3fDF1FB5b2D262C64022C5DE54598" //"0xf49c7F516314d84a4c9e02EB2711Da6a6f56f0D1"
     : "0xBaF15D830ddeB6c11fFae8890d9c902D8dF1f3E7",
 };
 
@@ -157,7 +157,7 @@ export const farmingPoolConstants = {
     "PBR-ETH": {
       multiplier: 40,
       pid: 0,
-      address: "0x33056C64C34cD9c7E27a94C00E2cA2AE8098974a",
+      address: "0xd9aeF1888e955c62A885C68441920303fD89b231",
       blocksPerYear: "",
       lpApr: 0,
       decimals: 18,
@@ -165,7 +165,7 @@ export const farmingPoolConstants = {
     "ETH-USDT": {
       multiplier: 5,
       pid: 1,
-      address: "0x511De78Ed2171776b30CF268D2C6CAcd28741704",
+      address: "0xeC958C778560425525f528b6a929174572F5fB5d",
       blocksPerYear: "",
       lpApr: 0,
       decimals: 12,
