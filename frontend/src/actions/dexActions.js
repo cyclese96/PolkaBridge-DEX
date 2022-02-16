@@ -748,7 +748,7 @@ export const loadTokens = (network) => async (dispatch) => {
   });
 };
 
-export const importToken = (address, account, network) => async (dispatch) => {
+export const importToken = (address, network) => async (dispatch) => {
   try {
     dispatch({
       type: SHOW_DEX_LOADING,
