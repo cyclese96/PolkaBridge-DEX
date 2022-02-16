@@ -375,11 +375,6 @@ const Swap = (props) => {
     setStatus({ message, disabled });
   };
 
-  // const debouncedGetLpBalance = useCallback(
-  //   debounce((...params) => getLpBalance(...params), 1000),
-  //   [] // will be created only once initially
-  // );
-
   const debouncedToken1OutCall = useCallback(
     debounce((...params) => getToken1OutAmount(...params), 1000),
     [] // will be created only once initially
@@ -406,10 +401,6 @@ const Swap = (props) => {
     } else {
       setCurrentSwapFn(swapFnConstants.swapExactTokensForTokens);
     }
-
-    // calculate resetpective value of token 2 if selected
-    // let _token2Value = "";
-    // const pairAddress = currentPairAddress();
 
     if (selectedToken1.symbol && new BigNumber(tokens).gt(0)) {
       debouncedToken1OutCall(
