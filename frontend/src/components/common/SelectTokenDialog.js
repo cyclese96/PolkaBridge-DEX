@@ -7,6 +7,7 @@ import { importToken } from "../../actions/dexActions";
 import { connect } from "react-redux";
 import { Button, CircularProgress, Divider } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
+import { isAddress } from "../../utils/helper";
 
 const useStyles = makeStyles((theme) => ({
   background: {

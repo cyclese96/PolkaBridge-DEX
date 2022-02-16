@@ -46,7 +46,7 @@ export const healthClient = new ApolloClient({
 });
 
 const _blocksApi =
-  currentConnection == "testnet" ? BLOCKS_API_TESTNET : BLOCKS_API_MAINNET;
+  currentConnection === "testnet" ? BLOCKS_API_TESTNET : BLOCKS_API_MAINNET;
 export const blockClient = new ApolloClient({
   link: new HttpLink({
     uri: _blocksApi,

@@ -62,7 +62,7 @@ const CustomButton = ({
       color="primary"
       disabled={disabled}
       className={[
-        variant == "primary"
+        variant === "primary"
           ? ownClasses.stakeButton
           : ownClasses.unstakeButton,
         className,

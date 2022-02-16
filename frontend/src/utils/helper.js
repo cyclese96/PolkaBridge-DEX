@@ -48,8 +48,7 @@ export const getCurrentAccount = async () => {
 
   try {
     accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-    // accounts = await web3.eth.getAccounts();
-    // console.log('accounts', accounts)
+
     const accountAddress = accounts.length > 0 ? accounts[0] : null;
     return accountAddress;
   } catch (error) {
@@ -150,6 +149,7 @@ export const getPercentageAmount = (value, percent) => {
   return percentValue.toString();
 };
 
+// :todo remove this function after testing
 export const fetchTokenInfo = async (address) => {
   try {
     const _api = `https://api.etherscan.io/api?module=token&action=tokeninfo&contractaddress=${address}&apikey=${process.env.REACT_APP_ETHER_SCAN_API.split(
@@ -158,7 +158,6 @@ export const fetchTokenInfo = async (address) => {
       .reverse()
       .join("")}`;
     const res = await axios.get(_api);
-    // console.log("api res ", res.data);
     return res.data;
   } catch (error) {
     console.log("fetchTokenInfo", error);
@@ -266,18 +265,9 @@ export const getTokenOutWithReserveRatio = (
     return new BigNumber("0").toFixed(4).toString();
   }
 
-  console.log("getTokenOutWithReserveRatio", {
-    tokenIn,
-    token1Reserve,
-    token2Reserve,
-  });
-
   try {
     const _out = _token1.div(_token2).multipliedBy(tokenIn);
 
-    // if (_out.gt(1)) {
-    //   return _out.toFixed(2).toString();
-    // }
     return _out.toString();
   } catch (error) {
     console.log("exeption getTokenOut", error);
@@ -302,7 +292,6 @@ export const buyPriceImpact = (yTokenamount, yTokenReserves) => {
 
   try {
     const buyImpact = _yAmount.multipliedBy(0.98).div(_yTokenReserves);
-    // console.log("buy impact ", buyImpact.toString());
     return buyImpact.toString();
   } catch (error) {
     console.log("exeption buyPriceImpact", error);
@@ -321,7 +310,6 @@ export const sellPriceImpact = (xTokenAmount, yTokenAmount, xReserve) => {
 
     const sellImpact = er.multipliedBy(0.98).div(xReserve);
 
-    // console.log("sell price impact ", sellImpact.toString());
     return sellImpact.toString();
   } catch (error) {
     console.log("exeption at sellPriceImpact", error);
@@ -378,12 +366,7 @@ export const getPbrRewardApr = (poolWeight, pbrPriceUSD, poolLiquidityUSD) => {
     const yearlyPbrRewardAllocation = poolWeight
       ? new BigNumber(poolWeight).times(PBR_PER_YEAR)
       : new BigNumber(NaN);
-    console.log({
-      pbrYearly: yearlyPbrRewardAllocation.toString(),
-      poolWeight: poolWeight.toString(),
-      pbrPriceUSD,
-      poolLiquidityUSD,
-    });
+
     const pbrRewardApr = yearlyPbrRewardAllocation
       .times(pbrPriceUSD)
       .div(poolLiquidityUSD)
