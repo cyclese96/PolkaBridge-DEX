@@ -12,10 +12,6 @@ import {
   USDT,
 } from "../constants";
 import {
-  getCurrentTokenPriceInEth,
-  getOnlyCurrentEthPrice,
-} from "../contexts/GlobalData";
-import {
   pairContract,
   routerContract,
   tokenContract,
@@ -730,7 +726,6 @@ export const loadTokens = (network) => async (dispatch) => {
           : moonriverTokens;
     }
 
-    console.log("load tokens ", { localTokens, network });
     const cachedTokens = getCachedTokens();
     const allTokens =
       cachedTokens.length > 0
@@ -937,24 +932,24 @@ export const getToken1OutAmount =
       }
 
       // fetch token usd price in AMM,
-      const [token0DerivedEth, token1DerivedEth, ethUsdValue] =
-        await Promise.all([
-          getCurrentTokenPriceInEth(token0.address),
-          getCurrentTokenPriceInEth(token1.address),
-          getOnlyCurrentEthPrice(),
-        ]);
+      // const [token0DerivedEth, token1DerivedEth, ethUsdValue] =
+      //   await Promise.all([
+      //     getCurrentTokenPriceInEth(token0.address),
+      //     getCurrentTokenPriceInEth(token1.address),
+      //     getOnlyCurrentEthPrice(),
+      //   ]);
 
       dispatch({
         type: GET_TOKEN_1_OUT,
         payload: {
           tokenAmount: resultOut,
-          token0UsdValue: new BigNumber(token0DerivedEth)
-            .times(ethUsdValue)
-            .toString(),
-          token1UsdValue: new BigNumber(token1DerivedEth)
-            .times(ethUsdValue)
-            .toString(),
-          selectedPath,
+          // token0UsdValue: new BigNumber(token0DerivedEth)
+          //   .times(ethUsdValue)
+          //   .toString(),
+          // token1UsdValue: new BigNumber(token1DerivedEth)
+          //   .times(ethUsdValue)
+          //   .toString(),
+          // selectedPath,
         },
       });
     } catch (error) {
@@ -1094,25 +1089,25 @@ export const getToken0InAmount =
         selectedPath = bridgePath;
       }
 
-      // fetch token usd price in AMM,
-      const [token0DerivedEth, token1DerivedEth, ethUsdValue] =
-        await Promise.all([
-          getCurrentTokenPriceInEth(token0.address),
-          getCurrentTokenPriceInEth(token1.address),
-          getOnlyCurrentEthPrice(),
-        ]);
+      // // fetch token usd price in AMM,
+      // const [token0DerivedEth, token1DerivedEth, ethUsdValue] =
+      //   await Promise.all([
+      //     getCurrentTokenPriceInEth(token0.address),
+      //     getCurrentTokenPriceInEth(token1.address),
+      //     getOnlyCurrentEthPrice(),
+      //   ]);
 
       dispatch({
         type: GET_TOKEN_O_IN,
         payload: {
           tokenAmount: resultIn,
-          token0UsdValue: new BigNumber(token0DerivedEth)
-            .times(ethUsdValue)
-            .toString(),
-          token1UsdValue: new BigNumber(token1DerivedEth)
-            .times(ethUsdValue)
-            .toString(),
-          selectedPath,
+          // token0UsdValue: new BigNumber(token0DerivedEth)
+          //   .times(ethUsdValue)
+          //   .toString(),
+          // token1UsdValue: new BigNumber(token1DerivedEth)
+          //   .times(ethUsdValue)
+          //   .toString(),
+          // selectedPath,
         },
       });
     } catch (error) {

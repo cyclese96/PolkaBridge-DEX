@@ -59,11 +59,6 @@ export default function NetworkSelect({ selectedNetwork }) {
   );
 
   useEffect(() => {
-    console.log("selected chain id", selectedNetwork);
-    // if (!localStorage.getItem('currentNetwork')) {
-    //     // setupNetwork(ethereumNetworkDetail.mainnet)
-    //     localStorage.currentNetwork = selectedNetwork
-    // }
     if (!selectedNetwork) {
       return;
     }
@@ -140,7 +135,7 @@ export default function NetworkSelect({ selectedNetwork }) {
             <span>Ethereum</span>
             <img className={classes.imgIcon} src="img/eth.png" />
           </MenuItem>
-          <MenuItem
+          {/* <MenuItem
             value={
               currentConnection === "testnet"
                 ? config.moonriverChainTestent
@@ -150,7 +145,7 @@ export default function NetworkSelect({ selectedNetwork }) {
           >
             <span>Moonriver</span>
             <img className={classes.imgIcon} src="img/moon.png" />
-          </MenuItem>
+          </MenuItem> */}
           {/* <MenuItem
             value={
               currentConnection === "testnet"
