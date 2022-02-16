@@ -605,13 +605,14 @@ const Swap = (props) => {
     }, 1000);
   }, [token0In]);
 
+  // selected token usd value track
   const token0PriceData = useTokenData(
     selectedToken0.address ? selectedToken0.address.toLowerCase() : null
   );
   const token1PriceData = useTokenData(
     selectedToken1.address ? selectedToken1.address.toLowerCase() : null
   );
-  // selected token usd value track
+
   const token0PriceUsd = useMemo(() => {
     if (!selectedToken0?.symbol || !token0PriceData) {
       return 0;
@@ -694,13 +695,8 @@ const Swap = (props) => {
     );
     store.dispatch({ type: HIDE_DEX_LOADING });
 
-    console.log("price impact ", impact);
     setPriceImpact(impact);
   };
-
-  // const hideSnackbar = () => {
-  //   setAlert({ status: false });
-  // };
 
   // swap selected tokens and reset inputs
   const handleSwapInputs = () => {
