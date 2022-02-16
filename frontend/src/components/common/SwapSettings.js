@@ -9,19 +9,6 @@ import { defaultSlippage, defaultTransactionDeadline } from "../../constants";
 import { Close, InfoRounded } from "@material-ui/icons";
 import { Button, Tooltip } from "@material-ui/core";
 
-// const styles = (theme) => ({
-//   root: {
-//     margin: 0,
-//     padding: theme.spacing(2),
-//   },
-//   closeButton: {
-//     position: "absolute",
-//     right: theme.spacing(1),
-//     top: theme.spacing(1),
-//     color: theme.palette.grey[500],
-//   },
-// });
-
 const useStyles = makeStyles((theme) => ({
   background: {
     backgroundColor: "#ffffff",
@@ -182,7 +169,6 @@ const SwapSettings = ({
     );
 
     if (!_slippage && !_deadline) {
-      console.log("no state update");
       return;
     }
     store.dispatch({
@@ -199,8 +185,6 @@ const SwapSettings = ({
   };
 
   useEffect(() => {
-    console.log("slippage", slippage);
-    console.log("setting", swapSettings);
     loadSettings();
   }, [currentNetwork, currentAccount]);
 

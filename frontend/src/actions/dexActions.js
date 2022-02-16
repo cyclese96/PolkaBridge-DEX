@@ -853,7 +853,11 @@ export const getToken1OutAmount =
       let selectedPath = [];
       let resultOut = "0";
 
-      const pairAddress = await getPairAddress(token0.address, token1.address);
+      const pairAddress = await getPairAddress(
+        token0.address,
+        token1.address,
+        network
+      );
 
       let reserve;
 
@@ -949,7 +953,7 @@ export const getToken1OutAmount =
           // token1UsdValue: new BigNumber(token1DerivedEth)
           //   .times(ethUsdValue)
           //   .toString(),
-          // selectedPath,
+          selectedPath,
         },
       });
     } catch (error) {
@@ -1015,7 +1019,11 @@ export const getToken0InAmount =
       let selectedPath = [];
       let resultIn = "0";
 
-      const pairAddress = await getPairAddress(token0.address, token1.address);
+      const pairAddress = await getPairAddress(
+        token0.address,
+        token1.address,
+        network
+      );
 
       let reserve;
 
@@ -1107,7 +1115,7 @@ export const getToken0InAmount =
           // token1UsdValue: new BigNumber(token1DerivedEth)
           //   .times(ethUsdValue)
           //   .toString(),
-          // selectedPath,
+          selectedPath,
         },
       });
     } catch (error) {
@@ -1201,7 +1209,11 @@ export const calculatePriceImpact = async (
   network
 ) => {
   try {
-    const pairAddress = await getPairAddress(token0.address, token1.address);
+    const pairAddress = await getPairAddress(
+      token0.address,
+      token1.address,
+      network
+    );
 
     let reserve;
 
