@@ -49,6 +49,7 @@ import {
 import { default as NumberFormat } from "react-number-format";
 import { useLocation } from "react-router";
 import { usePrevious } from "react-use";
+import { useTokenData } from "../../../contexts/TokenData";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -260,8 +261,6 @@ const Swap = (props) => {
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popper" : undefined;
-  const [_token0PriceUSD, setToken0PriceUSD] = useState(null);
-  const [_token1PriceUSD, setToken1PriceUSD] = useState(null);
 
   const query = new URLSearchParams(useLocation().search);
 
@@ -376,10 +375,10 @@ const Swap = (props) => {
     setStatus({ message, disabled });
   };
 
-  const debouncedGetLpBalance = useCallback(
-    debounce((...params) => getLpBalance(...params), 1000),
-    [] // will be created only once initially
-  );
+  // const debouncedGetLpBalance = useCallback(
+  //   debounce((...params) => getLpBalance(...params), 1000),
+  //   [] // will be created only once initially
+  // );
 
   const debouncedToken1OutCall = useCallback(
     debounce((...params) => getToken1OutAmount(...params), 1000),
@@ -485,14 +484,11 @@ const Swap = (props) => {
       );
     }
 
-    setToken0PriceUSD(token1Out.token0UsdValue);
-    setToken1PriceUSD(token1Out.token1UsdValue);
-
     // balance check before trade
     const _bal0 = Object.keys(balance).includes(selectedToken0.symbol)
       ? balance[selectedToken0.symbol]
       : 0;
-    const bal0Wei = fromWei(_bal0, selectedToken0.decimals); //DECIMAL_6_ADDRESSES.includes(selectedToken0.address) ? fromWei(_bal0, 6) : fromWei(_bal0)
+    const bal0Wei = fromWei(_bal0, selectedToken0.decimals);
     if (new BigNumber(token1Value).gt(bal0Wei)) {
       setStatus({
         disabled: true,
@@ -528,7 +524,6 @@ const Swap = (props) => {
           currentAccount,
           currentNetwork,
         ];
-        // console.log("calling token", token1OutParams);
 
         await debouncedToken1OutCall(...token1OutParams);
       }
@@ -561,9 +556,6 @@ const Swap = (props) => {
         { value: token2Value, selected: selectedToken1 }
       );
     }
-
-    setToken0PriceUSD(token0In.token0UsdValue);
-    setToken1PriceUSD(token0In.token1UsdValue);
 
     // balance check before trade
     const _bal0 = Object.keys(balance).includes(selectedToken0.symbol)
@@ -607,12 +599,35 @@ const Swap = (props) => {
           currentAccount,
           currentNetwork,
         ];
-        // console.log("calling token", token0InParams);
 
         await debouncedToken0InCall(...token0InParams);
       }
     }, 1000);
   }, [token0In]);
+
+  // selected token usd value track
+  const token0PriceData = useTokenData(
+    selectedToken0.address ? selectedToken0.address.toLowerCase() : null
+  );
+  const token1PriceData = useTokenData(
+    selectedToken1.address ? selectedToken1.address.toLowerCase() : null
+  );
+
+  const token0PriceUsd = useMemo(() => {
+    if (!selectedToken0?.symbol || !token0PriceData) {
+      return 0;
+    }
+
+    return token0PriceData?.priceUSD;
+  }, [token0PriceData]);
+
+  const token1PriceUsd = useMemo(() => {
+    if (!selectedToken1?.symbol || !token1PriceData) {
+      return 0;
+    }
+
+    return token1PriceData?.priceUSD;
+  }, [token1PriceData]);
 
   const onToken1Select = async (token) => {
     setToken1(token);
@@ -680,12 +695,7 @@ const Swap = (props) => {
     );
     store.dispatch({ type: HIDE_DEX_LOADING });
 
-    console.log("price impact ", impact);
     setPriceImpact(impact);
-  };
-
-  const hideSnackbar = () => {
-    setAlert({ status: false });
   };
 
   // swap selected tokens and reset inputs
@@ -812,7 +822,7 @@ const Swap = (props) => {
             currentToken={selectedToken0}
             disableToken={selectedToken1}
             inputValue={token1Value}
-            priceUSD={_token0PriceUSD}
+            priceUSD={token0PriceUsd}
           />
 
           <IconButton className={classes.iconButton}>
@@ -833,7 +843,7 @@ const Swap = (props) => {
             currentToken={selectedToken1}
             disableToken={selectedToken0}
             inputValue={token2Value}
-            priceUSD={_token1PriceUSD}
+            priceUSD={token1PriceUsd}
           />
 
           {token1Value && token2Value && (
@@ -873,14 +883,6 @@ const Swap = (props) => {
             className={classes.swapButton}
             onClick={handleAction}
           >
-            {/* {!swapStatus.disabled ? (
-              <CircularProgress
-                style={{ color: "black" }}
-                color="secondary"
-                size={30}
-              />
-            ) : (
-              )} */}
             {currentButton()}
           </Button>
         </div>

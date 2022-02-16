@@ -12,10 +12,6 @@ import {
   USDT,
 } from "../constants";
 import {
-  getCurrentTokenPriceInEth,
-  getOnlyCurrentEthPrice,
-} from "../contexts/GlobalData";
-import {
   pairContract,
   routerContract,
   tokenContract,
@@ -25,13 +21,13 @@ import {
   toWei,
   getUnixTime,
   getPercentage,
-  fetchTokenInfo,
   cacheImportedToken,
   getCachedTokens,
   fromWei,
   sellPriceImpact,
   getTokenWithSymbol,
 } from "../utils/helper";
+import { fetchTokenInfo } from "../utils/helper";
 import {
   APPROVE_LP_TOKENS,
   APPROVE_TOKEN,
@@ -57,33 +53,18 @@ import ethereumTokens from "../tokenList/tokenListEthereum.json";
 import moonriverTokens from "../tokenList/tokenListMoonriver.json";
 import testTokens from "../tokenList/tokenListTest.json";
 
-// const getCurrentGasLimit = (path) => {
-//   if (path.length < 3) {
-//     return 200000;
-//   } else if (path.length === 3) {
-//     return 250000;
-//   } else if (path.length === 4) {
-//     return 300000;
-//   } else {
-//     return 200000;
-//   }
-// };
-
 // swap transaction function
 export const swapTokens =
   (token0, token1, deadline, currentSwapFn, currenSwapPath, account, network) =>
   async (dispatch) => {
     try {
-      // console.log("swapExactEthForTokens");
       const _routerContract = routerContract(network);
 
       const token0In = token0.amount;
-      const token1In = token1.amount;
 
-      const token0Min = 0; //token0.min; // todo: veirfy min amount out with henry and update this
       const token1Min = 0; //token1.min;
 
-      const path = currenSwapPath; //[token0.address, token1.address];
+      const path = currenSwapPath;
       const toAddress = account;
       const _deadlineUnix = getUnixTime(deadline);
       dispatch({
@@ -91,18 +72,14 @@ export const swapTokens =
       });
       dispatch({ type: START_TRANSACTION });
 
-      // console.log("swapTokens:  inputs -->", { token0In, token1In, token0Min, token1Min, path, toAddress, _deadlineUnix, currentSwapFn })
-
       let swapPromise;
       if (currentSwapFn === swapFnConstants.swapExactETHForTokens) {
-        //case 1
-        // console.log('swapTokens:  case 1 swapExactETHForTokens')
+        //case 1 swapExactETHForTokens
         swapPromise = _routerContract.methods
           .swapExactETHForTokens(token1Min, path, toAddress, _deadlineUnix)
           .send(
             { from: account, value: token0In },
             function (error, transactionHash) {
-              // console.log('swapTokens: UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
               if (error) {
                 dispatch({
                   type: UPDATE_TRANSACTION_STATUS,
@@ -117,14 +94,12 @@ export const swapTokens =
             }
           );
       } else if (currentSwapFn === swapFnConstants.swapETHforExactTokens) {
-        // case 2
-        // console.log('swapTokens:  case 2 swapETHforExactTokens')
+        // case 2 swapETHforExactTokens
         swapPromise = _routerContract.methods
           .swapExactETHForTokens(token1Min, path, toAddress, _deadlineUnix)
           .send(
             { from: account, value: token0In },
             function (error, transactionHash) {
-              // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
               if (error) {
                 dispatch({
                   type: UPDATE_TRANSACTION_STATUS,
@@ -139,8 +114,7 @@ export const swapTokens =
             }
           );
       } else if (currentSwapFn === swapFnConstants.swapExactTokensForETH) {
-        // case 3
-        // console.log('swapTokens:  case 3 swapExactTokensForETH')
+        // case 3 swapExactTokensForETH
 
         swapPromise = _routerContract.methods
           .swapExactTokensForETH(
@@ -151,7 +125,6 @@ export const swapTokens =
             _deadlineUnix
           )
           .send({ from: account }, function (error, transactionHash) {
-            // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
               dispatch({
                 type: UPDATE_TRANSACTION_STATUS,
@@ -165,8 +138,7 @@ export const swapTokens =
             }
           });
       } else if (currentSwapFn === swapFnConstants.swapTokensForExactETH) {
-        // case 4
-        // console.log('swapTokens:  case 4 swapTokensForExactETH')
+        // case 4  swapTokensForExactETH
 
         swapPromise = _routerContract.methods
           .swapExactTokensForETH(
@@ -177,7 +149,6 @@ export const swapTokens =
             _deadlineUnix
           )
           .send({ from: account }, function (error, transactionHash) {
-            // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
               dispatch({
                 type: UPDATE_TRANSACTION_STATUS,
@@ -191,8 +162,7 @@ export const swapTokens =
             }
           });
       } else if (currentSwapFn === swapFnConstants.swapExactTokensForTokens) {
-        // case 5
-        // console.log('swapTokens:  case 5 swapExactTokensForTokens')
+        // case 5  swapExactTokensForTokens
 
         swapPromise = _routerContract.methods
           .swapExactTokensForTokens(
@@ -203,7 +173,6 @@ export const swapTokens =
             _deadlineUnix
           )
           .send({ from: account }, function (error, transactionHash) {
-            // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
               dispatch({
                 type: UPDATE_TRANSACTION_STATUS,
@@ -218,7 +187,6 @@ export const swapTokens =
           });
       } else {
         // case 6 swapTokensForExactTokens
-        // console.log('swapTokens:  case 6 swapTokensForExactTokens')
 
         swapPromise = _routerContract.methods
           .swapExactTokensForTokens(
@@ -229,7 +197,6 @@ export const swapTokens =
             _deadlineUnix
           )
           .send({ from: account }, function (error, transactionHash) {
-            // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
               dispatch({
                 type: UPDATE_TRANSACTION_STATUS,
@@ -257,14 +224,11 @@ export const swapTokens =
           });
         })
         .on("error", async function (error) {
-          // console.log('UPDATE_TRANSACTION_STATUS error', error)
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: { type: "swap", status: "failed" },
           });
         });
-
-      // console.log({ token0, token1 });
     } catch (error) {
       console.log("swapTokens: ", error);
       dispatch({
@@ -284,14 +248,12 @@ export const getPoolShare =
       //Load pair contract of selected token pair
       const _pairContract = pairContract(pairAddress, network);
 
-      const [token0Address, token1Address, reservesData] = await Promise.all([
+      const [token0Address, reservesData] = await Promise.all([
         _pairContract.methods.token0().call(),
-        _pairContract.methods.token1().call(),
         _pairContract.methods.getReserves().call(),
       ]);
-      // console.log({ token0Address, token1Address, reservesData });
       let tokenAReserve = "0";
-      let tokenBReserve = "0";
+
       if (tokenA.address === token0Address) {
         tokenAReserve = reservesData._reserve0;
       } else {
@@ -329,18 +291,9 @@ export const addLiquidity =
 
       // deadline should be passed in minites in calculation
       const _deadlineUnix = getUnixTime(deadline);
-      // console.log({
-      //   address0: token0.address,
-      //   address1: token1.address,
-      //   token0AmountDesired,
-      //   token1AmountDesired,
-      //   token0AmountMin,
-      //   token1AmountMin,
-      //   account,
-      //   _deadlineUnix,
-      // });
+
       dispatch({ type: START_TRANSACTION });
-      const liquidity = await _routerContract.methods
+      await _routerContract.methods
         .addLiquidity(
           token0.address,
           token1.address,
@@ -352,7 +305,6 @@ export const addLiquidity =
           _deadlineUnix
         )
         .send({ from: account }, function (error, transactionHash) {
-          // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
           if (error) {
             dispatch({
               type: UPDATE_TRANSACTION_STATUS,
@@ -366,7 +318,6 @@ export const addLiquidity =
           }
         })
         .on("receipt", async function (receipt) {
-          // console.log('UPDATE_TRANSACTION_STATUS', receipt)
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: {
@@ -377,14 +328,11 @@ export const addLiquidity =
           });
         })
         .on("error", async function (error) {
-          // console.log('UPDATE_TRANSACTION_STATUS error', error)
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: { type: "add", status: "failed" },
           });
         });
-
-      // console.log(liquidity);
     } catch (error) {
       console.log("addLiquidity: ", error);
       dispatch({
@@ -403,10 +351,7 @@ export const addLiquidity =
 export const addLiquidityEth =
   (ethToken, erc20Token, account, deadline, network) => async (dispatch) => {
     try {
-      // console.log({ token0: ethToken, token1: erc20Token });
-      // const _tokenContract = getTokenContract(network, erc20Token.symbol);
       const _routerContract = routerContract(network);
-      // console.log('addLiquidityEth')
       dispatch({
         type: SHOW_LOADING,
       });
@@ -419,17 +364,9 @@ export const addLiquidityEth =
 
       // deadline should be passed in minites in calculation
       const _deadlineUnix = getUnixTime(deadline);
-      // console.log('addLiquidity  in', {
-      //   tokenAddress: tokenAddress,
-      //   tokenAmountDesired,
-      //   tokenAmountMin,
-      //   etherAmountMin,
-      //   account,
-      //   router: _routerContract._address,
-      //   _deadlineUnix,
-      // });
+
       dispatch({ type: START_TRANSACTION });
-      const liquidity = await _routerContract.methods
+      await _routerContract.methods
         .addLiquidityETH(
           tokenAddress,
           tokenAmountDesired,
@@ -441,7 +378,6 @@ export const addLiquidityEth =
         .send(
           { from: account, value: toWei(etherAmount) },
           function (error, transactionHash) {
-            // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
             if (error) {
               dispatch({
                 type: UPDATE_TRANSACTION_STATUS,
@@ -456,7 +392,6 @@ export const addLiquidityEth =
           }
         )
         .on("receipt", async function (receipt) {
-          // console.log('UPDATE_TRANSACTION_STATUS', receipt)
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: {
@@ -467,14 +402,11 @@ export const addLiquidityEth =
           });
         })
         .on("error", async function (error) {
-          // console.log('UPDATE_TRANSACTION_STATUS error', error)
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: { type: "add", status: "failed" },
           });
         });
-
-      // console.log(liquidity);
     } catch (error) {
       console.log("addLiquidityEth: ", error);
       dispatch({
@@ -500,23 +432,15 @@ export const removeLiquidity =
         type: SHOW_DEX_LOADING,
       });
       //input params
-      // const token0AmountDesired = token0.amount;
+
       const token0AmountMin = "0";
-      // const token1AmountDesired = token1.amount;
       const token1AmountMin = "0";
 
       // deadline should be passed in minites in calculation
       const _deadlineUnix = getUnixTime(deadline);
-      // console.log({
-      //   address0: token0.address,
-      //   address1: token1.address,
 
-      //   account,
-      //   lpAmount,
-      //   _deadlineUnix,
-      // });
       dispatch({ type: START_TRANSACTION });
-      const liquidity = await _routerContract.methods
+      await _routerContract.methods
         .removeLiquidity(
           token0.address,
           token1.address,
@@ -527,7 +451,6 @@ export const removeLiquidity =
           _deadlineUnix
         )
         .send({ from: account }, function (error, transactionHash) {
-          // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
           if (error) {
             dispatch({
               type: UPDATE_TRANSACTION_STATUS,
@@ -541,7 +464,6 @@ export const removeLiquidity =
           }
         })
         .on("receipt", async function (receipt) {
-          // console.log('UPDATE_TRANSACTION_STATUS', receipt)
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: {
@@ -552,14 +474,11 @@ export const removeLiquidity =
           });
         })
         .on("error", async function (error) {
-          // console.log('UPDATE_TRANSACTION_STATUS error', error)
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: { type: "remove", status: "failed" },
           });
         });
-
-      // console.log(liquidity);
     } catch (error) {
       console.log("removeLiquidity: ", error);
       dispatch({
@@ -595,7 +514,7 @@ export const removeLiquidityEth =
       const _deadlineUnix = getUnixTime(deadline);
 
       dispatch({ type: START_TRANSACTION });
-      const rmLiquidity = await _routerContract.methods
+      await _routerContract.methods
         .removeLiquidityETH(
           erc20Address,
           lpTokenAmount,
@@ -605,7 +524,6 @@ export const removeLiquidityEth =
           _deadlineUnix
         )
         .send({ from: account }, function (error, transactionHash) {
-          // console.log('UPDATE_TRANSACTION_STATUS hash', { transactionHash, error })
           if (error) {
             dispatch({
               type: UPDATE_TRANSACTION_STATUS,
@@ -619,7 +537,6 @@ export const removeLiquidityEth =
           }
         })
         .on("receipt", async function (receipt) {
-          // console.log('UPDATE_TRANSACTION_STATUS', receipt)
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: {
@@ -634,14 +551,11 @@ export const removeLiquidityEth =
           });
         })
         .on("error", async function (error) {
-          // console.log('UPDATE_TRANSACTION_STATUS error', error)
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: { type: "remove", status: "failed" },
           });
         });
-
-      // console.log(rmLiquidity);
     } catch (error) {
       console.log("removeLiquidityEth: ", error);
     }
@@ -671,7 +585,6 @@ export const checkAllowance = (token, account, network) => async (dispatch) => {
       .allowance(account, _routerContract._address)
       .call();
 
-    // console.log("allowance ", tokenAllowance);
     if (new BigNumber(tokenAllowance).gt(0)) {
       dispatch({
         type: APPROVE_TOKEN,
@@ -705,7 +618,7 @@ export const confirmAllowance =
       dispatch({
         type: SHOW_LOADING,
       });
-      const tokenAllowance = await _tokenContract.methods
+      await _tokenContract.methods
         .approve(_routerContract._address, balance)
         .send({ from: account });
 
@@ -713,7 +626,6 @@ export const confirmAllowance =
         type: APPROVE_TOKEN,
         payload: { symbol: token.symbol, status: true },
       });
-      // console.log("allowance confirmed ", tokenAllowance);
     } catch (error) {
       console.log("confirmAllowance ", error);
       dispatch({
@@ -740,7 +652,6 @@ export const checkLpAllowance =
         .allowance(account, _routerContract._address)
         .call();
 
-      // console.log("allowance ", tokenAllowance);
       if (new BigNumber(lpAllowance).gt(0)) {
         dispatch({
           type: APPROVE_LP_TOKENS,
@@ -752,7 +663,6 @@ export const checkLpAllowance =
           payload: { pair: `${token0.symbol}_${token1.symbol}`, status: false },
         });
       }
-      // console.log("Test: lp allowance ", lpAllowance);
     } catch (error) {
       console.log("checkLpAllowance ", error);
       dispatch({
@@ -790,10 +700,6 @@ export const confirmLPAllowance =
       });
     } catch (error) {
       console.log("confirmLPAllowance ", error);
-      // dispatch({
-      //   type: DEX_ERROR,
-      //   payload: "Failed to confirm allowance",
-      // });
     }
     dispatch({
       type: HIDE_DEX_LOADING,
@@ -820,7 +726,6 @@ export const loadTokens = (network) => async (dispatch) => {
           : moonriverTokens;
     }
 
-    console.log("load tokens ", { localTokens, network });
     const cachedTokens = getCachedTokens();
     const allTokens =
       cachedTokens.length > 0
@@ -838,7 +743,7 @@ export const loadTokens = (network) => async (dispatch) => {
   });
 };
 
-export const importToken = (address, account, network) => async (dispatch) => {
+export const importToken = (address, network) => async (dispatch) => {
   try {
     dispatch({
       type: SHOW_DEX_LOADING,
@@ -850,8 +755,6 @@ export const importToken = (address, account, network) => async (dispatch) => {
       fetchTokenInfo(address),
       _tokenContract.methods.decimals().call(),
     ]);
-
-    // console.log("token info received ", tokenInfoData);
 
     if (tokenInfoData.status === "0") {
       if (currentConnection === "testnet") {
@@ -869,7 +772,6 @@ export const importToken = (address, account, network) => async (dispatch) => {
           },
         });
       }
-      console.log("token not found");
     } else {
       const tokenInfo = tokenInfoData.result[0];
       const tokenObj = {
@@ -953,7 +855,7 @@ export const getToken1OutAmount =
 
       const pairAddress = await getPairAddress(token0.address, token1.address);
 
-      let reserve, totalSupply, lpBalance;
+      let reserve;
 
       if (pairAddress) {
         const _pairContract = pairContract(pairAddress, network);
@@ -964,8 +866,8 @@ export const getToken1OutAmount =
           account
         );
         reserve = pairReserveRes.reserve;
-        totalSupply = pairReserveRes.totalSupply;
-        lpBalance = pairReserveRes.lpBalance;
+        // totalSupply = pairReserveRes.totalSupply;
+        // lpBalance = pairReserveRes.lpBalance;
       }
 
       if (
@@ -987,18 +889,14 @@ export const getToken1OutAmount =
           amountsOutPair = "0";
         }
 
-        // console.log({ amountsOutPair })
         resultOut = fromWei(amountsOutPair, token1.decimals);
         selectedPath = _path0;
-
-        // console.log('getToken1OutAmount getting from pair')
 
         if (
           [token0.symbol, token1.symbol].includes(USDT) &&
           [token0.symbol, token1.symbol].includes(PBR)
         ) {
           //pbr-usdt fix if pair exist and not enough liquidity
-          // const _token0In = toWei(fromWei(token0In), token0.decimals)  //DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0In), 6) : token0In;
 
           amountsOutBridge = await _routerContract.methods
             .getAmountsOut(token0In, _path0)
@@ -1007,22 +905,20 @@ export const getToken1OutAmount =
           const token1OutBridge = new BigNumber(
             amountsOutBridge[amountsOutBridge.length - 1]
           );
-          // console.log('getToken1OutAmount fetching from bridge ', { amountsOutBridge, bridgePath, token1OutBridge: token1OutBridge.toString() })
+
           const _resultOutBridge = fromWei(
             token1OutBridge.toString(),
             token1.decimals
-          ); //DECIMAL_6_ADDRESSES.includes(token1.address) ? fromWei(token1OutBridge.toString(), 6) : fromWei(token1OutBridge.toString());
+          );
 
           if (new BigNumber(resultOut).lt(_resultOutBridge)) {
             //consider swap from bridge instead of pair
             resultOut = _resultOutBridge;
             selectedPath = bridgePath;
-            // console.log('getToken1OutAmount swap using bridge out amount')
           }
         }
       } else {
         //fix if it is bridge swap and token0 is usdc
-        // const _token0In = toWei(fromWei(token0In), token0.decimals)// DECIMAL_6_ADDRESSES.includes(token0.address) ? toWei(fromWei(token0In), 6) : token0In;
 
         amountsOutBridge = await _routerContract.methods
           .getAmountsOut(token0In, bridgePath)
@@ -1031,30 +927,29 @@ export const getToken1OutAmount =
         const token1OutBridge = new BigNumber(
           amountsOutBridge[amountsOutBridge.length - 1]
         );
-        // console.log('getToken1OutAmount fetching from bridge ', { amountsOutBridge, bridgePath, token1OutBridge: token1OutBridge.toString() })
-        resultOut = fromWei(token1OutBridge.toString(), token1.decimals); //DECIMAL_6_ADDRESSES.includes(token1.address) ? fromWei(token1OutBridge.toString(), 6) : fromWei(token1OutBridge.toString());
+        resultOut = fromWei(token1OutBridge.toString(), token1.decimals);
         selectedPath = bridgePath;
       }
 
       // fetch token usd price in AMM,
-      const [token0DerivedEth, token1DerivedEth, ethUsdValue] =
-        await Promise.all([
-          getCurrentTokenPriceInEth(token0.address),
-          getCurrentTokenPriceInEth(token1.address),
-          getOnlyCurrentEthPrice(),
-        ]);
+      // const [token0DerivedEth, token1DerivedEth, ethUsdValue] =
+      //   await Promise.all([
+      //     getCurrentTokenPriceInEth(token0.address),
+      //     getCurrentTokenPriceInEth(token1.address),
+      //     getOnlyCurrentEthPrice(),
+      //   ]);
 
       dispatch({
         type: GET_TOKEN_1_OUT,
         payload: {
           tokenAmount: resultOut,
-          token0UsdValue: new BigNumber(token0DerivedEth)
-            .times(ethUsdValue)
-            .toString(),
-          token1UsdValue: new BigNumber(token1DerivedEth)
-            .times(ethUsdValue)
-            .toString(),
-          selectedPath,
+          // token0UsdValue: new BigNumber(token0DerivedEth)
+          //   .times(ethUsdValue)
+          //   .toString(),
+          // token1UsdValue: new BigNumber(token1DerivedEth)
+          //   .times(ethUsdValue)
+          //   .toString(),
+          // selectedPath,
         },
       });
     } catch (error) {
@@ -1115,15 +1010,6 @@ export const getToken0InAmount =
         bridgePath = _path3;
       }
 
-      // if ((DECIMAL_6_ADDRESSES.includes(token0.address) || DECIMAL_6_ADDRESSES.includes(token1.address)) && (token0.symbol === ETH || token1.symbol === ETH)) {
-      //   bridgePath = _path3;
-      // } else {
-      //   bridgePath = (DECIMAL_6_ADDRESSES.includes(token0.address) || DECIMAL_6_ADDRESSES.includes(token1.address))
-      //     ? DECIMAL_6_ADDRESSES.includes(token0.address) ? _path21 : _path2
-      //     : _path1;
-      // }
-
-      let amountsInPair;
       let amountsInBridge;
 
       let selectedPath = [];
@@ -1131,7 +1017,7 @@ export const getToken0InAmount =
 
       const pairAddress = await getPairAddress(token0.address, token1.address);
 
-      let reserve, totalSupply, lpBalance;
+      let reserve;
 
       if (pairAddress) {
         const _pairContract = pairContract(pairAddress, network);
@@ -1142,10 +1028,9 @@ export const getToken0InAmount =
           account
         );
         reserve = pairReserveRes.reserve;
-        totalSupply = pairReserveRes.totalSupply;
-        lpBalance = pairReserveRes.lpBalance;
+        // totalSupply = pairReserveRes.totalSupply;
+        // lpBalance = pairReserveRes.lpBalance;
       }
-      // console.log({ reserve, totalSupply, lpBalance })
 
       if (
         pairAddress &&
@@ -1166,7 +1051,7 @@ export const getToken0InAmount =
         } catch (error) {
           amountsInPair = "0";
         }
-        // console.log({ amountsInPair })
+
         resultIn = fromWei(amountsInPair, token0.decimals);
         selectedPath = _path0;
 
@@ -1175,8 +1060,6 @@ export const getToken0InAmount =
           [token0.symbol, token1.symbol].includes(USDT) &&
           [token0.symbol, token1.symbol].includes(PBR)
         ) {
-          // const _token1OutWei = toWei(fromWei(token1Out), token1.decimals) //DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1Out), 6) : token1Out;
-
           amountsInBridge = await _routerContract.methods
             .getAmountsIn(token1Out, bridgePath)
             .call();
@@ -1185,49 +1068,46 @@ export const getToken0InAmount =
           const _resultInBridge = fromWei(
             token1OutWethBridge.toString(),
             token1.decimals
-          ); //DECIMAL_6_ADDRESSES.includes(token0.address) ? fromWei(token1OutWethBridge.toString(), 6) : fromWei(token1OutWethBridge.toString());
+          );
 
           if (new BigNumber(resultIn).lt(_resultInBridge)) {
             //consider swap from bridge instead of pair
             resultIn = _resultInBridge;
             selectedPath = bridgePath;
-            // console.log('getToken0InAmount swap using bridge out amount')
           }
         }
       } else {
         //Note: token1Out should be in usdc decimals if we are fetching amount from path,
         // in normal wei if fetching from pair reserves
 
-        // const _token1OutWei = toWei(fromWei(token1Out), token1.decimals) //DECIMAL_6_ADDRESSES.includes(token1.address) ? toWei(fromWei(token1Out), 6) : token1Out;
-
         amountsInBridge = await _routerContract.methods
           .getAmountsIn(token1Out, bridgePath)
           .call();
         const token1OutWethBridge = new BigNumber(amountsInBridge[0]);
 
-        resultIn = fromWei(token1OutWethBridge.toString(), token0.decimals); //DECIMAL_6_ADDRESSES.includes(token0.address) ? fromWei(token1OutWethBridge.toString(), 6) : fromWei(token1OutWethBridge.toString());
+        resultIn = fromWei(token1OutWethBridge.toString(), token0.decimals);
         selectedPath = bridgePath;
       }
 
-      // fetch token usd price in AMM,
-      const [token0DerivedEth, token1DerivedEth, ethUsdValue] =
-        await Promise.all([
-          getCurrentTokenPriceInEth(token0.address),
-          getCurrentTokenPriceInEth(token1.address),
-          getOnlyCurrentEthPrice(),
-        ]);
+      // // fetch token usd price in AMM,
+      // const [token0DerivedEth, token1DerivedEth, ethUsdValue] =
+      //   await Promise.all([
+      //     getCurrentTokenPriceInEth(token0.address),
+      //     getCurrentTokenPriceInEth(token1.address),
+      //     getOnlyCurrentEthPrice(),
+      //   ]);
 
       dispatch({
         type: GET_TOKEN_O_IN,
         payload: {
           tokenAmount: resultIn,
-          token0UsdValue: new BigNumber(token0DerivedEth)
-            .times(ethUsdValue)
-            .toString(),
-          token1UsdValue: new BigNumber(token1DerivedEth)
-            .times(ethUsdValue)
-            .toString(),
-          selectedPath,
+          // token0UsdValue: new BigNumber(token0DerivedEth)
+          //   .times(ethUsdValue)
+          //   .toString(),
+          // token1UsdValue: new BigNumber(token1DerivedEth)
+          //   .times(ethUsdValue)
+          //   .toString(),
+          // selectedPath,
         },
       });
     } catch (error) {
@@ -1323,7 +1203,7 @@ export const calculatePriceImpact = async (
   try {
     const pairAddress = await getPairAddress(token0.address, token1.address);
 
-    let reserve, totalSupply, lpBalance;
+    let reserve;
 
     if (pairAddress) {
       const _pairContract = pairContract(pairAddress, network);
@@ -1334,8 +1214,8 @@ export const calculatePriceImpact = async (
         account
       );
       reserve = pairReserveRes.reserve;
-      totalSupply = pairReserveRes.totalSupply;
-      lpBalance = pairReserveRes.lpBalance;
+      // totalSupply = pairReserveRes.totalSupply;
+      // lpBalance = pairReserveRes.lpBalance;
     }
 
     if (
@@ -1361,9 +1241,6 @@ export const calculatePriceImpact = async (
         network
       );
 
-      // const _token0WeiAmount = toWei(fromWei(token0.amount, token0.decimals));
-      // const _token1WeiAmount = toWei(fromWei(token1.amount, token1.decimals));
-      console.log("checkPriceImpact fetched reserves0  ", { reserves });
       return sellPriceImpact(
         fromWei(token0.amount, token0.decimals),
         fromWei(token1.amount, token1.decimals),
@@ -1402,19 +1279,13 @@ export const loadPairAddress =
 
 const fetchPairData = async (token0, token1, _pairContract, account) => {
   try {
-    const [
-      lpBalance,
-      pairToken0Addr,
-      pairToken1Addr,
-      reservesData,
-      totalSupply,
-    ] = await Promise.all([
-      _pairContract.methods.balanceOf(account).call(),
-      _pairContract.methods.token0().call(),
-      _pairContract.methods.token1().call(),
-      _pairContract.methods.getReserves().call(),
-      _pairContract.methods.totalSupply().call(),
-    ]);
+    const [lpBalance, pairToken0Addr, reservesData, totalSupply] =
+      await Promise.all([
+        _pairContract.methods.balanceOf(account).call(),
+        _pairContract.methods.token0().call(),
+        _pairContract.methods.getReserves().call(),
+        _pairContract.methods.totalSupply().call(),
+      ]);
 
     let reserve = {};
 
@@ -1435,9 +1306,8 @@ const fetchPairData = async (token0, token1, _pairContract, account) => {
 
 export const getLpBalance =
   (token0, token1, pairAddress, account, network) => async (dispatch) => {
-    // console.log("getting balance", { token0, token1 });
     try {
-      const _pairContract = pairContract(pairAddress, network); // pairContract2(pairData, network);
+      const _pairContract = pairContract(pairAddress, network);
 
       dispatch({
         type: SHOW_DEX_LOADING,
@@ -1455,9 +1325,6 @@ export const getLpBalance =
         payload: reserve,
       });
 
-      // formatting fix for non 18 decimal tokens
-      const _lpDecimals =
-        (parseInt(token0.decimals) + parseInt(token1.decimals)) / 2;
       const _lpBalance = lpBalance;
       const _totalSupply = totalSupply;
 

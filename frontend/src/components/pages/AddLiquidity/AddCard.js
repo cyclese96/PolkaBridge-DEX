@@ -7,20 +7,16 @@ import {
 } from "@material-ui/core";
 import { connect } from "react-redux";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import SwapSettings from "../../common/SwapSettings";
 import etherImg from "../../../assets/ether.png";
 import SwapCardItem from "../../Cards/SwapCardItem";
 import AddIcon from "@material-ui/icons/Add";
 import {
   allowanceAmount,
-  BNB,
   defaultPoolToken0,
   defaultPoolToken1,
   ETH,
-  etheriumNetwork,
-  PBR,
-  PWAR,
 } from "../../../constants";
 import {
   fromWei,
@@ -48,7 +44,7 @@ import debounce from "lodash.debounce";
 import { getPairAddress } from "../../../utils/connectionUtils";
 import { Settings } from "@material-ui/icons";
 import TransactionConfirm from "../../common/TransactionConfirm";
-import { useAllTokenData } from "../../../contexts/TokenData";
+import { useTokenData } from "../../../contexts/TokenData";
 import { useLocation } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -267,23 +263,29 @@ const AddCard = (props) => {
 
   const [swapDialogOpen, setSwapDialog] = useState(false);
 
-  const [_token0PriceUSD, setToken0PriceUSD] = useState(null);
-  const [_token1PriceUSD, setToken1PriceUSD] = useState(null);
+  // selected token usd value track
+  const token0PriceData = useTokenData(
+    selectedToken0.address ? selectedToken0.address.toLowerCase() : null
+  );
+  const token1PriceData = useTokenData(
+    selectedToken1.address ? selectedToken1.address.toLowerCase() : null
+  );
 
-  const allTokens = useAllTokenData();
-
-  useEffect(() => {
-    if (!allTokens) {
-      return;
+  const token0PriceUsd = useMemo(() => {
+    if (!selectedToken0?.symbol || !token0PriceData) {
+      return 0;
     }
 
-    setToken0PriceUSD(
-      allTokens?.[selectedToken0.address?.toLowerCase()]?.priceUSD
-    );
-    setToken1PriceUSD(
-      allTokens?.[selectedToken1.address?.toLowerCase()]?.priceUSD
-    );
-  }, [allTokens, selectedToken1, selectedToken0]);
+    return token0PriceData?.priceUSD;
+  }, [token0PriceData]);
+
+  const token1PriceUsd = useMemo(() => {
+    if (!selectedToken1?.symbol || !token1PriceData) {
+      return 0;
+    }
+
+    return token1PriceData?.priceUSD;
+  }, [token1PriceData]);
 
   const [addStatus, setStatus] = useState({
     message: "Please select tokens",
@@ -299,23 +301,6 @@ const AddCard = (props) => {
   };
 
   const query = new URLSearchParams(useLocation().search);
-
-  // const getTokenToSelect = (tokenQuery) => {
-  //   const token =
-  //     tokenQuery &&
-  //     tokenList &&
-  //     tokenList.find(
-  //       (item) =>
-  //         item.symbol.toUpperCase() === tokenQuery.toUpperCase() ||
-  //         item.address.toLowerCase() === tokenQuery.toLowerCase()
-  //     );
-
-  //   if (token && token.symbol) {
-  //     return token;
-  //   }
-
-  //   return {};
-  // };
 
   useEffect(() => {
     async function initSelection() {
@@ -856,7 +841,7 @@ const AddCard = (props) => {
             currentToken={selectedToken0}
             disableToken={selectedToken1}
             inputValue={token1Value}
-            priceUSD={_token0PriceUSD}
+            priceUSD={token0PriceUsd}
           />
           <IconButton className={classes.iconButton}>
             <AddIcon fontSize="default" className={classes.addIcon} />
@@ -868,7 +853,7 @@ const AddCard = (props) => {
             currentToken={selectedToken1}
             disableToken={selectedToken0}
             inputValue={token2Value}
-            priceUSD={_token1PriceUSD}
+            priceUSD={token1PriceUsd}
           />
 
           {selectedToken0.symbol && selectedToken1.symbol ? (

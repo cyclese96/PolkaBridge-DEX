@@ -297,7 +297,6 @@ async function getGlobalData(ethPrice, oldEthPrice) {
       ? {}
       : twoWeekResult.data.polkabridgeAmmFactories[0];
 
-    // console.log('ApiTest:  data  --> ', { data, oneDayData, twoDayData, twoWeekData })
     if (data && oneDayData && twoDayData && twoWeekData) {
       let [oneDayVolumeUSD, volumeChangeUSD] = get2DayPercentChange(
         data.totalVolumeUSD,
@@ -564,7 +563,6 @@ export const getCurrentTokenPriceInEth = async (address) => {
     });
     data = result?.data?.tokens?.[0];
 
-    // console.log('farmTest current token pricedata ', result)
     tokenPriceInEth = data?.derivedETH;
   } catch (e) {
     console.log("farmTest: getCurrentTokenPriceInEth", e);
@@ -652,13 +650,8 @@ export function useGlobalData() {
 
   useEffect(() => {
     async function fetchData() {
-      console.log("analyticsTest: fetching global data...", {
-        ethPrice,
-        oldEthPrice,
-      });
       let globalData = await getGlobalData(ethPrice, oldEthPrice);
 
-      // console.log('analyticsTest: fetched global data ', globalData)
       globalData && update(globalData);
 
       let allPairs = await getAllPairsOnUniswap();
@@ -762,7 +755,6 @@ export function useEthPrice() {
   const ethPriceOld = state?.["oneDayPrice"];
   useEffect(() => {
     async function checkForEthPrice() {
-      console.log("allPairs", ethPrice);
       if (!ethPrice) {
         let [newPrice, oneDayPrice, priceChange] = await getEthPrice();
         updateEthPrice(newPrice, oneDayPrice, priceChange);

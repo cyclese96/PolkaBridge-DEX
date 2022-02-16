@@ -3,7 +3,7 @@ import { BigNumber } from "bignumber.js";
 import dayjs from "dayjs";
 import { ethers } from "ethers";
 import utc from "dayjs/plugin/utc";
-import { client, blockClient } from "../apollo/client";
+import { blockClient } from "../apollo/client";
 import { GET_BLOCK, GET_BLOCKS } from "../apollo/queries";
 import { Text } from "rebass";
 import _Decimal from "decimal.js-light";

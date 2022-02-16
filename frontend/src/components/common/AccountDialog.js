@@ -1,55 +1,14 @@
 import React from "react";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
-import MuiDialogTitle from "@material-ui/core/DialogTitle";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
-import Typography from "@material-ui/core/Typography";
-import CustomButton from "../Buttons/CustomButton";
-import {
-  AccountBalanceWallet,
-  Close,
-  ContactMailOutlined,
-  Person,
-} from "@material-ui/icons";
-import VisibilityIcon from "@material-ui/icons/Visibility";
+
+import { AccountBalanceWallet, Close } from "@material-ui/icons";
 import { etheriumNetwork } from "../../constants";
 import { fromWei } from "../../utils/helper";
 import { connect } from "react-redux";
 import { logout } from "../../actions/accountActions";
 import { formatCurrency } from "../../utils/formatters";
 import { Button } from "@material-ui/core";
-
-const styles = (theme) => ({
-  root: {
-    margin: 0,
-    padding: theme.spacing(2),
-  },
-  closeButton: {
-    position: "absolute",
-    right: theme.spacing(1),
-    top: theme.spacing(1),
-    color: theme.palette.grey[500],
-  },
-});
-
-const DialogTitle = withStyles(styles)((props) => {
-  const { children, classes, onClose, ...other } = props;
-  return (
-    <MuiDialogTitle disableTypography className={classes.root} {...other}>
-      <Typography variant="h6">{children}</Typography>
-      {onClose ? (
-        <IconButton
-          aria-label="close"
-          className={classes.closeButton}
-          onClick={onClose}
-        >
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </MuiDialogTitle>
-  );
-});
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -161,7 +120,7 @@ const AccountDialog = ({
   handleClose,
   logout,
   handleLogout,
-  account: { currentAccount, balance, connected, currentNetwork },
+  account: { currentAccount, balance, currentNetwork },
 }) => {
   const classes = useStyles();
   const onSingOut = () => {

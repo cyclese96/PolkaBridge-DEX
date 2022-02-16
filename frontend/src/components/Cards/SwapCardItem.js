@@ -105,7 +105,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SwapCardItem = (props) => {
   const {
-    account: { balance, loading },
+    account: { balance },
     inputType,
     onInputChange,
     onTokenChange,

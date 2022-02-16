@@ -45,7 +45,7 @@ export const tokenAddresses = {
 
 export const routerAddresses = {
   ethereum: testing
-    ? "0x67DD513E581E58220c3001805C9C56F87804D2d1" //"0xbb8331FAAB7E6BA2Ac819262bf4A29E44f4A112B"
+    ? "0x3230cD16e2A84153fE297fA1bb6232d63D433c11"
     : "0x8A2795aE669476Bf119A1a40FbFD75cA71Fd35c4",
   moonriver: testing
     ? "0x1C586Bc16e9Aa5fdf45F4dB3F37Bd97cA25A5aE9"
@@ -54,7 +54,7 @@ export const routerAddresses = {
 
 export const factoryAddresses = {
   ethereum: testing
-    ? "0x8D8c4E3Ae43A1F83EdF8e185013c8Fce4e14a0b9" //"0xAeDa6b39324e658e49959d23153033c6368fB5dc"
+    ? "0x2943FDe66598b17EEC9DD1f31c4DB516bf800046"
     : "0xeff9EcEFe14279C0157f88573Ca9361D253c10bE",
   moonriver: testing
     ? "0x2fc26998c0EB0CC67DC9d41f7f1F4508dE214292"
@@ -63,7 +63,7 @@ export const factoryAddresses = {
 
 export const farmAddresses = {
   ethereum: testing
-    ? "0xA5ffa99519A3fDF1FB5b2D262C64022C5DE54598" //"0xf49c7F516314d84a4c9e02EB2711Da6a6f56f0D1"
+    ? "0xA5ffa99519A3fDF1FB5b2D262C64022C5DE54598"
     : "0xBaF15D830ddeB6c11fFae8890d9c902D8dF1f3E7",
 };
 
@@ -157,7 +157,7 @@ export const farmingPoolConstants = {
     "PBR-ETH": {
       multiplier: 40,
       pid: 0,
-      address: "0xd9aeF1888e955c62A885C68441920303fD89b231",
+      address: "0xC6bf4941947d589dB69CeA26409eB4530B08D560",
       blocksPerYear: "",
       lpApr: 0,
       decimals: 18,
@@ -165,7 +165,7 @@ export const farmingPoolConstants = {
     "ETH-USDT": {
       multiplier: 5,
       pid: 1,
-      address: "0xeC958C778560425525f528b6a929174572F5fB5d",
+      address: "0x218C429b2F172d84AdC13bC5078D26aC63b9bAD6",
       blocksPerYear: "",
       lpApr: 0,
       decimals: 12,

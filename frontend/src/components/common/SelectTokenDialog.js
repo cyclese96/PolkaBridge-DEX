@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
@@ -7,6 +7,7 @@ import { importToken } from "../../actions/dexActions";
 import { connect } from "react-redux";
 import { Button, CircularProgress, Divider } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
+import { isAddress } from "../../utils/helper";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -82,11 +83,12 @@ const SelectTokenDialog = ({
   handleClose,
   handleTokenSelected,
   disableToken,
-  dex: { tokenList, importedToken, dexLoading },
+  account: { currentNetwork },
+  dex: { tokenList, dexLoading },
+  importToken,
 }) => {
   const classes = useStyles();
 
-  const [filteredTokens, setTokens] = useState([]);
   const [filterInput, setFilterInput] = useState("");
 
   const onTokenSelect = (token) => {
@@ -94,44 +96,46 @@ const SelectTokenDialog = ({
     handleClose();
   };
 
-  useEffect(() => {
-    if (open) {
-      setTokens(tokenList);
+  const filteredTokenList = useMemo(() => {
+    if (!tokenList) {
+      return [];
     }
-  }, [tokenList, open]);
 
-  useEffect(() => {
-    if (importedToken.symbol) {
-      const filteredList = applyFilter(tokenList, importedToken.symbol);
-      setTokens(filteredList);
-    }
-  }, [importedToken, tokenList]);
-
-  const applyFilter = (list, value) => {
-    const filtered = list.filter(
-      (item) =>
-        (item.symbol &&
-          item.symbol
-            .toLocaleLowerCase()
-            .includes(value.toLocaleLowerCase())) ||
-        (item.name &&
-          item.name.toLowerCase().includes(value.toLocaleLowerCase())) ||
-        (item.address &&
-          item.address.toLowerCase().includes(value.toLocaleLowerCase()))
-    );
+    const filtered =
+      tokenList &&
+      tokenList.filter(
+        (item) =>
+          (item.symbol &&
+            item.symbol
+              .toLocaleLowerCase()
+              .includes(filterInput.toLocaleLowerCase())) ||
+          (item.name &&
+            item.name
+              .toLowerCase()
+              .includes(filterInput.toLocaleLowerCase())) ||
+          (item.address &&
+            item.address
+              .toLowerCase()
+              .includes(filterInput.toLocaleLowerCase()))
+      );
 
     return filtered;
-  };
+  }, [tokenList, filterInput]);
 
   const handleTokenFilter = async (value) => {
-    setFilterInput(value);
     if (!value) {
-      value = "";
+      const _value = "";
+      setFilterInput(_value);
+      return;
     }
 
     const _value = value.split(" ").join("");
-    const filteredList = applyFilter(tokenList, _value);
-    setTokens(filteredList);
+
+    if (isAddress(_value)) {
+      importToken(_value, currentNetwork);
+    }
+
+    setFilterInput(_value);
   };
 
   const resetInputState = () => {
@@ -183,12 +187,12 @@ const SelectTokenDialog = ({
         />
         {dexLoading ? (
           <CircularProgress />
-        ) : filteredTokens.length === 0 ? (
+        ) : filteredTokenList.length === 0 ? (
           <span style={{ marginTop: 10 }}>No tokens found</span>
         ) : (
           <TokenList
             handleItemSelected={onTokenSelect}
-            tokens={filteredTokens}
+            tokens={filteredTokenList}
             disableToken={disableToken}
           />
         )}
@@ -212,6 +216,7 @@ const SelectTokenDialog = ({
 
 const mapStateToProps = (state) => ({
   dex: state.dex,
+  account: state.account,
 });
 
 export default connect(mapStateToProps, { importToken })(

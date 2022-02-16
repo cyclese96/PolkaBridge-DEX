@@ -8,7 +8,7 @@ import { currentConnection } from "../constants";
 // const APIURL = "https://api.studio.thegraph.com/query/8207/amm/0.8.1.2"; // oldsubgraph working price api
 // const APIURL = "https://api.studio.thegraph.com/query/2992/pbr-dex/2.3"//last recent factory
 const APIURL =
-  "https://api.studio.thegraph.com/query/5591/polkabridge-amm-test/1.0.3"; //"https://api.studio.thegraph.com/query/5591/polkabridge-amm-test/1.0.1"; // current latest subgraph
+  "https://api.studio.thegraph.com/query/5591/polkabridge-amm-test/1.0.4"; //"https://api.studio.thegraph.com/query/5591/polkabridge-amm-test/1.0.1"; // current latest subgraph
 // const API_MAINNET = "https://api.studio.thegraph.com/query/5591/polkabridge-amm-test/1.0.1";// temp query mainnet
 const API_MAINNET = ""; //`https://gateway.thegraph.com/api/${process.env.REACT_APP_GRAPH_API.split('').reverse().join('')}/subgraphs/id/0xac113a863e871ca007dd1be8be12563602502a6d-0`;// public query mainnet
 const BLOCKS_API_TESTNET =
@@ -46,7 +46,7 @@ export const healthClient = new ApolloClient({
 });
 
 const _blocksApi =
-  currentConnection == "testnet" ? BLOCKS_API_TESTNET : BLOCKS_API_MAINNET;
+  currentConnection === "testnet" ? BLOCKS_API_TESTNET : BLOCKS_API_MAINNET;
 export const blockClient = new ApolloClient({
   link: new HttpLink({
     uri: _blocksApi,

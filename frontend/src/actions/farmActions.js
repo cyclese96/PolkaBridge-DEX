@@ -125,7 +125,7 @@ export const stakeLpTokens =
 
       dispatch({ type: START_TRANSACTION });
 
-      const stakeRes = await _farmContract.methods
+      await _farmContract.methods
         .deposit(pid, lpAmount)
         .send({ from: account }, function (error, transactionHash) {
           if (error) {
@@ -178,7 +178,7 @@ export const unstakeLpTokens =
 
       dispatch({ type: START_TRANSACTION });
 
-      const stakeRes = await _farmContract.methods
+      await _farmContract.methods
         .withdraw(pid, lpAmount)
         .send({ from: account }, function (error, transactionHash) {
           if (error) {
@@ -232,7 +232,7 @@ export const harvestRewards =
 
       dispatch({ type: START_TRANSACTION });
 
-      const harvestRes = await _farmContract.methods
+      await _farmContract.methods
         .harvest(pid)
         .send({ from: account }, function (error, transactionHash) {
           if (error) {
