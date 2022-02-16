@@ -45,7 +45,7 @@ export const tokenAddresses = {
 
 export const routerAddresses = {
   ethereum: testing
-    ? "0x3230cD16e2A84153fE297fA1bb6232d63D433c11"
+    ? "0xA184Ff49aB012497a3297119223374827f997D32"
     : "0x8A2795aE669476Bf119A1a40FbFD75cA71Fd35c4",
   moonriver: testing
     ? "0x1C586Bc16e9Aa5fdf45F4dB3F37Bd97cA25A5aE9"
@@ -54,7 +54,7 @@ export const routerAddresses = {
 
 export const factoryAddresses = {
   ethereum: testing
-    ? "0x2943FDe66598b17EEC9DD1f31c4DB516bf800046"
+    ? "0xfA8e11D87F9B219e780Ff2Efa4304c8Ef5bFa0E7"
     : "0xeff9EcEFe14279C0157f88573Ca9361D253c10bE",
   moonriver: testing
     ? "0x2fc26998c0EB0CC67DC9d41f7f1F4508dE214292"
@@ -157,7 +157,7 @@ export const farmingPoolConstants = {
     "PBR-ETH": {
       multiplier: 40,
       pid: 0,
-      address: "0xC6bf4941947d589dB69CeA26409eB4530B08D560",
+      address: "0x306dd2eB9DDACeecdbA4cfA0EccC009e7291cDDE",
       blocksPerYear: "",
       lpApr: 0,
       decimals: 18,
@@ -165,7 +165,7 @@ export const farmingPoolConstants = {
     "ETH-USDT": {
       multiplier: 5,
       pid: 1,
-      address: "0x218C429b2F172d84AdC13bC5078D26aC63b9bAD6",
+      address: "0x17398F4101dac7c9C1d637b1139EEA9D3d700250",
       blocksPerYear: "",
       lpApr: 0,
       decimals: 12,
