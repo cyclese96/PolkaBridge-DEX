@@ -3,6 +3,7 @@ import {
   currentConnection,
   ETH,
   etheriumNetwork,
+  moonriverNetwork,
   PBR,
   routerAddresses,
   swapFnConstants,
@@ -714,16 +715,16 @@ export const loadTokens = (network) => async (dispatch) => {
     });
 
     let localTokens = [];
-    if (network === etheriumNetwork) {
-      localTokens =
-        currentConnection === "testnet"
-          ? testTokens?.[network]
-          : ethereumTokens;
-    } else {
+    if (network === moonriverNetwork) {
       localTokens =
         currentConnection === "testnet"
           ? testTokens?.[network]
           : moonriverTokens;
+    } else {
+      localTokens =
+        currentConnection === "testnet"
+          ? testTokens?.[network]
+          : ethereumTokens;
     }
 
     const cachedTokens = getCachedTokens();

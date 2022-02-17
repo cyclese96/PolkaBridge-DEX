@@ -6,12 +6,14 @@ import { CHANGE_NETWORK, CONNECT_WALLET } from "../actions/types";
 import { loadTokens } from "../actions/dexActions";
 import { getAccountBalance } from "../actions/accountActions";
 import { useWeb3React } from "@web3-react/core";
+import { etheriumNetwork } from "../constants";
 
 const Home = ({ loadTokens, getAccountBalance }) => {
   const { active, account, chainId } = useWeb3React();
 
   useEffect(() => {
     if (!chainId || !active) {
+      loadTokens(etheriumNetwork);
       return;
     }
 
