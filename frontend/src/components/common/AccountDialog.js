@@ -161,7 +161,7 @@ const AccountDialog = ({
             <div>
               <h6 className={classes.heading}>Account</h6>
             </div>
-            <div>
+            <div style={{ cursor: "pointer" }}>
               <Close onClick={() => handleClose()} />
             </div>
           </div>

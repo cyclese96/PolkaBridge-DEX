@@ -233,10 +233,10 @@ const Swap = (props) => {
 
   const [rotate, setRotate] = useState(false);
 
-  const [snackAlert, setAlert] = React.useState({
-    status: false,
-    message: "",
-  });
+  // const [snackAlert, setAlert] = React.useState({
+  //   status: false,
+  //   message: "",
+  // });
 
   const [swapStatus, setStatus] = useState({
     message: "Please select tokens",
