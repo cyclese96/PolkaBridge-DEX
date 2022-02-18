@@ -6,7 +6,6 @@ import { AccountBalanceWallet, Close } from "@material-ui/icons";
 import { etheriumNetwork } from "../../constants";
 import { fromWei } from "../../utils/helper";
 import { connect } from "react-redux";
-import { logout } from "../../actions/accountActions";
 import { formatCurrency } from "../../utils/formatters";
 import { Button } from "@material-ui/core";
 
@@ -118,14 +117,13 @@ const useStyles = makeStyles((theme) => ({
 const AccountDialog = ({
   open,
   handleClose,
-  logout,
   handleLogout,
   account: { currentAccount, balance, currentNetwork },
 }) => {
   const classes = useStyles();
   const onSingOut = () => {
     localStorage.setItem(`logout${currentAccount}`, currentAccount);
-    // logout();
+    handleLogout();
     handleClose();
   };
 
@@ -161,7 +159,7 @@ const AccountDialog = ({
             <div>
               <h6 className={classes.heading}>Account</h6>
             </div>
-            <div>
+            <div style={{ cursor: "pointer" }}>
               <Close onClick={() => handleClose()} />
             </div>
           </div>
@@ -231,4 +229,4 @@ const mapStateToProps = (state) => ({
   account: state.account,
 });
 
-export default connect(mapStateToProps, { logout })(React.memo(AccountDialog));
+export default connect(mapStateToProps, {})(React.memo(AccountDialog));

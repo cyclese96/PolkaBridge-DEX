@@ -29,7 +29,6 @@ import {
   calculatePriceImpact,
   checkAllowance,
   confirmAllowance,
-  getLpBalance,
   getToken0InAmount,
   getToken1OutAmount,
   importToken,
@@ -204,7 +203,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Swap = (props) => {
   const {
-    account: { currentNetwork, currentAccount, loading, balance, connected },
+    account: { currentNetwork, currentAccount, balance, connected },
     dex: {
       approvedTokens,
       transaction,
@@ -215,7 +214,6 @@ const Swap = (props) => {
     },
     checkAllowance,
     confirmAllowance,
-    getLpBalance,
     getAccountBalance,
     getToken0InAmount,
     getToken1OutAmount,
@@ -232,11 +230,6 @@ const Swap = (props) => {
   const [token2Value, setToken2Value] = useState("");
 
   const [rotate, setRotate] = useState(false);
-
-  const [snackAlert, setAlert] = React.useState({
-    status: false,
-    message: "",
-  });
 
   const [swapStatus, setStatus] = useState({
     message: "Please select tokens",
@@ -272,6 +265,12 @@ const Swap = (props) => {
   useEffect(() => {
     async function initSelection() {
       if (!tokenList || !currentAccount || !currentNetwork) {
+        // if wallet not connected select default token
+        const _token = getTokenToSelect(
+          tokenList,
+          defaultSwapInputToken?.ethereum
+        );
+        setToken1(_token);
         return;
       }
 
@@ -907,7 +906,7 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   checkAllowance,
   confirmAllowance,
-  getLpBalance,
+
   getAccountBalance,
   getToken0InAmount,
   getToken1OutAmount,

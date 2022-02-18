@@ -13,6 +13,8 @@ import {
 import { setupNetwork } from "../../utils/connectionUtils";
 import { currentConnection } from "../../constants";
 import config from "../../utils/config";
+import { useWeb3React } from "@web3-react/core";
+import { Button } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,6 +59,8 @@ export default function NetworkSelect({ selectedNetwork }) {
   const [network, setNetwork] = React.useState(
     parseInt(localStorage.getItem("currentNetwork") || config.chainId)
   );
+
+  const { active, account, chainId } = useWeb3React();
 
   useEffect(() => {
     if (!selectedNetwork) {
@@ -115,27 +119,44 @@ export default function NetworkSelect({ selectedNetwork }) {
   };
   return (
     <div>
-      <FormControl className={classes.root}>
-        <Select
-          className={classes.main}
-          value={parseInt(selectedNetwork)}
-          disableUnderline={true}
-          notched={true}
-          id="adornment-weight"
-          onChange={({ target: { value } }) => handleChange(value)}
-        >
-          <MenuItem
-            value={
+      {active &&
+      ![config.ethChainId, config.ethChainIdRinkeby].includes(
+        parseInt(chainId)
+      ) ? (
+        <Button
+          onClick={() =>
+            handleChange(
               currentConnection === "testnet"
                 ? config.ethChainIdRinkeby
                 : config.ethChainId
-            }
-            className={classes.buttonDrop}
+            )
+          }
+          className={classes.main}
+        >
+          Switch to ethereum
+        </Button>
+      ) : (
+        <FormControl className={classes.root}>
+          <Select
+            className={classes.main}
+            value={parseInt(selectedNetwork)}
+            disableUnderline={true}
+            notched={true}
+            id="adornment-weight"
+            onChange={({ target: { value } }) => handleChange(value)}
           >
-            <span>Ethereum</span>
-            <img className={classes.imgIcon} src="img/eth.png" />
-          </MenuItem>
-          {/* <MenuItem
+            <MenuItem
+              value={
+                currentConnection === "testnet"
+                  ? config.ethChainIdRinkeby
+                  : config.ethChainId
+              }
+              className={classes.buttonDrop}
+            >
+              <span>Ethereum</span>
+              <img className={classes.imgIcon} src="img/eth.png" />
+            </MenuItem>
+            {/* <MenuItem
             value={
               currentConnection === "testnet"
                 ? config.moonriverChainTestent
@@ -146,7 +167,7 @@ export default function NetworkSelect({ selectedNetwork }) {
             <span>Moonriver</span>
             <img className={classes.imgIcon} src="img/moon.png" />
           </MenuItem> */}
-          {/* <MenuItem
+            {/* <MenuItem
             value={
               currentConnection === "testnet"
                 ? config.bscChainTestent
@@ -157,7 +178,7 @@ export default function NetworkSelect({ selectedNetwork }) {
             <span>Binance Smart Chain</span>
             <img className={classes.imgIcon} src={binanceIcon} />
           </MenuItem> */}
-          {/* <MenuItem
+            {/* <MenuItem
             value={
               currentConnection === "testnet"
                 ? config.polygon_chain_testnet
@@ -168,7 +189,7 @@ export default function NetworkSelect({ selectedNetwork }) {
             <span>Polygon</span>
             <img className={classes.imgIcon} src={polygonIcon} />
           </MenuItem> */}
-          {/* <MenuItem
+            {/* <MenuItem
             value={
               currentConnection === "testnet"
                 ? config.hmyChainTestnet
@@ -179,8 +200,9 @@ export default function NetworkSelect({ selectedNetwork }) {
             <span>Harmony</span>
             <img className={classes.imgIcon} src={harmonyIcon} />
           </MenuItem> */}
-        </Select>
-      </FormControl>
+          </Select>
+        </FormControl>
+      )}
     </div>
   );
 }

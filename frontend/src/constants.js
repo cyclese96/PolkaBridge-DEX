@@ -108,7 +108,9 @@ export const etheriumNetwork = "ethereum";
 export const bscNetwork = "bsc";
 export const moonriverNetwork = "moonriver";
 
-export const supportedChains = [1, 4, 1285, 1287];
+export const supportedChains = [
+  1, 4, 1285, 1287, 97, 56, 137, 80001, 1666700000, 1666600000,
+];
 
 export const allowanceAmount = "9999999999999999999999999";
 

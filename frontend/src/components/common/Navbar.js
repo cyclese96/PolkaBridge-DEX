@@ -18,9 +18,9 @@ import SwapVertIcon from "@material-ui/icons/SwapVert";
 import { EqualizerOutlined } from "@material-ui/icons";
 import Wallet from "./Wallet";
 import AccountDialog from "./AccountDialog";
-import etherIcon from "../../assets/ether.png";
-import binanceIcon from "../../assets/binance.png";
-import { etheriumNetwork } from "../../constants";
+// import etherIcon from "../../assets/ether.png";
+// import binanceIcon from "../../assets/binance.png";
+// import { etheriumNetwork } from "../../constants";
 import DotCircle from "./DotCircle";
 import { connect } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
@@ -215,19 +215,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Navbar = (props) => {
-  const {
-    account: { currentNetwork },
-  } = props;
   const classes = useStyles();
 
   const [state, setState] = React.useState({
     right: false,
   });
 
-  const [alertObject, showAlert] = React.useState({
-    status: false,
-    message: "",
-  });
+  // const [alertObject, showAlert] = React.useState({
+  //   status: false,
+  //   message: "",
+  // });
 
   const [accountDialog, setAccountDialog] = useState(false);
 
@@ -235,16 +232,14 @@ const Navbar = (props) => {
     setState({ ...state, [anchor]: open });
   };
 
-  const { active, account, chainId, activate, deactivate } = useWeb3React();
+  const { active, chainId, activate, deactivate } = useWeb3React();
 
   const createConnectHandler = async (connector) => {
     try {
       // const connector = connectors.injected;
+      // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
 
-      if (
-        connector instanceof WalletConnectConnector &&
-        connector.walletConnectProvider?.wc?.uri
-      ) {
+      if (connector instanceof WalletConnectConnector) {
         connector.walletConnectProvider = undefined;
       }
 
@@ -283,9 +278,9 @@ const Navbar = (props) => {
     }
   };
 
-  const handleClose = () => {
-    showAlert({ status: false, message: "" });
-  };
+  // const handleClose = () => {
+  //   showAlert({ status: false, message: "" });
+  // };
   const list = (anchor) => (
     <div
       className={clsx(classes.list, {
@@ -418,16 +413,7 @@ const Navbar = (props) => {
 
 
           <div className={classes.grow} />
-          {/* <div className={classes.network}>
-            <img
-              className={classes.networkIcon}
-              src={currentNetwork === etheriumNetwork ? etherIcon : binanceIcon}
-              alt={currentNetwork}
-            />
-            <span style={{ color: "#212121", marginLeft: 5 }}>
-              {currentNetwork === etheriumNetwork ? "Ethereum" : "BSC"}
-            </span>
-          </div> */}
+
           <NetworkSelect selectedNetwork={chainId} />
           <Wallet onWalletClick={handleWalletClick} />
         </Toolbar>
