@@ -8,7 +8,7 @@ module.exports = async function (deployer) {
     //testnet
     //let owner = "0xfEEF5F353aE5022d0cfcD072165cDA284B65772B";
     // let owner = "0x57866ed63ca5f9744cef9aa270bd1f1dce935831";
-    let factorycontract = "0x8D8c4E3Ae43A1F83EdF8e185013c8Fce4e14a0b9";
+    let factorycontract = "0x009015797A74B503Bd59e37cC7016037b79D2bef";
     //let WETH = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";//main
     let WETH = "0xc778417E063141139Fce010982780140Aa0cD5Ab";//test
     // let treasury = "0xC5516e155aa03F002A00c6bbA9467Cdbc4272581";
