@@ -322,12 +322,7 @@ const Navbar = (props) => {
             id: "features",
             icon: <FlareOutlined />,
           },
-          {
-            name: "Prediction",
-            link: "#",
-            id: "usecase",
-            icon: <CategoryIcon />,
-          },
+
         ].map((tab, index) => (
           <a href={tab.link}>
             <ListItem
@@ -418,20 +413,9 @@ const Navbar = (props) => {
             </a>
           </div>
 
-          <div>
-            <a href="#" className={classes.navbarItemsDesktop}>
-              Prediction <DotCircle />
-            </a>
-          </div>
 
-          <div>
-            <a
-              href="https://corgib.polkabridge.org/bet"
-              className={classes.navbarItemsDesktop}
-            >
-              Betting <DotCircle />
-            </a>
-          </div>
+
+
 
           <div className={classes.grow} />
           {/* <div className={classes.network}>
