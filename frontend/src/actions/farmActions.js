@@ -293,6 +293,7 @@ export const getFarmInfo =
         poolWeight: new BigNumber(poolInfo?.allocPoint)
           .div(totalAllocPoint)
           .toString(),
+        lockedLp: poolInfo?.lpAmount,
       };
 
       dispatch({

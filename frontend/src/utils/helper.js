@@ -360,6 +360,7 @@ export const getCachedTokens = () => {
 export const getPbrRewardApr = (poolWeight, pbrPriceUSD, poolLiquidityUSD) => {
   try {
     if (!poolWeight || !pbrPriceUSD || !poolLiquidityUSD) {
+      console.log("farmTest: ", { poolWeight, pbrPriceUSD, poolLiquidityUSD });
       return "0";
     }
 
