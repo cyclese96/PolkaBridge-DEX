@@ -36,9 +36,10 @@ contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
     // Info of each pool.
     struct PoolInfo {
         IERC20 lpToken; // Address of LP token contract.
+        uint256 lpAmount; // LP token amount in the pool.
         uint256 allocPoint; // How many allocation points assigned to this pool. PBRs to distribute per block.
         uint256 lastRewardBlock; // Last block number that PBRs distribution occurs.
-        uint256 accPBRPerShare; // Accumulated PBRs per share, times 1e18. See below.
+        uint256 accPBRPerShare; // Accumulated PBRs per share, times 1e18. See below.        
     }
     // The PBR TOKEN!
     address public polkaBridge;
@@ -95,6 +96,7 @@ contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
         poolInfo.push(
             PoolInfo({
                 lpToken: _lpToken,
+                lpAmount: 0,
                 allocPoint: _allocPoint,
                 lastRewardBlock: lastRewardBlock,
                 accPBRPerShare: 0
@@ -205,6 +207,7 @@ contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
             _amount
         );
         user.amount = user.amount + _amount;
+        pool.lpAmount = pool.lpAmount + _amount;
         user.rewardDebt = user.amount * pool.accPBRPerShare / 1e18;
         emit Deposit(msg.sender, _pid, _amount);
     }
@@ -218,6 +221,7 @@ contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
         uint256 pending = user.amount * pool.accPBRPerShare / 1e18 - user.rewardDebt;
         IERC20(polkaBridge).safeTransfer(msg.sender, pending);
         user.amount = user.amount - _amount;
+        pool.lpAmount = pool.lpAmount - _amount;
         user.rewardDebt = user.amount * pool.accPBRPerShare / 1e18;
         pool.lpToken.safeTransfer(address(msg.sender), _amount);
         emit Withdraw(msg.sender, _pid, _amount);
@@ -229,7 +233,8 @@ contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
         UserInfo storage user = userInfo[_pid][msg.sender];
         pool.lpToken.safeTransfer(address(msg.sender), user.amount);
         emit EmergencyWithdraw(msg.sender, _pid, user.amount);
-        user.amount = 0;
+        pool.lpAmount = pool.lpAmount - user.amount;
+        user.amount = 0;        
         user.rewardDebt = 0;
     }
 
