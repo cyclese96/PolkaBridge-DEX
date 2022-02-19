@@ -251,13 +251,17 @@ const Farm = (props) => {
   }, [ethPrice, lpBalance, farmPoolAddress]);
 
   const totalValueLockedUSD = useMemo(() => {
-    if (!farmData || ethPrice) {
+    if (!ethPrice || !farmData?.lockedLp || !lpBalance) {
       return "0";
     }
 
+    const lpTokenPrice = lpBalance?.[farmPoolAddress]?.lpTokenPrice;
     const lockedLpTokens = farmData?.lockedLp;
-    return new BigNumber(lockedLpTokens).times(ethPrice?.[0]).toString();
-  }, [ethPrice, farmData]);
+    return new BigNumber(lockedLpTokens)
+      .times(lpTokenPrice)
+      .times(ethPrice?.[0])
+      .toString();
+  }, [ethPrice, farmData, lpBalance, farmPoolAddress]);
 
   const parseStakedAmount = useMemo(
     () =>

@@ -1,10 +1,4 @@
-import {
-  Button,
-  Card,
-  CircularProgress,
-  IconButton,
-  makeStyles,
-} from "@material-ui/core";
+import { Button, Card, IconButton, makeStyles } from "@material-ui/core";
 import { connect } from "react-redux";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -401,7 +395,6 @@ const AddCard = (props) => {
   };
 
   const loadPairReserves = async () => {
-    // console.log('loading pair reserves after add liquidity')
     let _pairAddress = currentPairAddress();
 
     if (!_pairAddress) {

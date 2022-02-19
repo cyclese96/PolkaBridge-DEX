@@ -213,7 +213,6 @@ export const swapTokens =
 
       await swapPromise
         .on("receipt", async function (receipt) {
-          console.log("UPDATE_TRANSACTION_STATUS", receipt);
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: {
@@ -509,7 +508,6 @@ export const removeLiquidityEth =
       const tokenAmountMin = "0";
       const lpTokenAmount = lpAmount;
 
-      console.log({ ethToken, erc20Token, lpAmount });
       // deadline should be passed in minites in calculation
       const _deadlineUnix = getUnixTime(deadline);
 

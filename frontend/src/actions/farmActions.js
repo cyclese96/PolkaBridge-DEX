@@ -293,7 +293,7 @@ export const getFarmInfo =
         poolWeight: new BigNumber(poolInfo?.allocPoint)
           .div(totalAllocPoint)
           .toString(),
-        lockedLp: poolInfo?.lpAmount,
+        lockedLp: fromWei(poolInfo?.lpAmount),
       };
 
       dispatch({
@@ -364,10 +364,11 @@ export const getLpBalanceFarm =
       const balObject = {};
       balObject[pairAddress] = {
         lpBalance,
-        poolLpTokens: new BigNumber(fromWei(totalSupply))
+        poolLpTokens: new BigNumber(fromWei(totalSupply)) // multiply this value with eth price to get correct pool total Liquidity usd value
           .times(lpTokenPrice)
           .toFixed(0)
           .toString(),
+        lpTokenPrice, // multiply this value with eth price to get correct lp price in usd
       };
 
       dispatch({
