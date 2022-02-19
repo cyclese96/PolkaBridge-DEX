@@ -1,10 +1,4 @@
-import {
-  Button,
-  Card,
-  CircularProgress,
-  IconButton,
-  makeStyles,
-} from "@material-ui/core";
+import { Button, Card, IconButton, makeStyles } from "@material-ui/core";
 import { connect } from "react-redux";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -235,6 +229,7 @@ const AddCard = (props) => {
       pairContractData,
       transaction,
       tokenList,
+      dexLoading,
     },
     addLiquidityEth,
     checkAllowance,
@@ -400,7 +395,6 @@ const AddCard = (props) => {
   };
 
   const loadPairReserves = async () => {
-    // console.log('loading pair reserves after add liquidity')
     let _pairAddress = currentPairAddress();
 
     if (!_pairAddress) {
@@ -746,6 +740,11 @@ const AddCard = (props) => {
   };
 
   const handleAction = () => {
+    if (dexLoading) {
+      setSwapDialog(true);
+      return;
+    }
+
     if (currentTokenApprovalStatus()) {
       handleAddLiquidity();
     } else {
@@ -762,6 +761,11 @@ const AddCard = (props) => {
       return "Please wait...";
     } else if (addStatus.disabled) {
       return addStatus.message;
+    } else if (
+      ["add", "token_approve"].includes(transaction.type) &&
+      transaction.status === "pending"
+    ) {
+      return "Pending Transaction...";
     } else {
       return !currentTokenApprovalStatus()
         ? currApproveBtnText()
@@ -775,13 +779,24 @@ const AddCard = (props) => {
       return;
     }
 
-    if (transaction.type === "add" && transaction.status === "success") {
+    if (
+      ["add", "token_approve"].includes(transaction.type) &&
+      transaction.status === "success"
+    ) {
       getAccountBalance(selectedToken0, currentNetwork);
       getAccountBalance(selectedToken1, currentNetwork);
     }
 
     if (
-      (transaction.type === "add" && transaction.status === "success") ||
+      ["add", "token_approve"].includes(transaction.type) &&
+      transaction.status === "pending"
+    ) {
+      setSwapDialog(true);
+    }
+
+    if (
+      (["add", "token_approve"].includes(transaction.type) &&
+        transaction.status === "success") ||
       transaction.status === "failed"
     ) {
       setSwapDialog(true);
@@ -790,10 +805,16 @@ const AddCard = (props) => {
 
   const handleConfirmSwapClose = (value) => {
     setSwapDialog(value);
-    if (transaction.type === "add" && transaction.status === "success") {
+    if (
+      ["add", "token_approve"].includes(transaction.type) &&
+      transaction.status === "success"
+    ) {
       store.dispatch({ type: START_TRANSACTION });
       clearInputState();
-    } else if (transaction.type === "add" && transaction.status === "failed") {
+    } else if (
+      ["add", "token_approve"].includes(transaction.type) &&
+      transaction.status === "failed"
+    ) {
       store.dispatch({ type: START_TRANSACTION });
     }
   };
@@ -908,19 +929,7 @@ const AddCard = (props) => {
             onClick={handleAction}
             className={classes.addLiquidityButton}
           >
-            {!addStatus.disabled && loading ? (
-              <span>
-                {transaction.status === "pending" && "Transaction Pending"}
-
-                <CircularProgress
-                  style={{ color: "grey" }}
-                  color="secondary"
-                  size={30}
-                />
-              </span>
-            ) : (
-              currentButton()
-            )}
+            {currentButton()}
           </Button>
         </div>
       </Card>

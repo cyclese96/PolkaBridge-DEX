@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   CircularProgress,
   IconButton,
@@ -6,7 +7,7 @@ import {
 } from "@material-ui/core";
 import { connect } from "react-redux";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import SwapSettings from "../../common/SwapSettings";
 import CustomButton from "../../Buttons/CustomButton";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
@@ -206,23 +207,23 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "30%",
   },
   removeBtn: {
-    marginTop: 30,
-    backgroundColor: theme.palette.primary.pbr,
-    color: theme.palette.primary.buttonText,
-
-    width: "fit-content",
+    marginTop: 20,
+    backgroundColor: "rgba(224, 7, 125, 0.9)",
+    color: "white",
+    width: "95%",
     textTransform: "none",
-    fontSize: 17,
+    fontSize: 19,
     borderRadius: 20,
     willChange: "transform",
     transition: "transform 450ms ease 0s",
     transform: "perspective(1px) translateZ(0px)",
-    padding: "12px 30px 12px 30px",
+    padding: "10px 50px 10px 50px",
     "&:hover": {
       background: "rgba(224, 7, 125, 0.7)",
     },
     [theme.breakpoints.down("sm")]: {
-      fontSize: 14,
+      marginTop: 5,
+      fontSize: 15,
     },
   },
   approveBtn: {
@@ -249,7 +250,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const RemoveCard = ({
-  account: { currentNetwork, currentAccount, connected },
+  account: { currentNetwork, currentAccount, connected, loading },
   dex: {
     lpApproved,
     lpBalance,
@@ -539,13 +540,23 @@ const RemoveCard = ({
       return;
     }
 
-    if (transaction.type === "remove" && transaction.status === "success") {
+    if (
+      ["remove", "lp_token_approve"].includes(transaction.type) &&
+      transaction.status === "success"
+    ) {
       getAccountBalance(selectedToken0, currentNetwork);
       getAccountBalance(selectedToken1, currentNetwork);
     }
 
     if (
-      transaction.type === "remove" &&
+      ["remove", "lp_token_approve"].includes(transaction.type) &&
+      transaction.status === "pending"
+    ) {
+      setSwapDialog(true);
+    }
+
+    if (
+      ["remove", "lp_token_approve"].includes(transaction.type) &&
       (transaction.status === "success" || transaction.status === "failed")
     ) {
       setSwapDialog(true);
@@ -554,11 +565,14 @@ const RemoveCard = ({
 
   const handleConfirmSwapClose = (value) => {
     setSwapDialog(value);
-    if (transaction.type === "remove" && transaction.status === "success") {
+    if (
+      ["remove", "lp_token_approve"].includes(transaction.type) &&
+      transaction.status === "success"
+    ) {
       store.dispatch({ type: START_TRANSACTION });
       handleClearState();
     } else if (
-      transaction.type === "remove" &&
+      ["remove", "lp_token_approve"].includes(transaction.type) &&
       transaction.status === "failed"
     ) {
       store.dispatch({ type: START_TRANSACTION });
@@ -567,6 +581,55 @@ const RemoveCard = ({
 
   const currentPairDecimals = (token1, token2) => {
     return (parseInt(token1.decimals) + parseInt(token2.decimals)) / 2;
+  };
+
+  const disableStatus = useMemo(() => {
+    if (!connected) {
+      return true;
+    }
+
+    return (
+      loading ||
+      new BigNumber(currentLpBalance()).eq(0) ||
+      new BigNumber(liquidityPercent).eq(0)
+    );
+  }, [connected, loading, liquidityPercent, currentLpBalance()]);
+
+  const currentButton = useMemo(() => {
+    if (!connected) {
+      return "Connect Wallet";
+    }
+
+    if (loading) {
+      return "Please wait...";
+    } else if (new BigNumber(currentLpBalance()).eq(0)) {
+      return "No liquidity to remove";
+    } else if (
+      ["remove", "lp_token_approve"].includes(transaction.type) &&
+      transaction.status === "pending"
+    ) {
+      return "Pending Transaction...";
+    } else {
+      return !currentLpApproved() ? "Approve LP token" : "Remove Liquidity";
+    }
+  }, [
+    connected,
+    loading,
+    transaction,
+    currentLpApproved(),
+    currentLpBalance(),
+  ]);
+
+  const handleAction = () => {
+    if (dexLoading) {
+      setSwapDialog(true);
+      return;
+    }
+    if (!currentLpApproved()) {
+      handleConfirmAllowance();
+    } else {
+      handleRemoveLiquidity();
+    }
   };
 
   return (
@@ -677,7 +740,7 @@ const RemoveCard = ({
           </div>
 
           <div className={classes.priceContainer}>
-            {dexLoading ? (
+            {loading ? (
               <div className="d-flex justify-content-center">
                 <CircularProgress className={classes.spinner} size={30} />
               </div>
@@ -716,8 +779,8 @@ const RemoveCard = ({
               (new BigNumber(liquidityPercent).eq(0) &&
                 "* Choose your amount of first to remove liquidity.")}
           </div>
-          <div className="d-flex justify-content-center">
-            <CustomButton
+          {/* <div className="d-flex justify-content-center"> */}
+          {/* <CustomButton
               variant="light"
               className={classes.approveBtn}
               disabled={
@@ -753,8 +816,16 @@ const RemoveCard = ({
               onClick={handleRemoveLiquidity}
             >
               Remove
-            </CustomButton>
-          </div>
+            </CustomButton> */}
+          <Button
+            variant="contained"
+            disabled={disableStatus}
+            onClick={handleAction}
+            className={classes.removeBtn}
+          >
+            {currentButton}
+          </Button>
+          {/* </div> */}
         </div>
       </Card>
 

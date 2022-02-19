@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   closeIcon: {
-    color: "#f6f6f6",
+    color: theme.palette.textColors.heading,
     fontSize: 24,
     [theme.breakpoints.down("sm")]: {
       fontSize: 20,
