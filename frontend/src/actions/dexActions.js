@@ -2,7 +2,6 @@ import BigNumber from "bignumber.js";
 import {
   currentConnection,
   ETH,
-  etheriumNetwork,
   moonriverNetwork,
   PBR,
   routerAddresses,
@@ -69,7 +68,7 @@ export const swapTokens =
       const toAddress = account;
       const _deadlineUnix = getUnixTime(deadline);
       dispatch({
-        type: SHOW_LOADING,
+        type: SHOW_DEX_LOADING,
       });
       dispatch({ type: START_TRANSACTION });
 
@@ -214,7 +213,6 @@ export const swapTokens =
 
       await swapPromise
         .on("receipt", async function (receipt) {
-          console.log("UPDATE_TRANSACTION_STATUS", receipt);
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: {
@@ -238,7 +236,7 @@ export const swapTokens =
       });
     }
     dispatch({
-      type: HIDE_LOADING,
+      type: HIDE_DEX_LOADING,
     });
   };
 
@@ -282,7 +280,7 @@ export const addLiquidity =
       const _routerContract = routerContract(network);
 
       dispatch({
-        type: SHOW_LOADING,
+        type: SHOW_DEX_LOADING,
       });
       //input params
       const token0AmountDesired = token0.amount;
@@ -343,7 +341,7 @@ export const addLiquidity =
     }
 
     dispatch({
-      type: HIDE_LOADING,
+      type: HIDE_DEX_LOADING,
     });
   };
 
@@ -354,7 +352,7 @@ export const addLiquidityEth =
     try {
       const _routerContract = routerContract(network);
       dispatch({
-        type: SHOW_LOADING,
+        type: SHOW_DEX_LOADING,
       });
       //input params
       const etherAmount = ethToken.amount;
@@ -417,7 +415,7 @@ export const addLiquidityEth =
     }
 
     dispatch({
-      type: HIDE_LOADING,
+      type: HIDE_DEX_LOADING,
     });
   };
 
@@ -510,7 +508,6 @@ export const removeLiquidityEth =
       const tokenAmountMin = "0";
       const lpTokenAmount = lpAmount;
 
-      console.log({ ethToken, erc20Token, lpAmount });
       // deadline should be passed in minites in calculation
       const _deadlineUnix = getUnixTime(deadline);
 
@@ -617,11 +614,39 @@ export const confirmAllowance =
       const _routerContract = routerContract(network);
 
       dispatch({
-        type: SHOW_LOADING,
+        type: SHOW_DEX_LOADING,
       });
       await _tokenContract.methods
         .approve(_routerContract._address, balance)
-        .send({ from: account });
+        .send({ from: account }, function (error, transactionHash) {
+          if (error) {
+            dispatch({
+              type: UPDATE_TRANSACTION_STATUS,
+              payload: { type: "token_approve", hash: null, status: "failed" },
+            });
+          } else {
+            dispatch({
+              type: UPDATE_TRANSACTION_STATUS,
+              payload: { type: "token_approve", hash: transactionHash },
+            });
+          }
+        })
+        .on("receipt", async function (receipt) {
+          dispatch({
+            type: UPDATE_TRANSACTION_STATUS,
+            payload: {
+              type: "token_approve",
+              status: "success",
+              result: {}, // add result data for reciept
+            },
+          });
+        })
+        .on("error", async function (error) {
+          dispatch({
+            type: UPDATE_TRANSACTION_STATUS,
+            payload: { type: "token_approve", status: "failed" },
+          });
+        });
 
       dispatch({
         type: APPROVE_TOKEN,
@@ -635,7 +660,7 @@ export const confirmAllowance =
       });
     }
     dispatch({
-      type: HIDE_LOADING,
+      type: HIDE_DEX_LOADING,
     });
   };
 
@@ -693,7 +718,39 @@ export const confirmLPAllowance =
 
       await _pairContract.methods
         .approve(_routerContractAddress, balance)
-        .send({ from: account });
+        .send({ from: account }, function (error, transactionHash) {
+          if (error) {
+            dispatch({
+              type: UPDATE_TRANSACTION_STATUS,
+              payload: {
+                type: "lp_token_approve",
+                hash: null,
+                status: "failed",
+              },
+            });
+          } else {
+            dispatch({
+              type: UPDATE_TRANSACTION_STATUS,
+              payload: { type: "lp_token_approve", hash: transactionHash },
+            });
+          }
+        })
+        .on("receipt", async function (receipt) {
+          dispatch({
+            type: UPDATE_TRANSACTION_STATUS,
+            payload: {
+              type: "lp_token_approve",
+              status: "success",
+              result: {}, // add result data
+            },
+          });
+        })
+        .on("error", async function (error) {
+          dispatch({
+            type: UPDATE_TRANSACTION_STATUS,
+            payload: { type: "lp_token_approve", status: "failed" },
+          });
+        });
 
       dispatch({
         type: APPROVE_LP_TOKENS,

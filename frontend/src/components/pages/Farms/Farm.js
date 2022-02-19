@@ -250,6 +250,19 @@ const Farm = (props) => {
     return usdValue;
   }, [ethPrice, lpBalance, farmPoolAddress]);
 
+  const totalValueLockedUSD = useMemo(() => {
+    if (!ethPrice || !farmData?.lockedLp || !lpBalance) {
+      return "0";
+    }
+
+    const lpTokenPrice = lpBalance?.[farmPoolAddress]?.lpTokenPrice;
+    const lockedLpTokens = farmData?.lockedLp;
+    return new BigNumber(lockedLpTokens)
+      .times(lpTokenPrice)
+      .times(ethPrice?.[0])
+      .toString();
+  }, [ethPrice, farmData, lpBalance, farmPoolAddress]);
+
   const parseStakedAmount = useMemo(
     () =>
       farms &&
@@ -454,6 +467,12 @@ const Farm = (props) => {
         </div>
 
         <div className="d-flex justify-content-between align-items-center mt-4">
+          <div className={classes.tokenTitle}>Total Value Locked:</div>
+          <div className={classes.tokenAmount}>
+            ${formattedNum(totalValueLockedUSD)}
+          </div>
+        </div>
+        <div className="d-flex justify-content-between align-items-center mt-2">
           <div className={classes.tokenTitle}>Total Liquidity:</div>
           <div className={classes.tokenAmount}>
             ${formattedNum(totalPoolLiquidityUSDValue)}

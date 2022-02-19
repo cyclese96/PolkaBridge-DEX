@@ -63,7 +63,7 @@ export const factoryAddresses = {
 
 export const farmAddresses = {
   ethereum: testing
-    ? "0x855CC2d28210F5A1074546ba71DF04EE4612843B"
+    ? "0x57eA8360A59468112cE669EA8bFb2169062EAF0d"
     : "0xBaF15D830ddeB6c11fFae8890d9c902D8dF1f3E7",
 };
 

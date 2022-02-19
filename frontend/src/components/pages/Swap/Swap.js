@@ -211,6 +211,7 @@ const Swap = (props) => {
       token1Out,
       priceLoading,
       tokenList,
+      dexLoading,
     },
     checkAllowance,
     confirmAllowance,
@@ -491,6 +492,7 @@ const Swap = (props) => {
         disabled: true,
         message: "Not enough liquidity for this trade!",
       });
+      return;
     }
 
     // update current price ratio based on trade amounts
@@ -566,6 +568,7 @@ const Swap = (props) => {
         disabled: true,
         message: "Not enough liquidity for this trade!",
       });
+      return;
     }
 
     // update current price ratio based on trade amounts
@@ -717,6 +720,11 @@ const Swap = (props) => {
   };
 
   const handleAction = () => {
+    if (dexLoading) {
+      setSwapDialog(true);
+      return;
+    }
+
     if (currentTokenApprovalStatus()) {
       handleSwapToken();
     } else {
@@ -734,10 +742,10 @@ const Swap = (props) => {
     } else if (swapStatus.disabled) {
       return swapStatus.message;
     } else if (
-      transaction.type === "swap" &&
+      ["swap", "token_approve"].includes(transaction.type) &&
       transaction.status === "pending"
     ) {
-      return "Pending Swap Transaction...";
+      return "Pending Transaction...";
     } else {
       return !currentTokenApprovalStatus() ? "Approve" : swapStatus.message;
     }
@@ -749,14 +757,17 @@ const Swap = (props) => {
       return;
     }
 
-    if (transaction.type === "swap" && transaction.status === "success") {
+    if (
+      ["swap", "token_approve"].includes(transaction.type) &&
+      transaction.status === "success"
+    ) {
       localStorage.priceTracker = "None";
       getAccountBalance(selectedToken0, currentNetwork);
       getAccountBalance(selectedToken1, currentNetwork);
     }
 
     if (
-      transaction.type === "swap" &&
+      ["swap", "token_approve"].includes(transaction.type) &&
       (transaction.status === "success" || transaction.status === "failed") &&
       !swapDialogOpen
     ) {
@@ -767,10 +778,16 @@ const Swap = (props) => {
   const handleConfirmSwapClose = (value) => {
     setSwapDialog(value);
 
-    if (transaction.type === "swap" && transaction.status === "success") {
+    if (
+      ["swap", "token_approve"].includes(transaction.type) &&
+      transaction.status === "success"
+    ) {
       store.dispatch({ type: START_TRANSACTION });
       clearInputState();
-    } else if (transaction.type === "swap" && transaction.status === "failed") {
+    } else if (
+      ["swap", "token_approve"].includes(transaction.type) &&
+      transaction.status === "failed"
+    ) {
       store.dispatch({ type: START_TRANSACTION });
     }
   };
