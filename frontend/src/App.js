@@ -2,13 +2,11 @@ import "./App.css";
 import React, { Suspense, lazy } from "react";
 import { ThemeProvider, makeStyles } from "@material-ui/core/styles";
 import theme from "./theme";
-import { Provider } from "react-redux";
-import store from "./store";
+
 import { Route, Switch, BrowserRouter, Redirect } from "react-router-dom";
 import { PAIR_BLACKLIST, TOKEN_BLACKLIST } from "./constants";
 import { isAddress } from "./utils/helper";
-import { Web3Provider } from "@ethersproject/providers";
-import { Web3ReactProvider } from "@web3-react/core";
+
 const Home = lazy(() => import("./components/Home"));
 const TokenPage = lazy(() =>
   import("./components/pages/Analytics/components/DetailsPage/TokenDetail")
@@ -55,92 +53,86 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function getLibrary(provider) {
-  const library = new Web3Provider(provider);
-  library.pollingInterval = 12000;
-  return library;
-}
-
 function App() {
   const classes = useStyles();
   return (
-    <Provider store={store}>
-      <Web3ReactProvider getLibrary={getLibrary}>
-        <Suspense fallback={null}>
-          <ThemeProvider theme={theme}>
-            <div style={{ overflowX: "hidden" }}>
-              <div className={classes.navbar}>
-                <Navbar />
-              </div>
-              <div className={classes.mainContent}>
-                <BrowserRouter>
-                  <Home />
-                  <Route exact path="/" component={Swap} />
-                  <Route exact path="/farms" component={Farms} />
-                  <Route exact path="/liquidity" component={AddLiquidity} />
-                  <Route exact path="/charts" component={Analytics} />
-                  <Route exact path="/charts/tokens" component={AllTopToken} />
-                  <Route exact path="/charts/pools" component={AllTopPool} />
+    // <Provider store={store}>
+    //   <Web3ReactProvider getLibrary={getLibrary}>
+    <Suspense fallback={null}>
+      <ThemeProvider theme={theme}>
+        <div style={{ overflowX: "hidden" }}>
+          <div className={classes.navbar}>
+            <Navbar />
+          </div>
+          <div className={classes.mainContent}>
+            <BrowserRouter>
+              <Home />
+              <Route exact path="/" component={Swap} />
+              <Route exact path="/farms" component={Farms} />
+              <Route exact path="/liquidity" component={AddLiquidity} />
+              <Route exact path="/charts" component={Analytics} />
+              <Route exact path="/charts/tokens" component={AllTopToken} />
+              <Route exact path="/charts/pools" component={AllTopPool} />
 
-                  <Switch>
-                    <Route
-                      exacts
-                      strict
-                      path="/token/:tokenAddress"
-                      render={({ match }) => {
-                        if (
-                          isAddress(match.params.tokenAddress.toLowerCase()) &&
-                          !Object.keys(TOKEN_BLACKLIST).includes(
-                            match.params.tokenAddress.toLowerCase()
-                          )
-                        ) {
-                          return (
-                            // <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
-                            <TokenPage
-                              address={match.params.tokenAddress.toLowerCase()}
-                            />
-                            // </LayoutWrapper>
-                          );
-                        } else {
-                          return <Redirect to="/" />;
-                        }
-                      }}
-                    />
+              <Switch>
+                <Route
+                  exacts
+                  strict
+                  path="/token/:tokenAddress"
+                  render={({ match }) => {
+                    if (
+                      isAddress(match.params.tokenAddress.toLowerCase()) &&
+                      !Object.keys(TOKEN_BLACKLIST).includes(
+                        match.params.tokenAddress.toLowerCase()
+                      )
+                    ) {
+                      return (
+                        // <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
+                        <TokenPage
+                          address={match.params.tokenAddress.toLowerCase()}
+                        />
+                        // </LayoutWrapper>
+                      );
+                    } else {
+                      return <Redirect to="/" />;
+                    }
+                  }}
+                />
 
-                    <Route
-                      exacts
-                      strict
-                      path="/pair/:pairAddress"
-                      render={({ match }) => {
-                        if (
-                          isAddress(match.params.pairAddress.toLowerCase()) &&
-                          !Object.keys(PAIR_BLACKLIST).includes(
-                            match.params.pairAddress.toLowerCase()
-                          )
-                        ) {
-                          return (
-                            // <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
-                            <PoolDetail
-                              pairAddress={match.params.pairAddress.toLowerCase()}
-                            />
-                            // </LayoutWrapper>
-                          );
-                        } else {
-                          return <Redirect to="/" />;
-                        }
-                      }}
-                    />
-                  </Switch>
-                </BrowserRouter>
-              </div>
-              <div className={classes.footer}>
-                <Footer />
-              </div>
-            </div>
-          </ThemeProvider>
-        </Suspense>
-      </Web3ReactProvider>
-    </Provider>
+                <Route
+                  exacts
+                  strict
+                  path="/pair/:pairAddress"
+                  render={({ match }) => {
+                    if (
+                      isAddress(match.params.pairAddress.toLowerCase()) &&
+                      !Object.keys(PAIR_BLACKLIST).includes(
+                        match.params.pairAddress.toLowerCase()
+                      )
+                    ) {
+                      return (
+                        // <LayoutWrapper savedOpen={savedOpen} setSavedOpen={setSavedOpen}>
+                        <PoolDetail
+                          pairAddress={match.params.pairAddress.toLowerCase()}
+                        />
+                        // </LayoutWrapper>
+                      );
+                    } else {
+                      return <Redirect to="/" />;
+                    }
+                  }}
+                />
+              </Switch>
+            </BrowserRouter>
+          </div>
+          <div className={classes.footer}>
+            <Footer />
+          </div>
+        </div>
+      </ThemeProvider>
+    </Suspense>
+    //   </Web3ReactProvider>
+    // </Provider>
   );
 }
 

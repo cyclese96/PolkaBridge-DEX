@@ -23,12 +23,13 @@ import AccountDialog from "./AccountDialog";
 // import { etheriumNetwork } from "../../constants";
 import DotCircle from "./DotCircle";
 import { connect } from "react-redux";
-import { useWeb3React } from "@web3-react/core";
+
 import connectors from "../../contracts/connections/connectors";
 import { isMetaMaskInstalled } from "../../utils/helper";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 // import { Link } from "react-router-dom";
 import NetworkSelect from "./NetworkSelect";
+import useActiveWeb3React from "../../hooks/useActiveWeb3React";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -232,7 +233,7 @@ const Navbar = (props) => {
     setState({ ...state, [anchor]: open });
   };
 
-  const { active, chainId, activate, deactivate } = useWeb3React();
+  const { active, chainId, activate, deactivate } = useActiveWeb3React();
 
   const createConnectHandler = async (connector) => {
     try {
