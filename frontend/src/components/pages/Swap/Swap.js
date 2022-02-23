@@ -50,8 +50,8 @@ import { default as NumberFormat } from "react-number-format";
 import { useLocation } from "react-router";
 import { usePrevious } from "react-use";
 import { useTokenData } from "../../../contexts/TokenData";
-// import { useTradeExactIn } from "../../../hooks/useTrades";
-// import { Token, TokenAmount, JSBI } from "polkabridge-sdk";
+import { useTradeExactIn } from "../../../hooks/useTrades";
+import { Token, TokenAmount, JSBI } from "polkabridge-sdk";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -795,27 +795,27 @@ const Swap = (props) => {
     }
   };
 
-  // const inputCurrency = new Token(
-  //   4,
-  //   tokenAddresses.ethereum.ETH.testnet,
-  //   18,
-  //   "ETH"
-  // );
-  // const parsedAmount = new TokenAmount(inputCurrency, JSBI.BigInt(1)); //1 input ether
-  // const outputCurrency = new Token(
-  //   4,
-  //   tokenAddresses.ethereum.PBR.testnet,
-  //   18,
-  //   "PBR"
-  // );
-  // const bestTradeExactIn = useTradeExactIn(
-  //   parsedAmount,
-  //   outputCurrency ?? undefined
-  // );
+  const inputCurrency = new Token(
+    4,
+    tokenAddresses.ethereum.ETH.testnet,
+    18,
+    "ETH"
+  );
+  const parsedAmount = new TokenAmount(inputCurrency, JSBI.BigInt(1)); //1 input ether
+  const outputCurrency = new Token(
+    4,
+    tokenAddresses.ethereum.PBR.testnet,
+    18,
+    "PBR"
+  );
+  const bestTradeExactIn = useTradeExactIn(
+    parsedAmount,
+    outputCurrency ?? undefined
+  );
 
-  // useEffect(() => {
-  //   console.log("bestTradeIn ", bestTradeExactIn);
-  // }, [bestTradeExactIn]);
+  useEffect(() => {
+    console.log("bestTradeIn ", bestTradeExactIn);
+  }, [bestTradeExactIn]);
 
   return (
     <>

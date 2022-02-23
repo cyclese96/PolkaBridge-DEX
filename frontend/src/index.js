@@ -12,7 +12,7 @@ import TokenDataContextProvider, {
 import PairDataContextProvider, {
   Updater as PairDataContextUpdater,
 } from "../src/contexts/PairData";
-// import { MulticallUpdater } from "./state/multicall";
+import { MulticallUpdater } from "./state/multicall";
 import { BlockUpdater } from "./hooks/useBlockNumber";
 import { createWeb3ReactRoot, Web3ReactProvider } from "web3-react-core";
 
@@ -41,7 +41,7 @@ function Updaters() {
     <>
       <TokenDataContextUpdater />
       <PairDataContextUpdater />
-      {/* <MulticallUpdater /> */}
+      <MulticallUpdater />
       <BlockUpdater />
     </>
   );
