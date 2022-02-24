@@ -50,8 +50,11 @@ import { default as NumberFormat } from "react-number-format";
 import { useLocation } from "react-router";
 import { usePrevious } from "react-use";
 import { useTokenData } from "../../../contexts/TokenData";
-import { useTradeExactIn } from "../../../hooks/useTrades";
-import { Token, TokenAmount, JSBI } from "polkabridge-sdk";
+import { useAllCommonPairs, useTradeExactIn } from "../../../hooks/useTrades";
+import { Token, TokenAmount, JSBI, ETHER } from "polkabridge-sdk";
+import { wrappedCurrency } from "hooks/wrappedCurrency";
+import useActiveWeb3React from "hooks/useActiveWeb3React";
+import { isAddress } from "utils/contractUtils";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -795,26 +798,42 @@ const Swap = (props) => {
     }
   };
 
-  const inputCurrency = new Token(
-    4,
-    tokenAddresses.ethereum.ETH.testnet,
+  const { chainId } = useActiveWeb3React();
+
+  const inputToken = new Token(
+    chainId,
+    isAddress(tokenAddresses.ethereum.ETH.testnet),
     18,
     "ETH"
   );
-  const parsedAmount = new TokenAmount(inputCurrency, JSBI.BigInt(1)); //1 input ether
-  const outputCurrency = new Token(
-    4,
-    tokenAddresses.ethereum.PBR.testnet,
+  // const inputCurrency = wrappedCurrency(inputToken, chainId);
+
+  const parsedAmount = new TokenAmount(
+    inputToken,
+    JSBI.BigInt(1000000000000000000)
+  ); //1 input ether
+  const outputToken = new Token(
+    chainId,
+    isAddress(tokenAddresses.ethereum.PBR.testnet),
     18,
     "PBR"
   );
   const bestTradeExactIn = useTradeExactIn(
     parsedAmount,
-    outputCurrency ?? undefined
+    wrappedCurrency(outputToken, chainId) ?? undefined
   );
 
+  // const allowedPairs = useAllCommonPairs(
+  //   wrappedCurrency(inputToken, chainId),
+  //   wrappedCurrency(outputToken, chainId)
+  // );
+
   useEffect(() => {
-    console.log("bestTradeIn ", bestTradeExactIn);
+    console.log("bestTradeIn ", {
+      bestTradeExactIn,
+      input: bestTradeExactIn?.inputAmount?.toExact(),
+      output: bestTradeExactIn?.outputAmount?.toSignificant(6),
+    });
   }, [bestTradeExactIn]);
 
   return (

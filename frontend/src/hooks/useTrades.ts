@@ -1,26 +1,44 @@
-import { Currency, CurrencyAmount, Pair, Token, Trade } from "polkabridge-sdk";
+import {
+  Currency,
+  CurrencyAmount,
+  ETHER,
+  Pair,
+  Token,
+  Trade,
+  WETH,
+} from "polkabridge-sdk";
 import flatMap from "lodash.flatmap";
 import { useMemo } from "react";
 
 // import { GlobalData } from '../constants';
 import { PairState, usePairs } from "../data/Reserves";
 // import { wrappedCurrency } from '../utils/wrappedCurrency';
-import { SWAP_BASES } from "../constants";
-import { wrappedCurrency } from "./wrappedCurrency";
+import { ETH, SWAP_BASES } from "../constants";
+import { wrappedCurrency, wrappedCurrencyAmount } from "./wrappedCurrency";
 import tokenListLocal from "../tokenList/tokenListTest.json";
 import useActiveWeb3React from "../hooks/useActiveWeb3React";
+import { getAddress } from "@ethersproject/address";
 
 function getTokenWithSymbol(symbol: String) {
-  const tokenItem = tokenListLocal.moonriver.find(
-    (item) => item.symbol === symbol
+  const tokenItem = tokenListLocal.ethereum.find(
+    (_token) => _token.symbol === symbol
   );
+  // const tokenItem = tokenListLocal.ethereum[tokenIndex];
+
   if (!tokenItem) {
-    return new Token(4, "", 18, "", "");
+    console.log("test  token not found", {
+      symbol,
+      keys: tokenItem,
+    });
+    return WETH[4];
+  }
+  if (symbol === ETH) {
+    return WETH[4];
   }
 
   const _token = new Token(
     4,
-    tokenItem.address,
+    getAddress(tokenItem.address),
     tokenItem.decimals,
     tokenItem.symbol,
     tokenItem.name
@@ -28,7 +46,10 @@ function getTokenWithSymbol(symbol: String) {
   return _token;
 }
 
-function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
+export function useAllCommonPairs(
+  currencyA?: Currency,
+  currencyB?: Currency
+): Pair[] {
   const { chainId } = useActiveWeb3React();
 
   const bases: Token[] = useMemo(
@@ -41,6 +62,7 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
     ? [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
     : [undefined, undefined];
 
+  console.log("test tokenA  and tokenB", { tokenA, tokenB });
   const basePairs: [Token, Token][] = useMemo(
     () =>
       flatMap(bases, (base): [Token, Token][] =>
@@ -95,6 +117,8 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
     [tokenA, tokenB, bases, basePairs, chainId]
   );
 
+  console.log("test allpair combination ", allPairCombinations);
+
   const allPairs = usePairs(allPairCombinations);
 
   // only pass along valid pairs, non-duplicated pairs
@@ -128,6 +152,12 @@ export function useTradeExactIn(
     currencyAmountIn?.currency,
     currencyOut
   );
+
+  console.log("result2 allowed pairs befire tradeIn ", {
+    allowedPairs,
+    currencyAmountIn,
+    currencyOut,
+  });
   return useMemo(() => {
     if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
       return (
