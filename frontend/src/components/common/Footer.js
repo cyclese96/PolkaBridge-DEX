@@ -64,7 +64,7 @@ const Footer = () => {
       </a>
       <a
         className={classes.item}
-        href="https://discord.gg/G3NDrcq6GW"
+        href="https://discord.gg/tzemFksyZB"
         target="_blank"
       >
         Discord

@@ -80,6 +80,9 @@ contract PolkaBridgeFarm is Ownable, ReentrancyGuard {
         return poolInfo.length;
     }
 
+    function changePBRBlock(uint256 _PBRPerBlock) external onlyOwner {
+         PBRPerBlock = _PBRPerBlock;
+    }
     // Add a new lp to the pool. Can only be called by the owner.
     // XXX DO NOT add the same LP token more than once. Rewards will be messed up if you do.
     function add(
