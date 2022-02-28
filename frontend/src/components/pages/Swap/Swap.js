@@ -14,6 +14,7 @@ import SwapSettings from "../../common/SwapSettings";
 import BigNumber from "bignumber.js";
 import {
   allowanceAmount,
+  defaultPoolToken1,
   defaultSwapInputToken,
   ETH,
   swapFnConstants,
@@ -299,6 +300,12 @@ const Swap = (props) => {
           importToken(token1Query, currentAccount, currentNetwork);
         }
 
+        setToken2(_token);
+      } else {
+        const _token = getTokenToSelect(
+          tokenList,
+          defaultPoolToken1?.[currentNetwork]
+        );
         setToken2(_token);
       }
 
