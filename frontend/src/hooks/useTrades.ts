@@ -10,9 +10,7 @@ import {
 import flatMap from "lodash.flatmap";
 import { useMemo } from "react";
 
-// import { GlobalData } from '../constants';
 import { PairState, usePairs } from "../data/Reserves";
-// import { wrappedCurrency } from '../utils/wrappedCurrency';
 import { ETH, SWAP_BASES } from "../constants";
 import { wrappedCurrency, wrappedCurrencyAmount } from "./wrappedCurrency";
 import tokenListLocal from "../tokenList/tokenListTest.json";
@@ -62,7 +60,6 @@ export function useAllCommonPairs(
     ? [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
     : [undefined, undefined];
 
-  console.log("test tokenA  and tokenB", { tokenA, tokenB });
   const basePairs: [Token, Token][] = useMemo(
     () =>
       flatMap(bases, (base): [Token, Token][] =>
@@ -116,8 +113,6 @@ export function useAllCommonPairs(
         : [],
     [tokenA, tokenB, bases, basePairs, chainId]
   );
-
-  console.log("test allpair combination ", allPairCombinations);
 
   const allPairs = usePairs(allPairCombinations);
 

@@ -42,8 +42,6 @@ export function usePairs(
     "getReserves"
   );
 
-  console.log("result multicall ", results);
-
   return useMemo(() => {
     return results.map((result, i) => {
       const { result: reserves, loading } = result;

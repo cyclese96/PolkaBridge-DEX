@@ -38,14 +38,9 @@ import TransactionConfirm from "../../common/TransactionConfirm";
 import { Info, Settings } from "@material-ui/icons";
 import TabPage from "../../TabPage";
 import store from "../../../store";
-import {
-  HIDE_DEX_LOADING,
-  SHOW_DEX_LOADING,
-  START_TRANSACTION,
-} from "../../../actions/types";
+import { START_TRANSACTION } from "../../../actions/types";
 import { default as NumberFormat } from "react-number-format";
 import { useLocation } from "react-router";
-// import { usePrevious } from "react-use";
 import { useTokenData } from "../../../contexts/TokenData";
 import { useTradeExactIn, useTradeExactOut } from "../../../hooks/useTrades";
 import { Token, TokenAmount, JSBI, ETHER } from "polkabridge-sdk";
@@ -142,7 +137,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 30,
   },
   tokenPrice: {
-    color: "white",
+    color: theme.palette.textColors.heading,
     textAlign: "right",
     width: 430,
     fontSize: 13,
@@ -228,7 +223,7 @@ const Swap = (props) => {
 
   const [localStateLoading, setLocalStateLoading] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [priceRatio, setPriceRatio] = useState(null);
+  // const [priceRatio, setPriceRatio] = useState(null);
 
   const handleTxPoper = (event) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -422,7 +417,6 @@ const Swap = (props) => {
       return undefined;
     }
 
-    console.log("selecteed Token0", selectedToken0);
     const _token = new Token(
       chainId,
       isAddress(selectedToken0?.address),
@@ -589,7 +583,7 @@ const Swap = (props) => {
       transaction.status === "success"
     ) {
       store.dispatch({ type: START_TRANSACTION });
-      clearInputState();
+      // clearInputState();
     } else if (
       ["swap", "token_approve"].includes(transaction.type) &&
       transaction.status === "failed"
@@ -626,6 +620,10 @@ const Swap = (props) => {
     currentSwap.tradeType,
   ]);
 
+  const priceRatio = useMemo(() => {
+    return getPriceRatio(parsedToken2Value, parsedToken1Value);
+  }, [parsedToken1Value, parsedToken2Value]);
+
   const currentButton = useMemo(() => {
     if (!active) {
       return "Connect Wallet";
@@ -652,20 +650,6 @@ const Swap = (props) => {
   const disableStatus = useMemo(() => {
     return priceLoading || !parsedToken1Value || !parsedToken2Value;
   }, [priceLoading, parsedToken1Value, parsedToken2Value]);
-
-  // useEffect(() => {
-  //   if (!bestTradeExactOut) {
-  //     return;
-  //   }
-  //   console.log("bestTrade ", {
-  //     bestTradeExactOut,
-  //     parsedToken1Value,
-  //     parsedToken2Value,
-  //     currentSwapFn,
-  //     currentTradePath,
-  //     priceImpact: bestTradeExactOut.priceImpact.toSignificant(6),
-  //   });
-  // }, [bestTradeExactOut, parsedToken1Value, parsedToken2Value, currentSwapFn]);
 
   return (
     <>
@@ -728,7 +712,7 @@ const Swap = (props) => {
             priceUSD={token1PriceUsd}
           />
 
-          {token1Value && token2Value && (
+          {parsedToken1Value && parsedToken2Value && (
             <div
               className="mt-2 d-flex justify-content-end"
               style={{ width: "95%" }}

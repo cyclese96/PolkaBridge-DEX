@@ -57,7 +57,6 @@ export function BlockUpdater() {
   const setBlock = useUpdateAtom(blockAtom);
   const block = useBlock();
   useEffect(() => {
-    console.log("updater ", block);
     setBlock(block);
   }, [block, setBlock]);
   return null;
