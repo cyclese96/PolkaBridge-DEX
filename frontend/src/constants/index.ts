@@ -45,8 +45,8 @@ export const tokenAddresses = {
 
 export const routerAddresses = {
   ethereum: testing
-    ? "0xA184Ff49aB012497a3297119223374827f997D32"
-    : "0x8A2795aE669476Bf119A1a40FbFD75cA71Fd35c4",
+    ? "0xC5f630dF68A8DA6B71fa2181FF2d7c899bcEd3Cf"
+    : "0xFF0e9437818258BDEdd1aA374095968ABC82a9E2",
   moonriver: testing
     ? "0x1C586Bc16e9Aa5fdf45F4dB3F37Bd97cA25A5aE9"
     : "0x1C586Bc16e9Aa5fdf45F4dB3F37Bd97cA25A5aE9", //todo update mainnet address
@@ -54,8 +54,8 @@ export const routerAddresses = {
 
 export const factoryAddresses = {
   ethereum: testing
-    ? "0xfA8e11D87F9B219e780Ff2Efa4304c8Ef5bFa0E7"
-    : "0xeff9EcEFe14279C0157f88573Ca9361D253c10bE",
+    ? "0xd624C547bCEEB9A0152F64BE4F85416365e3Ba6b"
+    : "0xf5d8E98ef1f66f1cAb949A2555837FE755fc2D68",
   moonriver: testing
     ? "0x2fc26998c0EB0CC67DC9d41f7f1F4508dE214292"
     : "0x2fc26998c0EB0CC67DC9d41f7f1F4508dE214292", // todo update mainnet address
@@ -64,7 +64,7 @@ export const factoryAddresses = {
 export const farmAddresses = {
   ethereum: testing
     ? "0x57eA8360A59468112cE669EA8bFb2169062EAF0d"
-    : "0xBaF15D830ddeB6c11fFae8890d9c902D8dF1f3E7",
+    : "0xF0301472c7e383310bE1D426aA59207818fB8a53",
 };
 
 export const farmContractConfig = {

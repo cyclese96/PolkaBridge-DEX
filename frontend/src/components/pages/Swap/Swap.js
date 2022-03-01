@@ -47,6 +47,7 @@ import { Token, TokenAmount, JSBI, ETHER } from "polkabridge-sdk";
 import { wrappedCurrency } from "hooks/wrappedCurrency";
 import useActiveWeb3React from "hooks/useActiveWeb3React";
 import { isAddress } from "utils/contractUtils";
+import { computeTradePriceBreakdown } from "utils/prices";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -456,11 +457,18 @@ const Swap = (props) => {
 
   const tradePriceImpact = useMemo(() => {
     if (currentSwap.tradeType === swapFnConstants.swapExactIn) {
-      return bestTradeExactIn && bestTradeExactIn.priceImpact.toSignificant(6);
+      const { priceImpactWithoutFee } = computeTradePriceBreakdown(
+        bestTradeExactIn && bestTradeExactIn
+      );
+      return priceImpactWithoutFee?.toSignificant(6);
     }
 
-    return bestTradeExactOut && bestTradeExactOut.priceImpact.toSignificant(6);
-  }, [bestTradeExactIn, bestTradeExactOut]);
+    const { priceImpactWithoutFee } = computeTradePriceBreakdown(
+      bestTradeExactOut && bestTradeExactOut
+    );
+
+    return priceImpactWithoutFee?.toSignificant(6);
+  }, [bestTradeExactIn, bestTradeExactOut, currentSwap]);
 
   const currentTradePath = useMemo(() => {
     if (currentSwap.tradeType === swapFnConstants.swapExactIn) {
