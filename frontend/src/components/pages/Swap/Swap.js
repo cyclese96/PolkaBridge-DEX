@@ -601,14 +601,30 @@ const Swap = (props) => {
   const parsedToken1Value = useMemo(() => {
     return currentSwap.tradeType === swapFnConstants.swapExactIn
       ? token1Value
-      : bestTradeExactOut?.inputAmount.toSignificant(6);
-  }, [bestTradeExactOut, bestTradeExactIn, token1Value, currentSwap.tradeType]);
+      : token2Value
+      ? bestTradeExactOut?.inputAmount.toSignificant(6)
+      : "";
+  }, [
+    bestTradeExactOut,
+    bestTradeExactIn,
+    token1Value,
+    token2Value,
+    currentSwap.tradeType,
+  ]);
 
   const parsedToken2Value = useMemo(() => {
     return currentSwap.tradeType === swapFnConstants.swapExactIn
-      ? bestTradeExactIn?.outputAmount.toSignificant(6)
+      ? token1Value
+        ? bestTradeExactIn?.outputAmount.toSignificant(6)
+        : ""
       : token2Value;
-  }, [bestTradeExactIn, bestTradeExactOut, token2Value, currentSwap.tradeType]);
+  }, [
+    bestTradeExactIn,
+    bestTradeExactOut,
+    token1Value,
+    token2Value,
+    currentSwap.tradeType,
+  ]);
 
   const currentButton = useMemo(() => {
     if (!active) {
