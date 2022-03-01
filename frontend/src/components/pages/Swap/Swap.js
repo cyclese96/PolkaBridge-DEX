@@ -478,7 +478,7 @@ const Swap = (props) => {
     return bestTradeExactOut?.route?.path?.map((_token) => _token.address);
   }, [bestTradeExactIn, bestTradeExactOut]);
 
-  // selected token usd value track
+  // token usd price tracker start
   const token0PriceData = useTokenData(
     selectedToken0.address ? selectedToken0.address.toLowerCase() : null
   );
@@ -501,6 +501,7 @@ const Swap = (props) => {
 
     return token1PriceData?.priceUSD;
   }, [token1PriceData]);
+  // end token usd price tracker
 
   const onToken1Select = async (token) => {
     setToken1(token);
@@ -628,6 +629,19 @@ const Swap = (props) => {
     currentSwap.tradeType,
   ]);
 
+  const route = useMemo(() => {
+    return bestTradeExactIn
+      ? bestTradeExactIn?.route
+      : bestTradeExactOut?.route;
+  }, [bestTradeExactIn, bestTradeExactOut]);
+
+  const userHasSpecifiedInputOutput = Boolean(
+    selectedToken0.address &&
+      selectedToken1.address &&
+      (parsedInputToken0Amount || parsedInputToken1Amount)
+  );
+  const noRoute = !route;
+
   const priceRatio = useMemo(() => {
     return getPriceRatio(parsedToken2Value, parsedToken1Value);
   }, [parsedToken1Value, parsedToken2Value]);
@@ -642,8 +656,10 @@ const Swap = (props) => {
       transaction.status === "pending"
     ) {
       return "Pending Transaction...";
-    } else if (!parsedToken1Value || !parsedToken2Value) {
+    } else if (!parsedToken1Value && !parsedToken2Value) {
       return "Enter token amount";
+    } else if (noRoute && userHasSpecifiedInputOutput) {
+      return "Insufficent liquidity for this trade!";
     } else {
       return !currentTokenApprovalStatus() ? "Approve" : "Swap";
     }
@@ -658,6 +674,10 @@ const Swap = (props) => {
   const disableStatus = useMemo(() => {
     return priceLoading || !parsedToken1Value || !parsedToken2Value;
   }, [priceLoading, parsedToken1Value, parsedToken2Value]);
+
+  useEffect(() => {
+    console.log("bestTrade ", bestTradeExactIn);
+  }, [bestTradeExactIn]);
 
   return (
     <>
