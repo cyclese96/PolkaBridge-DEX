@@ -145,6 +145,8 @@ export const swapFnConstants = {
   swapTokensForExactETH: "swapTokensForExactETH", // case 4
   swapExactTokensForTokens: "swapExactTokensForTokens", // case 5
   swapTokensForExactTokens: "swapTokensForExactTokens", // case 6
+  swapExactIn: "swapExactIn", // tradeType case 1
+  swapExactOut: "swapExactOut", // tradeType case 2
 };
 
 export const THRESOLD_VALUE = 0.00001;

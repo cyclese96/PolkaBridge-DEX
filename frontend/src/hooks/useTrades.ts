@@ -153,11 +153,6 @@ export function useTradeExactIn(
     currencyOut
   );
 
-  console.log("result2 allowed pairs befire tradeIn ", {
-    allowedPairs,
-    currencyAmountIn,
-    currencyOut,
-  });
   return useMemo(() => {
     if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
       return (
