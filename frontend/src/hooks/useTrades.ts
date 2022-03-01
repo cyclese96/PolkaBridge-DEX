@@ -19,9 +19,9 @@ import tokenListEthereum from "../tokenList/tokenListEthereum.json";
 import useActiveWeb3React from "../hooks/useActiveWeb3React";
 import { getAddress } from "@ethersproject/address";
 
-const localTokens: { [index: string]: any } = {
+const localTokens: { [index: string]: Array<any> } = {
   1: tokenListEthereum,
-  4: tokenListLocalRinkeby,
+  4: tokenListLocalRinkeby.ethereum,
 };
 function getTokenWithSymbol(symbol: String, chainId: ChainId) {
   const tokenItem = chainId

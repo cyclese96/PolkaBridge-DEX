@@ -11621,10 +11621,10 @@ polished@^3.4.4:
   dependencies:
     "@babel/runtime" "^7.12.5"
 
-polkabridge-sdk@^3.0.5:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/polkabridge-sdk/-/polkabridge-sdk-3.0.5.tgz#b9e0d2a0decc75d1b53dae80c4267eaa37289faa"
-  integrity sha512-WOGEwVobgAxZRvavM3OVYqG2yeBi77jgIKN8eP2Ia855jEM8rEgriza7vWDAVp5kFfSGY/Zc4D5MYLfCxoDm5g==
+polkabridge-sdk@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/polkabridge-sdk/-/polkabridge-sdk-1.0.0.tgz#35a16e527301165bb52f57c7e64c5717a4071e8c"
+  integrity sha512-RSJCpEZRUO8TxUzOmJXjEbAeI7HzDYfbXkNJeSCRlQ99D6CRiU9fc20u29mwSSvyNRaZ1djmKXh2scmPUH7dMQ==
   dependencies:
     "@ethersproject/address" "^5.0.0"
     "@ethersproject/solidity" "^5.0.0"
