@@ -67,6 +67,11 @@ export const farmAddresses = {
     : "0xF0301472c7e383310bE1D426aA59207818fB8a53",
 };
 
+export const MULTICALL_ADDRESS: { [index: string]: string } = {
+  1: "", // todo update mainnet multicall address
+  4: "0x6c4f9282bBD29992bF4F064F0165e805336Eef59",
+};
+
 export const farmContractConfig = {
   startBlock: 9829062,
   startTimestamp: 1639730634,
@@ -187,7 +192,7 @@ export const BASE_URL =
     ? process.env.REACT_APP_DEVELOPMENT_URL
     : process.env.REACT_APP_PRODUCTION_URL;
 
-export const SWAP_BASES = {
+export const SWAP_BASES: { [index: string]: Array<string> } = {
   1: ["USDT", "USDC", "ETH"], //eth chains
   4: ["USDT", "USDC", "ETH"],
   1285: ["USDT", "MOVR"],

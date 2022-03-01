@@ -1,4 +1,5 @@
 import {
+  ChainId,
   Currency,
   CurrencyAmount,
   ETHER,
@@ -13,29 +14,26 @@ import { useMemo } from "react";
 import { PairState, usePairs } from "../data/Reserves";
 import { ETH, SWAP_BASES } from "../constants";
 import { wrappedCurrency, wrappedCurrencyAmount } from "./wrappedCurrency";
-import tokenListLocal from "../tokenList/tokenListTest.json";
+import tokenListLocalRinkeby from "../tokenList/tokenListTest.json";
+import tokenListEthereum from "../tokenList/tokenListEthereum.json";
 import useActiveWeb3React from "../hooks/useActiveWeb3React";
 import { getAddress } from "@ethersproject/address";
 
-function getTokenWithSymbol(symbol: String) {
-  const tokenItem = tokenListLocal.ethereum.find(
-    (_token) => _token.symbol === symbol
-  );
-  // const tokenItem = tokenListLocal.ethereum[tokenIndex];
+const localTokens: { [index: string]: any } = {
+  1: tokenListEthereum,
+  4: tokenListLocalRinkeby,
+};
+function getTokenWithSymbol(symbol: String, chainId: ChainId) {
+  const tokenItem = chainId
+    ? localTokens?.[chainId].find((_token: any) => _token.symbol === symbol)
+    : [];
 
-  if (!tokenItem) {
-    console.log("test  token not found", {
-      symbol,
-      keys: tokenItem,
-    });
-    return WETH[4];
-  }
   if (symbol === ETH) {
-    return WETH[4];
+    return WETH?.[chainId];
   }
 
   const _token = new Token(
-    4,
+    chainId,
     getAddress(tokenItem.address),
     tokenItem.decimals,
     tokenItem.symbol,
@@ -52,7 +50,11 @@ export function useAllCommonPairs(
 
   const bases: Token[] = useMemo(
     () =>
-      chainId ? SWAP_BASES[4].map((symbol) => getTokenWithSymbol(symbol)) : [],
+      chainId
+        ? SWAP_BASES?.[chainId].map((symbol) =>
+            getTokenWithSymbol(symbol, chainId)
+          )
+        : [],
     [chainId]
   );
 
@@ -87,7 +89,7 @@ export function useAllCommonPairs(
             .filter(([t0, t1]) => t0.address !== t1.address)
             .filter(([tokenA, tokenB]) => {
               if (!chainId) return true;
-              const customBases = undefined; //GlobalData.bases.CUSTOM_BASES[chainId];
+              const customBases = undefined;
               if (!customBases) return true;
 
               const customBasesA: Token[] | undefined =
