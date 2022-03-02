@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   Button,
   Card,
@@ -638,10 +638,11 @@ const Swap = (props) => {
   ]);
 
   const route = useMemo(() => {
-    return bestTradeExactIn
-      ? bestTradeExactIn?.route
-      : bestTradeExactOut?.route;
-  }, [bestTradeExactIn, bestTradeExactOut]);
+    if (currentSwap.tradeType === swapFnConstants.swapExactIn) {
+      return bestTradeExactIn && bestTradeExactIn?.route;
+    }
+    return bestTradeExactOut && bestTradeExactOut?.route;
+  }, [bestTradeExactIn, bestTradeExactOut, currentSwap]);
 
   const userHasSpecifiedInputOutput = Boolean(
     selectedToken0.address &&
