@@ -45,7 +45,7 @@ export const tokenAddresses = {
 
 export const routerAddresses = {
   ethereum: testing
-    ? "0xC5f630dF68A8DA6B71fa2181FF2d7c899bcEd3Cf"
+    ? "0xA184Ff49aB012497a3297119223374827f997D32"
     : "0x4Bae489507EfD1ab185ea8283A76DCd9a3ACF742",
   moonriver: testing
     ? "0x1C586Bc16e9Aa5fdf45F4dB3F37Bd97cA25A5aE9"
@@ -54,7 +54,7 @@ export const routerAddresses = {
 
 export const factoryAddresses = {
   ethereum: testing
-    ? "0xd624C547bCEEB9A0152F64BE4F85416365e3Ba6b"
+    ? "0xfA8e11D87F9B219e780Ff2Efa4304c8Ef5bFa0E7"
     : "0xf5d8E98ef1f66f1cAb949A2555837FE755fc2D68",
   moonriver: testing
     ? "0x2fc26998c0EB0CC67DC9d41f7f1F4508dE214292"

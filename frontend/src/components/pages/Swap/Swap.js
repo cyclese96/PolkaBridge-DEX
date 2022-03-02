@@ -48,6 +48,7 @@ import { wrappedCurrency } from "hooks/wrappedCurrency";
 import useActiveWeb3React from "hooks/useActiveWeb3React";
 import { isAddress } from "utils/contractUtils";
 import { computeTradePriceBreakdown } from "utils/prices";
+import { useWalletConnectCallback } from "utils/connectionUtils";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -236,6 +237,8 @@ const Swap = (props) => {
   });
   // const [swapPath, setSwapPath] = useState([]);
   const { chainId, active, account } = useActiveWeb3React();
+
+  const [connectWallet] = useWalletConnectCallback();
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popper" : undefined;
@@ -548,6 +551,11 @@ const Swap = (props) => {
   };
 
   const handleAction = () => {
+    if (!active) {
+      connectWallet();
+      return;
+    }
+
     if (dexLoading) {
       setSwapDialog(true);
       return;
@@ -672,8 +680,11 @@ const Swap = (props) => {
   ]);
 
   const disableStatus = useMemo(() => {
+    if (!active) {
+      return false;
+    }
     return priceLoading || !parsedToken1Value || !parsedToken2Value;
-  }, [priceLoading, parsedToken1Value, parsedToken2Value]);
+  }, [priceLoading, parsedToken1Value, parsedToken2Value, active]);
 
   useEffect(() => {
     console.log("bestTrade ", bestTradeExactIn);

@@ -18,18 +18,11 @@ import SwapVertIcon from "@material-ui/icons/SwapVert";
 import { EqualizerOutlined } from "@material-ui/icons";
 import Wallet from "./Wallet";
 import AccountDialog from "./AccountDialog";
-// import etherIcon from "../../assets/ether.png";
-// import binanceIcon from "../../assets/binance.png";
-// import { etheriumNetwork } from "../../constants";
 import DotCircle from "./DotCircle";
 import { connect } from "react-redux";
-
-import connectors from "../../contracts/connections/connectors";
-import { isMetaMaskInstalled } from "../../utils/helper";
-import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
-// import { Link } from "react-router-dom";
 import NetworkSelect from "./NetworkSelect";
 import useActiveWeb3React from "../../hooks/useActiveWeb3React";
+import { useWalletConnectCallback } from "utils/connectionUtils";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -222,42 +215,19 @@ const Navbar = (props) => {
     right: false,
   });
 
-  // const [alertObject, showAlert] = React.useState({
-  //   status: false,
-  //   message: "",
-  // });
-
   const [accountDialog, setAccountDialog] = useState(false);
+
+  const [connectWallet] = useWalletConnectCallback();
 
   const toggleDrawer = (anchor, open) => (event) => {
     setState({ ...state, [anchor]: open });
   };
 
-  const { active, chainId, activate, deactivate } = useActiveWeb3React();
-
-  const createConnectHandler = async (connector) => {
-    try {
-      // const connector = connectors.injected;
-      // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
-
-      if (connector instanceof WalletConnectConnector) {
-        connector.walletConnectProvider = undefined;
-      }
-
-      await activate(connector);
-      localStorage.connected = "yes";
-    } catch (error) {
-      console.error("createConnectHandler", error);
-    }
-  };
+  const { active, chainId, deactivate } = useActiveWeb3React();
 
   useEffect(() => {
     if (!active && localStorage.connected === "yes") {
-      if (isMetaMaskInstalled()) {
-        createConnectHandler(connectors.injected);
-      } else {
-        createConnectHandler(connectors.walletconnect);
-      }
+      connectWallet();
     }
   }, [active]);
 
@@ -271,17 +241,10 @@ const Navbar = (props) => {
     if (active) {
       setAccountDialog(true);
     } else {
-      if (isMetaMaskInstalled()) {
-        createConnectHandler(connectors.injected);
-      } else {
-        createConnectHandler(connectors.walletconnect);
-      }
+      connectWallet();
     }
   };
 
-  // const handleClose = () => {
-  //   showAlert({ status: false, message: "" });
-  // };
   const list = (anchor) => (
     <div
       className={clsx(classes.list, {
