@@ -1,4 +1,4 @@
-const testing = true;
+const testing = false;
 
 export const currentConnection = testing ? "testnet" : "mainnet";
 
@@ -46,10 +46,10 @@ export const tokenAddresses = {
 export const routerAddresses = {
   ethereum: testing
     ? "0x541E97cC33aF16586fB544812b39F1663C3FD779"
-    : "0x4Bae489507EfD1ab185ea8283A76DCd9a3ACF742",
+    : "0xFF0e9437818258BDEdd1aA374095968ABC82a9E2",
   moonriver: testing
     ? "0x1C586Bc16e9Aa5fdf45F4dB3F37Bd97cA25A5aE9"
-    : "0x1C586Bc16e9Aa5fdf45F4dB3F37Bd97cA25A5aE9", //todo update mainnet address
+    : "0x1C586Bc16e9Aa5fdf45F4dB3F37Bd97cA25A5aE9",
 };
 
 export const factoryAddresses = {
@@ -58,7 +58,7 @@ export const factoryAddresses = {
     : "0xf5d8E98ef1f66f1cAb949A2555837FE755fc2D68",
   moonriver: testing
     ? "0x2fc26998c0EB0CC67DC9d41f7f1F4508dE214292"
-    : "0x2fc26998c0EB0CC67DC9d41f7f1F4508dE214292", // todo update mainnet address
+    : "0x2fc26998c0EB0CC67DC9d41f7f1F4508dE214292",
 };
 
 export const farmAddresses = {
@@ -68,7 +68,7 @@ export const farmAddresses = {
 };
 
 export const MULTICALL_ADDRESS: { [index: string]: string } = {
-  1: "", // todo update mainnet multicall address
+  1: "0x3a2Bd96Da4B14C30918aE0fC0E784E2F56120F1d",
   4: "0x6c4f9282bBD29992bF4F064F0165e805336Eef59",
 };
 
