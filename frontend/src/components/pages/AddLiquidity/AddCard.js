@@ -690,13 +690,7 @@ const AddCard = (props) => {
           amount: _amount,
         };
       }
-      console.log("liquidity test addLiquidityEth", {
-        etherToken,
-        erc20Token,
-        currentAccount,
-        deadline: swapSettings.deadline,
-        currentNetwork,
-      });
+
       await addLiquidityEth(
         etherToken,
         erc20Token,
@@ -816,7 +810,7 @@ const AddCard = (props) => {
       transaction.status === "success"
     ) {
       store.dispatch({ type: START_TRANSACTION });
-      clearInputState();
+      // clearInputState();
     } else if (
       ["add", "token_approve"].includes(transaction.type) &&
       transaction.status === "failed"

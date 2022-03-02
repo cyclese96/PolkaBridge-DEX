@@ -667,7 +667,7 @@ const Swap = (props) => {
     } else if (!parsedToken1Value && !parsedToken2Value) {
       return "Enter token amount";
     } else if (noRoute && userHasSpecifiedInputOutput) {
-      return "Insufficent liquidity for this trade!";
+      return "Insufficient liquidity for this trade!";
     } else {
       return !currentTokenApprovalStatus() ? "Approve" : "Swap";
     }
@@ -685,10 +685,6 @@ const Swap = (props) => {
     }
     return priceLoading || !parsedToken1Value || !parsedToken2Value;
   }, [priceLoading, parsedToken1Value, parsedToken2Value, active]);
-
-  useEffect(() => {
-    console.log("bestTrade ", bestTradeExactIn);
-  }, [bestTradeExactIn]);
 
   return (
     <>
