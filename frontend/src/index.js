@@ -12,6 +12,17 @@ import TokenDataContextProvider, {
 import PairDataContextProvider, {
   Updater as PairDataContextUpdater,
 } from "../src/contexts/PairData";
+import MulticallUpdater from "./state/multicall/updater";
+import { BlockUpdater } from "./hooks/useBlockNumber";
+import { createWeb3ReactRoot, Web3ReactProvider } from "web3-react-core";
+
+import { Provider } from "react-redux";
+import store from "./store";
+
+import getLibrary from "./utils/getLibrary";
+import { NetworkContextName } from "./constants";
+
+const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName);
 
 function ContextProviders({ children }) {
   return (
@@ -34,14 +45,24 @@ function Updaters() {
   );
 }
 
+if (!!window.ethereum) {
+  window.ethereum.autoRefreshOnNetworkChange = false;
+}
+
 ReactDOM.render(
   <React.StrictMode>
-    <ContextProviders>
-      <>
-        <Updaters />
-        <App />
-      </>
-    </ContextProviders>
+    <Provider store={store}>
+      <Web3ReactProvider getLibrary={getLibrary}>
+        <Web3ProviderNetwork getLibrary={getLibrary}>
+          <MulticallUpdater />
+          <BlockUpdater />
+          <ContextProviders>
+            <Updaters />
+            <App />
+          </ContextProviders>
+        </Web3ProviderNetwork>
+      </Web3ReactProvider>
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );

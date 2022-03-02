@@ -343,7 +343,7 @@ const StakeDialog = ({
           </div>
           <div className="d-flex justify-content-around align-items-center mt-3">
             <Button
-              variant="text"
+              // variant="text"
               className={classes.cancelButton}
               onClick={closeAction}
             >

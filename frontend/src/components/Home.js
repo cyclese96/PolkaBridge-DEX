@@ -5,11 +5,11 @@ import { getNetworkNameById } from "../utils/helper";
 import { CHANGE_NETWORK, CONNECT_WALLET } from "../actions/types";
 import { loadTokens } from "../actions/dexActions";
 import { getAccountBalance } from "../actions/accountActions";
-import { useWeb3React } from "@web3-react/core";
 import { etheriumNetwork } from "../constants";
+import useActiveWeb3React from "../hooks/useActiveWeb3React";
 
 const Home = ({ loadTokens, getAccountBalance }) => {
-  const { active, account, chainId } = useWeb3React();
+  const { active, account, chainId } = useActiveWeb3React();
 
   useEffect(() => {
     if (!chainId || !active) {

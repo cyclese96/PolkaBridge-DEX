@@ -64,9 +64,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 5,
     marginBottom: 5,
     padding: "20px 30px 20px 30px",
-    "&:hover": {
-      background: "rgba(255, 255, 255, 0.3)",
-    },
     [theme.breakpoints.down("sm")]: {
       fontSize: 18,
       height: 50,
@@ -106,7 +103,6 @@ const AddLiquidity = ({ account: { loading } }) => {
 
             <div className={classes.buttonsWrapper}>
               <Button
-                variant="contained"
                 className={classes.button}
                 onClick={() =>
                   setShowAdd({ status: true, component: "AddCard" })
@@ -115,7 +111,6 @@ const AddLiquidity = ({ account: { loading } }) => {
                 <AddIcon className={classes.icon} /> Add liquidity
               </Button>
               <Button
-                variant="contained"
                 className={classes.button}
                 onClick={() =>
                   setShowAdd({ status: true, component: "RemoveCard" })

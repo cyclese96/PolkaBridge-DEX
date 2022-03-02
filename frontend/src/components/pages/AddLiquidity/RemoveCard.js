@@ -208,7 +208,7 @@ const useStyles = makeStyles((theme) => ({
   },
   removeBtn: {
     marginTop: 20,
-    backgroundColor: "rgba(224, 7, 125, 0.9)",
+    backgroundColor: theme.palette.primary.pbr,
     color: "white",
     width: "95%",
     textTransform: "none",
@@ -217,7 +217,7 @@ const useStyles = makeStyles((theme) => ({
     willChange: "transform",
     transition: "transform 450ms ease 0s",
     transform: "perspective(1px) translateZ(0px)",
-    padding: "10px 50px 10px 50px",
+    padding: "12px 50px 12px 50px",
     "&:hover": {
       background: "rgba(224, 7, 125, 0.7)",
     },
@@ -734,9 +734,7 @@ const RemoveCard = ({
               </div>
             </div>
 
-            <div className="d-flex justify-content-end mb-1">
-              {/* <span className={classes.clearButton}>Receive WETH</span> */}
-            </div>
+            <div className="d-flex justify-content-end mb-1"></div>
           </div>
 
           <div className={classes.priceContainer}>
@@ -779,53 +777,14 @@ const RemoveCard = ({
               (new BigNumber(liquidityPercent).eq(0) &&
                 "* Choose your amount of first to remove liquidity.")}
           </div>
-          {/* <div className="d-flex justify-content-center"> */}
-          {/* <CustomButton
-              variant="light"
-              className={classes.approveBtn}
-              disabled={
-                dexLoading ||
-                currentLpApproved() ||
-                new BigNumber(currentLpBalance()).eq(0)
-              }
-              onClick={handleConfirmAllowance}
-            >
-              {currentLpApproved() ? (
-                <>
-                  Approved{" "}
-                  <CheckCircleIcon
-                    style={{ color: "#E0077D", marginLeft: 5 }}
-                    fontSize="small"
-                  />{" "}
-                </>
-              ) : dexLoading ? (
-                <CircularProgress className={classes.spinner} size={30} />
-              ) : (
-                "Approve"
-              )}
-            </CustomButton>
-            <CustomButton
-              variant="primary"
-              className={classes.removeBtn}
-              disabled={
-                dexLoading ||
-                !currentLpApproved() ||
-                new BigNumber(currentLpBalance()).eq(0) ||
-                new BigNumber(liquidityPercent).eq(0)
-              }
-              onClick={handleRemoveLiquidity}
-            >
-              Remove
-            </CustomButton> */}
+
           <Button
-            variant="contained"
             disabled={disableStatus}
             onClick={handleAction}
             className={classes.removeBtn}
           >
             {currentButton}
           </Button>
-          {/* </div> */}
         </div>
       </Card>
 

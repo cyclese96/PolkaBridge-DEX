@@ -45,8 +45,8 @@ export const tokenAddresses = {
 
 export const routerAddresses = {
   ethereum: testing
-    ? "0xA184Ff49aB012497a3297119223374827f997D32"
-    : "0x8A2795aE669476Bf119A1a40FbFD75cA71Fd35c4",
+    ? "0x541E97cC33aF16586fB544812b39F1663C3FD779"
+    : "0x4Bae489507EfD1ab185ea8283A76DCd9a3ACF742",
   moonriver: testing
     ? "0x1C586Bc16e9Aa5fdf45F4dB3F37Bd97cA25A5aE9"
     : "0x1C586Bc16e9Aa5fdf45F4dB3F37Bd97cA25A5aE9", //todo update mainnet address
@@ -54,8 +54,8 @@ export const routerAddresses = {
 
 export const factoryAddresses = {
   ethereum: testing
-    ? "0xfA8e11D87F9B219e780Ff2Efa4304c8Ef5bFa0E7"
-    : "0xeff9EcEFe14279C0157f88573Ca9361D253c10bE",
+    ? "0x628cf8e2A079C6D9bDd0293125273F71EA3d74Ec"
+    : "0xf5d8E98ef1f66f1cAb949A2555837FE755fc2D68",
   moonriver: testing
     ? "0x2fc26998c0EB0CC67DC9d41f7f1F4508dE214292"
     : "0x2fc26998c0EB0CC67DC9d41f7f1F4508dE214292", // todo update mainnet address
@@ -64,7 +64,12 @@ export const factoryAddresses = {
 export const farmAddresses = {
   ethereum: testing
     ? "0x57eA8360A59468112cE669EA8bFb2169062EAF0d"
-    : "0xBaF15D830ddeB6c11fFae8890d9c902D8dF1f3E7",
+    : "0xF0301472c7e383310bE1D426aA59207818fB8a53",
+};
+
+export const MULTICALL_ADDRESS: { [index: string]: string } = {
+  1: "", // todo update mainnet multicall address
+  4: "0x6c4f9282bBD29992bF4F064F0165e805336Eef59",
 };
 
 export const farmContractConfig = {
@@ -145,6 +150,8 @@ export const swapFnConstants = {
   swapTokensForExactETH: "swapTokensForExactETH", // case 4
   swapExactTokensForTokens: "swapExactTokensForTokens", // case 5
   swapTokensForExactTokens: "swapTokensForExactTokens", // case 6
+  swapExactIn: "swapExactIn", // tradeType case 1
+  swapExactOut: "swapExactOut", // tradeType case 2
 };
 
 export const THRESOLD_VALUE = 0.00001;
@@ -185,9 +192,11 @@ export const BASE_URL =
     ? process.env.REACT_APP_DEVELOPMENT_URL
     : process.env.REACT_APP_PRODUCTION_URL;
 
-export const SWAP_BASES = {
+export const SWAP_BASES: { [index: string]: Array<string> } = {
   1: ["USDT", "USDC", "ETH"], //eth chains
-  42: ["USDT", "USDC", "ETH"],
+  4: ["USDT", "USDC", "ETH"],
   1285: ["USDT", "MOVR"],
   1287: ["USDT", "MOVR"],
 };
+
+export const NetworkContextName = "NETWORK";

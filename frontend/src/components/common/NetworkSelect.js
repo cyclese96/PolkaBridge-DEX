@@ -13,8 +13,8 @@ import {
 import { setupNetwork } from "../../utils/connectionUtils";
 import { currentConnection } from "../../constants";
 import config from "../../utils/config";
-import { useWeb3React } from "@web3-react/core";
 import { Button } from "@material-ui/core";
+import useActiveWeb3React from "../../hooks/useActiveWeb3React";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -60,7 +60,7 @@ export default function NetworkSelect({ selectedNetwork }) {
     parseInt(localStorage.getItem("currentNetwork") || config.chainId)
   );
 
-  const { active, account, chainId } = useWeb3React();
+  const { active, account, chainId } = useActiveWeb3React();
 
   useEffect(() => {
     if (!selectedNetwork) {
