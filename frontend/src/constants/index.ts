@@ -46,7 +46,7 @@ export const tokenAddresses = {
 export const routerAddresses = {
   ethereum: testing
     ? "0xC5f630dF68A8DA6B71fa2181FF2d7c899bcEd3Cf"
-    : "0xFF0e9437818258BDEdd1aA374095968ABC82a9E2",
+    : "0x4Bae489507EfD1ab185ea8283A76DCd9a3ACF742",
   moonriver: testing
     ? "0x1C586Bc16e9Aa5fdf45F4dB3F37Bd97cA25A5aE9"
     : "0x1C586Bc16e9Aa5fdf45F4dB3F37Bd97cA25A5aE9", //todo update mainnet address

@@ -9,7 +9,7 @@ import {
   routerAddresses,
   factoryAddresses,
   farmAddresses,
-} from "../../constants";
+} from "../../constants/index";
 import { isMetaMaskInstalled } from "../../utils/helper";
 import config from "../../utils/config";
 
@@ -30,14 +30,14 @@ export const tokenContract = (address, network) => {
 };
 
 export const routerContract = (network) => {
-  const _routerAddress = routerAddresses?.[network];
+  const _routerAddress = routerAddresses?.ethereum;
   const abi = RouterAbi;
   const connection = getCurrentConnection(network, abi, _routerAddress);
   return connection;
 };
 
 export const factoryContract = (network) => {
-  const _factoryAddress = factoryAddresses?.[network];
+  const _factoryAddress = factoryAddresses?.ethereum;
   const abi = FactoryAbi;
   const connection = getCurrentConnection(network, abi, _factoryAddress);
   return connection;

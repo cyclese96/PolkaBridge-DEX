@@ -199,7 +199,7 @@ const useStyles = makeStyles((theme) => ({
   },
   addLiquidityButton: {
     marginTop: 20,
-    backgroundColor: "rgba(224, 7, 125, 0.9)",
+    backgroundColor: theme.palette.primary.pbr,
     color: "white",
     width: "95%",
     textTransform: "none",
@@ -208,7 +208,7 @@ const useStyles = makeStyles((theme) => ({
     willChange: "transform",
     transition: "transform 450ms ease 0s",
     transform: "perspective(1px) translateZ(0px)",
-    padding: "10px 50px 10px 50px",
+    padding: "12px 50px 12px 50px",
     "&:hover": {
       background: "rgba(224, 7, 125, 0.7)",
     },
@@ -690,7 +690,13 @@ const AddCard = (props) => {
           amount: _amount,
         };
       }
-
+      console.log("liquidity test addLiquidityEth", {
+        etherToken,
+        erc20Token,
+        currentAccount,
+        deadline: swapSettings.deadline,
+        currentNetwork,
+      });
       await addLiquidityEth(
         etherToken,
         erc20Token,
@@ -924,7 +930,6 @@ const AddCard = (props) => {
           </div>
 
           <Button
-            variant="contained"
             disabled={disableStatus()}
             onClick={handleAction}
             className={classes.addLiquidityButton}
