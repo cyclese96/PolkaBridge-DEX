@@ -5,7 +5,10 @@ import IconButton from "@material-ui/core/IconButton";
 import { connect } from "react-redux";
 import store from "../../store";
 import { UPDATE_SETTINGS } from "../../actions/types";
-import { defaultSlippage, defaultTransactionDeadline } from "../../constants";
+import {
+  defaultSlippage,
+  defaultTransactionDeadline,
+} from "../../constants/index";
 import { Close, InfoRounded } from "@material-ui/icons";
 import { Button, Tooltip } from "@material-ui/core";
 

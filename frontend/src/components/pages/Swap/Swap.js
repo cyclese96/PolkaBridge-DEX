@@ -43,7 +43,7 @@ import { default as NumberFormat } from "react-number-format";
 import { useLocation } from "react-router";
 import { useTokenData } from "../../../contexts/TokenData";
 import { useTradeExactIn, useTradeExactOut } from "../../../hooks/useTrades";
-import { Token, TokenAmount, JSBI, ETHER } from "polkabridge-sdk";
+import { Token, TokenAmount, JSBI } from "polkabridge-sdk";
 import { wrappedCurrency } from "hooks/wrappedCurrency";
 import useActiveWeb3React from "hooks/useActiveWeb3React";
 import { isAddress } from "utils/contractUtils";

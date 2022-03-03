@@ -10,7 +10,7 @@ import {
   moonriverNetwork,
   PBR_PER_YEAR,
   tokenAddresses,
-} from "../constants";
+} from "../constants/index";
 import Web3 from "web3";
 
 export const fromWei = (tokens, decimals = 18) => {

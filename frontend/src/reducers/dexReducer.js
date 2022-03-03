@@ -30,14 +30,14 @@ import {
   defaultSlippage,
   defaultTransactionDeadline,
   exchangeFee,
-} from "../constants";
+} from "../constants/index";
 
 const initalState = {
   dexError: null,
   dexLoading: false,
   recentSwaps: [],
-  token0In: null,// { tokenAmount, selectedPath }
-  token1Out: null,// { tokenAmount, selectedPath }
+  token0In: null, // { tokenAmount, selectedPath }
+  token1Out: null, // { tokenAmount, selectedPath }
   priceLoading: false,
   swapSettings: {
     swapFee: exchangeFee,
@@ -55,12 +55,12 @@ const initalState = {
   pairContractData: {}, // { "PBR_ETH": { abi: [], address: ""  }  }
   tokenData: {}, // { "PBR": { abi: [], address: ""  }  }
   transaction: {
-    type: null,// swap/ add_liquidity, remove_liquidity
+    type: null, // swap/ add_liquidity, remove_liquidity
     hash: null,
-    status: 'pending', // pending, success, failed
-    result: null // transaction result on success, { token0:{symbol, address, amount  }  , token1: { symbol, address, amount }, priceRatio:token0/token1 }
-  },             //  
-  allTransactions: []
+    status: "pending", // pending, success, failed
+    result: null, // transaction result on success, { token0:{symbol, address, amount  }  , token1: { symbol, address, amount }, priceRatio:token0/token1 }
+  }, //
+  allTransactions: [],
 };
 
 export default function (state = initalState, action) {
@@ -211,14 +211,13 @@ export default function (state = initalState, action) {
         poolReserves: {},
       };
     case START_TRANSACTION:
-
       return {
         ...state,
-        transaction: initalState.transaction
-      }
+        transaction: initalState.transaction,
+      };
 
     case UPDATE_TRANSACTION_STATUS:
-      if (action.payload && action.payload.status === 'success') {
+      if (action.payload && action.payload.status === "success") {
         //add curr transaction to transaction history
         return {
           ...state,
@@ -226,42 +225,45 @@ export default function (state = initalState, action) {
             ...state.transaction,
             ...action.payload,
           },
-          allTransactions: [{ ...state.transaction, ...action.payload }, ...state.allTransactions]
-        }
+          allTransactions: [
+            { ...state.transaction, ...action.payload },
+            ...state.allTransactions,
+          ],
+        };
       }
       return {
         ...state,
         transaction: {
           ...state.transaction,
-          ...action.payload
-        }
-      }
+          ...action.payload,
+        },
+      };
     case GET_TOKEN_O_IN:
       return {
         ...state,
         token0In: {
           ...state.token0In,
-          ...action.payload
-        }
-      }
+          ...action.payload,
+        },
+      };
     case GET_TOKEN_1_OUT:
       return {
         ...state,
         token1Out: {
           ...state.token1Out,
-          ...action.payload
-        }
-      }
+          ...action.payload,
+        },
+      };
     case START_PRICE_LOADING:
       return {
         ...state,
-        priceLoading: true
-      }
+        priceLoading: true,
+      };
     case STOP_PRICE_LOADING:
       return {
         ...state,
-        priceLoading: false
-      }
+        priceLoading: false,
+      };
 
     default:
       return state;

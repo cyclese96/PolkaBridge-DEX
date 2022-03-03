@@ -10,7 +10,7 @@ import {
   currentConnection,
   farmingPoolConstants,
   tokenAddresses,
-} from "../../../constants";
+} from "../../../constants/index";
 import { connect } from "react-redux";
 import { formattedNum } from "../../../utils/formatters";
 import {

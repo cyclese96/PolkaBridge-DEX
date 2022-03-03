@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
-  useTokenChartData,
+  // useTokenChartData,
   useTokenData,
-  useTokenPairs,
-  useTokenPriceData,
-  useTokenTransactions,
+  // useTokenPairs,
+  // useTokenPriceData,
+  // useTokenTransactions,
 } from "../../../../../contexts/TokenData";
 import { usePrevious } from "react-use";
 import {
   useAllPairData,
-  useDataForList,
+  // useDataForList,
 } from "../../../../../contexts/PairData";
 import { formatCurrency, formattedNum } from "../../../../../utils/formatters";
 import TokenIcon from "../../../../common/TokenIcon";
@@ -18,7 +18,7 @@ import { Link } from "react-router-dom";
 import TokenChart from "../../components/Charts/TokenChart";
 import { Button, Card } from "@material-ui/core";
 import { FileCopyOutlined, OpenInNew } from "@material-ui/icons";
-import { currentConnection } from "../../../../../constants";
+import { currentConnection } from "../../../../../constants/index";
 import Loader from "../../../../common/Loader";
 import TokenTxTable from "../Tables/TokenTxTable";
 import { useGlobalTransactions } from "../../../../../contexts/GlobalData";

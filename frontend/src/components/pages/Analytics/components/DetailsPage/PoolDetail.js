@@ -5,15 +5,15 @@ import {
   usePairData,
   usePairTransactions,
 } from "../../../../../contexts/PairData";
-import { formattedNum, formattedPercent } from "../../../../../utils/timeUtils";
+import { formattedNum } from "../../../../../utils/timeUtils";
 import { useEthPrice } from "../../../../../contexts/GlobalData";
 import { Button, Card } from "@material-ui/core";
 import TokenIcon from "../../../../common/TokenIcon";
 // import { formatCurrency } from "../../../utils/helper";
 // import TokenChart from "../../components/Charts/TokenChart";
-import { formatCurrency } from "../../../../../utils/formatters";
-import { currentConnection } from "../../../../../constants";
-import { FileCopy, FileCopyOutlined, OpenInNew } from "@material-ui/icons";
+// import { formatCurrency } from "../../../../../utils/formatters";
+import { currentConnection } from "../../../../../constants/index";
+import { FileCopyOutlined, OpenInNew } from "@material-ui/icons";
 import PairTransactionsTable from "../Tables/PairTransactionsTable";
 import Loader from "../../../../common/Loader";
 import PairChart from "../Charts/PairChart";

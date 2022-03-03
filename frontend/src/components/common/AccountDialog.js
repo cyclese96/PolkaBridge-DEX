@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 
 import { AccountBalanceWallet, Close } from "@material-ui/icons";
-import { etheriumNetwork } from "../../constants";
+import { etheriumNetwork } from "../../constants/index";
 import { fromWei } from "../../utils/helper";
 import { connect } from "react-redux";
 import { formatCurrency } from "../../utils/formatters";

@@ -20,7 +20,7 @@ import { Provider } from "react-redux";
 import store from "./store";
 
 import getLibrary from "./utils/getLibrary";
-import { NetworkContextName } from "./constants";
+import { NetworkContextName } from "./constants/index";
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName);
 
