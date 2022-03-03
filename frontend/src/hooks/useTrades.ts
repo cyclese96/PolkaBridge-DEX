@@ -46,7 +46,7 @@ export function useAllCommonPairs(
   currencyA?: Currency,
   currencyB?: Currency
 ): Pair[] {
-  const { chainId } = useActiveWeb3React();
+  const { chainId, active } = useActiveWeb3React();
 
   const bases: Token[] = useMemo(
     () =>
