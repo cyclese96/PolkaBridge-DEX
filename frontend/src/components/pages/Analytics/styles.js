@@ -13,8 +13,9 @@ const useStyles = makeStyles((theme) => ({
     minHeight: 300,
     height: "100%",
     border: "1px solid #616161",
-    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
-    // background: theme.palette.primary.bgCard,
+    // background: `linear-gradient(to bottom,#ffffff,#f9f9f9)`,
+    boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+    backgroundColor: theme.palette.primary.bgCard,
 
     borderRadius: 15,
     paddingLeft: 10,
@@ -40,7 +41,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   heading: {
-    color: "#bdbdbd",
+    color: theme.palette.textColors.heading,
+
     textAlign: "left",
     fontWeight: 500,
     fontSize: 22,
@@ -63,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   cardSpan: {
-    color: "#eeeeee",
+    color: theme.palette.textColors.heading,
     fontSize: 15,
     paddingLeft: 7,
     fontWeight: 400,
@@ -79,8 +81,8 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 7,
     fontSize: 22,
     fontWeight: 400,
-    color: "#f9f9f9",
 
+    color: theme.palette.textColors.subheading,
     letterSpacing: -0.5,
     [theme.breakpoints.down("sm")]: {
       fontSize: 22,
@@ -106,7 +108,9 @@ const useStyles = makeStyles((theme) => ({
     border: "1px solid #616161",
     height: "100%",
     border: "1px solid #616161",
-    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+    backgroundColor: theme.palette.primary.bgCard,
+
     borderRadius: 15,
     paddingLeft: 10,
     paddingRight: 10,
@@ -136,7 +140,8 @@ const useStyles = makeStyles((theme) => ({
   statLabel: {
     paddingRight: 10,
     fontSize: 15,
-    color: "#bdbdbd",
+    color: theme.palette.textColors.heading,
+
     fontWeight: 500,
 
     [theme.breakpoints.down("sm")]: {
@@ -145,7 +150,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   statAmount: {
-    color: "#eeeeee",
+    color: theme.palette.textColors.subheading,
     paddingRight: 5,
     fontSize: 14,
     fontWeight: 600,

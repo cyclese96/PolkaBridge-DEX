@@ -16,15 +16,17 @@ import { formattedNum } from "../../../../../utils/timeUtils";
 
 const useStyles = makeStyles((theme) => ({
   table: {
-    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
-    color: "white",
+    boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+    backgroundColor: "white",
+    borderRadius: 15,
+    color: "black",
     width: "100%",
     [theme.breakpoints.down("sm")]: {
       width: "96vw",
     },
   },
   arrowIcon: {
-    color: "white",
+    color: "black",
     fontSize: 15,
     marginTop: -2,
   },
@@ -77,7 +79,7 @@ export default function TopTokensTable({ data, numberOfRows = 5 }) {
   let styles = {
     tableHeading: {
       fontSize: window.innerWidth < 500 ? 11 : 14,
-      color: "white",
+      color: "black",
       fontWeight: 700,
     },
   };
@@ -121,20 +123,25 @@ export default function TopTokensTable({ data, numberOfRows = 5 }) {
   };
 
   return (
-    <Paper elevation={10} className={classes.table}>
+    <Paper className={classes.table}>
       <TableContainer
         elevation={10}
         style={{
-          border: "1px solid #616161",
-          borderRadius: 10,
-          background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+          border: "1px solid #e5e5e5",
+          borderRadius: 4,
+          boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+          backgroundColor: "white",
+          color: "black",
         }}
       >
         <Table
           sx={{
             minWidth: 650,
-            background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
-            color: "white",
+            border: "1px solid #e5e5e5",
+
+            boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+            backgroundColor: "white",
+            color: "black",
           }}
           aria-label="simple table"
         >
@@ -208,7 +215,7 @@ export default function TopTokensTable({ data, numberOfRows = 5 }) {
                   <TableCell
                     component="th"
                     scope="row"
-                    style={{ color: "white", fontSize: 13 }}
+                    style={{ color: "black", fontSize: 13 }}
                   >
                     <span>
                       {skipIndex * numberOfRows + index + 1}
@@ -230,32 +237,32 @@ export default function TopTokensTable({ data, numberOfRows = 5 }) {
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 13 }}
+                    style={{ color: "#212121", fontSize: 13 }}
                   >
                     {row.symbol}
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 13 }}
+                    style={{ color: "#212121", fontSize: 13 }}
                   >
                     ${formattedNum(parseInt(row.totalLiquidityUSD))}
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 13 }}
+                    style={{ color: "#212121", fontSize: 13 }}
                   >
                     ${formattedNum(parseFloat(row.tradeVolumeUSD).toFixed(3))}
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 13 }}
+                    style={{ color: "#212121", fontSize: 13 }}
                   >
                     ${formattedNum(parseFloat(row.priceUSD).toFixed(3))}
                   </TableCell>
                   <TableCell
                     align="right"
                     className={classes.tableText}
-                    style={{ color: "#e5e5e5", fontSize: 13 }}
+                    style={{ color: "#212121", fontSize: 13 }}
                   >
                     {parseFloat(row.priceChangeUSD) < 0 ? (
                       <span style={{ color: "#ef5350" }}>

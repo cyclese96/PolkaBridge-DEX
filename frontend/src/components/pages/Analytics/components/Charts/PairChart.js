@@ -144,8 +144,8 @@ const PairChart = ({ address, color, base0, base1 }) => {
       paddingBottom: 5,
       marginBottom: 10,
       border: "1px solid #616161",
-      color: "white",
-      background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+      color: "black",
+      background: `#f9f9f9`,
     },
     buttonActive: {
       marginRight: 5,
@@ -212,8 +212,8 @@ const PairChart = ({ address, color, base0, base1 }) => {
             <Button
               active={chartFilter === CHART_VIEW.RATE0}
               onClick={() => {
-                setTimeWindow(timeframeOptions.WEEK)
-                setChartFilter(CHART_VIEW.RATE0)
+                setTimeWindow(timeframeOptions.WEEK);
+                setChartFilter(CHART_VIEW.RATE0);
               }}
               style={
                 chartFilter === CHART_VIEW.RATE0
@@ -221,13 +221,15 @@ const PairChart = ({ address, color, base0, base1 }) => {
                   : styles.button
               }
             >
-              {pairData.token0 ? formattedSymbol1 + '/' + formattedSymbol0 : '-'}
+              {pairData.token0
+                ? formattedSymbol1 + "/" + formattedSymbol0
+                : "-"}
             </Button>
             <Button
               active={chartFilter === CHART_VIEW.RATE1}
               onClick={() => {
-                setTimeWindow(timeframeOptions.WEEK)
-                setChartFilter(CHART_VIEW.RATE1)
+                setTimeWindow(timeframeOptions.WEEK);
+                setChartFilter(CHART_VIEW.RATE1);
               }}
               style={
                 chartFilter === CHART_VIEW.RATE1
@@ -235,7 +237,9 @@ const PairChart = ({ address, color, base0, base1 }) => {
                   : styles.button
               }
             >
-              {pairData.token0 ? formattedSymbol0 + '/' + formattedSymbol1 : '-'}
+              {pairData.token0
+                ? formattedSymbol0 + "/" + formattedSymbol1
+                : "-"}
             </Button>
           </div>
           <AutoRow justify="flex-end" gap="6px">
@@ -243,7 +247,6 @@ const PairChart = ({ address, color, base0, base1 }) => {
               active={timeWindow === timeframeOptions.WEEK}
               onClick={() => setTimeWindow(timeframeOptions.WEEK)}
               style={styles.button}
-
             >
               1W
             </Button>
@@ -251,7 +254,6 @@ const PairChart = ({ address, color, base0, base1 }) => {
               active={timeWindow === timeframeOptions.MONTH}
               onClick={() => setTimeWindow(timeframeOptions.MONTH)}
               style={styles.button}
-
             >
               1M
             </Button>
@@ -259,7 +261,6 @@ const PairChart = ({ address, color, base0, base1 }) => {
               active={timeWindow === timeframeOptions.ALL_TIME}
               onClick={() => setTimeWindow(timeframeOptions.ALL_TIME)}
               style={styles.button}
-
             >
               All
             </Button>

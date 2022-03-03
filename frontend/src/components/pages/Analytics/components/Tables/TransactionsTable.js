@@ -21,9 +21,11 @@ import CurrencyFormat from "react-currency-format";
 import BigNumber from "bignumber.js";
 const useStyles = makeStyles((theme) => ({
   table: {
-    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+    backgroundColor: "white",
+    borderRadius: 15,
+    color: "black",
 
-    color: "white",
     width: "100%",
     marginBottom: 10,
     [theme.breakpoints.down("sm")]: {
@@ -82,12 +84,15 @@ export default function TransactionsTable({ data }) {
   const [skipIndex, setSkipIndex] = useState(0);
   const [sortedTime, setSortedTime] = useState(true);
   const [txFilterType, setTxFilterType] = useState("all");
-  const [tokenHeaderNames, setTokenHeaderNames] = useState({ token0: 'Token(In)', token1: 'Token(Out)' })
+  const [tokenHeaderNames, setTokenHeaderNames] = useState({
+    token0: "Token(In)",
+    token1: "Token(Out)",
+  });
 
   let styles = {
     tableHeading: {
       fontSize: window.innerWidth < 500 ? 11 : 14,
-      color: "white",
+      color: "black",
       fontWeight: 700,
     },
   };
@@ -154,49 +159,64 @@ export default function TransactionsTable({ data }) {
   };
 
   const getToken = (_row) => {
-    if (new BigNumber(_row?.amount0In).gt(0) && new BigNumber(_row?.amount1Out).gt(0)) {
-
-      return { fromSymbol: _row?.pair?.token0.symbol, toSymbol: _row?.pair?.token1?.symbol, tokenIn: _row?.amount0In, tokenOut: _row?.amount1Out }
-
+    if (
+      new BigNumber(_row?.amount0In).gt(0) &&
+      new BigNumber(_row?.amount1Out).gt(0)
+    ) {
+      return {
+        fromSymbol: _row?.pair?.token0.symbol,
+        toSymbol: _row?.pair?.token1?.symbol,
+        tokenIn: _row?.amount0In,
+        tokenOut: _row?.amount1Out,
+      };
     } else {
-
-      return { fromSymbol: _row?.pair?.token1.symbol, toSymbol: _row?.pair?.token0?.symbol, tokenIn: _row?.amount1In, tokenOut: _row?.amount0Out }
-
+      return {
+        fromSymbol: _row?.pair?.token1.symbol,
+        toSymbol: _row?.pair?.token0?.symbol,
+        tokenIn: _row?.amount1In,
+        tokenOut: _row?.amount0Out,
+      };
     }
-
-  }
-
+  };
 
   return (
-    <Paper elevation={10} className={classes.table}>
+    <Paper className={classes.table}>
       <TableContainer
         elevation={10}
         style={{
-          border: "1px solid #616161",
-          borderRadius: 10,
-          background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+          border: "1px solid #e5e5e5",
+          borderRadius: 4,
+          boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+          backgroundColor: "white",
+          color: "black",
         }}
       >
         <Table
           sx={{
             minWidth: 650,
-            background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
-            color: "white",
+            border: "1px solid #e5e5e5",
+            borderRadius: 4,
+            boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+            backgroundColor: "white",
+            color: "black",
           }}
           aria-label="simple table"
         >
           <TableHead>
-            <TableRow style={{ color: "white" }}>
+            <TableRow style={{ color: "black" }}>
               <TableCell style={styles.tableHeading}>
                 <div className="d-flex justify-content-start">
                   <button
                     type="button"
                     onClick={() => {
                       filterTx("all");
-                      setTokenHeaderNames({ token0: 'Token(In)', token1: 'Token(Out)' })
+                      setTokenHeaderNames({
+                        token0: "Token(In)",
+                        token1: "Token(Out)",
+                      });
                     }}
                     style={{
-                      color: txFilterType === "all" ? "white" : "grey",
+                      color: txFilterType === "all" ? "black" : "grey",
                       textTransform: "none",
                       backgroundColor: "transparent",
                       textDecoration: "none",
@@ -212,7 +232,10 @@ export default function TransactionsTable({ data }) {
                     type="button"
                     onClick={() => {
                       filterTx("swap");
-                      setTokenHeaderNames({ token0: 'Token(In)', token1: 'Token(Out)' })
+                      setTokenHeaderNames({
+                        token0: "Token(In)",
+                        token1: "Token(Out)",
+                      });
                     }}
                     style={{
                       color: txFilterType === "swap" ? "white" : "grey",
@@ -232,7 +255,10 @@ export default function TransactionsTable({ data }) {
                     type="button"
                     onClick={() => {
                       filterTx("add");
-                      setTokenHeaderNames({ token0: 'Token Amount', token1: 'Token Amount' })
+                      setTokenHeaderNames({
+                        token0: "Token Amount",
+                        token1: "Token Amount",
+                      });
                     }}
                     style={{
                       color: txFilterType === "add" ? "white" : "grey",
@@ -253,10 +279,13 @@ export default function TransactionsTable({ data }) {
                     type="button"
                     onClick={() => {
                       filterTx("remove");
-                      setTokenHeaderNames({ token0: 'Token Amount', token1: 'Token Amount' })
+                      setTokenHeaderNames({
+                        token0: "Token Amount",
+                        token1: "Token Amount",
+                      });
                     }}
                     style={{
-                      color: txFilterType === "remove" ? "white" : "grey",
+                      color: txFilterType === "remove" ? "black" : "grey",
                       outline: "none",
                       textTransform: "none",
                       backgroundColor: "transparent",
@@ -312,7 +341,7 @@ export default function TransactionsTable({ data }) {
                   <TableCell
                     component="th"
                     scope="row"
-                    style={{ color: "white", fontSize: 12 }}
+                    style={{ color: "black", fontSize: 12 }}
                   >
                     <span style={{ marginRight: 10 }}>
                       {skipIndex * 5 + index + 1}
@@ -329,40 +358,52 @@ export default function TransactionsTable({ data }) {
                       {" "}
                       <span
                         style={{
-                          backgroundColor: "#2B2022",
+                          backgroundColor: "#f9f9f9",
                           padding: "5px 5px 5px 5px",
                           borderRadius: 7,
                           fontWeight: 500,
                         }}
                       >
-                        {row.__typename.toLowerCase() === "mint" && `ADD  ${getToken(row).fromSymbol} and ${getToken(row).toSymbol} `}
-                        {row.__typename.toLowerCase() === "burn" && `REMOVE ${getToken(row).fromSymbol} and ${getToken(row).toSymbol}`}
-                        {row.__typename.toLowerCase() === "swap" && `SWAP ${getToken(row).fromSymbol} for ${getToken(row).toSymbol}`}
+                        {row.__typename.toLowerCase() === "mint" &&
+                          `ADD  ${getToken(row).fromSymbol} and ${
+                            getToken(row).toSymbol
+                          } `}
+                        {row.__typename.toLowerCase() === "burn" &&
+                          `REMOVE ${getToken(row).fromSymbol} and ${
+                            getToken(row).toSymbol
+                          }`}
+                        {row.__typename.toLowerCase() === "swap" &&
+                          `SWAP ${getToken(row).fromSymbol} for ${
+                            getToken(row).toSymbol
+                          }`}
                       </span>{" "}
-
                     </a>
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 13 }}
+                    style={{ color: "#212121", fontSize: 13 }}
                   >
                     ${formattedNum(parseFloat(row.amountUSD).toFixed(2))}
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 13 }}
+                    style={{ color: "#212121", fontSize: 13 }}
                   >
-                    {["mint", "burn"].includes(row.__typename.toLowerCase()) ? formattedNum(row?.amount0) : formattedNum(getToken(row).tokenIn)}
+                    {["mint", "burn"].includes(row.__typename.toLowerCase())
+                      ? formattedNum(row?.amount0)
+                      : formattedNum(getToken(row).tokenIn)}
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 13 }}
+                    style={{ color: "#212121", fontSize: 13 }}
                   >
-                    {["mint", "burn"].includes(row.__typename.toLowerCase()) ? formattedNum(row?.amount1) : formattedNum(getToken(row).tokenOut)}
+                    {["mint", "burn"].includes(row.__typename.toLowerCase())
+                      ? formattedNum(row?.amount1)
+                      : formattedNum(getToken(row).tokenOut)}
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 13 }}
+                    style={{ color: "#212121", fontSize: 13 }}
                   >
                     <a
                       style={{ color: "rgb(223, 9, 124)" }}
@@ -380,7 +421,7 @@ export default function TransactionsTable({ data }) {
                   <TableCell
                     align="right"
                     className={classes.tableText}
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#212121", fontSize: 12 }}
                   >
                     {formatTime(row.transaction.timestamp)}
                   </TableCell>

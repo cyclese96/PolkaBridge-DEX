@@ -16,9 +16,9 @@ import { formattedNum } from "../../../../../utils/formatters";
 
 const useStyles = makeStyles((theme) => ({
   table: {
-    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
-
-    color: "white",
+    boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+    backgroundColor: "white",
+    color: "black",
     width: "100%",
     marginBottom: 10,
     [theme.breakpoints.down("sm")]: {
@@ -66,12 +66,15 @@ export default function PairTransactionsTable({ data }) {
   const [skipIndex, setSkipIndex] = useState(0);
   const [sortedTime, setSortedTime] = useState(true);
   const [txFilterType, setTxFilterType] = useState("all");
-  const [tokenHeaderNames, setTokenHeaderNames] = useState({ token0: 'Token(In)', token1: 'Token(Out)' })
+  const [tokenHeaderNames, setTokenHeaderNames] = useState({
+    token0: "Token(In)",
+    token1: "Token(Out)",
+  });
 
   let styles = {
     tableHeading: {
       fontSize: window.innerWidth < 500 ? 11 : 14,
-      color: "white",
+      color: "black",
       fontWeight: 700,
     },
   };
@@ -104,9 +107,8 @@ export default function PairTransactionsTable({ data }) {
     setRows([...tempRows]);
   };
   const filterTx = (filter) => {
-
     if (!data) {
-      return
+      return;
     }
 
     let result = Object.keys(data).map((key) => data[key]);
@@ -140,34 +142,44 @@ export default function PairTransactionsTable({ data }) {
   };
 
   const getToken = (_row) => {
-    if (new BigNumber(_row?.amount0In).gt(0) && new BigNumber(_row?.amount1Out).gt(0)) {
-
-      return { fromSymbol: _row?.pair?.token0.symbol, toSymbol: _row?.pair?.token1?.symbol, tokenIn: _row?.amount0In, tokenOut: _row?.amount1Out }
-
+    if (
+      new BigNumber(_row?.amount0In).gt(0) &&
+      new BigNumber(_row?.amount1Out).gt(0)
+    ) {
+      return {
+        fromSymbol: _row?.pair?.token0.symbol,
+        toSymbol: _row?.pair?.token1?.symbol,
+        tokenIn: _row?.amount0In,
+        tokenOut: _row?.amount1Out,
+      };
     } else {
-
-      return { fromSymbol: _row?.pair?.token1.symbol, toSymbol: _row?.pair?.token0?.symbol, tokenIn: _row?.amount1In, tokenOut: _row?.amount0Out }
-
+      return {
+        fromSymbol: _row?.pair?.token1.symbol,
+        toSymbol: _row?.pair?.token0?.symbol,
+        tokenIn: _row?.amount1In,
+        tokenOut: _row?.amount0Out,
+      };
     }
-
-  }
-
+  };
 
   return (
-    <Paper elevation={10} className={classes.table}>
+    <Paper className={classes.table}>
       <TableContainer
         elevation={10}
         style={{
           border: "1px solid #616161",
           borderRadius: 10,
-          background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+          boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+          backgroundColor: "white",
+          color: "black",
         }}
       >
         <Table
           sx={{
             minWidth: 650,
-            background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
-            color: "white",
+            boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+            backgroundColor: "white",
+            color: "black",
           }}
           aria-label="simple table"
         >
@@ -180,10 +192,13 @@ export default function PairTransactionsTable({ data }) {
                     type="button"
                     onClick={() => {
                       filterTx("all");
-                      setTokenHeaderNames({ token0: 'Token(In)', token1: 'Token(Out)' })
+                      setTokenHeaderNames({
+                        token0: "Token(In)",
+                        token1: "Token(Out)",
+                      });
                     }}
                     style={{
-                      color: txFilterType === "all" ? "white" : "grey",
+                      color: txFilterType === "all" ? "black" : "grey",
                       textTransform: "none",
                       backgroundColor: "transparent",
                       textDecoration: "none",
@@ -199,10 +214,13 @@ export default function PairTransactionsTable({ data }) {
                     type="button"
                     onClick={() => {
                       filterTx("swap");
-                      setTokenHeaderNames({ token0: 'Token(In)', token1: 'Token(Out)' })
+                      setTokenHeaderNames({
+                        token0: "Token(In)",
+                        token1: "Token(Out)",
+                      });
                     }}
                     style={{
-                      color: txFilterType === "swap" ? "white" : "grey",
+                      color: txFilterType === "swap" ? "black" : "grey",
                       backgroundColor: "transparent",
                       textDecoration: "none",
                       width: 60,
@@ -218,10 +236,13 @@ export default function PairTransactionsTable({ data }) {
                     type="button"
                     onClick={() => {
                       filterTx("add");
-                      setTokenHeaderNames({ token0: 'Token Amount', token1: 'Token Amount' })
+                      setTokenHeaderNames({
+                        token0: "Token Amount",
+                        token1: "Token Amount",
+                      });
                     }}
                     style={{
-                      color: txFilterType === "add" ? "white" : "grey",
+                      color: txFilterType === "add" ? "black" : "grey",
 
                       textTransform: "none",
                       backgroundColor: "transparent",
@@ -238,10 +259,13 @@ export default function PairTransactionsTable({ data }) {
                     type="button"
                     onClick={() => {
                       filterTx("remove");
-                      setTokenHeaderNames({ token0: 'Token Amount', token1: 'Token Amount' })
+                      setTokenHeaderNames({
+                        token0: "Token Amount",
+                        token1: "Token Amount",
+                      });
                     }}
                     style={{
-                      color: txFilterType === "remove" ? "white" : "grey",
+                      color: txFilterType === "remove" ? "black" : "grey",
                       outline: "none",
                       textTransform: "none",
                       backgroundColor: "transparent",
@@ -296,7 +320,7 @@ export default function PairTransactionsTable({ data }) {
                   <TableCell
                     component="th"
                     scope="row"
-                    style={{ color: "white", fontSize: 12 }}
+                    style={{ color: "black", fontSize: 12 }}
                   >
                     <span style={{ marginRight: 10 }}>
                       {skipIndex * 5 + index + 1}
@@ -313,43 +337,54 @@ export default function PairTransactionsTable({ data }) {
                       {" "}
                       <span
                         style={{
-                          backgroundColor: "#2B2022",
+                          backgroundColor: "#f9f9f9",
                           padding: "5px 5px 5px 5px",
                           borderRadius: 7,
                           fontWeight: 500,
                         }}
                       >
                         {" "}
-                        {row.__typename.toLowerCase() === "mint" && `ADD  ${getToken(row).fromSymbol} and ${getToken(row).toSymbol} `}
-                        {row.__typename.toLowerCase() === "burn" && `REMOVE ${getToken(row).fromSymbol} and ${getToken(row).toSymbol}`}
-                        {row.__typename.toLowerCase() === "swap" && `SWAP ${getToken(row).fromSymbol} for ${getToken(row).toSymbol}`}
+                        {row.__typename.toLowerCase() === "mint" &&
+                          `ADD  ${getToken(row).fromSymbol} and ${
+                            getToken(row).toSymbol
+                          } `}
+                        {row.__typename.toLowerCase() === "burn" &&
+                          `REMOVE ${getToken(row).fromSymbol} and ${
+                            getToken(row).toSymbol
+                          }`}
+                        {row.__typename.toLowerCase() === "swap" &&
+                          `SWAP ${getToken(row).fromSymbol} for ${
+                            getToken(row).toSymbol
+                          }`}
                       </span>{" "}
                       {/* {" " + row.pair.token0.symbol} -{row.pair.token1.symbol} */}
                     </a>
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#212121", fontSize: 12 }}
                   >
                     ${parseFloat(row.amountUSD).toFixed(2)}
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#212121", fontSize: 12 }}
                   >
-                    {["mint", "burn"].includes(row.__typename.toLowerCase()) ? formattedNum(row?.amount0) : formattedNum(getToken(row).tokenIn)}
-
+                    {["mint", "burn"].includes(row.__typename.toLowerCase())
+                      ? formattedNum(row?.amount0)
+                      : formattedNum(getToken(row).tokenIn)}
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#212121", fontSize: 12 }}
                   >
-                    {["mint", "burn"].includes(row.__typename.toLowerCase()) ? formattedNum(row?.amount1) : formattedNum(getToken(row).tokenOut)}
-
+                    {["mint", "burn"].includes(row.__typename.toLowerCase())
+                      ? formattedNum(row?.amount1)
+                      : formattedNum(getToken(row).tokenOut)}
                   </TableCell>
                   {/* <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#212121", fontSize: 12 }}
                   >
 
                     {row.sender?.slice(0, 3)} {"..."}
@@ -358,7 +393,7 @@ export default function PairTransactionsTable({ data }) {
                   <TableCell
                     align="right"
                     className={classes.tableText}
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#212121", fontSize: 12 }}
                   >
                     {formatTime(row.transaction.timestamp)}
                   </TableCell>

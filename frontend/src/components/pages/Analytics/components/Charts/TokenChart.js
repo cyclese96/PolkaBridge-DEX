@@ -1,15 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import {
-  ResponsiveContainer,
-} from "recharts";
+import { ResponsiveContainer } from "recharts";
 import { AutoRow, RowBetween, RowFixed } from "../../../../common/Styled/Row";
 import BarChart from "../Charts/BarChart";
 import AreaChart from "../Charts/AreaChart";
 import styled from "styled-components";
 
-import {
-  getTimeframe,
-} from "../../../../../utils/timeUtils";
+import { getTimeframe } from "../../../../../utils/timeUtils";
 
 import { useMedia, usePrevious } from "react-use";
 import { timeframeOptions } from "../../../../../constants";
@@ -24,7 +20,6 @@ import Loader from "../../../../common/Loader";
 import { Button } from "@material-ui/core";
 import DropdownSelect from "../../../../common/Styled/DropdownSelect";
 
-
 const ChartWrapper = styled.div`
   height: 100%;
   max-height: 340px;
@@ -33,7 +28,6 @@ const ChartWrapper = styled.div`
     min-height: 200px;
   }
 `;
-
 
 const CHART_VIEW = {
   VOLUME: "Volume",
@@ -58,8 +52,8 @@ const styles = {
     paddingBottom: 5,
     marginBottom: 10,
     border: "1px solid #616161",
-    color: "white",
-    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    color: "black",
+    background: `#f9f9f9`,
   },
   buttonActive: {
     marginRight: 5,
@@ -107,18 +101,18 @@ const TokenChart = ({ address, color, base }) => {
   const priceData =
     timeWindow === timeframeOptions.MONTH
       ? // monthly selected
-      frequency === DATA_FREQUENCY.DAY
+        frequency === DATA_FREQUENCY.DAY
         ? dailyMonth
         : hourlyMonth
       : // weekly selected
       timeWindow === timeframeOptions.WEEK
-        ? frequency === DATA_FREQUENCY.DAY
-          ? dailyWeek
-          : hourlyWeek
-        : // all time selected
-        frequency === DATA_FREQUENCY.DAY
-          ? dailyAll
-          : hourlyAll;
+      ? frequency === DATA_FREQUENCY.DAY
+        ? dailyWeek
+        : hourlyWeek
+      : // all time selected
+      frequency === DATA_FREQUENCY.DAY
+      ? dailyAll
+      : hourlyAll;
 
   // switch to hourly data when switched to week window
   useEffect(() => {
