@@ -9,7 +9,6 @@ import { connect } from "react-redux";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import { useEffect, useMemo, useState } from "react";
 import SwapSettings from "../../common/SwapSettings";
-import CustomButton from "../../Buttons/CustomButton";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import {
   allowanceAmount,
@@ -34,16 +33,19 @@ import {
 } from "../../../actions/dexActions";
 import { getAccountBalance } from "../../../actions/accountActions";
 import SelectToken from "../../common/SelectToken";
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import tokenThumbnail from "../../../utils/tokenThumbnail";
 import BigNumber from "bignumber.js";
-import { getPairAddress } from "../../../utils/connectionUtils";
+import {
+  getPairAddress,
+  useWalletConnectCallback,
+} from "../../../utils/connectionUtils";
 import { RESET_POOL_DATA, START_TRANSACTION } from "../../../actions/types";
 import store from "../../../store";
 import { Settings } from "@material-ui/icons";
 import { formatCurrency } from "../../../utils/formatters";
 import TransactionConfirm from "../../common/TransactionConfirm";
 import { useLocation } from "react-router-dom";
+import useActiveWeb3React from "hooks/useActiveWeb3React";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -250,7 +252,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const RemoveCard = ({
-  account: { currentNetwork, currentAccount, connected, loading },
+  account: { currentNetwork, currentAccount, loading },
   dex: {
     lpApproved,
     lpBalance,
@@ -282,6 +284,9 @@ const RemoveCard = ({
   const [swapDialogOpen, setSwapDialog] = useState(false);
   const query = new URLSearchParams(useLocation().search);
 
+  const { active } = useActiveWeb3React();
+  const [connectWallet] = useWalletConnectCallback();
+
   const handleSettings = () => {
     setOpen(true);
   };
@@ -296,10 +301,6 @@ const RemoveCard = ({
         query.get("inputCurrency"),
         query.get("outputCurrency"),
       ];
-
-      if (!tokenList || !currentAccount || !currentNetwork) {
-        return;
-      }
 
       if (token0Query) {
         const _token = getTokenToSelect(tokenList, token0Query);
@@ -335,7 +336,7 @@ const RemoveCard = ({
     initSelection();
   }, [currentNetwork, currentAccount, tokenList]);
 
-  const currentLpApproved = () => {
+  const currentLpApproved = useMemo(() => {
     if (
       Object.keys(lpApproved).includes(
         `${selectedToken0.symbol}_${selectedToken1.symbol}`
@@ -345,7 +346,7 @@ const RemoveCard = ({
     } else {
       return lpApproved[`${selectedToken1.symbol}_${selectedToken0.symbol}`];
     }
-  };
+  }, [lpApproved, selectedToken0, selectedToken1]);
 
   const handleConfirmAllowance = async () => {
     const _allowanceAmount = allowanceAmount;
@@ -360,7 +361,7 @@ const RemoveCard = ({
     );
   };
 
-  const currentLpBalance = () => {
+  const currentLpBalance = useMemo(() => {
     if (
       Object.keys(lpBalance).includes(
         `${selectedToken0.symbol}_${selectedToken1.symbol}`
@@ -376,7 +377,7 @@ const RemoveCard = ({
     } else {
       return "0";
     }
-  };
+  }, [lpBalance, selectedToken0, selectedToken1]);
 
   const currentPairAddress = () => {
     if (
@@ -463,7 +464,7 @@ const RemoveCard = ({
 
   const handleRemoveLiquidity = async () => {
     const lpAmount = getPercentAmountWithFloor(
-      currentLpBalance(),
+      currentLpBalance,
       liquidityPercent
     );
 
@@ -584,25 +585,25 @@ const RemoveCard = ({
   };
 
   const disableStatus = useMemo(() => {
-    if (!connected) {
-      return true;
+    if (!active) {
+      return false;
     }
 
     return (
       loading ||
-      new BigNumber(currentLpBalance()).eq(0) ||
+      new BigNumber(currentLpBalance).eq(0) ||
       new BigNumber(liquidityPercent).eq(0)
     );
-  }, [connected, loading, liquidityPercent, currentLpBalance()]);
+  }, [active, loading, liquidityPercent, currentLpBalance]);
 
   const currentButton = useMemo(() => {
-    if (!connected) {
+    if (!active) {
       return "Connect Wallet";
     }
 
     if (loading) {
       return "Please wait...";
-    } else if (new BigNumber(currentLpBalance()).eq(0)) {
+    } else if (new BigNumber(currentLpBalance).eq(0)) {
       return "No liquidity to remove";
     } else if (
       ["remove", "lp_token_approve"].includes(transaction.type) &&
@@ -610,22 +611,21 @@ const RemoveCard = ({
     ) {
       return "Pending Transaction...";
     } else {
-      return !currentLpApproved() ? "Approve LP token" : "Remove Liquidity";
+      return !currentLpApproved ? "Approve LP token" : "Remove Liquidity";
     }
-  }, [
-    connected,
-    loading,
-    transaction,
-    currentLpApproved(),
-    currentLpBalance(),
-  ]);
+  }, [active, loading, transaction, currentLpApproved, currentLpBalance]);
 
   const handleAction = () => {
+    if (!active) {
+      connectWallet();
+      return;
+    }
+
     if (dexLoading) {
       setSwapDialog(true);
       return;
     }
-    if (!currentLpApproved()) {
+    if (!currentLpApproved) {
       handleConfirmAllowance();
     } else {
       handleRemoveLiquidity();
@@ -742,10 +742,10 @@ const RemoveCard = ({
               <div className="d-flex justify-content-center">
                 <CircularProgress className={classes.spinner} size={30} />
               </div>
-            ) : new BigNumber(priceRatio1()).eq(0) && !connected ? (
+            ) : new BigNumber(priceRatio1()).eq(0) && !active ? (
               <div className="d-flex justify-content-center">
                 <span>
-                  {connected
+                  {active
                     ? "No liquidity available for selected pool"
                     : "Connect your wallet first"}
                 </span>
@@ -772,8 +772,8 @@ const RemoveCard = ({
           </div>
           <div style={{ color: "#DF097C", fontSize: 13 }}>
             {dexLoading ||
-              !currentLpApproved() ||
-              new BigNumber(currentLpBalance()).eq(0) ||
+              !currentLpApproved ||
+              new BigNumber(currentLpBalance).eq(0) ||
               (new BigNumber(liquidityPercent).eq(0) &&
                 "* Choose your amount of first to remove liquidity.")}
           </div>
@@ -826,7 +826,7 @@ const RemoveCard = ({
                   <span className={classes.itemValues}>
                     {formatCurrency(
                       fromWei(
-                        currentLpBalance(),
+                        currentLpBalance,
                         currentPairDecimals(selectedToken0, selectedToken1)
                       )
                     )}
