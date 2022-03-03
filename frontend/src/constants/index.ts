@@ -193,10 +193,16 @@ export const BASE_URL =
     : process.env.REACT_APP_PRODUCTION_URL;
 
 export const SWAP_BASES: { [index: string]: Array<string> } = {
-  1: ["USDT", "USDC", "ETH"], //eth chains
+  1: ["USDT", "USDC", "ETH"],
   4: ["USDT", "USDC", "ETH"],
-  1285: ["USDT", "MOVR"],
-  1287: ["USDT", "MOVR"],
+  1285: [],
+  1287: [],
+  97: [],
+  56: [],
+  137: [],
+  80001: [],
+  1666700000: [],
+  1666600000: [],
 };
 
 export const NetworkContextName = "NETWORK";
