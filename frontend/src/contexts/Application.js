@@ -7,7 +7,7 @@ import React, {
   useState,
   useEffect,
 } from "react";
-import { timeframeOptions, SUPPORTED_LIST_URLS__NO_ENS } from "../constants";
+import { timeframeOptions } from "../constants/index";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 // import getTokenList from '../utils/tokenLists'

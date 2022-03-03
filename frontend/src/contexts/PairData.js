@@ -32,7 +32,7 @@ import {
   getTimestampsForChanges,
   splitQuery,
 } from "../utils/timeUtils";
-import { timeframeOptions, TRACKED_OVERRIDES } from "../constants";
+import { timeframeOptions } from "../constants/index";
 import { useLatestBlocks } from "./Application";
 // import { PAIRS_CURRENT } from '../apollo/queries'
 // import { updateNameData } from '../utils/data'

@@ -10,7 +10,7 @@ import {
   tokenAddresses,
   USDC,
   USDT,
-} from "../constants";
+} from "../constants/index";
 import {
   pairContract,
   routerContract,

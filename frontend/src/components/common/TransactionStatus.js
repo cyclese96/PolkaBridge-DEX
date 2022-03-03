@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
-import { currentConnection } from "../../constants";
+import { currentConnection } from "../../constants/index";
 import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({

@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { BUNDLE_ID } from "../constants";
+import { BUNDLE_ID } from "../constants/index";
 import { getUnixTime } from "../utils/helper";
 import { client } from "./client";
 

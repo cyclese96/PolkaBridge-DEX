@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { useEffect, useState } from "react";
 import TabPage from "../../TabPage";
 import Farm from "./Farm";
-import { supportedFarmingPools } from "../../../constants";
+import { supportedFarmingPools } from "../../../constants/index";
 import StakeDialog from "./StakeDialog";
 import store from "../../../store";
 import { START_TRANSACTION } from "../../../actions/types";

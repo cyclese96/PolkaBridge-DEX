@@ -11,7 +11,7 @@ import {
   polygonNetworkDetail,
 } from "../../utils/networkConstants";
 import { setupNetwork } from "../../utils/connectionUtils";
-import { currentConnection } from "../../constants";
+import { currentConnection } from "../../constants/index";
 import config from "../../utils/config";
 import { Button } from "@material-ui/core";
 import useActiveWeb3React from "../../hooks/useActiveWeb3React";

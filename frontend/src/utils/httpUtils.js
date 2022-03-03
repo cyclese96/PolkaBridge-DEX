@@ -1,5 +1,5 @@
 import axios from "axios";
-import { currentConnection } from "../constants";
+import { currentConnection } from "../constants/index";
 
 // downlaod abi from network
 

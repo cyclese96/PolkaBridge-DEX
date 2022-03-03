@@ -5,7 +5,7 @@ import { getNetworkNameById } from "../utils/helper";
 import { CHANGE_NETWORK, CONNECT_WALLET } from "../actions/types";
 import { loadTokens } from "../actions/dexActions";
 import { getAccountBalance } from "../actions/accountActions";
-import { etheriumNetwork } from "../constants";
+import { etheriumNetwork } from "../constants/index";
 import useActiveWeb3React from "../hooks/useActiveWeb3React";
 
 const Home = ({ loadTokens, getAccountBalance }) => {

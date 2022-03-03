@@ -14,7 +14,7 @@ import {
   TOKEN_CHART,
   TOKEN_TOP_DAY_DATAS,
   PRICES_BY_BLOCK,
-  PAIR_DATA,
+  // PAIR_DATA,
   TOKENS_HISTORICAL_BULK,
 } from "../apollo/queries";
 
@@ -32,7 +32,7 @@ import {
   splitQuery,
 } from "../utils/timeUtils";
 
-import { timeframeOptions } from "../constants";
+import { timeframeOptions } from "../constants/index";
 import { useLatestBlocks } from "./Application";
 
 const UPDATE = "UPDATE";

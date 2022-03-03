@@ -7,7 +7,7 @@ import {
   etheriumNetwork,
   moonriverNetwork,
   nullAddress,
-} from "../constants";
+} from "../constants/index";
 
 import { factoryContract } from "../contracts/connections";
 import config from "./config";

@@ -11,7 +11,7 @@ import {
   defaultPoolToken0,
   defaultPoolToken1,
   ETH,
-} from "../../../constants";
+} from "../../../constants/index";
 import {
   fromWei,
   getPercentage,

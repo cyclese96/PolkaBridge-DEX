@@ -1,7 +1,7 @@
 import { DISCONNECT_WALLET, ERROR, LOAD_TOKEN_BALANCE } from "./types";
 import { getCurrentAccount, getNetworkBalance } from "../utils/helper";
 import { tokenContract } from "../contracts/connections";
-import { defaultSwapInputToken } from "../constants";
+import { defaultSwapInputToken } from "../constants/index";
 
 export const getAccountBalance = (token, network) => async (dispatch) => {
   try {

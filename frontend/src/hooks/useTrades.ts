@@ -2,7 +2,6 @@ import {
   ChainId,
   Currency,
   CurrencyAmount,
-  ETHER,
   Pair,
   Token,
   Trade,
@@ -13,7 +12,7 @@ import { useMemo } from "react";
 
 import { PairState, usePairs } from "../data/Reserves";
 import { ETH, SWAP_BASES } from "../constants";
-import { wrappedCurrency, wrappedCurrencyAmount } from "./wrappedCurrency";
+import { wrappedCurrency } from "./wrappedCurrency";
 import tokenListLocalRinkeby from "../tokenList/tokenListTest.json";
 import tokenListEthereum from "../tokenList/tokenListEthereum.json";
 import useActiveWeb3React from "../hooks/useActiveWeb3React";

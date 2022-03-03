@@ -8,7 +8,7 @@ import {
   CHANGE_NETWORK,
   LOAD_TOKEN_BALANCE,
 } from "../actions/types";
-import { etheriumNetwork } from "../constants";
+import { etheriumNetwork } from "../constants/index";
 
 const initalState = {
   connected: false,

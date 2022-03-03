@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core";
 import React from "react";
-import { currentConnection } from "../../constants";
+import { currentConnection } from "../../constants/index";
 import { isAddress } from "../../utils/helper";
 import tokenThumbnail from "../../utils/tokenThumbnail";
 

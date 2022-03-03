@@ -9,7 +9,11 @@ import {
   GET_FARM_POOL,
 } from "./types";
 import { farmContract, pairContract } from "../contracts/connections";
-import { currentConnection, farmAddresses, tokenAddresses } from "../constants";
+import {
+  currentConnection,
+  farmAddresses,
+  tokenAddresses,
+} from "../constants/index";
 import BigNumber from "bignumber.js";
 import { fromWei } from "../utils/helper";
 
