@@ -390,9 +390,7 @@ const Swap = (props) => {
 
     return new TokenAmount(
       _token,
-      JSBI.BigInt(
-        toWei(token1Value ? token1Value : "", selectedToken0.decimals)
-      )
+      JSBI.BigInt(toWei(token1Value, selectedToken0.decimals))
     );
   }, [token1Value, selectedToken0, chainId]);
 
@@ -411,9 +409,7 @@ const Swap = (props) => {
 
     return new TokenAmount(
       _token,
-      JSBI.BigInt(
-        toWei(token2Value ? token2Value : "", selectedToken1.decimals)
-      )
+      JSBI.BigInt(toWei(token2Value, selectedToken1.decimals))
     );
   }, [token2Value, selectedToken1, chainId]);
 
@@ -660,6 +656,13 @@ const Swap = (props) => {
     return getPriceRatio(parsedToken2Value, parsedToken1Value);
   }, [parsedToken1Value, parsedToken2Value]);
 
+  const disableStatus = useMemo(() => {
+    if (!active) {
+      return false;
+    }
+    return priceLoading || noRoute || !userHasSpecifiedInputOutput;
+  }, [priceLoading, userHasSpecifiedInputOutput, active, noRoute]);
+
   const currentButton = useMemo(() => {
     if (!active) {
       return "Connect Wallet";
@@ -677,14 +680,13 @@ const Swap = (props) => {
     } else {
       return !currentTokenApprovalStatus() ? "Approve" : "Swap";
     }
-  }, [active, transaction, currentTokenApprovalStatus()]);
-
-  const disableStatus = useMemo(() => {
-    if (!active) {
-      return false;
-    }
-    return priceLoading || !userHasSpecifiedInputOutput;
-  }, [priceLoading, userHasSpecifiedInputOutput, active]);
+  }, [
+    active,
+    transaction,
+    userHasSpecifiedInputOutput,
+    noRoute,
+    currentTokenApprovalStatus(),
+  ]);
 
   return (
     <>

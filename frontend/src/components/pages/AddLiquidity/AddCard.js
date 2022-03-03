@@ -35,11 +35,15 @@ import BigNumber from "bignumber.js";
 import store from "../../../store";
 import { RESET_POOL_SHARE, START_TRANSACTION } from "../../../actions/types";
 import debounce from "lodash.debounce";
-import { getPairAddress } from "../../../utils/connectionUtils";
+import {
+  getPairAddress,
+  useWalletConnectCallback,
+} from "../../../utils/connectionUtils";
 import { Settings } from "@material-ui/icons";
 import TransactionConfirm from "../../common/TransactionConfirm";
 import { useTokenData } from "../../../contexts/TokenData";
 import { useLocation } from "react-router-dom";
+import useActiveWeb3React from "hooks/useActiveWeb3React";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -221,7 +225,7 @@ const useStyles = makeStyles((theme) => ({
 
 const AddCard = (props) => {
   const {
-    account: { balance, loading, currentNetwork, currentAccount, connected },
+    account: { balance, loading, currentNetwork, currentAccount },
     dex: {
       swapSettings,
       approvedTokens,
@@ -257,6 +261,8 @@ const AddCard = (props) => {
   const [localStateLoading, setLocalStateLoading] = useState(false);
 
   const [swapDialogOpen, setSwapDialog] = useState(false);
+  const { chainId, active } = useActiveWeb3React();
+  const [connectWallet] = useWalletConnectCallback();
 
   // selected token usd value track
   const token0PriceData = useTokenData(
@@ -303,10 +309,6 @@ const AddCard = (props) => {
         query.get("inputCurrency"),
         query.get("outputCurrency"),
       ];
-
-      if (!tokenList || !currentAccount || !currentNetwork) {
-        return;
-      }
 
       if (token0Query) {
         const _token = getTokenToSelect(tokenList, token0Query);
@@ -364,29 +366,31 @@ const AddCard = (props) => {
     }
   };
 
-  const isApproved = (token) => {
-    if (token.symbol === ETH) {
+  const token0Approved = useMemo(() => {
+    if (selectedToken0?.symbol === ETH) {
       return true;
     }
-    return approvedTokens[token.symbol];
-  };
+    return approvedTokens && approvedTokens?.[selectedToken0?.symbol];
+  }, [selectedToken0, approvedTokens]);
 
-  const currentTokenApprovalStatus = () => {
-    if (isApproved(selectedToken0) && isApproved(selectedToken1)) {
+  const token1Approved = useMemo(() => {
+    if (selectedToken1?.symbol === ETH) {
       return true;
     }
-    return false;
-  };
+    return approvedTokens && approvedTokens?.[selectedToken1?.symbol];
+  }, [approvedTokens, selectedToken1]);
 
-  const currApproveBtnText = () => {
-    if (!approvedTokens[selectedToken0.symbol]) {
+  const currentTokenApprovalStatus = useMemo(() => {
+    return token0Approved && token1Approved;
+  }, [token0Approved, token1Approved]);
+
+  const currApproveBtnText = useMemo(() => {
+    if (!token0Approved) {
       return `Approve ${selectedToken0.symbol}`;
     }
-    if (!approvedTokens[selectedToken1.symbol]) {
-      return `Approve ${selectedToken1.symbol}`;
-    }
-    return "Approve";
-  };
+
+    return `Approve ${selectedToken1.symbol}`;
+  }, [token0Approved, token1Approved, selectedToken0, selectedToken1]);
 
   const clearInputState = () => {
     setToken1Value("");
@@ -731,29 +735,34 @@ const AddCard = (props) => {
     return share;
   };
 
-  const disableStatus = () => {
-    if (!connected) {
-      return true;
+  const disableStatus = useMemo(() => {
+    if (!active) {
+      return false;
     }
 
     return addStatus.disabled || loading || localStateLoading;
-  };
+  }, [active, addStatus, loading, localStateLoading]);
 
   const handleAction = () => {
+    if (!active) {
+      connectWallet();
+      return;
+    }
+
     if (dexLoading) {
       setSwapDialog(true);
       return;
     }
 
-    if (currentTokenApprovalStatus()) {
+    if (currentTokenApprovalStatus) {
       handleAddLiquidity();
     } else {
       handleConfirmAllowance();
     }
   };
 
-  const currentButton = () => {
-    if (!connected) {
+  const currentButton = useMemo(() => {
+    if (!active) {
       return "Connect Wallet";
     }
 
@@ -767,11 +776,17 @@ const AddCard = (props) => {
     ) {
       return "Pending Transaction...";
     } else {
-      return !currentTokenApprovalStatus()
-        ? currApproveBtnText()
+      return !currentTokenApprovalStatus
+        ? currApproveBtnText
         : addStatus.message;
     }
-  };
+  }, [
+    active,
+    localStateLoading,
+    transaction,
+    currentTokenApprovalStatus,
+    addStatus,
+  ]);
 
   // liquidity transaction status updates
   useEffect(() => {
@@ -924,11 +939,11 @@ const AddCard = (props) => {
           </div>
 
           <Button
-            disabled={disableStatus()}
+            disabled={disableStatus}
             onClick={handleAction}
             className={classes.addLiquidityButton}
           >
-            {currentButton()}
+            {currentButton}
           </Button>
         </div>
       </Card>
