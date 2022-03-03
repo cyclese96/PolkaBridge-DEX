@@ -611,13 +611,14 @@ export const confirmAllowance =
     try {
       const _tokenContract = tokenContract(token.address, network);
 
-      const _routerContract = routerContract(network);
+      // const _routerContract = routerContract(network);
+      const _routerAddress = routerAddresses.ethereum;
 
       dispatch({
         type: SHOW_DEX_LOADING,
       });
       await _tokenContract.methods
-        .approve(_routerContract._address, balance)
+        .approve(_routerAddress, balance)
         .send({ from: account }, function (error, transactionHash) {
           if (error) {
             dispatch({
@@ -668,14 +669,15 @@ export const checkLpAllowance =
   (token0, token1, pairAddress, account, network) => async (dispatch) => {
     try {
       const _pairContract = pairContract(pairAddress, network);
-      const _routerContract = routerContract(network);
+      // const _routerContract = routerContract(network);
+      const _routerAddress = routerAddresses.ethereum;
 
       dispatch({
         type: SHOW_DEX_LOADING,
       });
 
       const lpAllowance = await _pairContract.methods
-        .allowance(account, _routerContract._address)
+        .allowance(account, _routerAddress)
         .call();
 
       if (new BigNumber(lpAllowance).gt(0)) {

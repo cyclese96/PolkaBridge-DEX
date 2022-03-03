@@ -749,7 +749,10 @@ const AddCard = (props) => {
       return;
     }
 
-    if (dexLoading) {
+    if (
+      ["add", "token_approve"].includes(transaction.type) &&
+      transaction.status === "pending"
+    ) {
       setSwapDialog(true);
       return;
     }
