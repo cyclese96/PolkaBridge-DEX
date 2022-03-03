@@ -49,6 +49,7 @@ import useActiveWeb3React from "hooks/useActiveWeb3React";
 import { isAddress } from "utils/contractUtils";
 import { computeTradePriceBreakdown } from "utils/prices";
 import { useWalletConnectCallback } from "utils/connectionUtils";
+import BigNumber from "bignumber.js";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -373,8 +374,6 @@ const Swap = (props) => {
 
   // new trade hooks
 
-  // const inputCurrency = wrappedCurrency(inputToken, chainId);
-
   // parseed input token amounts entered by user: token0/token1 to pass into best trade hooks
   const parsedInputToken0Amount = useMemo(() => {
     if (!token1Value || !selectedToken0.symbol || !chainId) {
@@ -391,7 +390,9 @@ const Swap = (props) => {
 
     return new TokenAmount(
       _token,
-      JSBI.BigInt(toWei(token1Value, selectedToken0.decimals))
+      JSBI.BigInt(
+        toWei(token1Value ? token1Value : "", selectedToken0.decimals)
+      )
     );
   }, [token1Value, selectedToken0, chainId]);
 
@@ -410,7 +411,9 @@ const Swap = (props) => {
 
     return new TokenAmount(
       _token,
-      JSBI.BigInt(toWei(token2Value, selectedToken1.decimals))
+      JSBI.BigInt(
+        toWei(token2Value ? token2Value : "", selectedToken1.decimals)
+      )
     );
   }, [token2Value, selectedToken1, chainId]);
 
@@ -644,11 +647,13 @@ const Swap = (props) => {
     return bestTradeExactOut && bestTradeExactOut?.route;
   }, [bestTradeExactIn, bestTradeExactOut, currentSwap]);
 
-  const userHasSpecifiedInputOutput = Boolean(
-    selectedToken0.address &&
-      selectedToken1.address &&
-      (parsedInputToken0Amount || parsedInputToken1Amount)
-  );
+  const userHasSpecifiedInputOutput = useMemo(() => {
+    return Boolean(
+      selectedToken0.address &&
+        selectedToken1.address &&
+        (new BigNumber(token1Value).gt(0) || new BigNumber(token2Value).gt(0))
+    );
+  }, [selectedToken0, selectedToken1, token1Value, token2Value]);
   const noRoute = !route;
 
   const priceRatio = useMemo(() => {
@@ -665,27 +670,21 @@ const Swap = (props) => {
       transaction.status === "pending"
     ) {
       return "Pending Transaction...";
-    } else if (!parsedToken1Value && !parsedToken2Value) {
+    } else if (!userHasSpecifiedInputOutput) {
       return "Enter token amount";
     } else if (noRoute && userHasSpecifiedInputOutput) {
       return "Insufficient liquidity for this trade!";
     } else {
       return !currentTokenApprovalStatus() ? "Approve" : "Swap";
     }
-  }, [
-    active,
-    transaction,
-    currentTokenApprovalStatus(),
-    parsedToken1Value,
-    parsedToken2Value,
-  ]);
+  }, [active, transaction, currentTokenApprovalStatus()]);
 
   const disableStatus = useMemo(() => {
     if (!active) {
       return false;
     }
-    return priceLoading || !parsedToken1Value || !parsedToken2Value;
-  }, [priceLoading, parsedToken1Value, parsedToken2Value, active]);
+    return priceLoading || !userHasSpecifiedInputOutput;
+  }, [priceLoading, userHasSpecifiedInputOutput, active]);
 
   return (
     <>
