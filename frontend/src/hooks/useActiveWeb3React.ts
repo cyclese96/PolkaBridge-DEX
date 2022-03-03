@@ -3,7 +3,7 @@ import { Web3Provider } from "@ethersproject/providers";
 import { default as useWidgetsWeb3React } from "../lib/useActiveWeb3React";
 import { useWeb3React } from "web3-react-core";
 
-import { NetworkContextName } from "../constants";
+import { NetworkContextName } from "../constants/index";
 
 export default function useActiveWeb3React() {
   if (process.env.REACT_APP_IS_WIDGET) {
