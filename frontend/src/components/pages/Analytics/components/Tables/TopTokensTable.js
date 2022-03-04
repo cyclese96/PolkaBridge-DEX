@@ -49,7 +49,8 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    borderTop: "1px solid #616161",
+    backgroundColor: "white",
+    borderTop: "1px solid #e5e5e5",
   },
   paginationButton: {
     color: "#DF097C",
@@ -127,7 +128,6 @@ export default function TopTokensTable({ data, numberOfRows = 5 }) {
       <TableContainer
         elevation={10}
         style={{
-          border: "1px solid #e5e5e5",
           borderRadius: 4,
           boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
           backgroundColor: "white",
@@ -137,7 +137,6 @@ export default function TopTokensTable({ data, numberOfRows = 5 }) {
         <Table
           sx={{
             minWidth: 650,
-            border: "1px solid #e5e5e5",
 
             boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
             backgroundColor: "white",
@@ -146,7 +145,7 @@ export default function TopTokensTable({ data, numberOfRows = 5 }) {
           aria-label="simple table"
         >
           <TableHead>
-            <TableRow style={{ color: "white" }}>
+            <TableRow style={{ color: "black" }}>
               <TableCell style={styles.tableHeading}>Name</TableCell>
               <TableCell align="right" style={styles.tableHeading}>
                 Symbol
@@ -215,7 +214,7 @@ export default function TopTokensTable({ data, numberOfRows = 5 }) {
                   <TableCell
                     component="th"
                     scope="row"
-                    style={{ color: "black", fontSize: 13 }}
+                    style={{ color: "black", fontSize: 14 }}
                   >
                     <span>
                       {skipIndex * numberOfRows + index + 1}

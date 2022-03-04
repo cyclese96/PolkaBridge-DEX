@@ -72,7 +72,8 @@ const useStyles = makeStyles((theme) => ({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 400,
+    fontWeight: 500,
+    paddingLeft: 10,
     color: theme.palette.textColors.subheading,
 
     paddingTop: 5,
@@ -82,12 +83,12 @@ const useStyles = makeStyles((theme) => ({
     height: 130,
     width: "100%",
     borderRadius: 15,
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingLeft: 15,
+    paddingRight: 15,
     paddingTop: 15,
     paddingBottom: 15,
     marginBottom: 10,
-    border: "1px solid #616161",
+
     boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
     backgroundColor: theme.palette.primary.bgCard,
   },
@@ -99,12 +100,12 @@ const useStyles = makeStyles((theme) => ({
   },
   cardValue: {
     color: "#212121",
-    fontSize: 26,
+    fontSize: 30,
     textAlign: "left",
   },
   cardChangeIndicator: {
     color: "green",
-    fontSize: 13,
+    fontSize: 18,
   },
   chartsCard: {
     height: "100%",
@@ -117,12 +118,11 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 15,
     paddingBottom: 15,
     marginBottom: 10,
-    border: "1px solid #616161",
+
     boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
     backgroundColor: theme.palette.primary.bgCard,
   },
   tokenInfo: {
-    border: "1px solid #616161",
     boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
     backgroundColor: theme.palette.primary.bgCard,
     borderRadius: 15,

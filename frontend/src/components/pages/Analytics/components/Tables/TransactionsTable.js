@@ -56,7 +56,8 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    borderTop: "1px solid #616161",
+    backgroundColor: "white",
+    borderTop: "1px solid #e5e5e5",
   },
   paginationButton: {
     color: "rgb(223, 9, 124)",
@@ -184,7 +185,6 @@ export default function TransactionsTable({ data }) {
       <TableContainer
         elevation={10}
         style={{
-          border: "1px solid #e5e5e5",
           borderRadius: 4,
           boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
           backgroundColor: "white",
@@ -194,8 +194,7 @@ export default function TransactionsTable({ data }) {
         <Table
           sx={{
             minWidth: 650,
-            border: "1px solid #e5e5e5",
-            borderRadius: 4,
+
             boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
             backgroundColor: "white",
             color: "black",
@@ -218,6 +217,7 @@ export default function TransactionsTable({ data }) {
                     style={{
                       color: txFilterType === "all" ? "black" : "grey",
                       textTransform: "none",
+
                       backgroundColor: "transparent",
                       textDecoration: "none",
                       width: 35,
@@ -238,8 +238,9 @@ export default function TransactionsTable({ data }) {
                       });
                     }}
                     style={{
-                      color: txFilterType === "swap" ? "white" : "grey",
+                      color: txFilterType === "swap" ? "black" : "grey",
                       backgroundColor: "transparent",
+
                       textDecoration: "none",
                       width: 60,
                       fontWeight: 500,
@@ -261,7 +262,7 @@ export default function TransactionsTable({ data }) {
                       });
                     }}
                     style={{
-                      color: txFilterType === "add" ? "white" : "grey",
+                      color: txFilterType === "add" ? "black" : "grey",
 
                       textTransform: "none",
                       backgroundColor: "transparent",
@@ -288,7 +289,12 @@ export default function TransactionsTable({ data }) {
                       color: txFilterType === "remove" ? "black" : "grey",
                       outline: "none",
                       textTransform: "none",
-                      backgroundColor: "transparent",
+                      // borderColor:
+                      //   txFilterType === "remove" ? "grey" : "transparent",
+                      // borderWidth: "1px",
+                      // borderStyle: "solid",
+                      backgroundColor: "white",
+                      borderRadius: 5,
                       textDecoration: "none",
                       width: 75,
                       border: "none",

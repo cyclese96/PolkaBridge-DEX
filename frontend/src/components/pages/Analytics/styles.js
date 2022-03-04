@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     width: 470,
     minHeight: 300,
     height: "100%",
-    border: "1px solid #616161",
+
     // background: `linear-gradient(to bottom,#ffffff,#f9f9f9)`,
     boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
     backgroundColor: theme.palette.primary.bgCard,
@@ -105,9 +105,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-evenly",
-    border: "1px solid #616161",
+
     height: "100%",
-    border: "1px solid #616161",
+
     boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
     backgroundColor: theme.palette.primary.bgCard,
 
@@ -163,7 +163,7 @@ const useStyles = makeStyles((theme) => ({
   tokenListHeading: {
     width: "100%",
     color: theme.palette.textColors.heading,
-    marginTop: 150,
+    marginTop: 30,
     marginBottom: 10,
     paddingLeft: 2,
     fontWeight: 500,

@@ -50,7 +50,6 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
     backgroundColor: theme.palette.primary.bgCard,
 
-    border: "0.5px solid #bdbdbd",
     borderRadius: 15,
 
     padding: "5px 10px 5px 10px",
@@ -94,12 +93,11 @@ const useStyles = makeStyles((theme) => ({
     height: 120,
     width: "100%",
     borderRadius: 15,
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingLeft: 15,
+    paddingRight: 15,
     paddingTop: 15,
     paddingBottom: 15,
     marginBottom: 10,
-    border: "1px solid #616161",
     boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
     backgroundColor: theme.palette.primary.bgCard,
   },
@@ -113,7 +111,7 @@ const useStyles = makeStyles((theme) => ({
   cardValue: {
     color: theme.palette.textColors.heading,
 
-    fontSize: 32,
+    fontSize: 30,
     textAlign: "left",
     [theme.breakpoints.down("sm")]: {
       fontSize: 28,
@@ -132,9 +130,9 @@ const useStyles = makeStyles((theme) => ({
   },
   cardChangeIndicator: {
     color: "green",
-    fontSize: 24,
+    fontSize: 18,
     [theme.breakpoints.down("sm")]: {
-      fontSize: 24,
+      fontSize: 18,
     },
   },
   chartsCard: {
@@ -147,13 +145,12 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 15,
     paddingBottom: 15,
     marginBottom: 10,
-    border: "1px solid #616161",
+
     boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
     backgroundColor: "white",
     color: "black",
   },
   tokenInfo: {
-    border: "1px solid #616161",
     boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
     backgroundColor: "white",
     color: "black",
