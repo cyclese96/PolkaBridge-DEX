@@ -17,9 +17,9 @@ import BigNumber from "bignumber.js";
 
 const useStyles = makeStyles((theme) => ({
   table: {
-    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+    backgroundColor: "white",
 
-    color: "white",
     width: "100%",
     marginBottom: 10,
     [theme.breakpoints.down("sm")]: {
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   arrowIcon: {
-    color: "white",
+    color: "black",
     fontSize: 15,
     marginTop: -2,
   },
@@ -50,7 +50,8 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    borderTop: "1px solid #616161",
+    backgroundColor: "white",
+    borderTop: "1px solid #e5e5e5",
   },
   paginationButton: {
     color: "#DF097C",
@@ -65,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
     width: 10,
   },
   filterButtonActive: {
-    color: "#f9f9f9",
+    color: "black",
     textTransform: "none",
     width: 10,
   },
@@ -86,7 +87,7 @@ export default function TokenTxTable({ data }) {
   let styles = {
     tableHeading: {
       fontSize: window.innerWidth < 500 ? 11 : 14,
-      color: "white",
+      color: "black",
       fontWeight: 700,
     },
   };
@@ -175,25 +176,26 @@ export default function TokenTxTable({ data }) {
   };
 
   return (
-    <Paper elevation={10} className={classes.table}>
+    <Paper className={classes.table}>
       <TableContainer
         elevation={10}
         style={{
-          border: "1px solid #616161",
-          borderRadius: 10,
-          background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+          borderRadius: 4,
+          boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+          backgroundColor: "white",
         }}
       >
         <Table
           sx={{
             minWidth: 650,
-            background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
-            color: "white",
+
+            boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+            backgroundColor: "white",
           }}
           aria-label="simple table"
         >
           <TableHead>
-            <TableRow style={{ color: "white" }}>
+            <TableRow style={{ color: "black" }}>
               <TableCell style={styles.tableHeading}>
                 <div className="d-flex justify-content-start">
                   <button
@@ -206,7 +208,7 @@ export default function TokenTxTable({ data }) {
                       });
                     }}
                     style={{
-                      color: txFilterType === "all" ? "white" : "grey",
+                      color: txFilterType === "all" ? "black" : "grey",
                       textTransform: "none",
                       backgroundColor: "transparent",
                       textDecoration: "none",
@@ -228,7 +230,7 @@ export default function TokenTxTable({ data }) {
                       });
                     }}
                     style={{
-                      color: txFilterType === "swap" ? "white" : "grey",
+                      color: txFilterType === "swap" ? "black" : "grey",
                       backgroundColor: "transparent",
                       textDecoration: "none",
                       width: 60,
@@ -250,7 +252,7 @@ export default function TokenTxTable({ data }) {
                       });
                     }}
                     style={{
-                      color: txFilterType === "add" ? "white" : "grey",
+                      color: txFilterType === "add" ? "black" : "grey",
 
                       textTransform: "none",
                       backgroundColor: "transparent",
@@ -273,7 +275,7 @@ export default function TokenTxTable({ data }) {
                       });
                     }}
                     style={{
-                      color: txFilterType === "remove" ? "white" : "grey",
+                      color: txFilterType === "remove" ? "black" : "grey",
                       outline: "none",
                       textTransform: "none",
                       backgroundColor: "transparent",
@@ -328,7 +330,7 @@ export default function TokenTxTable({ data }) {
                   <TableCell
                     component="th"
                     scope="row"
-                    style={{ color: "white", fontSize: 12 }}
+                    style={{ color: "black", fontSize: 12 }}
                   >
                     <span style={{ marginRight: 10 }}>
                       {skipIndex * 5 + index + 1}
@@ -345,7 +347,7 @@ export default function TokenTxTable({ data }) {
                       {" "}
                       <span
                         style={{
-                          backgroundColor: "#2B2022",
+                          backgroundColor: "#f9f9f9",
                           padding: "5px 5px 5px 5px",
                           borderRadius: 7,
                           fontWeight: 500,
@@ -370,13 +372,13 @@ export default function TokenTxTable({ data }) {
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#212121", fontSize: 12 }}
                   >
                     ${formattedNum(parseFloat(row.amountUSD).toFixed(2))}
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#212121", fontSize: 12 }}
                   >
                     {["mint", "burn"].includes(row.__typename.toLowerCase())
                       ? formattedNum(row?.amount0)
@@ -384,7 +386,7 @@ export default function TokenTxTable({ data }) {
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 13 }}
+                    style={{ color: "#212121", fontSize: 13 }}
                   >
                     {["mint", "burn"].includes(row.__typename.toLowerCase())
                       ? formattedNum(row?.amount1)
@@ -392,7 +394,7 @@ export default function TokenTxTable({ data }) {
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#212121", fontSize: 12 }}
                   >
                     <a
                       style={{ color: "#df097c" }}
@@ -410,7 +412,7 @@ export default function TokenTxTable({ data }) {
                   <TableCell
                     align="right"
                     className={classes.tableText}
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#212121", fontSize: 12 }}
                   >
                     {formatTime(row.transaction.timestamp)}
                   </TableCell>

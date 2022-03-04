@@ -17,7 +17,8 @@ import { formattedNum } from "../../../../../utils/timeUtils";
 
 const useStyles = makeStyles((theme) => ({
   table: {
-    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+    backgroundColor: theme.palette.primary.bgCard,
     color: "white",
     width: "100%",
     [theme.breakpoints.down("sm")]: {
@@ -50,7 +51,8 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    borderTop: "1px solid #616161",
+    backgroundColor: "white",
+    borderTop: "1px solid #e5e5e5",
   },
   paginationButton: {
     color: "#DF097C",
@@ -71,7 +73,7 @@ export default function TokenPairsTable({ data }) {
   let styles = {
     tableHeading: {
       fontSize: window.innerWidth < 500 ? 11 : 14,
-      color: "white",
+      color: "black",
       fontWeight: 700,
       cursor: "pointer",
     },
@@ -107,25 +109,25 @@ export default function TokenPairsTable({ data }) {
   };
 
   return (
-    <Paper elevation={10} className={classes.table}>
+    <Paper className={classes.table}>
       <TableContainer
         elevation={10}
         style={{
-          border: "1px solid #616161",
-          borderRadius: 10,
-          background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+          borderRadius: 4,
+          boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+          backgroundColor: "white",
         }}
       >
         <Table
           sx={{
             minWidth: 650,
-            background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
-            color: "white",
+            boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+            backgroundColor: "white",
           }}
           aria-label="simple table"
         >
           <TableHead>
-            <TableRow style={{ color: "white" }}>
+            <TableRow style={{ color: "black" }}>
               <TableCell style={styles.tableHeading}>Name</TableCell>
               <TableCell align="right" style={styles.tableHeading}>
                 TVL
@@ -197,7 +199,7 @@ export default function TokenPairsTable({ data }) {
                   <TableCell
                     component="th"
                     scope="row"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#212121", fontSize: 12 }}
                     sortDirection="asc"
                   >
                     <span>
@@ -228,26 +230,26 @@ export default function TokenPairsTable({ data }) {
 
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#212121", fontSize: 12 }}
                   >
                     ${formattedNum(parseInt(row.reserveUSD))}
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#212121", fontSize: 12 }}
                   >
                     ${formattedNum(parseFloat(row.oneDayVolumeUSD).toFixed(2))}
                   </TableCell>
                   <TableCell
                     align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#212121", fontSize: 12 }}
                   >
                     ${formattedNum(parseFloat(row.oneDayVolumeUSD).toFixed(2))}
                   </TableCell>
                   <TableCell
                     align="right"
                     className={classes.tableText}
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
+                    style={{ color: "#212121", fontSize: 12 }}
                   >
                     ${" "}
                     {formattedNum(

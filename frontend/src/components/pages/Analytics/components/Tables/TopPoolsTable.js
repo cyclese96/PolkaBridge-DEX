@@ -20,14 +20,14 @@ import BigNumber from "bignumber.js";
 const useStyles = makeStyles((theme) => ({
   table: {
     background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
-    color: "white",
+    color: "black",
     width: "100%",
     [theme.breakpoints.down("sm")]: {
       width: "96vw",
     },
   },
   arrowIcon: {
-    color: "white",
+    color: "black",
     fontSize: 15,
     marginTop: -2,
   },
@@ -52,7 +52,8 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    borderTop: "1px solid #616161",
+    backgroundColor: "white",
+    borderTop: "1px solid #e5e5e5",
   },
   paginationButton: {
     color: "#DF097C",
@@ -74,7 +75,7 @@ export default function TopPoolsTable({ data, numberOfRows = 5 }) {
   let styles = {
     tableHeading: {
       fontSize: window.innerWidth < 500 ? 11 : 14,
-      color: "white",
+      color: "black",
       fontWeight: 700,
       cursor: "pointer",
     },
@@ -110,25 +111,28 @@ export default function TopPoolsTable({ data, numberOfRows = 5 }) {
   };
 
   return (
-    <Paper elevation={10} className={classes.table}>
+    <Paper className={classes.table}>
       <TableContainer
         elevation={10}
         style={{
-          border: "1px solid #616161",
-          borderRadius: 10,
-          background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+          borderRadius: 4,
+          boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+          backgroundColor: "white",
+          color: "black",
         }}
       >
         <Table
           sx={{
             minWidth: 650,
-            background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
-            color: "white",
+
+            boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+            backgroundColor: "white",
+            color: "black",
           }}
           aria-label="simple table"
         >
           <TableHead>
-            <TableRow style={{ color: "white" }}>
+            <TableRow style={{ color: "black" }}>
               <TableCell style={styles.tableHeading}>Name</TableCell>
               <TableCell align="right" style={styles.tableHeading}>
                 TVL
@@ -192,73 +196,88 @@ export default function TopPoolsTable({ data, numberOfRows = 5 }) {
               </TableRow>
             )}
             {data &&
-              rows.slice(skipIndex * numberOfRows, skipIndex * numberOfRows + numberOfRows).map((row, index) => (
-                <TableRow
-                  key={row.name}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell
-                    component="th"
-                    scope="row"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
-                    sortDirection="asc"
+              rows
+                .slice(
+                  skipIndex * numberOfRows,
+                  skipIndex * numberOfRows + numberOfRows
+                )
+                .map((row, index) => (
+                  <TableRow
+                    key={row.name}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <span>
-                      {skipIndex * numberOfRows + index + 1}
-                      <span className={classes.tokenImageWrapper}>
-                        {" "}
-                        <TokenIcon
-                          symbol={row.token0.symbol}
-                          address={row?.token0?.id}
-                          className={classes.tokenIcon}
-                        />
-                        <span style={{ marginLeft: -10 }}>
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      style={{ color: "#212121", fontSize: 12 }}
+                      sortDirection="asc"
+                    >
+                      <span>
+                        {skipIndex * numberOfRows + index + 1}
+                        <span className={classes.tokenImageWrapper}>
+                          {" "}
                           <TokenIcon
-                            symbol={row.token1.symbol}
-                            address={row?.token1?.id}
+                            symbol={row.token0.symbol}
+                            address={row?.token0?.id}
                             className={classes.tokenIcon}
                           />
+                          <span style={{ marginLeft: -10 }}>
+                            <TokenIcon
+                              symbol={row.token1.symbol}
+                              address={row?.token1?.id}
+                              className={classes.tokenIcon}
+                            />
+                          </span>
                         </span>
                       </span>
-                    </span>
-                    <Link to={`pair/${row.id}`} className={classes.link}>
-                      <span className={classes.cellText}>
-                        {row.token0.symbol} - {row.token1.symbol}
-                      </span>
-                      <small className={classes.cellTextSecondary}></small>
-                    </Link>
-                  </TableCell>
+                      <Link to={`pair/${row.id}`} className={classes.link}>
+                        <span className={classes.cellText}>
+                          {row.token0.symbol} - {row.token1.symbol}
+                        </span>
+                        <small className={classes.cellTextSecondary}></small>
+                      </Link>
+                    </TableCell>
 
-                  <TableCell
-                    align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
-                  >
-                    ${formattedNum(parseInt(new BigNumber(row.reserveETH).multipliedBy(ethPrice).toString()))}
-                  </TableCell>
-                  <TableCell
-                    align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
-                  >
-                    ${formattedNum(parseFloat(row.oneDayVolumeUntracked).toFixed(2))}
-                  </TableCell>
-                  <TableCell
-                    align="right"
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
-                  >
-                    ${formattedNum(parseInt(row.oneWeekVolumeUSD))}
-                  </TableCell>
-                  <TableCell
-                    align="right"
-                    className={classes.tableText}
-                    style={{ color: "#e5e5e5", fontSize: 12 }}
-                  >
-                    ${" "}
-                    {formattedNum(
-                      (parseFloat(row.oneDayVolumeUSD) * 0.02).toFixed(2)
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
+                    <TableCell
+                      align="right"
+                      style={{ color: "#212121", fontSize: 12 }}
+                    >
+                      $
+                      {formattedNum(
+                        parseInt(
+                          new BigNumber(row.reserveETH)
+                            .multipliedBy(ethPrice)
+                            .toString()
+                        )
+                      )}
+                    </TableCell>
+                    <TableCell
+                      align="right"
+                      style={{ color: "#212121", fontSize: 12 }}
+                    >
+                      $
+                      {formattedNum(
+                        parseFloat(row.oneDayVolumeUntracked).toFixed(2)
+                      )}
+                    </TableCell>
+                    <TableCell
+                      align="right"
+                      style={{ color: "#212121", fontSize: 12 }}
+                    >
+                      ${formattedNum(parseInt(row.oneWeekVolumeUSD))}
+                    </TableCell>
+                    <TableCell
+                      align="right"
+                      className={classes.tableText}
+                      style={{ color: "#212121", fontSize: 12 }}
+                    >
+                      ${" "}
+                      {formattedNum(
+                        (parseFloat(row.oneDayVolumeUSD) * 0.02).toFixed(2)
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
           </TableBody>
         </Table>
         <div className={classes.pagination}>

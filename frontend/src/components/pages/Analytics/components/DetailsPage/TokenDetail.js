@@ -72,7 +72,8 @@ const useStyles = makeStyles((theme) => ({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 400,
+    fontWeight: 500,
+    paddingLeft: 10,
     color: theme.palette.textColors.subheading,
 
     paddingTop: 5,
@@ -82,28 +83,29 @@ const useStyles = makeStyles((theme) => ({
     height: 130,
     width: "100%",
     borderRadius: 15,
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingLeft: 15,
+    paddingRight: 15,
     paddingTop: 15,
     paddingBottom: 15,
     marginBottom: 10,
-    border: "1px solid #616161",
-    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+
+    boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+    backgroundColor: theme.palette.primary.bgCard,
   },
   cardTitle: {
-    color: "white",
+    color: "black",
     fontSize: 14,
     textAlign: "left",
     paddingBottom: 7,
   },
   cardValue: {
-    color: "white",
-    fontSize: 26,
+    color: "#212121",
+    fontSize: 30,
     textAlign: "left",
   },
   cardChangeIndicator: {
     color: "green",
-    fontSize: 13,
+    fontSize: 18,
   },
   chartsCard: {
     height: "100%",
@@ -116,12 +118,13 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 15,
     paddingBottom: 15,
     marginBottom: 10,
-    border: "1px solid #616161",
-    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+
+    boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+    backgroundColor: theme.palette.primary.bgCard,
   },
   tokenInfo: {
-    border: "1px solid #616161",
-    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+    backgroundColor: theme.palette.primary.bgCard,
     borderRadius: 15,
     paddingLeft: 10,
     paddingRight: 10,
@@ -134,7 +137,7 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: 20,
   },
   openButton: {
-    backgroundColor: "#4C2238",
+    backgroundColor: "#F9057D",
     color: "#f6f6f6",
     borderColor: "#f6f6f6",
     width: 200,
@@ -157,12 +160,13 @@ const useStyles = makeStyles((theme) => ({
   },
   detailTitle: {
     fontSize: 14,
-    color: "#bdbdbd",
+    color: "#212121",
     fontWeight: 500,
   },
   detailValue: {
     fontSize: 18,
     fontWeight: 600,
+    color: "black",
   },
   copyIcon: {
     fontSize: 14,

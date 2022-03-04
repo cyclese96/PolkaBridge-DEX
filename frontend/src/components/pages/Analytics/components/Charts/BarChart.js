@@ -73,7 +73,7 @@ const state = {
       type: "datetime",
       labels: {
         style: {
-          colors: "#bdbdbd",
+          colors: "#212121",
         },
       },
       style: {
@@ -92,7 +92,7 @@ const state = {
       },
       labels: {
         formatter: function (value) {
-          return formatCurrency(value)
+          return formatCurrency(value);
         },
       },
     },
@@ -132,9 +132,9 @@ const BarChart = ({ chartData }) => {
       const _series =
         chartData.length > 0
           ? chartData.map((item) => [
-            item.date * 1000,
-            item.dailyVolumeUSD ? parseInt(item.dailyVolumeUSD) : 0,
-          ])
+              item.date * 1000,
+              item.dailyVolumeUSD ? parseInt(item.dailyVolumeUSD) : 0,
+            ])
           : [];
       setChartData([{ name: currChartData[0].name, data: _series }]);
     }

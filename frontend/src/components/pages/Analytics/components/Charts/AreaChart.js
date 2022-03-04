@@ -17,17 +17,14 @@ const chartEvent = (
   }
 };
 
-
-
 const AreaChart = ({ chartData, chartType }) => {
-
   let state = {
     options: {
       chart: {
         id: "chart2",
         type: "area",
         height: 300,
-        foreColor: "#ccc",
+        foreColor: "#212121",
 
         toolbar: {
           show: false,
@@ -65,7 +62,7 @@ const AreaChart = ({ chartData, chartType }) => {
         tickAmount: 3,
         labels: {
           formatter: function (value) {
-            return formatCurrency(value)
+            return formatCurrency(value);
           },
         },
       },
@@ -88,7 +85,7 @@ const AreaChart = ({ chartData, chartType }) => {
     selection: "all",
     series: [
       {
-        name: chartType === 'price' ? "Price USD" : "TVL USD",
+        name: chartType === "price" ? "Price USD" : "TVL USD",
         data: [],
       },
     ],
@@ -100,18 +97,18 @@ const AreaChart = ({ chartData, chartType }) => {
   const [currChartData, setChartData] = useState(state.series);
 
   const currentChartDataPoint = (item, type) => {
-
-    if (type === 'price') {
-      return [item.date, item.priceUSD]
+    if (type === "price") {
+      return [item.date, item.priceUSD];
     }
-    return [item.date * 1000,
-    item.totalLiquidityUSD || item.reserveUSD
-      ? parseInt(item.totalLiquidityUSD || item.reserveUSD)
-      : 0,]
-
-  }
+    return [
+      item.date * 1000,
+      item.totalLiquidityUSD || item.reserveUSD
+        ? parseInt(item.totalLiquidityUSD || item.reserveUSD)
+        : 0,
+    ];
+  };
   useEffect(() => {
-    console.log('chart data ', { chartData, chartType })
+    console.log("chart data ", { chartData, chartType });
     if (chartData !== dataPrev && chartData) {
       const _data =
         chartData.length > 0

@@ -47,13 +47,14 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   ratioCard: {
-    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+    backgroundColor: theme.palette.primary.bgCard,
 
-    border: "0.5px solid #616161",
     borderRadius: 15,
-    color: "white",
+
     padding: "5px 10px 5px 10px",
     marginRight: 10,
+    color: "black",
   },
   tokenTitle: {
     color: theme.palette.textColors.heading,
@@ -84,7 +85,7 @@ const useStyles = makeStyles((theme) => ({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 400,
-    color: "white",
+    color: "black",
     paddingTop: 5,
     paddingBottom: 10,
   },
@@ -92,32 +93,32 @@ const useStyles = makeStyles((theme) => ({
     height: 120,
     width: "100%",
     borderRadius: 15,
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingLeft: 15,
+    paddingRight: 15,
     paddingTop: 15,
     paddingBottom: 15,
     marginBottom: 10,
-    border: "1px solid #616161",
-    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+    backgroundColor: theme.palette.primary.bgCard,
   },
   cardTitle: {
-    color: theme.palette.textColors.textPrimary,
+    color: theme.palette.textColors.heading,
 
     fontSize: 14,
     textAlign: "left",
     paddingBottom: 7,
   },
   cardValue: {
-    color: theme.palette.textColors.textPrimary,
+    color: theme.palette.textColors.heading,
 
-    fontSize: 32,
+    fontSize: 30,
     textAlign: "left",
     [theme.breakpoints.down("sm")]: {
       fontSize: 28,
     },
   },
   cardTokenValue: {
-    color: theme.palette.textColors.textPrimary,
+    color: theme.palette.textColors.subheading,
 
     fontSize: 20,
     textAlign: "left",
@@ -129,9 +130,9 @@ const useStyles = makeStyles((theme) => ({
   },
   cardChangeIndicator: {
     color: "green",
-    fontSize: 24,
+    fontSize: 18,
     [theme.breakpoints.down("sm")]: {
-      fontSize: 24,
+      fontSize: 18,
     },
   },
   chartsCard: {
@@ -144,12 +145,15 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 15,
     paddingBottom: 15,
     marginBottom: 10,
-    border: "1px solid #616161",
-    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+
+    boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+    backgroundColor: "white",
+    color: "black",
   },
   tokenInfo: {
-    border: "1px solid #616161",
-    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
+    backgroundColor: "white",
+    color: "black",
     borderRadius: 15,
     paddingLeft: 10,
     paddingRight: 10,
@@ -162,7 +166,7 @@ const useStyles = makeStyles((theme) => ({
     paddingRight: 20,
   },
   openButton: {
-    backgroundColor: "#4C2238",
+    backgroundColor: "#F9057D",
     color: "#f6f6f6",
     borderColor: "#f6f6f6",
     width: 200,
@@ -185,7 +189,7 @@ const useStyles = makeStyles((theme) => ({
   },
   detailTitle: {
     fontSize: 14,
-    color: "#bdbdbd",
+    color: "#212121",
     fontWeight: 500,
     [theme.breakpoints.down("sm")]: {
       fontSize: 12,
@@ -195,7 +199,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 18,
     fontWeight: 500,
     letterSpacing: 0.5,
-    color: "#f7f7f7",
+    color: "#000000",
     [theme.breakpoints.down("sm")]: {
       fontSize: 12,
     },
@@ -332,7 +336,7 @@ function PoolDetail({ pairAddress }) {
           >
             <div className={classes.ratioCard}>
               {" "}
-              <Link to={`/token/${token0?.id}`}>
+              <Link to={`/token/${token0?.id}`} style={{ color: "black" }}>
                 <TokenIcon
                   symbol={poolInfo.token0?.symbol}
                   address={poolInfo.token0?.id}
@@ -345,7 +349,7 @@ function PoolDetail({ pairAddress }) {
               </Link>
             </div>
             <div className={classes.ratioCard}>
-              <Link to={`/token/${token1?.id}`}>
+              <Link to={`/token/${token1?.id}`} style={{ color: "black" }}>
                 <TokenIcon
                   symbol={poolInfo.token1?.symbol}
                   address={poolInfo.token1?.id}

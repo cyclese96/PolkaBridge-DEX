@@ -52,8 +52,8 @@ const styles = {
     paddingBottom: 5,
     marginBottom: 10,
     border: "1px solid #616161",
-    color: "white",
-    background: `linear-gradient(to bottom,#191B1F,#191B1F)`,
+    color: "black",
+    backgroundColor: `#f9f9f9`,
   },
   buttonActive: {
     marginRight: 5,
@@ -63,9 +63,9 @@ const styles = {
     paddingTop: 5,
     paddingBottom: 5,
     marginBottom: 10,
-    border: "1px solid #616161",
-    color: "white",
-    background: `#263238`,
+    border: "1px solid #f9057d",
+    color: "#f9057d",
+    backgroundColor: `transparent`,
   },
   chartContainer: {},
 };

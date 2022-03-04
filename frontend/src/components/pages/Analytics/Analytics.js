@@ -192,7 +192,7 @@ const Analytics = () => {
             className="d-flex-end"
             style={{
               fontSize: 13,
-              color: "#bdbdbd",
+              color: "black",
               marginTop: 35,
               marginBottom: 10,
               paddingLeft: 2,
@@ -203,7 +203,9 @@ const Analytics = () => {
               textAlign: "right",
             }}
           >
-            <Link to="charts/tokens">View All</Link>
+            <Link to="charts/tokens" style={{ color: "black" }}>
+              View All
+            </Link>
           </div>
         </div>
         <div className="d-flex justify-content-center ">
@@ -229,7 +231,9 @@ const Analytics = () => {
               textAlign: "right",
             }}
           >
-            <Link to="charts/pools">View All</Link>
+            <Link to="charts/pools" style={{ color: "black" }}>
+              View All
+            </Link>
           </div>
         </div>
         <div className="d-flex justify-content-center">
