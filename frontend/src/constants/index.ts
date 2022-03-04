@@ -166,7 +166,9 @@ export const farmingPoolConstants = {
     "PBR-ETH": {
       multiplier: 40,
       pid: 0,
-      address: "0x306dd2eB9DDACeecdbA4cfA0EccC009e7291cDDE",
+      address: testing
+        ? "0x306dd2eB9DDACeecdbA4cfA0EccC009e7291cDDE"
+        : "0x173cF7c7356f71c3e75cE02F9cC777Fb762B5080",
       blocksPerYear: "",
       lpApr: 0,
       decimals: 18,
@@ -174,7 +176,9 @@ export const farmingPoolConstants = {
     "ETH-USDT": {
       multiplier: 5,
       pid: 1,
-      address: "0x17398F4101dac7c9C1d637b1139EEA9D3d700250",
+      address: testing
+        ? "0x17398F4101dac7c9C1d637b1139EEA9D3d700250"
+        : "0xdda0A346D267a48EC74CC68979584d85501fe5D5",
       blocksPerYear: "",
       lpApr: 0,
       decimals: 12,
