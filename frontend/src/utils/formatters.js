@@ -1,3 +1,4 @@
+import { currentConnection } from "constants/index";
 import Decimal from "decimal.js-light";
 import { Numeral } from "numeral";
 
@@ -104,10 +105,22 @@ export const formattedNum = (number, usd = false, acceptNegatives = false) => {
 };
 
 export const urls = {
-  showTransaction: (tx) => `https://etherscan.io/tx/${tx}/`,
-  showAddress: (address) => `https://www.etherscan.io/address/${address}/`,
-  showToken: (address) => `https://www.etherscan.io/token/${address}/`,
-  showBlock: (block) => `https://etherscan.io/block/${block}/`,
+  showTransaction: (tx) =>
+    currentConnection === "mainnet"
+      ? `https://etherscan.io/tx/${tx}/`
+      : `https://rinkeby.etherscan.io/tx/${tx}/`,
+  showAddress: (address) =>
+    currentConnection === "mainnet"
+      ? `https://www.etherscan.io/address/${address}/`
+      : `https://rinkeby.etherscan.io/address/${address}/`,
+  showToken: (address) =>
+    currentConnection === "mainnet"
+      ? `https://www.etherscan.io/token/${address}/`
+      : `https://rinkeby.etherscan.io/token/${address}/`,
+  showBlock: (block) =>
+    currentConnection === "mainnet"
+      ? `https://etherscan.io/block/${block}/`
+      : `https://rinkeby.etherscan.io/block/${block}/`,
 };
 
 export function localNumber(val) {
