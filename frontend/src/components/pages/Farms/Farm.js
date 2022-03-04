@@ -12,7 +12,7 @@ import {
   tokenAddresses,
 } from "../../../constants/index";
 import { connect } from "react-redux";
-import { formattedNum } from "../../../utils/formatters";
+import { formattedNum, urls } from "../../../utils/formatters";
 import {
   checkLpFarmAllowance,
   confirmLpFarmAllowance,
@@ -483,7 +483,7 @@ const Farm = (props) => {
           <a
             className={classes.link}
             target="_blank"
-            href={`${BASE_URL}/liquidity?action=add_liquidity&inputCurrency=${
+            href={`/liquidity?action=add_liquidity&inputCurrency=${
               farmPool && farmPool.split("-")[0]
             }&outputCurrency=${farmPool && farmPool.split("-")[1]}`}
           >
@@ -497,7 +497,7 @@ const Farm = (props) => {
           <a
             target="_blank"
             className={classes.link}
-            href={`https://rinkeby.etherscan.io/address/${farmPoolAddress}`}
+            href={urls.showAddress(farmPoolAddress)}
           >
             View Contract{" "}
             <OpenInNewIcon fontSize="small" className={classes.icon} />{" "}
@@ -509,7 +509,7 @@ const Farm = (props) => {
           <a
             target="_blank"
             className={classes.link}
-            href={`http://localhost:3000/pair/${farmPoolAddress}`}
+            href={`/pair/${farmPoolAddress}`}
           >
             See Pair Info{" "}
             <OpenInNewIcon fontSize="small" className={classes.icon} />{" "}
