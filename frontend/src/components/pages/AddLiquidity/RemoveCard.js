@@ -49,7 +49,8 @@ import useActiveWeb3React from "hooks/useActiveWeb3React";
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    width: 500,
+    width: "96%",
+    maxWidth: 500,
     borderRadius: 15,
     boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
     backgroundColor: theme.palette.primary.bgCard,
@@ -60,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 0,
       paddingRight: 0,
-      width: "100%",
+      width: "96%",
     },
   },
   cardContents: {
@@ -788,59 +789,61 @@ const RemoveCard = ({
         </div>
       </Card>
 
-      <div className="mt-4 mb-5">
-        <Card elevation={20} className={classes.card}>
-          <div className={classes.priceContainer}>
-            {false ? (
-              <div className="d-flex justify-content-center pt-2 pb-2">
-                <CircularProgress className={classes.spinner} size={30} />
-              </div>
-            ) : (
-              <>
-                <div className="d-flex justify-content-center">
-                  <div className={classes.heading} style={{ fontSize: 20 }}>
-                    Your Position
-                  </div>
+      <Card
+        elevation={20}
+        className={classes.card}
+        style={{ marginTop: 30, marginBottom: 30 }}
+      >
+        <div className={classes.priceContainer}>
+          {false ? (
+            <div className="d-flex justify-content-center pt-2 pb-2">
+              <CircularProgress className={classes.spinner} size={30} />
+            </div>
+          ) : (
+            <>
+              <div className="d-flex justify-content-center">
+                <div className={classes.heading} style={{ fontSize: 20 }}>
+                  Your Position
                 </div>
+              </div>
 
-                <div className="d-flex justify-content-between my-2 align-items-center">
-                  <div className="d-flex justify-content-between align-items-center">
-                    <img
-                      className={classes.tokenIcon}
-                      src={tokenThumbnail(selectedToken0.symbol)}
-                      alt={""}
-                    />
-                    <img
-                      className={classes.tokenIcon}
-                      src={tokenThumbnail(selectedToken1.symbol)}
-                      alt={""}
-                    />
-                    <span
-                      className={classes.itemHeading}
-                      style={{ paddingTop: 5 }}
-                    >
-                      {selectedToken0.symbol}/{selectedToken1.symbol}{" "}
-                      {`( LP tokens )`}
-                    </span>
-                  </div>
-                  <span className={classes.itemValues}>
-                    {formatCurrency(
-                      fromWei(
-                        currentLpBalance,
-                        currentPairDecimals(selectedToken0, selectedToken1)
-                      )
-                    )}
+              <div className="d-flex justify-content-between my-2 align-items-center">
+                <div className="d-flex justify-content-between align-items-center">
+                  <img
+                    className={classes.tokenIcon}
+                    src={tokenThumbnail(selectedToken0.symbol)}
+                    alt={""}
+                  />
+                  <img
+                    className={classes.tokenIcon}
+                    src={tokenThumbnail(selectedToken1.symbol)}
+                    alt={""}
+                  />
+                  <span
+                    className={classes.itemHeading}
+                    style={{ paddingTop: 5 }}
+                  >
+                    {selectedToken0.symbol}/{selectedToken1.symbol}{" "}
+                    {`( LP tokens )`}
                   </span>
                 </div>
-                <div className="d-flex justify-content-between mt-3 mb-3">
-                  <div className={classes.itemHeading}>Your pool share:</div>
-                  <div className={classes.itemValues}>{poolShare}%</div>
-                </div>
-              </>
-            )}
-          </div>
-        </Card>
-      </div>
+                <span className={classes.itemValues}>
+                  {formatCurrency(
+                    fromWei(
+                      currentLpBalance,
+                      currentPairDecimals(selectedToken0, selectedToken1)
+                    )
+                  )}
+                </span>
+              </div>
+              <div className="d-flex justify-content-between mt-3 mb-3">
+                <div className={classes.itemHeading}>Your pool share:</div>
+                <div className={classes.itemValues}>{poolShare}%</div>
+              </div>
+            </>
+          )}
+        </div>
+      </Card>
     </>
   );
 };

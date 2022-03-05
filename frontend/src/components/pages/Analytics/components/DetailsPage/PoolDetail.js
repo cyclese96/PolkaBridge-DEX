@@ -164,6 +164,12 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     paddingLeft: 20,
     paddingRight: 20,
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
   },
   openButton: {
     backgroundColor: "#F9057D",

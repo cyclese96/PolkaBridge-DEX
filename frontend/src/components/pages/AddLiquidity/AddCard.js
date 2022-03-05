@@ -47,7 +47,8 @@ import useActiveWeb3React from "hooks/useActiveWeb3React";
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    width: 500,
+    width: "96%",
+    maxWidth: 500,
     borderRadius: 15,
     boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
     backgroundColor: theme.palette.primary.bgCard,
@@ -60,7 +61,6 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft: 5,
       paddingRight: 5,
       width: "95%",
-      border: "1px solid #212121",
     },
   },
   cardContents: {

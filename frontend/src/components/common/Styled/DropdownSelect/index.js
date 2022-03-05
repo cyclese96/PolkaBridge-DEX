@@ -12,7 +12,7 @@ const Wrapper = styled.div`
   position: relative;
   background-color: rgba(223, 9, 124,0.1);
   border: 1px solid ${({ open, color }) =>
-    open ? color : "rgba(0, 0, 0, 0.15);"} 
+    open ? color : "rgba(255, 0, 0, 0.15);"} 
   width: 100px;
   padding: 4px 10px;
   padding-right: 6px;
