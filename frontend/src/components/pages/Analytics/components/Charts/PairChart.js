@@ -175,7 +175,7 @@ const PairChart = ({ address, color, base0, base1 }) => {
             options={timeframeOptions}
             active={timeWindow}
             setActive={setTimeWindow}
-            color={color}
+            color={"#000000"}
           />
         </RowBetween>
       ) : (

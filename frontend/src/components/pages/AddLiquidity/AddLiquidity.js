@@ -10,7 +10,8 @@ import { useLocation } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    width: 500,
+    width: "96%",
+    maxWidth: 500,
     height: "100%",
     display: "flex",
     flexDirection: "column",
