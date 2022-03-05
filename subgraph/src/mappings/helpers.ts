@@ -13,12 +13,12 @@ import { ERC20NameBytes } from "../../generated/Factory/ERC20NameBytes";
 import { Factory as FactoryContract } from "../../generated/templates/Pair/Factory";
 // import { TokenDefinition } from './tokenDefinition'
 
-export const testing = true;
+export const testing = false;
 
 export const ADDRESS_ZERO = "0x0000000000000000000000000000000000000000";
 export const FACTORY_ADDRESS = testing
-  ? "0xa068d176d079a3B7213558DE0bAD285435D11C76"
-  : "0xeff9EcEFe14279C0157f88573Ca9361D253c10bE";
+  ? "0x628cf8e2A079C6D9bDd0293125273F71EA3d74Ec"
+  : "0xf5d8E98ef1f66f1cAb949A2555837FE755fc2D68";
 
 export let ZERO_BI = BigInt.fromI32(0);
 export let ONE_BI = BigInt.fromI32(1);
