@@ -2,20 +2,20 @@
 import { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import { usePrevious } from "react-use";
-import CurrencyFormat from "react-currency-format";
+// import CurrencyFormat from "react-currency-format";
 import { formatCurrency } from "../../../../../utils/formatters";
 
-const chartEvent = (
-  event,
-  chartConfig,
-  { seriesIndex, dataPointIndex, config }
-) => {
-  if (dataPointIndex < 0) {
-    return;
-  } else {
-    // console.log("click on data ", dataPointIndex);
-  }
-};
+// const chartEvent = (
+//   event,
+//   chartConfig,
+//   { seriesIndex, dataPointIndex, config }
+// ) => {
+//   if (dataPointIndex < 0) {
+//     return;
+//   } else {
+//     // console.log("click on data ", dataPointIndex);
+//   }
+// };
 
 const AreaChart = ({ chartData, chartType }) => {
   let state = {
@@ -30,7 +30,7 @@ const AreaChart = ({ chartData, chartType }) => {
           show: false,
         },
         events: {
-          mouseMove: chartEvent,
+          mouseMove: () => {},
         },
       },
       stroke: {
@@ -92,7 +92,8 @@ const AreaChart = ({ chartData, chartType }) => {
   };
 
   // pointer to the chart object
-  const [chartCreated, setChartCreated] = useState(false);
+  const chartCreated = false;
+  // const [chartCreated, setChartCreated] = useState(false);
   const dataPrev = usePrevious(chartData);
   const [currChartData, setChartData] = useState(state.series);
 
@@ -118,7 +119,7 @@ const AreaChart = ({ chartData, chartType }) => {
       // console.log("area chart data  ", currChartData);
       setChartData([{ name: currChartData[0].name, data: _data }]);
     }
-  }, [chartCreated, chartData, dataPrev, chartType]);
+  }, [chartCreated, chartData, dataPrev, chartType, currChartData]);
 
   return (
     <Chart

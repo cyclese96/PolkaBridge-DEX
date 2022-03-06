@@ -296,13 +296,13 @@ const RemoveCard = ({
     setOpen(false);
   };
 
+  const [token0Query, token1Query] = [
+    query.get("inputCurrency"),
+    query.get("outputCurrency"),
+  ];
+
   useEffect(() => {
     async function initSelection() {
-      const [token0Query, token1Query] = [
-        query.get("inputCurrency"),
-        query.get("outputCurrency"),
-      ];
-
       if (token0Query) {
         const _token = getTokenToSelect(tokenList, token0Query);
 
@@ -335,7 +335,7 @@ const RemoveCard = ({
       }
     }
     initSelection();
-  }, [currentNetwork, currentAccount, tokenList]);
+  }, [currentNetwork, currentAccount, tokenList, token0Query, token1Query]);
 
   const currentLpApproved = useMemo(() => {
     if (
@@ -413,8 +413,8 @@ const RemoveCard = ({
         });
 
         // load erc20 token abi and balance
-        const erc20Token =
-          selectedToken0.symbol === ETH ? selectedToken1 : selectedToken0;
+        // const erc20Token =
+        //   selectedToken0.symbol === ETH ? selectedToken1 : selectedToken0;
 
         let _pairAddress = currentPairAddress();
         if (!_pairAddress) {

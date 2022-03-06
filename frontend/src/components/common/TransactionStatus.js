@@ -1,8 +1,9 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
-import { currentConnection } from "../../constants/index";
+// import { currentConnection } from "../../constants/index";
 import { connect } from "react-redux";
+import { urls } from "utils/formatters";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -67,19 +68,27 @@ const TransactionStatus = ({ dex: { transaction }, onClose }) => {
         <div className="mt-4 ">
           {transaction.status === "pending" && (
             <div className="text-center">
-              <img src="/img/submit.png" className={classes.image} />
+              <img
+                src="/img/submit.png"
+                alt="Submitted"
+                className={classes.image}
+              />
               <h6 className={classes.message}>Transaction Submitted</h6>
             </div>
           )}
           {transaction.status === "failed" && (
             <div className="text-center">
-              <img src="/img/fail.png" className={classes.image} />
+              <img src="/img/fail.png" alt="failed" className={classes.image} />
               <h6 className={classes.message}>Transaction Failed</h6>
             </div>
           )}
           {transaction.status === "success" && (
             <div className="text-center">
-              <img src="/img/success.png" className={classes.image} />{" "}
+              <img
+                src="/img/success.png"
+                alt="success"
+                className={classes.image}
+              />{" "}
               <h6 className={classes.message}>Transaction Succeed</h6>
             </div>
           )}
@@ -88,12 +97,9 @@ const TransactionStatus = ({ dex: { transaction }, onClose }) => {
               <h6 style={{ color: "#DF097C", fontSize: 14 }}>Cancelled</h6>
             ) : (
               <a
-                href={
-                  currentConnection === "testnet"
-                    ? `https://rinkeby.etherscan.io/tx/${transaction.hash}`
-                    : `https://etherscan.io/tx/${transaction.hash}`
-                }
+                href={urls.showTransaction(transaction.hash)}
                 target="_blank"
+                rel="noreferrer"
               >
                 <h6 style={{ color: "#DF097C", fontSize: 14 }}>
                   {!transaction.hash ? "Cancelled" : "View on explorer"}

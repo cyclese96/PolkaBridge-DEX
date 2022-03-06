@@ -28,9 +28,9 @@ const Home = ({ loadTokens, getAccountBalance }) => {
       payload: _network,
     });
 
-    getAccountBalance(account, _network);
+    // getAccountBalance(account, _network);
     loadTokens(_network);
-  }, [chainId, active, account]);
+  }, [chainId, active, account, loadTokens]);
 
   useEffect(() => {
     async function onNetworkChangeUpdate() {

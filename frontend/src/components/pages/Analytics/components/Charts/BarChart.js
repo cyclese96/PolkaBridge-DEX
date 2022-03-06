@@ -4,17 +4,17 @@ import Chart from "react-apexcharts";
 import { usePrevious } from "react-use";
 import { formatCurrency } from "../../../../../utils/formatters";
 
-const chartEvent = (
-  event,
-  chartConfig,
-  { seriesIndex, dataPointIndex, config }
-) => {
-  if (dataPointIndex < 0) {
-    return;
-  } else {
-    // console.log("click on data ", dataPointIndex);
-  }
-};
+// const chartEvent = (
+//   event,
+//   chartConfig,
+//   { seriesIndex, dataPointIndex, config }
+// ) => {
+//   if (dataPointIndex < 0) {
+//     return;
+//   } else {
+//     console.log("click on data ", dataPointIndex);
+//   }
+// };
 
 const state = {
   options: {
@@ -29,7 +29,7 @@ const state = {
         show: false,
       },
       events: {
-        mouseMove: chartEvent,
+        mouseMove: () => {},
       },
     },
     plotOptions: {
@@ -85,11 +85,11 @@ const state = {
     },
     yaxis: {
       tickAmount: 3,
-      labels: {
-        style: {
-          colors: "#bdbdbd",
-        },
-      },
+      // labels: {
+      //   style: {
+      //     colors: "#bdbdbd",
+      //   },
+      // },
       labels: {
         formatter: function (value) {
           return formatCurrency(value);
@@ -122,7 +122,8 @@ const state = {
 };
 const BarChart = ({ chartData }) => {
   // pointer to the chart object
-  const [chartCreated, setChartCreated] = useState(false);
+  const chartCreated = false;
+  // const [chartCreated, setChartCreated] = useState(false);
   const dataPrev = usePrevious(chartData);
   const [currChartData, setChartData] = useState(state.series);
 
@@ -138,7 +139,7 @@ const BarChart = ({ chartData }) => {
           : [];
       setChartData([{ name: currChartData[0].name, data: _series }]);
     }
-  }, [chartCreated, chartData, dataPrev]);
+  }, [chartCreated, chartData, dataPrev, currChartData]);
 
   return (
     <Chart

@@ -6,7 +6,6 @@ import { logout } from "../../actions/accountActions";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import SelectTokenDialog from "./SelectTokenDialog";
 import tokenThumbnail from "../../utils/tokenThumbnail";
-import { Card } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   token: {

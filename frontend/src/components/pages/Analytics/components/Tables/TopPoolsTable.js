@@ -11,7 +11,6 @@ import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import Loader from "../../../../common/Loader";
 import TokenIcon from "../../../../common/TokenIcon";
 import { Link } from "react-router-dom";
-import { ArrowDown } from "react-feather";
 import { ArrowDownward } from "@material-ui/icons";
 import { formattedNum } from "../../../../../utils/timeUtils";
 import { useEthPrice } from "../../../../../contexts/GlobalData";
@@ -70,7 +69,7 @@ export default function TopPoolsTable({ data, numberOfRows = 5 }) {
   const [sortedFees, setSortedFees] = useState(false);
   const [sortedVolume7d, setSortedVolume7d] = useState(false);
   const [skipIndex, setSkipIndex] = useState(0);
-  const [ethPrice, oldEthPrice] = useEthPrice();
+  const [ethPrice] = useEthPrice();
 
   let styles = {
     tableHeading: {

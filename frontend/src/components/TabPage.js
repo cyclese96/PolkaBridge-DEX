@@ -126,9 +126,10 @@ const TabPage = ({ data = 1 }) => {
             className={classes.certikLabel}
             href="https://certik.org/projects/polkabridge"
             target="_blank"
+            rel="noreferrer"
             style={{ color: "rgba(224, 7, 125, 1)" }}
           >
-            <img src="img/certik.png" className={classes.icon} />
+            <img src="img/certik.png" className={classes.icon} alt="certic" />
             Certik
           </a>{" "}
           and{" "}
@@ -136,9 +137,11 @@ const TabPage = ({ data = 1 }) => {
             className={classes.hackenLabel}
             href="https://hacken.io/audits/#polkabridge"
             target="_blank"
+            rel="noreferrer"
           >
             <img
               src="https://hacken.io/wp-content/themes/hacken/assets/img/token-ico-min.png"
+              alt="hacken"
               className={classes.icon}
             />{" "}
             Hacken
@@ -182,10 +185,11 @@ const TabPage = ({ data = 1 }) => {
             }
           >
             Charts{" "}
-            <img
+            {/* <img
               src="https://cdn-icons-png.flaticon.com/512/478/478544.png"
+              alt="charts"
               style={{ height: 16, marginTop: -5, marginLeft: 5 }}
-            />
+            /> */}
           </div>
         </Link>
       </div>

@@ -10,9 +10,8 @@ import { Button, makeStyles } from "@material-ui/core";
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import Loader from "../../../../common/Loader";
 import { formatTime } from "../../../../../utils/timeUtils";
-import { currentConnection } from "../../../../../constants/index";
 import BigNumber from "bignumber.js";
-import { formattedNum } from "../../../../../utils/formatters";
+import { formattedNum, urls } from "../../../../../utils/formatters";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -326,12 +325,9 @@ export default function PairTransactionsTable({ data }) {
                       {skipIndex * 5 + index + 1}
                     </span>
                     <a
-                      href={
-                        currentConnection === "testnet"
-                          ? `https://rinkeby.etherscan.io/tx/${row.transaction.id}`
-                          : `https://etherscan.io/tx/${row.transaction.id}`
-                      }
+                      href={urls.showTransaction(row.transaction.id)}
                       target="_blank"
+                      rel="noreferrer"
                       className={classes.link}
                     >
                       {" "}

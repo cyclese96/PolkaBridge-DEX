@@ -100,7 +100,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   priceStatContainer: {
-    height: 55,
     marginTop: 30,
     display: "flex",
     alignItems: "center",

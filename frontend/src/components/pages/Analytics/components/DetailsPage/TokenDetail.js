@@ -7,18 +7,21 @@ import {
   // useTokenPriceData,
   // useTokenTransactions,
 } from "../../../../../contexts/TokenData";
-import { usePrevious } from "react-use";
+// import { usePrevious } from "react-use";
 import {
   useAllPairData,
   // useDataForList,
 } from "../../../../../contexts/PairData";
-import { formatCurrency, formattedNum } from "../../../../../utils/formatters";
+import {
+  formatCurrency,
+  formattedNum,
+  urls,
+} from "../../../../../utils/formatters";
 import TokenIcon from "../../../../common/TokenIcon";
 import { Link } from "react-router-dom";
 import TokenChart from "../../components/Charts/TokenChart";
 import { Button, Card } from "@material-ui/core";
 import { FileCopyOutlined, OpenInNew } from "@material-ui/icons";
-import { currentConnection } from "../../../../../constants/index";
 import Loader from "../../../../common/Loader";
 import TokenTxTable from "../Tables/TokenTxTable";
 import { useGlobalTransactions } from "../../../../../contexts/GlobalData";
@@ -126,8 +129,6 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
     backgroundColor: theme.palette.primary.bgCard,
     borderRadius: 15,
-    paddingLeft: 10,
-    paddingRight: 10,
     paddingTop: 15,
     paddingBottom: 15,
     display: "flex",
@@ -191,7 +192,7 @@ function TokenPage({ address }) {
     oneDayVolumeUSD,
     totalLiquidityUSD,
     volumeChangeUSD,
-    oneDayVolumeUT,
+    // oneDayVolumeUT,
     liquidityChangeUSD,
     priceChangeUSD,
   } = useTokenData(address);
@@ -203,10 +204,6 @@ function TokenPage({ address }) {
     document.querySelector("body").scrollTo(0, 0);
   }, []);
 
-  // useEffect(() => {
-  //   console.log("alltransaction token page ", { oneDayVolumeUSD });
-  // }, []);
-
   useEffect(() => {
     window.scrollTo({
       behavior: "smooth",
@@ -215,9 +212,9 @@ function TokenPage({ address }) {
   }, []);
 
   // volume
-  const volume = formattedNum(oneDayVolumeUSD);
+  // const volume = formattedNum(oneDayVolumeUSD);
 
-  const usingUtVolume = oneDayVolumeUSD === 0 && !!oneDayVolumeUT;
+  // const usingUtVolume = oneDayVolumeUSD === 0 && !!oneDayVolumeUT;
 
   const fee = formattedNum(oneDayVolumeUSD * 0.005);
 
@@ -236,7 +233,7 @@ function TokenPage({ address }) {
 
     tokenPairs.map((key) => (pairObjects[key] = allPairs[key]));
     setTokenPairRows(pairObjects);
-  }, [allPairs]);
+  }, [allPairs, address]);
   // all transactions with this token
   const allTransactions = useGlobalTransactions();
 
@@ -245,29 +242,29 @@ function TokenPage({ address }) {
       return;
     }
 
-    LoadtokenTransactions(address);
-  }, [allTransactions]);
+    function loadtokenTransactions() {
+      let _burns = allTransactions ? allTransactions.burns : [];
+      let _swaps = allTransactions ? allTransactions.swaps : [];
+      let _mints = allTransactions ? allTransactions.mints : [];
 
-  const LoadtokenTransactions = (address) => {
-    let _burns = allTransactions ? allTransactions.burns : [];
-    let _swaps = allTransactions ? allTransactions.swaps : [];
-    let _mints = allTransactions ? allTransactions.mints : [];
+      _burns = _burns.filter(
+        (item) =>
+          item.pair.token0.id === address || item.pair.token1.id === address
+      );
+      _swaps = _swaps.filter(
+        (item) =>
+          item.pair.token0.id === address || item.pair.token1.id === address
+      );
+      _mints = _mints.filter(
+        (item) =>
+          item.pair.token0.id === address || item.pair.token1.id === address
+      );
 
-    _burns = _burns.filter(
-      (item) =>
-        item.pair.token0.id === address || item.pair.token1.id === address
-    );
-    _swaps = _swaps.filter(
-      (item) =>
-        item.pair.token0.id === address || item.pair.token1.id === address
-    );
-    _mints = _mints.filter(
-      (item) =>
-        item.pair.token0.id === address || item.pair.token1.id === address
-    );
+      setRows({ mints: _mints, swaps: _swaps, burns: _burns });
+    }
 
-    setRows({ mints: _mints, swaps: _swaps, burns: _burns });
-  };
+    loadtokenTransactions();
+  }, [allTransactions, address, setRows]);
 
   const classes = useStyles();
 
@@ -296,11 +293,8 @@ function TokenPage({ address }) {
                 <a
                   style={{ color: "#DF097C", paddingLeft: 5 }}
                   target="_blank"
-                  href={
-                    currentConnection === "testnet"
-                      ? `https://rinkeby.etherscan.io/address/${id}`
-                      : `https://etherscan.io/address/${id}`
-                  }
+                  rel="noreferrer"
+                  href={urls.showAddress(id)}
                 >
                   ({id && id.slice(0, 8)})
                 </a>
@@ -421,12 +415,9 @@ function TokenPage({ address }) {
                   </div>
                   <div className="d-flex justify-content-end">
                     <a
-                      href={
-                        currentConnection === "testnet"
-                          ? `https://rinkeby.etherscan.io/address/${id}`
-                          : `https://etherscan.io/address/${id}`
-                      }
+                      href={urls.showAddress(id)}
                       target="_blank"
+                      rel="noreferrer"
                     >
                       <Button className={classes.openButton}>
                         View on explorer{" "}

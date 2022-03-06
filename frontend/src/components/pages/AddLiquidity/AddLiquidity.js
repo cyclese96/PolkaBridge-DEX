@@ -10,7 +10,7 @@ import { useLocation } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    width: "96%",
+    width: 500,
     maxWidth: 500,
     height: "100%",
     display: "flex",
@@ -52,7 +52,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   button: {
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
     backgroundColor: theme.palette.primary.iconBack,
     color: theme.palette.primary.iconColor,
     borderColor: "#f6f6f6",
@@ -82,14 +81,14 @@ const AddLiquidity = ({ account: { loading } }) => {
   const [showCard, setShowAdd] = useState({ status: false, component: "" });
   const query = new URLSearchParams(useLocation().search);
 
+  const action = query.get("action");
   useEffect(() => {
-    const action = query.get("action");
     if (action === "add_liquidity") {
       setShowAdd({ status: true, component: "AddCard" });
     } else if (action === "remove_liquidity") {
       setShowAdd({ status: true, component: "RemoveCard" });
     }
-  }, []);
+  }, [action]);
 
   return (
     <>

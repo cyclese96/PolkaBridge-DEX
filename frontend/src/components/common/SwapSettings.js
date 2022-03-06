@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
@@ -34,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "transparent",
     color: theme.palette.primary.iconColor,
     height: 40,
-    width: "auto",
     border: "1px solid rgba(224, 224, 224,1)",
     borderRadius: 10,
     // outline: "none",
@@ -159,35 +158,34 @@ const SwapSettings = ({
     setDeadline(value);
   };
 
-  const handleSlippage = (value) => {
+  const handleSlippage = useCallback((value) => {
     setSlippage(value);
-  };
-
-  const loadSettings = () => {
-    const _slippage = localStorage.getItem(
-      `${currentAccount}_${currentNetwork}_slippage`
-    );
-    const _deadline = localStorage.getItem(
-      `${currentAccount}_${currentNetwork}_deadline`
-    );
-
-    if (!_slippage && !_deadline) {
-      return;
-    }
-    store.dispatch({
-      type: UPDATE_SETTINGS,
-      payload: {
-        slippage: _slippage ? parseFloat(_slippage) : defaultSlippage,
-        deadline: _deadline
-          ? parseFloat(_deadline)
-          : defaultTransactionDeadline,
-      },
-    });
-    setSlippage(_slippage);
-    setDeadline(_deadline);
-  };
+  }, []);
 
   useEffect(() => {
+    function loadSettings() {
+      const _slippage = localStorage.getItem(
+        `${currentAccount}_${currentNetwork}_slippage`
+      );
+      const _deadline = localStorage.getItem(
+        `${currentAccount}_${currentNetwork}_deadline`
+      );
+
+      if (!_slippage && !_deadline) {
+        return;
+      }
+      store.dispatch({
+        type: UPDATE_SETTINGS,
+        payload: {
+          slippage: _slippage ? parseFloat(_slippage) : defaultSlippage,
+          deadline: _deadline
+            ? parseFloat(_deadline)
+            : defaultTransactionDeadline,
+        },
+      });
+      setSlippage(_slippage);
+      setDeadline(_deadline);
+    }
     loadSettings();
   }, [currentNetwork, currentAccount]);
 
@@ -218,7 +216,6 @@ const SwapSettings = ({
             <span className={classes.settingRowLabel}>
               Slippage tolerance
               <Tooltip
-                title="Add"
                 arrow
                 title={
                   <span style={{ fontSize: 12 }}>
@@ -238,18 +235,18 @@ const SwapSettings = ({
               </Tooltip>
             </span>
             <div>
-              <a
+              <span
                 className={classes.slippageItem}
                 onClick={() => handleSlippage(0.5)}
               >
                 0.5%
-              </a>
-              <a
+              </span>
+              <span
                 className={classes.slippageItem}
                 onClick={() => handleSlippage(1)}
               >
                 1%
-              </a>
+              </span>
               <input
                 type="text"
                 className={classes.input}
