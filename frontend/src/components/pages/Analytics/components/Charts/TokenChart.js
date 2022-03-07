@@ -170,15 +170,15 @@ const TokenChart = ({ address, color, base }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, [isClient, width]); // Empty array ensures that effect is only run on mount and unmount
 
-  useEffect(() => {
-    console.log("tokenPage  chart data  ", {
-      chartData,
-      address,
-      frequency,
-      chartFilter,
-      priceData,
-    });
-  }, [chartData]);
+  // useEffect(() => {
+  //   console.log("tokenPage  chart data  ", {
+  //     chartData,
+  //     address,
+  //     frequency,
+  //     chartFilter,
+  //     priceData,
+  //   });
+  // }, [chartData]);
 
   return (
     <ChartWrapper>
@@ -225,7 +225,7 @@ const TokenChart = ({ address, color, base }) => {
             <Button
               active={chartFilter === CHART_VIEW.PRICE}
               onClick={() => {
-                console.log("analyticsTest: filter", CHART_VIEW.PRICE);
+                // console.log("analyticsTest: filter", CHART_VIEW.PRICE);
                 setChartFilter(CHART_VIEW.PRICE);
               }}
               style={

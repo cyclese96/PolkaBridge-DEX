@@ -13,7 +13,7 @@ const chartEvent = (
   if (dataPointIndex < 0) {
     return;
   } else {
-    console.log("click on data ", dataPointIndex);
+    // console.log("click on data ", dataPointIndex);
   }
 };
 
@@ -108,14 +108,14 @@ const AreaChart = ({ chartData, chartType }) => {
     ];
   };
   useEffect(() => {
-    console.log("chart data ", { chartData, chartType });
+    // console.log("chart data ", { chartData, chartType });
     if (chartData !== dataPrev && chartData) {
       const _data =
         chartData.length > 0
           ? chartData.map((item) => currentChartDataPoint(item, chartType))
           : [];
 
-      console.log("area chart data  ", currChartData);
+      // console.log("area chart data  ", currChartData);
       setChartData([{ name: currChartData[0].name, data: _data }]);
     }
   }, [chartCreated, chartData, dataPrev, chartType]);

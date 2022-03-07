@@ -12,7 +12,7 @@ const chartEvent = (
   if (dataPointIndex < 0) {
     return;
   } else {
-    console.log("click on data ", dataPointIndex);
+    // console.log("click on data ", dataPointIndex);
   }
 };
 
@@ -128,7 +128,7 @@ const BarChart = ({ chartData }) => {
 
   useEffect(() => {
     if (chartData !== dataPrev && chartData) {
-      console.log(chartData);
+      // console.log(chartData);
       const _series =
         chartData.length > 0
           ? chartData.map((item) => [

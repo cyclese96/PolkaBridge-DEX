@@ -85,7 +85,7 @@ export default function TopPoolsTable({ data, numberOfRows = 5 }) {
     let result = Object.keys(data).map((key) => data[key]);
     if (result.length > 0) {
       setRows(result);
-      console.log(result);
+      // console.log(result);
     }
   }, [data]);
 

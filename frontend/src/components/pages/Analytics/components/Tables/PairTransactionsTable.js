@@ -88,7 +88,7 @@ export default function PairTransactionsTable({ data }) {
           (a, b) => b.transaction.timestamp - a.transaction.timestamp
         );
         setRows([...tempRows]);
-        console.log(result);
+        // console.log(result);
       }
     }
   }, [data]);
