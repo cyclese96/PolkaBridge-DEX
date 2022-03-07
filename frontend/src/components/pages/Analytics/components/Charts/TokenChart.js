@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ResponsiveContainer } from "recharts";
-import { AutoRow, RowBetween, RowFixed } from "../../../../common/Styled/Row";
+import { AutoRow, RowBetween } from "../../../../common/Styled/Row";
 import BarChart from "../Charts/BarChart";
 import AreaChart from "../Charts/AreaChart";
 import styled from "styled-components";
@@ -74,8 +74,8 @@ const TokenChart = ({ address, color, base }) => {
   const [chartFilter, setChartFilter] = useState(CHART_VIEW.LIQUIDITY);
   const [frequency, setFrequency] = useState(DATA_FREQUENCY.DAY);
 
-  const [darkMode, setDarkMode] = useState(true);
-  const textColor = darkMode ? "white" : "black";
+  // const [darkMode, setDarkMode] = useState(true);
+  // const textColor = darkMode ? "white" : "black";
 
   // reset view on new address
   const addressPrev = usePrevious(address);
@@ -147,10 +147,10 @@ const TokenChart = ({ address, color, base }) => {
   const below600 = useMedia("(max-width: 600px)");
 
   let utcStartTime = getTimeframe(timeWindow);
-  const domain = [
-    (dataMin) => (dataMin > utcStartTime ? dataMin : utcStartTime),
-    "dataMax",
-  ];
+  // const domain = [
+  //   (dataMin) => (dataMin > utcStartTime ? dataMin : utcStartTime),
+  //   "dataMax",
+  // ];
   const aspect = below1080 ? 60 / 32 : below600 ? 60 / 42 : 60 / 22;
 
   chartData = chartData?.filter((entry) => entry.date >= utcStartTime);
@@ -169,16 +169,6 @@ const TokenChart = ({ address, color, base }) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [isClient, width]); // Empty array ensures that effect is only run on mount and unmount
-
-  // useEffect(() => {
-  //   console.log("tokenPage  chart data  ", {
-  //     chartData,
-  //     address,
-  //     frequency,
-  //     chartFilter,
-  //     priceData,
-  //   });
-  // }, [chartData]);
 
   return (
     <ChartWrapper>

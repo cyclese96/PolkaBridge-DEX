@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
@@ -38,7 +38,6 @@ const useStyles = makeStyles((theme) => ({
   main: {
     backgroundColor: "#f9f9f9",
     color: "#C80C81",
-    borderRadius: 10,
     textTransform: "none",
     "&:hover": {
       background: "rgba(255, 255, 255, 0.7)",
@@ -60,7 +59,60 @@ export default function NetworkSelect({ selectedNetwork }) {
     parseInt(localStorage.getItem("currentNetwork") || config.chainId)
   );
 
-  const { active, account, chainId } = useActiveWeb3React();
+  const { active, chainId } = useActiveWeb3React();
+
+  const handleChange = useCallback(
+    (_selected) => {
+      if (network === _selected) {
+        return;
+      }
+
+      localStorage.setItem("currentNetwork", _selected);
+      setNetwork(_selected);
+      if ([config, config.bscChainTestent].includes(_selected)) {
+        setupNetwork(
+          currentConnection === "mainnet"
+            ? bscNetworkDetail.mainnet
+            : bscNetworkDetail.testnet
+        );
+      } else if (
+        [config.polygon_chain_mainnet, config.polygon_chain_testnet].includes(
+          _selected
+        )
+      ) {
+        setupNetwork(
+          currentConnection === "mainnet"
+            ? polygonNetworkDetail.mainnet
+            : polygonNetworkDetail.testnet
+        );
+      } else if (
+        [config.hmyChainMainnet, config.hmyChainTestnet].includes(_selected)
+      ) {
+        setupNetwork(
+          currentConnection === "mainnet"
+            ? harmonyNetworkDetail.mainnet
+            : harmonyNetworkDetail.testnet
+        );
+      } else if (
+        [config.moonriverChain, config.moonriverChainTestent].includes(
+          _selected
+        )
+      ) {
+        setupNetwork(
+          currentConnection === "mainnet"
+            ? moonriverNetworkDetail.mainnet
+            : moonriverNetworkDetail.testnet
+        );
+      } else {
+        setupNetwork(
+          currentConnection === "mainnet"
+            ? ethereumNetworkDetail.mainnet
+            : ethereumNetworkDetail.testnet
+        );
+      }
+    },
+    [network]
+  );
 
   useEffect(() => {
     if (!selectedNetwork) {
@@ -68,55 +120,8 @@ export default function NetworkSelect({ selectedNetwork }) {
     }
 
     handleChange(selectedNetwork);
-  }, [selectedNetwork]);
+  }, [selectedNetwork, handleChange]);
 
-  const handleChange = (_selected) => {
-    if (network === _selected) {
-      return;
-    }
-
-    localStorage.setItem("currentNetwork", _selected);
-    setNetwork(_selected);
-    if ([config, config.bscChainTestent].includes(_selected)) {
-      setupNetwork(
-        currentConnection === "mainnet"
-          ? bscNetworkDetail.mainnet
-          : bscNetworkDetail.testnet
-      );
-    } else if (
-      [config.polygon_chain_mainnet, config.polygon_chain_testnet].includes(
-        _selected
-      )
-    ) {
-      setupNetwork(
-        currentConnection === "mainnet"
-          ? polygonNetworkDetail.mainnet
-          : polygonNetworkDetail.testnet
-      );
-    } else if (
-      [config.hmyChainMainnet, config.hmyChainTestnet].includes(_selected)
-    ) {
-      setupNetwork(
-        currentConnection === "mainnet"
-          ? harmonyNetworkDetail.mainnet
-          : harmonyNetworkDetail.testnet
-      );
-    } else if (
-      [config.moonriverChain, config.moonriverChainTestent].includes(_selected)
-    ) {
-      setupNetwork(
-        currentConnection === "mainnet"
-          ? moonriverNetworkDetail.mainnet
-          : moonriverNetworkDetail.testnet
-      );
-    } else {
-      setupNetwork(
-        currentConnection === "mainnet"
-          ? ethereumNetworkDetail.mainnet
-          : ethereumNetworkDetail.testnet
-      );
-    }
-  };
   return (
     <div>
       {active &&
@@ -154,7 +159,11 @@ export default function NetworkSelect({ selectedNetwork }) {
               className={classes.buttonDrop}
             >
               <span>Ethereum</span>
-              <img className={classes.imgIcon} src="img/eth.png" />
+              <img
+                className={classes.imgIcon}
+                src="https://swap.polkabridge.org/img/eth.png"
+                alt="Ethereum"
+              />
             </MenuItem>
             {/* <MenuItem
             value={

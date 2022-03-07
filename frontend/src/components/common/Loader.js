@@ -14,6 +14,7 @@ const Loader = () => {
     <div>
       <img
         src="https://thumbs.gfycat.com/LameDifferentBalloonfish-small.gif"
+        alt="loader"
         className={classes.loader}
       />
     </div>

@@ -850,10 +850,10 @@ export const importToken = (address, network) => async (dispatch) => {
     }
   } catch (error) {
     console.log("importToken ", error);
-    dispatch({
-      type: DEX_ERROR,
-      payload: "Failed to importToken",
-    });
+    // dispatch({
+    //   type: DEX_ERROR,
+    //   payload: "Failed to importToken",
+    // });
   }
   dispatch({
     type: HIDE_DEX_LOADING,

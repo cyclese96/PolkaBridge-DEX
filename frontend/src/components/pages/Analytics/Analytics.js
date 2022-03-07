@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import useStyles from "./styles";
 import BarChart from "./components/Charts/BarChart";
 import AreaChart from "./components/Charts/AreaChart";
@@ -15,7 +15,6 @@ import { useAllPairData } from "../../../contexts/PairData";
 import Loader from "../../common/Loader";
 import TabPage from "../../TabPage";
 import { formatCurrency } from "../../../utils/formatters";
-import BigNumber from "bignumber.js";
 import TopTokensTable from "./components/Tables/TopTokensTable";
 import TopPoolsTable from "./components/Tables/TopPoolsTable";
 import Transactions from "./components/Tables/TransactionsTable";
@@ -29,14 +28,6 @@ const Analytics = () => {
   const globalData = useGlobalData();
 
   const chartData = useGlobalChartData();
-
-  // useEffect(() => {
-  //   if (!transactions) {
-  //     return
-  //   }
-
-  //   console.log("analyticsTest  ", { transactions });
-  // }, [transactions]);
 
   return (
     <div>
@@ -247,12 +238,6 @@ const Analytics = () => {
           <Transactions data={transactions} />
         </div>
       </div>
-      {/* <div className="d-flex justify-content-center pt-10">
-        <div className={classes.tokenListHeading}>
-
-          Chart is unavailable,
-          will be available soon.</div>
-      </div> */}
     </div>
   );
 };

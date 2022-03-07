@@ -11,7 +11,6 @@ import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import Loader from "../../../../common/Loader";
 import TokenIcon from "../../../../common/TokenIcon";
 import { Link } from "react-router-dom";
-import { ArrowDown } from "react-feather";
 import { ArrowDownward } from "@material-ui/icons";
 import { formattedNum } from "../../../../../utils/timeUtils";
 

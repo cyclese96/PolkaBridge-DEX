@@ -37,9 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
   input: {
     backgroundColor: "transparent",
-    borderRadius: 5,
     height: 50,
-    width: "auto",
     border: "1px solid rgba(224, 224, 224,1)",
     borderRadius: 15,
     fontSize: 18,

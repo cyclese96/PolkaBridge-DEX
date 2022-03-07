@@ -233,7 +233,6 @@ const AddCard = (props) => {
       pairContractData,
       transaction,
       tokenList,
-      dexLoading,
     },
     addLiquidityEth,
     checkAllowance,
@@ -261,7 +260,7 @@ const AddCard = (props) => {
   const [localStateLoading, setLocalStateLoading] = useState(false);
 
   const [swapDialogOpen, setSwapDialog] = useState(false);
-  const { chainId, active } = useActiveWeb3React();
+  const { active } = useActiveWeb3React();
   const [connectWallet] = useWalletConnectCallback();
 
   // selected token usd value track
@@ -278,7 +277,7 @@ const AddCard = (props) => {
     }
 
     return token0PriceData?.priceUSD;
-  }, [token0PriceData]);
+  }, [token0PriceData, selectedToken0]);
 
   const token1PriceUsd = useMemo(() => {
     if (!selectedToken1?.symbol || !token1PriceData) {
@@ -286,7 +285,7 @@ const AddCard = (props) => {
     }
 
     return token1PriceData?.priceUSD;
-  }, [token1PriceData]);
+  }, [token1PriceData, selectedToken1]);
 
   const [addStatus, setStatus] = useState({
     message: "Please select tokens",
@@ -303,18 +302,26 @@ const AddCard = (props) => {
 
   const query = new URLSearchParams(useLocation().search);
 
+  const handleTokenImport = useCallback(
+    (_tokenAddress) => {
+      importToken(_tokenAddress, currentNetwork);
+    },
+    [currentNetwork, importToken]
+  );
+
+  const [token0Query, token1Query] = [
+    query.get("inputCurrency"),
+    query.get("outputCurrency"),
+  ];
+
   useEffect(() => {
     async function initSelection() {
-      const [token0Query, token1Query] = [
-        query.get("inputCurrency"),
-        query.get("outputCurrency"),
-      ];
-
       if (token0Query) {
         const _token = getTokenToSelect(tokenList, token0Query);
 
         if (!_token || !_token.symbol) {
-          importToken(token0Query, currentAccount, currentNetwork);
+          // importToken(token0Query, currentAccount, currentNetwork);
+          handleTokenImport(token0Query);
         }
         setToken0(_token);
       } else {
@@ -329,7 +336,8 @@ const AddCard = (props) => {
         const _token = getTokenToSelect(tokenList, token1Query);
 
         if (!_token || !_token.symbol) {
-          importToken(token1Query, currentAccount, currentNetwork);
+          // importToken(token1Query, currentAccount, currentNetwork);
+          handleTokenImport(token1Query);
         }
 
         setToken1(_token);
@@ -342,7 +350,14 @@ const AddCard = (props) => {
       }
     }
     initSelection();
-  }, [currentNetwork, currentAccount, tokenList]);
+  }, [
+    currentNetwork,
+    currentAccount,
+    tokenList,
+    handleTokenImport,
+    token1Query,
+    token0Query,
+  ]);
 
   const currentPairAddress = () => {
     if (
@@ -529,15 +544,13 @@ const AddCard = (props) => {
     }
   };
 
-  const debouncedPoolShareCall = useCallback(
-    debounce((...params) => getPoolShare(...params), 1000),
-    [] // will be created only once initially
-  );
+  const debouncedPoolShareCall = useCallback(() => {
+    debounce((...params) => getPoolShare(...params), 1000);
+  }, []);
 
-  const debouncedGetLpBalance = useCallback(
-    debounce((...params) => getLpBalance(...params), 1000),
-    [] // will be created only once initially
-  );
+  const debouncedGetLpBalance = useCallback(() => {
+    debounce((...params) => getLpBalance(...params), 1000);
+  }, []);
 
   const onToken1InputChange = async (tokens) => {
     setToken1Value(tokens);
@@ -784,6 +797,7 @@ const AddCard = (props) => {
         : addStatus.message;
     }
   }, [
+    currApproveBtnText,
     active,
     localStateLoading,
     transaction,
@@ -819,7 +833,13 @@ const AddCard = (props) => {
     ) {
       setSwapDialog(true);
     }
-  }, [transaction]);
+  }, [
+    transaction,
+    currentNetwork,
+    getAccountBalance,
+    selectedToken0,
+    selectedToken1,
+  ]);
 
   const handleConfirmSwapClose = (value) => {
     setSwapDialog(value);

@@ -6,19 +6,20 @@ import {
   usePairTransactions,
 } from "../../../../../contexts/PairData";
 import { formattedNum } from "../../../../../utils/timeUtils";
-import { useEthPrice } from "../../../../../contexts/GlobalData";
+// import { useEthPrice } from "../../../../../contexts/GlobalData";
 import { Button, Card } from "@material-ui/core";
 import TokenIcon from "../../../../common/TokenIcon";
 // import { formatCurrency } from "../../../utils/helper";
 // import TokenChart from "../../components/Charts/TokenChart";
 // import { formatCurrency } from "../../../../../utils/formatters";
-import { currentConnection } from "../../../../../constants/index";
+// import { currentConnection } from "../../../../../constants/index";
 import { FileCopyOutlined, OpenInNew } from "@material-ui/icons";
 import PairTransactionsTable from "../Tables/PairTransactionsTable";
 import Loader from "../../../../common/Loader";
 import PairChart from "../Charts/PairChart";
 import { Link } from "react-router-dom";
 import CurrencyFormat from "react-currency-format";
+import { urls } from "utils/formatters";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -155,8 +156,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "white",
     color: "black",
     borderRadius: 15,
-    paddingLeft: 10,
-    paddingRight: 10,
     paddingTop: 15,
     paddingBottom: 15,
     display: "flex",
@@ -225,22 +224,18 @@ function PoolDetail({ pairAddress }) {
     token1,
     reserve0,
     reserve1,
-    reserveUSD,
-    trackedReserveUSD,
+    // reserveUSD,
+    // trackedReserveUSD,
     oneDayVolumeUSD,
     volumeChangeUSD,
-    oneDayVolumeUntracked,
-    volumeChangeUntracked,
+    // oneDayVolumeUntracked,
+    // volumeChangeUntracked,
     liquidityChangeUSD,
   } = usePairData(pairAddress);
 
   const transactions = usePairTransactions(pairAddress); // todo fix api for pair transactions
   // const transactions = useGlobalTransactions();
   const poolData = usePairData(pairAddress);
-
-  // useEffect(() => {
-  //   console.log("alltransaction", { oneDayVolumeUSD, oneDayVolumeUntracked });
-  // }, []);
 
   useEffect(() => {
     if (Object.keys(poolData).length !== 0 || !poolData) {
@@ -253,7 +248,7 @@ function PoolDetail({ pairAddress }) {
       let result = Object.keys(transactions).map((key) => transactions[key]);
       if (result.length > 0) {
         setPairTransactions(transactions);
-        console.log(transactions);
+        // console.log(transactions);
       }
     }
   }, [transactions]);
@@ -269,11 +264,11 @@ function PoolDetail({ pairAddress }) {
     });
   }, []);
 
-  const usingUtVolume = oneDayVolumeUSD === 0 && !!oneDayVolumeUntracked;
+  // const usingUtVolume = oneDayVolumeUSD === 0 && !!oneDayVolumeUntracked;
 
-  const volume = formattedNum(
-    !oneDayVolumeUSD ? oneDayVolumeUSD : usingUtVolume
-  );
+  // const volume = formattedNum(
+  //   !oneDayVolumeUSD ? oneDayVolumeUSD : usingUtVolume
+  // );
   // Total gas fees collected
   const fees = formattedNum(oneDayVolumeUSD * 0.002);
 
@@ -282,7 +277,7 @@ function PoolDetail({ pairAddress }) {
   };
 
   // token data for usd
-  const [ethPrice] = useEthPrice();
+  // const [ethPrice] = useEthPrice();
 
   const classes = useStyles();
   return (
@@ -306,11 +301,8 @@ function PoolDetail({ pairAddress }) {
                 <a
                   style={{ color: "#DF097C", paddingLeft: 5 }}
                   target="_blank"
-                  href={
-                    currentConnection === "testnet"
-                      ? `https://rinkeby.etherscan.io/address/${pairAddress}`
-                      : `https://etherscan.io/address/${pairAddress}`
-                  }
+                  rel="noreferrer"
+                  href={urls.showAddress(pairAddress)}
                 >
                   ({pairAddress && pairAddress.slice(0, 8)})
                 </a>
@@ -546,12 +538,9 @@ function PoolDetail({ pairAddress }) {
                   </div>
                   <div className="d-flex justify-content-end">
                     <a
-                      href={
-                        currentConnection === "testnet"
-                          ? `https://rinkeby.etherscan.io/address/${pairAddress}`
-                          : `https://etherscan.io/address/${pairAddress}`
-                      }
+                      href={urls.showAddress(pairAddress)}
                       target="_blank"
+                      rel="noreferrer"
                     >
                       <Button className={classes.openButton}>
                         View on explorer{" "}

@@ -71,7 +71,9 @@ const symbolMapping = {
   ANT: ant,
 };
 
-export default (symbol) => {
+const tokenThumbnail = (symbol) => {
   const iconImg = symbolMapping[symbol];
   return iconImg ? iconImg : noIcon;
 };
+
+export default tokenThumbnail;

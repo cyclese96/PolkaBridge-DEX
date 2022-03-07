@@ -1,20 +1,20 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
-import { Area, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
-import { AutoRow, RowBetween, RowFixed } from "../../../../common/Styled/Row";
+import { ResponsiveContainer } from "recharts";
+import { AutoRow, RowBetween } from "../../../../common/Styled/Row";
 import BarChart from "../Charts/BarChart";
 import AreaChart from "../Charts/AreaChart";
 
 import {
-  toK,
-  toNiceDate,
-  toNiceDateYear,
+  // toK,
+  // toNiceDate,
+  // toNiceDateYear,
   formattedNum,
   getTimeframe,
 } from "../../../../../utils/timeUtils";
 
-import { OptionButton } from "../../../../common/Styled/ButtonStyled";
-import { darken } from "polished";
+// import { OptionButton } from "../../../../common/Styled/ButtonStyled";
+// import { darken } from "polished";
 import {
   usePairChartData,
   useHourlyRateData,
@@ -38,12 +38,12 @@ const ChartWrapper = styled.div`
   }
 `;
 
-const OptionsRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  margin-bottom: 40px;
-`;
+// const OptionsRow = styled.div`
+//   display: flex;
+//   flex-direction: row;
+//   width: 100%;
+//   margin-bottom: 40px;
+// `;
 
 const CHART_VIEW = {
   VOLUME: "Volume",
@@ -57,8 +57,8 @@ const PairChart = ({ address, color, base0, base1 }) => {
 
   const [timeWindow, setTimeWindow] = useState(timeframeOptions.MONTH);
 
-  const [darkMode, setDarkMode] = useState(true);
-  const textColor = darkMode ? "white" : "black";
+  // const [darkMode, setDarkMode] = useState(true);
+  // const textColor = darkMode ? "white" : "black";
 
   // update the width on a window resize
   const ref = useRef();

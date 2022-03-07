@@ -12,7 +12,6 @@ import MenuIcon from "@material-ui/icons/Menu";
 import PeopleAltOutlined from "@material-ui/icons/PeopleAltOutlined";
 import FlareOutlined from "@material-ui/icons/FlareOutlined";
 import TouchAppOutlined from "@material-ui/icons/TouchAppOutlined";
-import CategoryIcon from "@material-ui/icons/Category";
 import SwapVertIcon from "@material-ui/icons/SwapVert";
 
 import { EqualizerOutlined } from "@material-ui/icons";
@@ -50,7 +49,6 @@ const useStyles = makeStyles((theme) => ({
   sectionDesktop: {
     marginLeft: 40,
     marginRight: 40,
-    display: "block",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
@@ -229,7 +227,7 @@ const Navbar = (props) => {
     if (!active && localStorage.connected === "yes") {
       connectWallet();
     }
-  }, [active]);
+  }, [active, connectWallet]);
 
   const handleLogout = () => {
     localStorage.connected = "none";
@@ -350,6 +348,7 @@ const Navbar = (props) => {
             <a
               href="https://launchpad.polkabridge.org"
               target="_blank"
+              rel="noreferrer"
               className={classes.navbarItemsDesktop}
             >
               Launchpad <DotCircle />
@@ -366,7 +365,7 @@ const Navbar = (props) => {
           </div>
 
           <div>
-            <a href="#" className={classes.navbarItemsDesktop}>
+            <a href="/" className={classes.navbarItemsDesktop}>
               Lending <DotCircle />
             </a>
           </div>
@@ -381,7 +380,6 @@ const Navbar = (props) => {
           <div className={classes.row1}>
             <div>
               <a href="/">
-                {" "}
                 <img
                   alt="logo"
                   variant="square"

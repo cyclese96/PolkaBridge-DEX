@@ -8,12 +8,11 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { makeStyles } from "@material-ui/core";
 import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import Loader from "../../../../common/Loader";
 import { formattedNum, formatTime } from "../../../../../utils/timeUtils";
-import { currentConnection } from "../../../../../constants/index";
 import BigNumber from "bignumber.js";
+import { urls } from "utils/formatters";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -336,12 +335,9 @@ export default function TokenTxTable({ data }) {
                       {skipIndex * 5 + index + 1}
                     </span>
                     <a
-                      href={
-                        currentConnection === "testnet"
-                          ? `https://rinkeby.etherscan.io/tx/${row.transaction.id}`
-                          : `https://etherscan.io/tx/${row.transaction.id}`
-                      }
+                      href={urls.showAddress(row?.transaction?.id)}
                       target="_blank"
+                      rel="noreferrer"
                       className={classes.link}
                     >
                       {" "}
@@ -398,11 +394,9 @@ export default function TokenTxTable({ data }) {
                   >
                     <a
                       style={{ color: "#df097c" }}
-                      href={
-                        currentConnection === "testnet"
-                          ? `https://rinkeby.etherscan.io/address/${row.sender}`
-                          : `https://etherscan.io/address/${row.sender}`
-                      }
+                      href={urls.showAddress(row?.sender)}
+                      target="_blank"
+                      rel="noreferrer"
                     >
                       {" "}
                       {[...row.sender]?.splice(0, 3)} {"..."}

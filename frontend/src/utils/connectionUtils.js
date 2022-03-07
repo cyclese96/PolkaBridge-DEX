@@ -89,14 +89,6 @@ export const getCurrentNetwork = (networkId) => {
 export function useWalletConnectCallback() {
   const { activate } = useActiveWeb3React();
 
-  const connectWallet = useCallback(() => {
-    if (isMetaMaskInstalled()) {
-      createConnectHandler(connectors.injected);
-    } else {
-      createConnectHandler(connectors.walletconnect);
-    }
-  }, [activate]);
-
   const createConnectHandler = async (connector) => {
     try {
       // const connector = connectors.injected;
@@ -112,6 +104,14 @@ export function useWalletConnectCallback() {
       console.error("createConnectHandler", error);
     }
   };
+
+  const connectWallet = useCallback(() => {
+    if (isMetaMaskInstalled()) {
+      createConnectHandler(connectors.injected);
+    } else {
+      createConnectHandler(connectors.walletconnect);
+    }
+  }, [activate, createConnectHandler]);
 
   return [connectWallet];
 }

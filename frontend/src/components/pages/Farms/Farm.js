@@ -6,7 +6,6 @@ import TokenIcon from "../../common/TokenIcon";
 import { useEffect, useMemo } from "react";
 import {
   allowanceAmount,
-  BASE_URL,
   currentConnection,
   farmingPoolConstants,
   tokenAddresses,
@@ -198,12 +197,12 @@ const Farm = (props) => {
 
   const farmPoolAddress = useMemo(
     () => farmingPoolConstants?.ethereum?.[farmPool]?.address,
-    [farmPool, farmingPoolConstants]
+    [farmPool]
   );
 
   const farmPoolId = useMemo(
     () => farmingPoolConstants?.ethereum?.[farmPool]?.pid,
-    [farmPool, farmingPoolConstants]
+    [farmPool]
   );
 
   useEffect(() => {
@@ -483,6 +482,7 @@ const Farm = (props) => {
           <a
             className={classes.link}
             target="_blank"
+            rel="noreferrer"
             href={`/liquidity?action=add_liquidity&inputCurrency=${
               farmPool && farmPool.split("-")[0]
             }&outputCurrency=${farmPool && farmPool.split("-")[1]}`}
@@ -496,6 +496,7 @@ const Farm = (props) => {
         <div className="d-flex justify-content-between align-items-center ">
           <a
             target="_blank"
+            rel="noreferrer"
             className={classes.link}
             href={urls.showAddress(farmPoolAddress)}
           >

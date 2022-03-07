@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import Paper from "@mui/material/Paper";
+import React from "react";
 import { makeStyles } from "@material-ui/core";
 
 import { useAllPairData } from "../../../../../contexts/PairData";
@@ -32,7 +31,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 20,
     marginBottom: 10,
 
-
     fontWeight: 500,
     letterSpacing: 0.7,
     fontSize: 18,
@@ -42,20 +40,16 @@ const useStyles = makeStyles((theme) => ({
 export default function AllTopPoll() {
   const classes = useStyles();
 
-
   const allPairs = useAllPairData();
 
-
   return (
-    <div className='container'>
+    <div className="container">
       <div className={classes.background}>
         <div className="d-flex justify-content-start">
           <div className={classes.tokenListHeading}>Top Pools</div>
-
         </div>
         <div className="d-flex justify-content-center">
           <TopPoolsTable data={allPairs} numberOfRows={10} />
-
         </div>
       </div>
     </div>

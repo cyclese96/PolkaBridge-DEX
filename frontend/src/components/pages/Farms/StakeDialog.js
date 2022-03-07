@@ -354,7 +354,15 @@ const StakeDialog = ({
             </Button>
           </div>
           <div className="d-flex justify-content-center align-items-center mt-4 mb-2">
-            <Link to="liquidity">
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href={`/liquidity?action=add_liquidity&inputCurrency=${
+                poolInfo?.farmPool && poolInfo?.farmPool?.split("-")?.[0]
+              }&outputCurrency=${
+                poolInfo?.farmPool && poolInfo?.farmPool?.split("-")?.[1]
+              }`}
+            >
               {" "}
               <div
                 className={classes.tokenTitle}
@@ -362,7 +370,7 @@ const StakeDialog = ({
               >
                 Get {poolInfo.farmPool} LP <OpenInNewIcon fontSize="small" />{" "}
               </div>{" "}
-            </Link>
+            </a>
             <div className={classes.tokenAmount}></div>
           </div>
         </div>

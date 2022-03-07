@@ -1,5 +1,7 @@
 import { makeStyles } from "@material-ui/core";
+import { factoryAddresses } from "constants/index";
 import React from "react";
+import { urls } from "utils/formatters";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,13 +40,19 @@ const Footer = () => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <a className={classes.item} href="#">
+      <a
+        className={classes.item}
+        href={urls.showAddress(factoryAddresses.ethereum)}
+        target="_blank"
+        rel="noreferrer"
+      >
         Contract
       </a>
       <a
         className={classes.item}
         href="https://github.com/cyclese96"
         target="_blank"
+        rel="noreferrer"
       >
         Github
       </a>
@@ -52,6 +60,7 @@ const Footer = () => {
         className={classes.item}
         href="https://twitter.com/realpolkabridge"
         target="_blank"
+        rel="noreferrer"
       >
         Twitter
       </a>
@@ -59,6 +68,7 @@ const Footer = () => {
         className={classes.item}
         href="https://t.me/polkabridgegroup"
         target="_blank"
+        rel="noreferrer"
       >
         Telegram
       </a>
@@ -66,6 +76,7 @@ const Footer = () => {
         className={classes.item}
         href="https://discord.gg/tzemFksyZB"
         target="_blank"
+        rel="noreferrer"
       >
         Discord
       </a>
@@ -73,6 +84,7 @@ const Footer = () => {
         className={classes.item}
         href="https://polkabridge.org"
         target="_blank"
+        rel="noreferrer"
       >
         Landing Page
       </a>
@@ -80,6 +92,7 @@ const Footer = () => {
       <div className={classes.ankrLabel}>
         <img
           src="https://assets.coingecko.com/coins/images/4324/small/U85xTl2.png?1608111978"
+          alt="Ankr"
           className={classes.icon}
         />
         RPC powered by ANKR protocol
