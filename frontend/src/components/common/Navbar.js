@@ -237,7 +237,7 @@ const Navbar = (props) => {
   };
 
   const handleWalletClick = () => {
-    console.log("active", active);
+    // console.log("active", active);
     if (active) {
       setAccountDialog(true);
     } else {
@@ -281,7 +281,6 @@ const Navbar = (props) => {
             id: "features",
             icon: <FlareOutlined />,
           },
-
         ].map((tab, index) => (
           <a href={tab.link}>
             <ListItem
@@ -371,10 +370,6 @@ const Navbar = (props) => {
               Lending <DotCircle />
             </a>
           </div>
-
-
-
-
 
           <div className={classes.grow} />
 

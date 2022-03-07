@@ -203,9 +203,9 @@ function TokenPage({ address }) {
     document.querySelector("body").scrollTo(0, 0);
   }, []);
 
-  useEffect(() => {
-    console.log("alltransaction token page ", { oneDayVolumeUSD });
-  }, []);
+  // useEffect(() => {
+  //   console.log("alltransaction token page ", { oneDayVolumeUSD });
+  // }, []);
 
   useEffect(() => {
     window.scrollTo({

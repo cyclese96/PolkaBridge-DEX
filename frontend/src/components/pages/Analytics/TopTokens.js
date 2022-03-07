@@ -193,7 +193,7 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-          // style={{ color: "#E0077D" }}s
+            // style={{ color: "#E0077D" }}s
           >
             <TableSortLabel
               // active={orderBy === headCell.id}
@@ -225,7 +225,7 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
-          // style={{ color: "#E0077D" }}s
+            // style={{ color: "#E0077D" }}s
           >
             <TableSortLabel
               // active={orderBy === headCell.id}
@@ -400,8 +400,8 @@ const TopTokens = ({
   const formattedTokens = useMemo(() => {
     return (
       allTokens &&
-      Object.keys(allTokens).map((key) =>
-        allTokens[key].id && getFormattedTokenObject(allTokens[key])
+      Object.keys(allTokens).map(
+        (key) => allTokens[key].id && getFormattedTokenObject(allTokens[key])
       )
     );
   }, [allTokens]);
@@ -442,7 +442,7 @@ const TopTokens = ({
   }, [allTransactions]);
 
   const handleRequestSort = (event, property) => {
-    console.log("sort ", property);
+    // console.log("sort ", property);
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
@@ -458,7 +458,7 @@ const TopTokens = ({
   // };
 
   const handleClick = (event, name) => {
-    console.log("row clicked...", name);
+    // console.log("row clicked...", name);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -491,26 +491,26 @@ const TopTokens = ({
 
   const CurrenTokenRow = ({ tableType, classes, handleClick }) => {
     if (tableType === "TopTokens") {
-      console.log(formattedTokens);
+      // console.log(formattedTokens);
       return (
         <>
           {formattedTokens.length > 0
             ? stableSort(formattedTokens, getComparator(order, orderBy))
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row, index) => {
-                const isItemSelected = row ? isSelected(row.name) : false;
-                const labelId = `enhanced-table-checkbox-${index}`;
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => {
+                  const isItemSelected = row ? isSelected(row.name) : false;
+                  const labelId = `enhanced-table-checkbox-${index}`;
 
-                return (
-                  <TokenRow
-                    row={!row ? {} : row}
-                    classes={classes}
-                    isItemSelected={isItemSelected}
-                    labelId={labelId}
-                    handleClick={handleClick}
-                  />
-                );
-              })
+                  return (
+                    <TokenRow
+                      row={!row ? {} : row}
+                      classes={classes}
+                      isItemSelected={isItemSelected}
+                      labelId={labelId}
+                      handleClick={handleClick}
+                    />
+                  );
+                })
             : ""}
           {emptyRows > 0 && (
             <TableRow

@@ -238,9 +238,9 @@ function PoolDetail({ pairAddress }) {
   // const transactions = useGlobalTransactions();
   const poolData = usePairData(pairAddress);
 
-  useEffect(() => {
-    console.log("alltransaction", { oneDayVolumeUSD, oneDayVolumeUntracked });
-  }, []);
+  // useEffect(() => {
+  //   console.log("alltransaction", { oneDayVolumeUSD, oneDayVolumeUntracked });
+  // }, []);
 
   useEffect(() => {
     if (Object.keys(poolData).length !== 0 || !poolData) {

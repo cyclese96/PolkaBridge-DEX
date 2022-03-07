@@ -84,9 +84,9 @@ const PairChart = ({ address, color, base0, base1 }) => {
   const hourlyRate0 = hourlyData && hourlyData[0];
   const hourlyRate1 = hourlyData && hourlyData[1];
 
-  useEffect(() => {
-    console.log("pair chart data page", chartData);
-  }, [chartData]);
+  // useEffect(() => {
+  //   // console.log("pair chart data page", chartData);
+  // }, [chartData]);
   // formatted symbols for overflow
   const formattedSymbol0 =
     pairData?.token0?.symbol.length > 6

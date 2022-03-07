@@ -336,7 +336,7 @@ export const topTransactions = async (page = 1, order = "desc") => {
   `;
 
     const res = await client.query({ query: gql(queryObj) });
-    console.log("res", res.data);
+    // console.log("res", res.data);
     return res.data.transactions;
   } catch (error) {
     return [];
