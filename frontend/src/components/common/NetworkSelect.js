@@ -161,7 +161,7 @@ export default function NetworkSelect({ selectedNetwork }) {
               <span>Ethereum</span>
               <img
                 className={classes.imgIcon}
-                src="img/eth.png"
+                src="https://swap.polkabridge.org/img/eth.png"
                 alt="Ethereum"
               />
             </MenuItem>
