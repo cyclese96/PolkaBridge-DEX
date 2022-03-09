@@ -211,7 +211,7 @@ const Farm = (props) => {
     }
 
     async function loadFarmData() {
-      await Promise.all([
+      Promise.all([
         checkLpFarmAllowance(farmPoolAddress, currentAccount, currentNetwork),
         getFarmInfo(
           farmPoolAddress,
