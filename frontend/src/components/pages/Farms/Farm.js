@@ -206,9 +206,9 @@ const Farm = (props) => {
   );
 
   useEffect(() => {
-    if (!currentAccount || !currentNetwork) {
-      return;
-    }
+    // if (!currentAccount || !currentNetwork) {
+    //   return;
+    // }
 
     async function loadFarmData() {
       Promise.all([

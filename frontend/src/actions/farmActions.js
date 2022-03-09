@@ -272,6 +272,15 @@ export const harvestRewards =
     });
   };
 
+const resolvePromise = async (promiseFn) => {
+  try {
+    const data = await promiseFn.call();
+    return data;
+  } catch (error) {
+    return {};
+  }
+};
+
 export const getFarmInfo =
   (pairAddress, pid, account, network) => async (dispatch) => {
     try {
@@ -284,10 +293,10 @@ export const getFarmInfo =
 
       const [poolInfo, pendingPbr, userInfo, totalAllocPoint] =
         await Promise.all([
-          _farmContract.methods.poolInfo(pid).call(),
-          _farmContract.methods.pendingPBR(pid, account).call(),
-          _farmContract.methods.userInfo(pid, account).call(),
-          _farmContract.methods.totalAllocPoint().call(),
+          resolvePromise(_farmContract.methods.poolInfo(pid)),
+          resolvePromise(_farmContract.methods.pendingPBR(pid, account)),
+          resolvePromise(_farmContract.methods.userInfo(pid, account)),
+          resolvePromise(_farmContract.methods.totalAllocPoint()),
         ]);
 
       const farmPoolObj = {};
@@ -304,6 +313,7 @@ export const getFarmInfo =
         type: GET_FARM_POOL,
         payload: farmPoolObj,
       });
+      console.log("farmTest: farm pool fetched ", farmPoolObj);
     } catch (error) {
       console.log("farmTest: getFarmInfo", {
         error,
@@ -335,11 +345,11 @@ export const getLpBalanceFarm =
 
       const [lpBalance, token0Addr, token1Addr, reservesData, totalSupply] =
         await Promise.all([
-          _pairContract.methods.balanceOf(account).call(),
-          _pairContract.methods.token0().call(),
-          _pairContract.methods.token1().call(),
-          _pairContract.methods.getReserves().call(),
-          _pairContract.methods.totalSupply().call(),
+          resolvePromise(_pairContract.methods.balanceOf(account)),
+          resolvePromise(_pairContract.methods.token0()),
+          resolvePromise(_pairContract.methods.token1()),
+          resolvePromise(_pairContract.methods.getReserves()),
+          resolvePromise(_pairContract.methods.totalSupply()),
         ]);
 
       const reserve = {};
