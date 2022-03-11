@@ -11,7 +11,7 @@ import {
   polygonNetworkDetail,
 } from "../../utils/networkConstants";
 import { setupNetwork } from "../../utils/connectionUtils";
-import { currentConnection } from "../../constants/index";
+import { currentConnection, FACTORY_ADDRESS } from "../../constants/index";
 import config from "../../utils/config";
 import { Button } from "@material-ui/core";
 import useActiveWeb3React from "../../hooks/useActiveWeb3React";
@@ -124,10 +124,7 @@ export default function NetworkSelect({ selectedNetwork }) {
 
   return (
     <div>
-      {active &&
-      ![config.ethChainId, config.ethChainIdRinkeby].includes(
-        parseInt(chainId)
-      ) ? (
+      {active && !Object.keys(FACTORY_ADDRESS).includes(chainId?.toString()) ? (
         <Button
           onClick={() =>
             handleChange(
@@ -165,17 +162,13 @@ export default function NetworkSelect({ selectedNetwork }) {
                 alt="Ethereum"
               />
             </MenuItem>
-            {/* <MenuItem
-            value={
-              currentConnection === "testnet"
-                ? config.moonriverChainTestent
-                : config.moonriverChain
-            }
-            className={classes.buttonDrop}
-          >
-            <span>Moonriver</span>
-            <img className={classes.imgIcon} src="img/moon.png" />
-          </MenuItem> */}
+            <MenuItem
+              value={currentConnection === "testnet" ? 97 : 56}
+              className={classes.buttonDrop}
+            >
+              <span>BSC</span>
+              <img className={classes.imgIcon} src="img/bsc.png" />
+            </MenuItem>
             {/* <MenuItem
             value={
               currentConnection === "testnet"

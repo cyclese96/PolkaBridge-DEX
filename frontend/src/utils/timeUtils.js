@@ -1,7 +1,6 @@
 import React from "react";
 import { BigNumber } from "bignumber.js";
 import dayjs from "dayjs";
-import { ethers } from "ethers";
 import utc from "dayjs/plugin/utc";
 import { blockClient } from "../apollo/client";
 import { GET_BLOCK, GET_BLOCKS } from "../apollo/queries";
@@ -10,6 +9,7 @@ import _Decimal from "decimal.js-light";
 import toFormat from "toformat";
 import { timeframeOptions } from "../constants/index";
 import Numeral from "numeral";
+import { isAddress } from "./contractUtils";
 
 // format libraries
 const Decimal = toFormat(_Decimal);
@@ -326,14 +326,6 @@ export function getTimestampRange(timestamp_from, period_length, periods) {
 
 export const toNiceDateYear = (date) =>
   dayjs.utc(dayjs.unix(date)).format("MMMM DD, YYYY");
-
-export const isAddress = (value) => {
-  try {
-    return ethers.utils.getAddress(value.toLowerCase());
-  } catch {
-    return false;
-  }
-};
 
 export const toK = (num) => {
   return Numeral(num).format("0.[00]a");

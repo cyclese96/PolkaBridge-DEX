@@ -5,7 +5,7 @@ import theme from "./theme";
 
 import { Route, Switch, BrowserRouter, Redirect } from "react-router-dom";
 import { PAIR_BLACKLIST, TOKEN_BLACKLIST } from "./constants";
-import { isAddress } from "./utils/helper";
+import { isAddress } from "utils/contractUtils";
 
 const Home = lazy(() => import("./components/Home"));
 const TokenPage = lazy(() =>

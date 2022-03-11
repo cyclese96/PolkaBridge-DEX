@@ -27,13 +27,13 @@ import {
   get2DayPercentChange,
   getPercentChange,
   getBlockFromTimestamp,
-  isAddress,
   getBlocksFromTimestamps,
   splitQuery,
 } from "../utils/timeUtils";
 
 import { timeframeOptions } from "../constants/index";
 import { useLatestBlocks } from "./Application";
+import { isAddress } from "utils/contractUtils";
 
 const UPDATE = "UPDATE";
 const UPDATE_TOKEN_TXNS = "UPDATE_TOKEN_TXNS";

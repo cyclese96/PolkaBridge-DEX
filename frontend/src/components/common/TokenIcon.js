@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 import React from "react";
+import { isAddress } from "utils/contractUtils";
 import { currentConnection } from "../../constants/index";
-import { isAddress } from "../../utils/helper";
 import tokenThumbnail from "../../utils/tokenThumbnail";
 
 const useStyles = makeStyles((theme) => ({

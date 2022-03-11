@@ -1,7 +1,5 @@
 import BigNumber from "bignumber.js";
-// import web3 from "../web";
 import axios from "axios";
-import { getAddress } from "ethers/utils/address";
 import {
   bscNetwork,
   currentConnection,
@@ -198,52 +196,7 @@ export const getToken2Out = (tokenIn, token1Reserve, token2Reserve) => {
     const denominator = r0.multipliedBy(1000).plus(x.multipliedBy(998));
     const y = numerator.div(denominator);
 
-    // let result;
-    // let integerPart;
     const result = fromWei(y.toFixed(0).toString());
-    // if (y.gt(1)) {
-    //   // integerPart = y.toString().split(".");
-    //   // result = fromWei(integerPart[0]);
-    // } else {
-    //   // integerPart = y.toString().split(".");
-    //   // result = fromWei(y.toString());
-    //   const _toString = y.div(WEI_UNITS).toString();
-    //   result = _toString;
-    // }
-
-    return result;
-  } catch (error) {
-    console.log("exeption getTokenOut", { error, tokenIn });
-    return new BigNumber(0).toFixed(0).toString();
-  }
-};
-
-export const getToken1Out = (tokenIn, token1Reserve, token2Reserve) => {
-  const r0 = new BigNumber(!token1Reserve ? 0 : token1Reserve);
-  const r1 = new BigNumber(!token2Reserve ? 0 : token2Reserve);
-  const y = new BigNumber(!tokenIn ? 0 : tokenIn);
-
-  if (r0.lte(0) || r1.lte(0) || y.lte(0)) {
-    return new BigNumber(0).toFixed(0).toString();
-  }
-
-  try {
-    // price out calculation
-    const numerator = y.multipliedBy(998).multipliedBy(r0);
-    const denominator = r1.multipliedBy(1000).plus(y.multipliedBy(998));
-    // const numerator = y.multipliedBy(1000).multipliedBy(r0);
-    // const denominator = r1.multipliedBy(998).minus(y.multipliedBy(998));
-    const x = numerator.div(denominator);
-
-    const result = fromWei(x.toFixed(0).toString());
-
-    // if (x.gt(1)) {
-    //   const _toString = x.div(WEI_UNITS).toString()
-    //   result = _toString;
-    // } else {
-    //   const _toString = x.div(WEI_UNITS).toString();
-    //   result = _toString;
-    // }
 
     return result;
   } catch (error) {
@@ -320,14 +273,6 @@ export const sellPriceImpact = (xTokenAmount, yTokenAmount, xReserve) => {
 export const formatFloat = (floatValue) => {
   const _f = new BigNumber(floatValue ? floatValue : 0);
   return _f.toFixed(4).toString();
-};
-
-export const isAddress = (value) => {
-  try {
-    return getAddress(value.toLowerCase());
-  } catch {
-    return false;
-  }
 };
 
 export const cacheImportedToken = (tokenData) => {

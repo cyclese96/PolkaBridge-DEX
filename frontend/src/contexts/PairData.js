@@ -27,13 +27,13 @@ import utc from "dayjs/plugin/utc";
 import {
   getPercentChange,
   get2DayPercentChange,
-  isAddress,
   getBlocksFromTimestamps,
   getTimestampsForChanges,
   splitQuery,
 } from "../utils/timeUtils";
 import { timeframeOptions } from "../constants/index";
 import { useLatestBlocks } from "./Application";
+import { isAddress } from "utils/contractUtils";
 // import { PAIRS_CURRENT } from '../apollo/queries'
 // import { updateNameData } from '../utils/data'
 

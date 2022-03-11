@@ -6,6 +6,7 @@ import { formatCurrency } from "../../utils/formatters";
 import { formattedNum } from "../../utils/timeUtils";
 import BigNumber from "bignumber.js";
 import React from "react";
+import { useCurrencyBalance } from "hooks/useBalance";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -113,6 +114,7 @@ const SwapCardItem = (props) => {
     inputValue,
     disableToken,
     priceUSD,
+    currenryBalance,
   } = props;
   const classes = useStyles();
 
@@ -133,11 +135,7 @@ const SwapCardItem = (props) => {
       return;
     }
 
-    onInputChange(
-      balance
-        ? fromWei(balance[currentToken.symbol], currentToken.decimals)
-        : "0"
-    );
+    onInputChange(!currenryBalance ? "0" : currenryBalance);
   };
 
   return (
@@ -154,9 +152,7 @@ const SwapCardItem = (props) => {
             )}
             <p className={classes.labelFont}>
               Balance:
-              {formatCurrency(
-                fromWei(balance[currentToken.symbol], currentToken.decimals)
-              )}
+              {formatCurrency(!currenryBalance ? "0" : currenryBalance)}
             </p>
           </div>
           <div className={classes.inputRow}>

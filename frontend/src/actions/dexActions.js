@@ -1,5 +1,6 @@
 import BigNumber from "bignumber.js";
 import {
+  bscNetwork,
   currentConnection,
   ETH,
   moonriverNetwork,
@@ -779,6 +780,11 @@ export const loadTokens = (network) => async (dispatch) => {
         currentConnection === "testnet"
           ? testTokens?.[network]
           : moonriverTokens;
+    } else if (network === bscNetwork) {
+      localTokens =
+        currentConnection === "testnet"
+          ? testTokens?.[network]
+          : ethereumTokens;
     } else {
       localTokens =
         currentConnection === "testnet"

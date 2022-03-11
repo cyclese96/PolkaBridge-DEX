@@ -13,8 +13,7 @@ import { useState } from "react";
 import SwapSettings from "../../common/SwapSettings";
 import {
   allowanceAmount,
-  defaultPoolToken1,
-  defaultSwapInputToken,
+  DEFAULT_SWAP_TOKENS,
   ETH,
   swapFnConstants,
 } from "../../../constants/index";
@@ -28,11 +27,8 @@ import {
 import {
   checkAllowance,
   confirmAllowance,
-  getToken0InAmount,
-  getToken1OutAmount,
   importToken,
 } from "../../../actions/dexActions";
-import { getAccountBalance } from "../../../actions/accountActions";
 import TransactionConfirm from "../../common/TransactionConfirm";
 
 import { Info, Settings } from "@material-ui/icons";
@@ -50,6 +46,8 @@ import { isAddress } from "utils/contractUtils";
 import { computeTradePriceBreakdown } from "utils/prices";
 import { useWalletConnectCallback } from "utils/connectionUtils";
 import BigNumber from "bignumber.js";
+import { useTokenAllowance } from "hooks/useAllowance";
+import { useCurrencyBalances } from "hooks/useBalance";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -208,7 +206,6 @@ const Swap = (props) => {
     dex: { approvedTokens, transaction, priceLoading, tokenList, dexLoading },
     checkAllowance,
     confirmAllowance,
-    getAccountBalance,
     importToken,
   } = props;
 
@@ -271,7 +268,7 @@ const Swap = (props) => {
       } else {
         const _token = getTokenToSelect(
           tokenList,
-          defaultSwapInputToken?.[currentNetwork]
+          DEFAULT_SWAP_TOKENS?.[chainId]?.[0]
         );
         setToken1(_token);
       }
@@ -287,13 +284,13 @@ const Swap = (props) => {
       } else {
         const _token = getTokenToSelect(
           tokenList,
-          defaultPoolToken1?.[currentNetwork]
+          DEFAULT_SWAP_TOKENS?.[chainId]?.[1]
         );
         setToken2(_token);
       }
     }
     initSelection();
-  }, [currentNetwork, active, tokenList]);
+  }, [chainId, active, tokenList]);
 
   const clearInputState = () => {
     setToken1Value("");
@@ -308,14 +305,6 @@ const Swap = (props) => {
       if (!selectedToken0.symbol || !selectedToken1.symbol) {
         localStorage.priceTracker = "None";
         clearInputState();
-      }
-
-      if (selectedToken0.symbol) {
-        await getAccountBalance(selectedToken0, currentNetwork);
-      }
-
-      if (selectedToken1.symbol) {
-        await getAccountBalance(selectedToken1, currentNetwork);
       }
 
       if (selectedToken0.symbol && selectedToken1.symbol) {
@@ -579,8 +568,6 @@ const Swap = (props) => {
       transaction.status === "success"
     ) {
       localStorage.priceTracker = "None";
-      getAccountBalance(selectedToken0, currentNetwork);
-      getAccountBalance(selectedToken1, currentNetwork);
     }
 
     if (
@@ -689,6 +676,18 @@ const Swap = (props) => {
     currentTokenApprovalStatus(),
   ]);
 
+  const currencyBalances = useCurrencyBalances(account, [
+    parsedOutputToken0,
+    parsedOutputToken1,
+  ]);
+  // useEffect(() => {
+  //   console.log("currencyBalances ", {
+  //     curr0: currencyBalances?.[0]?.toSignificant(6),
+  //     curr1: currencyBalances?.[1]?.toSignificant(6),
+  //     ethBal: currencyBalances,
+  //   });
+  // }, [currencyBalances]);
+
   return (
     <>
       <TabPage data={0} />
@@ -727,6 +726,7 @@ const Swap = (props) => {
             disableToken={selectedToken1}
             inputValue={parsedToken1Value}
             priceUSD={token0PriceUsd}
+            currenryBalance={currencyBalances?.[0]?.toExact()}
           />
 
           <IconButton className={classes.iconButton}>
@@ -748,6 +748,7 @@ const Swap = (props) => {
             disableToken={selectedToken0}
             inputValue={parsedToken2Value}
             priceUSD={token1PriceUsd}
+            currenryBalance={currencyBalances?.[1]?.toExact()}
           />
 
           {parsedToken1Value && parsedToken2Value && (
@@ -820,8 +821,5 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   checkAllowance,
   confirmAllowance,
-  getAccountBalance,
-  getToken0InAmount,
-  getToken1OutAmount,
   importToken,
 })(Swap);

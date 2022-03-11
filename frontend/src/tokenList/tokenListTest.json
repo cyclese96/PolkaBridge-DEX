@@ -80,5 +80,31 @@
       "address": "",
       "decimals": 6
     }
+  ],
+  "bsc": [
+    {
+      "name": "Polkawar",
+      "symbol": "PWAR",
+      "address": "0x16153214E683018D5aA318864c8e692b66E16778",
+      "decimals": 18
+    },
+    {
+      "name": "Binance Coin",
+      "symbol": "BNB",
+      "address": "",
+      "decimals": 18
+    },
+    {
+      "name": "US Tether",
+      "symbol": "USDT",
+      "address": "0xe687b0a94c3a20540552d981cd311a6812759df8",
+      "decimals": 6
+    },
+    {
+      "name": "Corgi",
+      "symbol": "CORGIB",
+      "address": "0xE428Cc8A06Cdba0ad5074180f8E80ec6D4083b24",
+      "decimals": 18
+    }
   ]
 }

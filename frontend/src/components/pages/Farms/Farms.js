@@ -84,7 +84,7 @@ const Farms = (props) => {
       <div className="mt-5 mb-2 container row">
         <div className={classes.subTitle}>
           {!supportedFarmingPools?.[currentNetwork]
-            ? "No Farming pools available on " + currentNetwork + " network"
+            ? "Farming will be available soon on " + currentNetwork + " network"
             : "Stake LP tokens to Earn Rewards"}
         </div>
       </div>

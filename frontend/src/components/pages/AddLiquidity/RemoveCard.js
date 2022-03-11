@@ -12,8 +12,7 @@ import SwapSettings from "../../common/SwapSettings";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import {
   allowanceAmount,
-  defaultPoolToken0,
-  defaultPoolToken1,
+  DEFAULT_POOL_TOKENS,
   ETH,
 } from "../../../constants/index";
 import {
@@ -285,7 +284,7 @@ const RemoveCard = ({
   const [swapDialogOpen, setSwapDialog] = useState(false);
   const query = new URLSearchParams(useLocation().search);
 
-  const { active } = useActiveWeb3React();
+  const { active, chainId } = useActiveWeb3React();
   const [connectWallet] = useWalletConnectCallback();
 
   const handleSettings = () => {
@@ -313,7 +312,7 @@ const RemoveCard = ({
       } else {
         const _token = getTokenToSelect(
           tokenList,
-          defaultPoolToken0?.[currentNetwork]
+          DEFAULT_POOL_TOKENS?.[chainId]?.[0]
         );
         setToken0(_token);
       }
@@ -329,13 +328,13 @@ const RemoveCard = ({
       } else {
         const _token = getTokenToSelect(
           tokenList,
-          defaultPoolToken1?.[currentNetwork]
+          DEFAULT_POOL_TOKENS?.[chainId]?.[1]
         );
         setToken1(_token);
       }
     }
     initSelection();
-  }, [currentNetwork, currentAccount, tokenList, token0Query, token1Query]);
+  }, [chainId, currentAccount, tokenList, token0Query, token1Query]);
 
   const currentLpApproved = useMemo(() => {
     if (
