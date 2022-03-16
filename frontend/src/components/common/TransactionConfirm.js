@@ -123,7 +123,9 @@ const TransactionConfirm = (props) => {
     priceRatio,
     handleClose,
     priceImpact,
-    account: { currentAccount, currentNetwork, loading },
+    account: { loading },
+    chainId,
+    currentAccount,
     selectedToken0,
     selectedToken1,
     token1Value,
@@ -158,7 +160,7 @@ const TransactionConfirm = (props) => {
       currentSwapFn,
       currenSwapPath,
       currentAccount,
-      currentNetwork
+      chainId
     );
   };
 

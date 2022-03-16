@@ -30,17 +30,21 @@ export function usePairs(
     () =>
       tokens.map(([tokenA, tokenB]) => {
         return tokenA && tokenB && !tokenA.equals(tokenB)
-          ? Pair.getAddress(tokenA, tokenB)
+          ? Pair.getAddress(tokenA, tokenB, tokenA.chainId)
           : undefined;
       }),
     [tokens]
   );
+
+  // console.log("tradeTest usePairs", { pairAddresses, currencies });
 
   const results = useMultipleContractSingleData(
     pairAddresses,
     PAIR_INTERFACE,
     "getReserves"
   );
+
+  // console.log("tradeTest callResults", results);
 
   return useMemo(() => {
     return results.map((result, i) => {
@@ -61,11 +65,12 @@ export function usePairs(
         PairState.EXISTS,
         new Pair(
           new TokenAmount(token0, _reserve0.toString()),
-          new TokenAmount(token1, _reserve1.toString())
+          new TokenAmount(token1, _reserve1.toString()),
+          chainId || 1
         ),
       ];
     });
-  }, [results, tokens]);
+  }, [results, tokens, chainId]);
 }
 
 export function usePair(

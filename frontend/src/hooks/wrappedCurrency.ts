@@ -1,3 +1,4 @@
+import { NATIVE_TOKEN } from "constants/index";
 import {
   Currency,
   CurrencyAmount,
@@ -11,7 +12,7 @@ export function wrappedCurrency(
   currency: Currency | undefined,
   chainId: number | undefined
 ): Token | undefined {
-  return chainId && currency === ETHER
+  return chainId && currency?.symbol === NATIVE_TOKEN?.[chainId]
     ? WETH?.[chainId]
     : currency instanceof Token && currency.chainId === chainId
     ? currency

@@ -3,17 +3,16 @@ import { connect } from "react-redux";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import SwapSettings from "../../common/SwapSettings";
-import etherImg from "../../../assets/ether.png";
 import SwapCardItem from "../../Cards/SwapCardItem";
 import AddIcon from "@material-ui/icons/Add";
 import {
   allowanceAmount,
   DEFAULT_POOL_TOKENS,
   ETH,
+  NATIVE_TOKEN,
 } from "../../../constants/index";
 import {
   fromWei,
-  getNetworkNameById,
   getPercentage,
   getPriceRatio,
   getTokenOutWithReserveRatio,
@@ -30,7 +29,6 @@ import {
   addLiquidity,
   importToken,
 } from "../../../actions/dexActions";
-import { getAccountBalance } from "../../../actions/accountActions";
 import BigNumber from "bignumber.js";
 import store from "../../../store";
 import { RESET_POOL_SHARE, START_TRANSACTION } from "../../../actions/types";
@@ -244,22 +242,16 @@ const AddCard = (props) => {
     handleBack,
     getLpBalance,
     loadPairAddress,
-    getAccountBalance,
     addLiquidity,
     importToken,
   } = props;
 
-  const currentDefaultToken = {
-    icon: etherImg,
-    name: "Ethereum",
-    symbol: "ETH",
-  };
   const classes = useStyles();
   const [settingOpen, setOpen] = useState(false);
-  const [selectedToken0, setToken0] = useState(currentDefaultToken);
+  const [selectedToken0, setToken0] = useState({});
   const [selectedToken1, setToken1] = useState({});
-  const [token1Value, setToken1Value] = useState(""); // token1 for eth only
-  const [token2Value, setToken2Value] = useState(""); // token2 for pbr
+  const [token1Value, setToken1Value] = useState("");
+  const [token2Value, setToken2Value] = useState("");
   const [localStateLoading, setLocalStateLoading] = useState(false);
 
   const [swapDialogOpen, setSwapDialog] = useState(false);
@@ -301,16 +293,11 @@ const AddCard = (props) => {
 
   const { chainId, active, account } = useActiveWeb3React();
 
-  const currentNetwork = useMemo(
-    () => getNetworkNameById(chainId ? chainId : 1),
-    [chainId]
-  );
-
   const handleTokenImport = useCallback(
     (_tokenAddress) => {
-      importToken(_tokenAddress, currentNetwork);
+      importToken(_tokenAddress, chainId);
     },
-    [currentNetwork, importToken]
+    [chainId, importToken]
   );
 
   const [token0Query, token1Query] = [
@@ -324,7 +311,6 @@ const AddCard = (props) => {
         const _token = getTokenToSelect(tokenList, token0Query);
 
         if (!_token || !_token.symbol) {
-          // importToken(token0Query, currentAccount, currentNetwork);
           handleTokenImport(token0Query);
         }
         setToken0(_token);
@@ -340,7 +326,6 @@ const AddCard = (props) => {
         const _token = getTokenToSelect(tokenList, token1Query);
 
         if (!_token || !_token.symbol) {
-          // importToken(token1Query, currentAccount, currentNetwork);
           handleTokenImport(token1Query);
         }
 
@@ -399,7 +384,7 @@ const AddCard = (props) => {
     return approvedTokens && approvedTokens?.[selectedToken1?.symbol];
   }, [approvedTokens, selectedToken1]);
 
-  const currentTokenApprovalStatus = useMemo(() => {
+  const isBothTokensApproved = useMemo(() => {
     return token0Approved && token1Approved;
   }, [token0Approved, token1Approved]);
 
@@ -423,14 +408,14 @@ const AddCard = (props) => {
       _pairAddress = await getPairAddress(
         selectedToken0.address,
         selectedToken1.address,
-        currentNetwork
+        chainId
       );
 
       loadPairAddress(
         selectedToken0.symbol,
         selectedToken1.symbol,
         _pairAddress,
-        currentNetwork
+        chainId
       );
     }
 
@@ -442,7 +427,7 @@ const AddCard = (props) => {
         selectedToken1,
         _pairAddress,
         account,
-        currentNetwork
+        chainId
       );
     }
   };
@@ -455,11 +440,9 @@ const AddCard = (props) => {
         clearInputState();
 
         await Promise.all([
-          getAccountBalance(selectedToken0, currentNetwork),
-          getAccountBalance(selectedToken1, currentNetwork),
           loadPairReserves(),
-          checkAllowance(selectedToken0, account, currentNetwork),
-          checkAllowance(selectedToken1, account, currentNetwork),
+          checkAllowance(selectedToken0, account, chainId),
+          checkAllowance(selectedToken1, account, chainId),
         ]);
 
         setLocalStateLoading(false);
@@ -467,7 +450,7 @@ const AddCard = (props) => {
     }
 
     loadPair();
-  }, [selectedToken0, selectedToken1, currentNetwork, account]);
+  }, [selectedToken0, selectedToken1, chainId, account]);
 
   const handleConfirmAllowance = async () => {
     const _allowanceAmount = allowanceAmount;
@@ -476,14 +459,14 @@ const AddCard = (props) => {
         _allowanceAmount,
         selectedToken0,
         account,
-        currentNetwork
+        chainId
       );
     } else {
       await confirmAllowance(
         _allowanceAmount,
         selectedToken1,
         account,
-        currentNetwork
+        chainId
       );
     }
   };
@@ -510,7 +493,7 @@ const AddCard = (props) => {
         selectedToken1,
         pairAddress,
         account,
-        currentNetwork
+        chainId
       );
 
       _token2Value = getTokenOutWithReserveRatio(
@@ -541,7 +524,7 @@ const AddCard = (props) => {
         selectedToken1,
         pairAddress,
         account,
-        currentNetwork
+        chainId
       );
 
       _token1Value = getTokenOutWithReserveRatio(
@@ -581,9 +564,12 @@ const AddCard = (props) => {
   };
 
   const handleAddLiquidity = async () => {
-    if (selectedToken0.symbol === ETH || selectedToken1.symbol === ETH) {
+    if (
+      selectedToken0.symbol === NATIVE_TOKEN?.[chainId] ||
+      selectedToken1.symbol === NATIVE_TOKEN?.[chainId]
+    ) {
       let etherToken, erc20Token;
-      if (selectedToken0.symbol === ETH) {
+      if (selectedToken0.symbol === NATIVE_TOKEN?.[chainId]) {
         etherToken = {
           ...selectedToken0,
           amount: token1Value,
@@ -612,7 +598,7 @@ const AddCard = (props) => {
         erc20Token,
         account,
         swapSettings.deadline,
-        currentNetwork
+        chainId
       );
     } else {
       // addLiquidity
@@ -624,7 +610,7 @@ const AddCard = (props) => {
         { ...selectedToken1, amount: _amount2 },
         account,
         swapSettings.deadline,
-        currentNetwork
+        chainId
       );
     }
 
@@ -661,14 +647,15 @@ const AddCard = (props) => {
       return;
     }
 
-    if (currentTokenApprovalStatus) {
+    if (isBothTokensApproved) {
       handleAddLiquidity();
     } else {
       handleConfirmAllowance();
     }
   };
 
-  const parsedOutputToken0 = useMemo(() => {
+  // wrapped curreny formats of selected token
+  const wrappedCurrency0 = useMemo(() => {
     if (!selectedToken0.address || !chainId) {
       return undefined;
     }
@@ -684,7 +671,7 @@ const AddCard = (props) => {
     return wrappedCurrency(_token, chainId);
   }, [selectedToken0, chainId]);
 
-  const parsedOutputToken1 = useMemo(() => {
+  const wrappedCurrency1 = useMemo(() => {
     if (!selectedToken1.address || !chainId) {
       return undefined;
     }
@@ -701,8 +688,8 @@ const AddCard = (props) => {
   }, [selectedToken1, chainId]);
 
   const currencyBalances = useCurrencyBalances(account, [
-    parsedOutputToken0,
-    parsedOutputToken1,
+    wrappedCurrency0,
+    wrappedCurrency1,
   ]);
 
   const currentAddLiquidityStatus = useMemo(() => {
@@ -741,8 +728,8 @@ const AddCard = (props) => {
       return { currentBtnText: "Insufficient funds!", disabled: true };
     }
 
-    if (!currentTokenApprovalStatus) {
-      return currApproveBtnText;
+    if (!isBothTokensApproved) {
+      return { currentBtnText: currApproveBtnText, disabled: false };
     }
 
     return { currentBtnText: "Add liquidity", disabled: false };
@@ -751,7 +738,7 @@ const AddCard = (props) => {
     active,
     localStateLoading,
     transaction,
-    currentTokenApprovalStatus,
+    isBothTokensApproved,
     currencyBalances,
     token1Value,
     token2Value,
@@ -761,14 +748,6 @@ const AddCard = (props) => {
   useEffect(() => {
     if (!transaction.hash && !transaction.type) {
       return;
-    }
-
-    if (
-      ["add", "token_approve"].includes(transaction.type) &&
-      transaction.status === "success"
-    ) {
-      getAccountBalance(selectedToken0, currentNetwork);
-      getAccountBalance(selectedToken1, currentNetwork);
     }
 
     if (
@@ -785,13 +764,7 @@ const AddCard = (props) => {
     ) {
       setSwapDialog(true);
     }
-  }, [
-    transaction,
-    currentNetwork,
-    getAccountBalance,
-    selectedToken0,
-    selectedToken1,
-  ]);
+  }, [transaction]);
 
   const handleConfirmSwapClose = (value) => {
     setSwapDialog(value);
@@ -808,6 +781,14 @@ const AddCard = (props) => {
       store.dispatch({ type: START_TRANSACTION });
     }
   };
+
+  // useEffect(() => {
+  //   console.log("current stated ", {
+  //     currApproveBtnText,
+  //     currentAddLiquidityStatus,
+  //     isBothTokensApproved,
+  //   });
+  // }, [currApproveBtnText, currentAddLiquidityStatus, isBothTokensApproved]);
 
   return (
     <>
@@ -940,7 +921,6 @@ export default connect(mapStateToProps, {
   getPoolShare,
   getLpBalance,
   loadPairAddress,
-  getAccountBalance,
   addLiquidity,
   importToken,
 })(AddCard);

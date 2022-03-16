@@ -30,7 +30,6 @@ import {
   removeLiquidity,
   importToken,
 } from "../../../actions/dexActions";
-import { getAccountBalance } from "../../../actions/accountActions";
 import SelectToken from "../../common/SelectToken";
 import tokenThumbnail from "../../../utils/tokenThumbnail";
 import BigNumber from "bignumber.js";
@@ -252,7 +251,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const RemoveCard = ({
-  account: { currentNetwork, currentAccount, loading },
+  account: { currentAccount, loading },
   dex: {
     lpApproved,
     lpBalance,
@@ -271,7 +270,6 @@ const RemoveCard = ({
   removeLiquidityEth,
   loadPairAddress,
   removeLiquidity,
-  getAccountBalance,
   importToken,
 }) => {
   const classes = useStyles();
@@ -306,7 +304,7 @@ const RemoveCard = ({
         const _token = getTokenToSelect(tokenList, token0Query);
 
         if (!_token || !_token.symbol) {
-          importToken(token0Query, currentAccount, currentNetwork);
+          importToken(token0Query, currentAccount, chainId);
         }
         setToken0(_token);
       } else {
@@ -321,7 +319,7 @@ const RemoveCard = ({
         const _token = getTokenToSelect(tokenList, token1Query);
 
         if (!_token || !_token.symbol) {
-          importToken(token1Query, currentAccount, currentNetwork);
+          importToken(token1Query, currentAccount, chainId);
         }
 
         setToken1(_token);
@@ -357,7 +355,7 @@ const RemoveCard = ({
       selectedToken1,
       pairAddress,
       currentAccount,
-      currentNetwork
+      chainId
     );
   };
 
@@ -420,13 +418,13 @@ const RemoveCard = ({
           _pairAddress = await getPairAddress(
             selectedToken0.address,
             selectedToken1.address,
-            currentNetwork
+            chainId
           );
           loadPairAddress(
             selectedToken0.symbol,
             selectedToken1.symbol,
             _pairAddress,
-            currentNetwork
+            chainId
           );
         }
 
@@ -435,7 +433,7 @@ const RemoveCard = ({
           selectedToken1,
           _pairAddress,
           currentAccount,
-          currentNetwork
+          chainId
         );
 
         await checkLpAllowance(
@@ -443,13 +441,13 @@ const RemoveCard = ({
           selectedToken1,
           _pairAddress,
           currentAccount,
-          currentNetwork
+          chainId
         );
       }
     }
 
     loadPair();
-  }, [selectedToken0, selectedToken1, currentNetwork, currentAccount]);
+  }, [selectedToken0, selectedToken1, chainId, currentAccount]);
 
   const onToken1Select = (token) => {
     setToken0(token);
@@ -487,7 +485,7 @@ const RemoveCard = ({
         currentAccount,
         _lpAmount,
         swapSettings.deadline,
-        currentNetwork
+        chainId
       );
     } else {
       // remove liquidy erc20 - erc20
@@ -498,7 +496,7 @@ const RemoveCard = ({
         currentAccount,
         _lpAmount,
         swapSettings.deadline,
-        currentNetwork
+        chainId
       );
     }
 
@@ -508,7 +506,7 @@ const RemoveCard = ({
       selectedToken1,
       pairAddress,
       currentAccount,
-      currentNetwork
+      chainId
     );
   };
 
@@ -539,14 +537,6 @@ const RemoveCard = ({
   useEffect(() => {
     if (!transaction.hash && !transaction.type) {
       return;
-    }
-
-    if (
-      ["remove", "lp_token_approve"].includes(transaction.type) &&
-      transaction.status === "success"
-    ) {
-      getAccountBalance(selectedToken0, currentNetwork);
-      getAccountBalance(selectedToken1, currentNetwork);
     }
 
     if (
@@ -859,6 +849,5 @@ export default connect(mapStateToProps, {
   removeLiquidityEth,
   loadPairAddress,
   removeLiquidity,
-  getAccountBalance,
   importToken,
 })(RemoveCard);

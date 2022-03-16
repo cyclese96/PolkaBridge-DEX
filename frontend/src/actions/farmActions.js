@@ -9,11 +9,7 @@ import {
   GET_FARM_POOL,
 } from "./types";
 import { farmContract, pairContract } from "../contracts/connections";
-import {
-  currentConnection,
-  farmAddresses,
-  tokenAddresses,
-} from "../constants/index";
+import { FARM_ADDRESS, TOKEN_ADDRESS } from "../constants/index";
 import BigNumber from "bignumber.js";
 import { fromWei } from "../utils/helper";
 
@@ -24,10 +20,10 @@ const getLoadingObject = (_key, flag) => {
 };
 
 export const checkLpFarmAllowance =
-  (pairAddress, account, network) => async (dispatch) => {
+  (pairAddress, account, chainId) => async (dispatch) => {
     try {
-      const _pairContract = pairContract(pairAddress, network);
-      const _farmAddress = farmAddresses?.[network];
+      const _pairContract = pairContract(pairAddress, chainId);
+      const _farmAddress = FARM_ADDRESS?.[chainId];
 
       dispatch({
         type: SHOW_FARM_LOADING,
@@ -60,12 +56,12 @@ export const checkLpFarmAllowance =
   };
 
 export const confirmLpFarmAllowance =
-  (allowanceAmount, pairAddress, account, network) => async (dispatch) => {
+  (allowanceAmount, pairAddress, account, chainId) => async (dispatch) => {
     try {
       // const _testPbrToken = tokenAddresses?.ethereum.PBR.testnet;
 
-      const _pairContract = pairContract(pairAddress, network);
-      const _farmAddress = farmAddresses?.[network];
+      const _pairContract = pairContract(pairAddress, chainId);
+      const _farmAddress = FARM_ADDRESS?.[chainId];
 
       dispatch({
         type: SHOW_FARM_LOADING,
@@ -118,9 +114,9 @@ export const confirmLpFarmAllowance =
   };
 
 export const stakeLpTokens =
-  (lpAmount, pairAddress, pid, account, network) => async (dispatch) => {
+  (lpAmount, pairAddress, pid, account, chainId) => async (dispatch) => {
     try {
-      const _farmContract = farmContract(network);
+      const _farmContract = farmContract(chainId);
 
       dispatch({
         type: SHOW_FARM_LOADING,
@@ -171,9 +167,9 @@ export const stakeLpTokens =
   };
 
 export const unstakeLpTokens =
-  (lpAmount, pairAddress, pid, account, network) => async (dispatch) => {
+  (lpAmount, pairAddress, pid, account, chainId) => async (dispatch) => {
     try {
-      const _farmContract = farmContract(network);
+      const _farmContract = farmContract(chainId);
 
       dispatch({
         type: SHOW_FARM_LOADING,
@@ -225,9 +221,9 @@ export const unstakeLpTokens =
   };
 
 export const harvestRewards =
-  (pairAddress, pid, account, network) => async (dispatch) => {
+  (pairAddress, pid, account, chainId) => async (dispatch) => {
     try {
-      const _farmContract = farmContract(network);
+      const _farmContract = farmContract(chainId);
 
       dispatch({
         type: SHOW_FARM_LOADING,
@@ -282,9 +278,9 @@ const resolvePromise = async (promiseFn) => {
 };
 
 export const getFarmInfo =
-  (pairAddress, pid, account, network) => async (dispatch) => {
+  (pairAddress, pid, account, chainId) => async (dispatch) => {
     try {
-      const _farmContract = farmContract(network);
+      const _farmContract = farmContract(chainId);
 
       dispatch({
         type: SHOW_FARM_LOADING,
@@ -330,13 +326,13 @@ export const getFarmInfo =
   };
 
 export const getLpBalanceFarm =
-  (pairAddress, account, network) => async (dispatch) => {
+  (pairAddress, account, chainId) => async (dispatch) => {
     try {
-      if (!pairAddress || !network) {
+      if (!pairAddress || !chainId) {
         return;
       }
 
-      const _pairContract = pairContract(pairAddress, network);
+      const _pairContract = pairContract(pairAddress, chainId);
 
       dispatch({
         type: SHOW_FARM_LOADING,
@@ -357,10 +353,8 @@ export const getLpBalanceFarm =
       reserve[token1Addr] = reservesData._reserve1;
 
       //calculating total liquidity usd value
-      const ethAddress =
-        currentConnection === "mainnet"
-          ? tokenAddresses.ethereum.ETH.mainnet.toLowerCase()
-          : tokenAddresses.ethereum.ETH.testnet.toLowerCase();
+      const ethAddress = TOKEN_ADDRESS?.ETH?.[chainId].toLowerCase();
+
       let valueOfBaseTokenInFarm = 0;
       // base in this calculation is eth token
       if (token0Addr.toLowerCase() === ethAddress) {

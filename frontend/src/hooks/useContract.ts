@@ -26,7 +26,7 @@ export function useContract<T extends Contract = Contract>(
     if (!address) return null;
     try {
       return getContract(
-        MULTICALL_ADDRESS?.[chainId],
+        address,
         ABI,
         library,
         withSignerIfPossible && account ? account : undefined
@@ -48,11 +48,7 @@ export function useContract<T extends Contract = Contract>(
 export function useInterfaceMulticall(): Contract | null {
   const { chainId } = useActiveWeb3React();
 
-  return useContract(
-    MULTICALL_ADDRESS?.[chainId ? chainId : 1],
-    MulticallABI,
-    false
-  );
+  return useContract(MULTICALL_ADDRESS, MulticallABI, false);
 }
 
 export function useTokenContract(

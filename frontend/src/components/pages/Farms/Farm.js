@@ -6,9 +6,8 @@ import TokenIcon from "../../common/TokenIcon";
 import { useEffect, useMemo } from "react";
 import {
   allowanceAmount,
-  currentConnection,
   farmingPoolConstants,
-  tokenAddresses,
+  TOKEN_ADDRESS,
 } from "../../../constants/index";
 import { connect } from "react-redux";
 import { formattedNum, urls } from "../../../utils/formatters";
@@ -23,6 +22,7 @@ import BigNumber from "bignumber.js";
 import { fromWei, getLpApr, getPbrRewardApr } from "../../../utils/helper";
 import { useTokenData } from "../../../contexts/TokenData";
 import { useEthPrice } from "../../../contexts/GlobalData";
+import useActiveWeb3React from "hooks/useActiveWeb3React";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -180,11 +180,9 @@ const Farm = (props) => {
   } = props;
   const classes = useStyles();
 
-  const pbrPriceData = useTokenData(
-    currentConnection === "testnet"
-      ? tokenAddresses.ethereum.PBR.testnet.toLowerCase()
-      : tokenAddresses.ethereum.PBR.mainnet.toLowerCase()
-  );
+  const { chainId } = useActiveWeb3React();
+
+  const pbrPriceData = useTokenData(TOKEN_ADDRESS.PBR?.[chainId]);
 
   const pbrPriceUsd = useMemo(() => {
     if (!pbrPriceData) {
@@ -196,13 +194,19 @@ const Farm = (props) => {
   const ethPrice = useEthPrice();
 
   const farmPoolAddress = useMemo(
-    () => farmingPoolConstants?.ethereum?.[farmPool]?.address,
-    [farmPool]
+    () =>
+      Object.keys(farmingPoolConstants).includes(chainId)
+        ? farmingPoolConstants?.[chainId]?.[farmPool]?.address
+        : "",
+    [farmPool, chainId]
   );
 
   const farmPoolId = useMemo(
-    () => farmingPoolConstants?.ethereum?.[farmPool]?.pid,
-    [farmPool]
+    () =>
+      Object.keys(farmingPoolConstants).includes(chainId)
+        ? farmingPoolConstants?.[chainId]?.[farmPool]?.pid
+        : "",
+    [farmPool, chainId]
   );
 
   useEffect(() => {
@@ -225,9 +229,11 @@ const Farm = (props) => {
     loadFarmData();
   }, [currentAccount, farmPoolAddress, farmPoolId]);
 
-  const farmPoolDecimals = (_farmPool) => {
-    return farmingPoolConstants?.ethereum?.[_farmPool]?.decimals;
-  };
+  const farmPoolDecimals = useMemo(() => {
+    return Object.keys(farmingPoolConstants).includes(chainId)
+      ? farmingPoolConstants?.[chainId]?.[farmPool]?.decimals
+      : null;
+  }, [chainId, farmPool]);
 
   const farmData = useMemo(() => {
     if (!farmPool || !farmPoolAddress) {
@@ -265,11 +271,8 @@ const Farm = (props) => {
   const parseStakedAmount = useMemo(
     () =>
       farms &&
-      fromWei(
-        farms?.[farmPoolAddress]?.stakeData?.amount,
-        farmPoolDecimals(farmPool)
-      ),
-    [farmPool, farms, farmPoolAddress]
+      fromWei(farms?.[farmPoolAddress]?.stakeData?.amount, farmPoolDecimals),
+    [farms, farmPoolAddress, farmPoolDecimals]
   );
 
   const isPoolApproved = useMemo(() => {
@@ -288,7 +291,7 @@ const Farm = (props) => {
       allowanceAmount,
       farmPoolAddress,
       currentAccount,
-      currentNetwork
+      chainId
     );
   };
 
@@ -321,7 +324,7 @@ const Farm = (props) => {
       farmPool,
       actionType,
       farmPoolAddress,
-      farmPoolDecimals(farmPool),
+      farmPoolDecimals,
       farmPoolId
     );
   };

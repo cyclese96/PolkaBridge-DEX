@@ -1,12 +1,14 @@
 import { makeStyles } from "@material-ui/core";
 import { connect } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import TabPage from "../../TabPage";
 import Farm from "./Farm";
 import { supportedFarmingPools } from "../../../constants/index";
 import StakeDialog from "./StakeDialog";
 import store from "../../../store";
 import { START_TRANSACTION } from "../../../actions/types";
+import useActiveWeb3React from "hooks/useActiveWeb3React";
+import { getNetworkNameById } from "utils/helper";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -29,7 +31,6 @@ const useStyles = makeStyles((theme) => ({
 
 const Farms = (props) => {
   const {
-    account: { currentNetwork },
     dex: { transaction },
     farm: {},
   } = props;
@@ -40,6 +41,7 @@ const Farms = (props) => {
     type: "stake",
     poolInfo: {},
   });
+  const { chainId } = useActiveWeb3React();
 
   const handleStake = (farmPool, type, poolAddress, poolDecimals, pid) => {
     setStakeDialog({
@@ -76,6 +78,17 @@ const Farms = (props) => {
     }
   };
 
+  const farmPools = useMemo(() => {
+    return Object.keys(supportedFarmingPools).includes(chainId)
+      ? supportedFarmingPools?.[chainId]
+      : [];
+  }, [chainId]);
+
+  const currentNetwork = useMemo(
+    () => getNetworkNameById(chainId ? chainId : 1),
+    [chainId]
+  );
+
   return (
     <>
       <div>
@@ -83,7 +96,7 @@ const Farms = (props) => {
       </div>
       <div className="mt-5 mb-2 container row">
         <div className={classes.subTitle}>
-          {!supportedFarmingPools?.[currentNetwork]
+          {!farmPools
             ? "Farming will be available soon on " + currentNetwork + " network"
             : "Stake LP tokens to Earn Rewards"}
         </div>
@@ -92,7 +105,7 @@ const Farms = (props) => {
         className="container row flex-row justify-content-center align-items-center mb-5"
         align="center"
       >
-        {supportedFarmingPools?.[currentNetwork]?.map((farmPool) => {
+        {farmPools?.map((farmPool) => {
           return (
             <div className="col-12 col-xl-4 col-lg-6">
               <Farm farmPool={farmPool} onStake={handleStake} />

@@ -91,13 +91,19 @@
     {
       "name": "Binance Coin",
       "symbol": "BNB",
-      "address": "",
+      "address": "0x094616f0bdfb0b526bd735bf66eca0ad254ca81f",
       "decimals": 18
     },
     {
       "name": "US Tether",
       "symbol": "USDT",
-      "address": "0xe687b0a94c3a20540552d981cd311a6812759df8",
+      "address": "0x496aA3FE91d239469a797379986948d94e893494",
+      "decimals": 6
+    },
+    {
+      "name": "USD Coin",
+      "symbol": "USDC",
+      "address": "0x3584E72b063F362c7F73b0ED24f54dF922C68B9b",
       "decimals": 6
     },
     {

@@ -13,9 +13,9 @@ import { factoryContract } from "../contracts/connections";
 import config from "./config";
 import { isMetaMaskInstalled } from "./helper";
 
-export const getPairAddress = async (address0, address1, network) => {
+export const getPairAddress = async (address0, address1, chainId) => {
   try {
-    const factory = factoryContract(network);
+    const factory = factoryContract(chainId);
     const pairAddress = await factory.methods
       .getPair(address0, address1)
       .call();

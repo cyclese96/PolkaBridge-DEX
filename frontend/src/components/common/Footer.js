@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core";
-import { factoryAddresses } from "constants/index";
+import { FACTORY_ADDRESS } from "constants/index";
 import React from "react";
 import { urls } from "utils/formatters";
 
@@ -42,7 +42,7 @@ const Footer = () => {
     <div className={classes.root}>
       <a
         className={classes.item}
-        href={urls.showAddress(factoryAddresses.ethereum)}
+        href={urls.showAddress(FACTORY_ADDRESS[1])}
         target="_blank"
         rel="noreferrer"
       >

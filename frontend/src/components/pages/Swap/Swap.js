@@ -15,6 +15,7 @@ import {
   allowanceAmount,
   DEFAULT_SWAP_TOKENS,
   ETH,
+  NATIVE_TOKEN,
   swapFnConstants,
 } from "../../../constants/index";
 import {
@@ -39,7 +40,7 @@ import { default as NumberFormat } from "react-number-format";
 import { useLocation } from "react-router";
 import { useTokenData } from "../../../contexts/TokenData";
 import { useTradeExactIn, useTradeExactOut } from "../../../hooks/useTrades";
-import { Token, TokenAmount, JSBI } from "polkabridge-sdk";
+import { Token, TokenAmount, JSBI, WETH } from "polkabridge-sdk";
 import { wrappedCurrency } from "hooks/wrappedCurrency";
 import useActiveWeb3React from "hooks/useActiveWeb3React";
 import { isAddress } from "utils/contractUtils";
@@ -262,7 +263,7 @@ const Swap = (props) => {
         const _token = getTokenToSelect(tokenList, token0Query);
 
         if (!_token || !_token.symbol) {
-          importToken(token0Query, account, currentNetwork);
+          importToken(token0Query, account, chainId);
         }
         setToken1(_token);
       } else {
@@ -277,7 +278,7 @@ const Swap = (props) => {
         const _token = getTokenToSelect(tokenList, token1Query);
 
         if (!_token || !_token.symbol) {
-          importToken(token1Query, account, currentNetwork);
+          importToken(token1Query, account, chainId);
         }
 
         setToken2(_token);
@@ -311,14 +312,14 @@ const Swap = (props) => {
         // reset token input on token selection
         clearInputState();
 
-        await checkAllowance(selectedToken0, account, currentNetwork);
+        await checkAllowance(selectedToken0, account, chainId);
 
         setLocalStateLoading(false);
       }
     }
     loadPair();
     setLocalStateLoading(false);
-  }, [selectedToken0, selectedToken1, currentNetwork, account]);
+  }, [selectedToken0, selectedToken1, chainId, account]);
 
   // token 1 input change
   const onToken1InputChange = async (tokens) => {
@@ -327,9 +328,12 @@ const Swap = (props) => {
     // localStorage.priceTracker = token1OutCalling;
 
     let _swapFn = swapFnConstants.swapExactETHForTokens;
-    if (selectedToken0.symbol === ETH) {
+    if (selectedToken0.symbol === NATIVE_TOKEN?.[chainId]) {
       _swapFn = swapFnConstants.swapExactETHForTokens;
-    } else if (selectedToken1.symbol && selectedToken1.symbol === ETH) {
+    } else if (
+      selectedToken1.symbol &&
+      selectedToken1.symbol === NATIVE_TOKEN?.[chainId]
+    ) {
       _swapFn = swapFnConstants.swapExactTokensForETH;
     } else {
       _swapFn = swapFnConstants.swapExactTokensForTokens;
@@ -513,12 +517,7 @@ const Swap = (props) => {
 
   const handleConfirmAllowance = async () => {
     const _allowanceAmount = allowanceAmount;
-    await confirmAllowance(
-      _allowanceAmount,
-      selectedToken0,
-      account,
-      currentNetwork
-    );
+    await confirmAllowance(_allowanceAmount, selectedToken0, account, chainId);
   };
 
   const handleSwapToken = async () => {
@@ -534,7 +533,7 @@ const Swap = (props) => {
   };
 
   const currentTokenApprovalStatus = () => {
-    return selectedToken0.symbol === "ETH"
+    return selectedToken0.symbol === NATIVE_TOKEN?.[chainId]
       ? true
       : approvedTokens[selectedToken0.symbol];
   };
@@ -680,13 +679,6 @@ const Swap = (props) => {
     parsedOutputToken0,
     parsedOutputToken1,
   ]);
-  // useEffect(() => {
-  //   console.log("currencyBalances ", {
-  //     curr0: currencyBalances?.[0]?.toSignificant(6),
-  //     curr1: currencyBalances?.[1]?.toSignificant(6),
-  //     ethBal: currencyBalances,
-  //   });
-  // }, [currencyBalances]);
 
   return (
     <>
@@ -703,6 +695,8 @@ const Swap = (props) => {
         currentSwapFn={currentSwap.swapFn}
         currenSwapPath={currentTradePath}
         priceRatio={priceRatio}
+        chainId={chainId}
+        currentAccount={account}
       />
       <SwapSettings open={settingOpen} handleClose={close} />
       <Card elevation={20} className={classes.card}>

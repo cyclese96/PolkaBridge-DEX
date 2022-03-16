@@ -4,6 +4,7 @@ import { Button } from "@material-ui/core";
 // import { currentConnection } from "../../constants/index";
 import { connect } from "react-redux";
 import { urls } from "utils/formatters";
+import useActiveWeb3React from "hooks/useActiveWeb3React";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -60,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
 
 const TransactionStatus = ({ dex: { transaction }, onClose }) => {
   const classes = useStyles();
+  const { chainId } = useActiveWeb3React();
 
   return (
     <div>
@@ -97,7 +99,7 @@ const TransactionStatus = ({ dex: { transaction }, onClose }) => {
               <h6 style={{ color: "#DF097C", fontSize: 14 }}>Cancelled</h6>
             ) : (
               <a
-                href={urls.showTransaction(transaction.hash)}
+                href={urls.showTransaction(transaction.hash, chainId)}
                 target="_blank"
                 rel="noreferrer"
               >
