@@ -1,12 +1,10 @@
 import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
-
 import { AccountBalanceWallet, Close } from "@material-ui/icons";
-import { etheriumNetwork, NATIVE_TOKEN } from "../../constants/index";
-import { fromWei } from "../../utils/helper";
+import { NATIVE_TOKEN } from "../../constants/index";
 import { connect } from "react-redux";
-import { formatCurrency, urls } from "../../utils/formatters";
+import { urls } from "../../utils/formatters";
 import { Button } from "@material-ui/core";
 import useActiveWeb3React from "hooks/useActiveWeb3React";
 import { useETHBalances } from "hooks/useBalance";

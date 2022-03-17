@@ -209,7 +209,7 @@ export const SWAP_BASES: { [index: string]: Array<string> } = {
   4: ["USDT", "USDC", "ETH"],
   1285: [],
   1287: [],
-  97: ["BNB"],
+  97: ["BNB", "USDT", "USDC"],
   56: ["BNB"],
   137: [],
   80001: [],

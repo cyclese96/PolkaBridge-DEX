@@ -3,7 +3,6 @@ import pwarImg from "../assets/pwar.png";
 import bite from "../assets/bite.png";
 import pbrImg from "../assets/balance.png";
 import etherImg from "../assets/etherNew.png";
-import bnbImg from "../assets/binance.png";
 import noIcon from "../assets/no_icon.png";
 import usdtImg from "../assets/usdt.png";
 import usdcImg from "../assets/usdc.png";
@@ -33,6 +32,7 @@ import wdoge from "../assets/wdoge.png";
 import yfi from "../assets/yfi.png";
 import zrx from "../assets/zrx.png";
 
+const bnbImg = "img/binance.png";
 const symbolMapping = {
   NEXO: nexo,
   PAX: pax,

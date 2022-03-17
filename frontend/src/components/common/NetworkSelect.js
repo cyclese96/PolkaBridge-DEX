@@ -167,7 +167,7 @@ export default function NetworkSelect({ selectedNetwork }) {
               className={classes.buttonDrop}
             >
               <span>BSC</span>
-              <img className={classes.imgIcon} src="img/bsc.png" />
+              <img className={classes.imgIcon} src="img/binance.png" />
             </MenuItem>
             {/* <MenuItem
             value={

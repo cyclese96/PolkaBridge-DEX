@@ -561,7 +561,7 @@ const RemoveCard = ({
       transaction.status === "success"
     ) {
       store.dispatch({ type: START_TRANSACTION });
-      handleClearState();
+      // handleClearState();
     } else if (
       ["remove", "lp_token_approve"].includes(transaction.type) &&
       transaction.status === "failed"
