@@ -150,7 +150,7 @@ export const supportedFarmingPools = {
   1: ["PBR-ETH", "ETH-USDT"],
   4: ["PBR-ETH", "ETH-USDT"],
   56: ["BNB-PWAR", "BNB-USDT"],
-  97: ["BNB-PWAR", "BNB-USDT"],
+  97: [],
 };
 
 export const farmingPoolConstants = {

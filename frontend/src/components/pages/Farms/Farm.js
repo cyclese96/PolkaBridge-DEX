@@ -4,11 +4,7 @@ import Varified from "../../../assets/check.png";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import TokenIcon from "../../common/TokenIcon";
 import { useEffect, useMemo } from "react";
-import {
-  allowanceAmount,
-  farmingPoolConstants,
-  TOKEN_ADDRESS,
-} from "../../../constants/index";
+import { allowanceAmount, TOKEN_ADDRESS } from "../../../constants/index";
 import { connect } from "react-redux";
 import { formattedNum, urls } from "../../../utils/formatters";
 import {
@@ -19,7 +15,7 @@ import {
   harvestRewards,
 } from "../../../actions/farmActions";
 import BigNumber from "bignumber.js";
-import { fromWei, getLpApr, getPbrRewardApr } from "../../../utils/helper";
+import { fromWei, getPbrRewardApr } from "../../../utils/helper";
 import { useTokenData } from "../../../contexts/TokenData";
 import { useEthPrice } from "../../../contexts/GlobalData";
 import useActiveWeb3React from "hooks/useActiveWeb3React";
@@ -169,7 +165,6 @@ const Farm = (props) => {
   const {
     farmPool,
     onStake,
-    account: { currentAccount, currentNetwork },
     farm: { farms, lpApproved, loading, lpBalance },
     dex: { transaction },
     getFarmInfo,
@@ -180,9 +175,11 @@ const Farm = (props) => {
   } = props;
   const classes = useStyles();
 
-  const { chainId } = useActiveWeb3React();
+  const { chainId, account } = useActiveWeb3React();
 
-  const pbrPriceData = useTokenData(TOKEN_ADDRESS.PBR?.[chainId]);
+  const pbrPriceData = useTokenData(
+    TOKEN_ADDRESS.PBR?.[chainId]?.toLowerCase()
+  );
 
   const pbrPriceUsd = useMemo(() => {
     if (!pbrPriceData) {
@@ -192,115 +189,76 @@ const Farm = (props) => {
   }, [pbrPriceData]);
 
   const ethPrice = useEthPrice();
-
-  const farmPoolAddress = useMemo(
-    () =>
-      Object.keys(farmingPoolConstants).includes(chainId)
-        ? farmingPoolConstants?.[chainId]?.[farmPool]?.address
-        : "",
-    [farmPool, chainId]
-  );
-
-  const farmPoolId = useMemo(
-    () =>
-      Object.keys(farmingPoolConstants).includes(chainId)
-        ? farmingPoolConstants?.[chainId]?.[farmPool]?.pid
-        : "",
-    [farmPool, chainId]
-  );
+  const { address, pid, multiplier, decimals, lpApr, name } = farmPool;
 
   useEffect(() => {
-    // if (!currentAccount || !currentNetwork) {
-    //   return;
-    // }
-
     async function loadFarmData() {
       Promise.all([
-        checkLpFarmAllowance(farmPoolAddress, currentAccount, currentNetwork),
-        getFarmInfo(
-          farmPoolAddress,
-          farmPoolId,
-          currentAccount,
-          currentNetwork
-        ),
-        getLpBalanceFarm(farmPoolAddress, currentAccount, currentNetwork),
+        checkLpFarmAllowance(address, account, chainId),
+        getFarmInfo(address, pid, account, chainId),
+        getLpBalanceFarm(address, account, chainId),
       ]);
     }
     loadFarmData();
-  }, [currentAccount, farmPoolAddress, farmPoolId]);
-
-  const farmPoolDecimals = useMemo(() => {
-    return Object.keys(farmingPoolConstants).includes(chainId)
-      ? farmingPoolConstants?.[chainId]?.[farmPool]?.decimals
-      : null;
-  }, [chainId, farmPool]);
+  }, [account, chainId, address, pid]);
 
   const farmData = useMemo(() => {
-    if (!farmPool || !farmPoolAddress) {
+    if (!farms) {
       return {};
     }
-
-    return farms?.[farmPoolAddress];
-  }, [farmPool, farmPoolAddress, farms]);
+    return farms?.[address];
+  }, [address, farms]);
 
   const totalPoolLiquidityUSDValue = useMemo(() => {
     if (!ethPrice || !lpBalance) {
       return "0";
     }
-    const poolTotalLpTokens = lpBalance?.[farmPoolAddress]?.poolLpTokens;
+    const poolTotalLpTokens = lpBalance?.[address]?.poolLpTokens;
     const usdValue = new BigNumber(poolTotalLpTokens)
       .times(ethPrice?.[0])
       .toString();
 
     return usdValue;
-  }, [ethPrice, lpBalance, farmPoolAddress]);
+  }, [ethPrice, lpBalance, address]);
 
   const totalValueLockedUSD = useMemo(() => {
     if (!ethPrice || !farmData?.lockedLp || !lpBalance) {
       return "0";
     }
 
-    const lpTokenPrice = lpBalance?.[farmPoolAddress]?.lpTokenPrice;
+    const lpTokenPrice = lpBalance?.[address]?.lpTokenPrice;
     const lockedLpTokens = farmData?.lockedLp;
     return new BigNumber(lockedLpTokens)
       .times(lpTokenPrice)
       .times(ethPrice?.[0])
       .toString();
-  }, [ethPrice, farmData, lpBalance, farmPoolAddress]);
+  }, [ethPrice, farmData, lpBalance, address]);
 
-  const parseStakedAmount = useMemo(
-    () =>
-      farms &&
-      fromWei(farms?.[farmPoolAddress]?.stakeData?.amount, farmPoolDecimals),
-    [farms, farmPoolAddress, farmPoolDecimals]
-  );
+  const parseStakedAmount = useMemo(() => {
+    if (!farmData) {
+      return 0;
+    }
+
+    return fromWei(farmData?.stakeData?.amount, decimals);
+  }, [farmData, decimals]);
 
   const isPoolApproved = useMemo(() => {
-    if (!lpApproved || !farmPoolAddress) {
+    if (!lpApproved) {
       return false;
     }
-    return lpApproved?.[farmPoolAddress];
-  }, [lpApproved, farmPoolAddress]);
+    return lpApproved?.[address];
+  }, [lpApproved, address]);
 
   const isPoolLoading = useMemo(() => {
-    return loading && loading?.[farmPoolAddress];
-  }, [loading, farmPoolAddress]);
+    return loading && loading?.[address];
+  }, [loading, address]);
 
   const handleApproveLpTokenToFarm = async () => {
-    await confirmLpFarmAllowance(
-      allowanceAmount,
-      farmPoolAddress,
-      currentAccount,
-      chainId
-    );
+    await confirmLpFarmAllowance(allowanceAmount, address, account, chainId);
   };
 
-  const calculateTotalApr = (_address) => {
-    if (!_address) {
-      return "";
-    }
-
-    const poolWeight = farms?.[_address]?.poolWeight;
+  const farmApr = useMemo(() => {
+    const poolWeight = farmData?.poolWeight;
 
     const pbrRewardApr = getPbrRewardApr(
       poolWeight,
@@ -308,48 +266,27 @@ const Farm = (props) => {
       totalPoolLiquidityUSDValue
     );
     const totalApr = new BigNumber(pbrRewardApr)
-      .plus(getLpApr(farmPool))
+      .plus(lpApr)
       .toFixed(0)
       .toString();
     return totalApr;
-  };
-
-  const farmApr = useMemo(
-    () => calculateTotalApr(farmPoolAddress),
-    [farmPool, pbrPriceUsd, farms, totalPoolLiquidityUSDValue]
-  );
+  }, [farmData, lpApr, pbrPriceUsd, totalPoolLiquidityUSDValue]);
 
   const handleStakeActions = (actionType = "stake") => {
-    onStake(
-      farmPool,
-      actionType,
-      farmPoolAddress,
-      farmPoolDecimals,
-      farmPoolId
-    );
+    onStake(name, actionType, address, decimals, pid);
   };
 
   const harvestDisableStatus = useMemo(() => {
     return (
-      loading?.[farmPoolAddress] ||
+      loading?.[address] ||
       new BigNumber(!farmData?.pendingPbr ? 0 : farmData.pendingPbr).eq(0)
     );
-  }, [farmData, farmPoolAddress, loading]);
+  }, [farmData, address, loading]);
 
   const handleHarvest = async () => {
-    await harvestRewards(
-      farmPoolAddress,
-      farmPoolId,
-      currentAccount,
-      currentNetwork
-    );
+    await harvestRewards(address, pid, account, chainId);
 
-    await getFarmInfo(
-      farmPoolAddress,
-      farmPoolId,
-      currentAccount,
-      currentNetwork
-    );
+    await getFarmInfo(address, pid, account, chainId);
   };
 
   return (
@@ -359,24 +296,22 @@ const Farm = (props) => {
           <div className={classes.imgWrapper}>
             <TokenIcon
               className={classes.avatar}
-              symbol={farmPool?.split("-")?.[0]}
+              symbol={name?.split("-")?.[0]}
             />
             <TokenIcon
               className={classes.avatar}
-              symbol={farmPool?.split("-")?.[1]}
+              symbol={name?.split("-")?.[1]}
             />
           </div>
           <div>
-            <div className={classes.farmName}>{farmPool}</div>
+            <div className={classes.farmName}>{name}</div>
             <div className={classes.tagWrapper}>
               <div className={classes.earn}>
                 <img
                   style={{ height: 20, width: 20, marginRight: 5 }}
                   src={Varified}
                 />
-                Core{" "}
-                {farmingPoolConstants?.[currentNetwork]?.[farmPool]?.multiplier}
-                X
+                Core {multiplier}X
               </div>
             </div>
           </div>
@@ -415,7 +350,7 @@ const Farm = (props) => {
         </div>
 
         <div className="d-flex justify-content-between align-items-center mt-4">
-          <div className={classes.tokenTitle}>{farmPool} LP STAKED</div>
+          <div className={classes.tokenTitle}>{name} LP STAKED</div>
           <div className={classes.tokenAmount}></div>
         </div>
 
@@ -487,10 +422,10 @@ const Farm = (props) => {
             target="_blank"
             rel="noreferrer"
             href={`/liquidity?action=add_liquidity&inputCurrency=${
-              farmPool && farmPool.split("-")[0]
-            }&outputCurrency=${farmPool && farmPool.split("-")[1]}`}
+              name && name.split("-")[0]
+            }&outputCurrency=${name && name.split("-")[1]}`}
           >
-            Get {farmPool} LP{" "}
+            Get {name} LP{" "}
             <OpenInNewIcon fontSize="small" className={classes.icon} />{" "}
           </a>
           <div className={classes.tokenAmount}></div>
@@ -501,7 +436,7 @@ const Farm = (props) => {
             target="_blank"
             rel="noreferrer"
             className={classes.link}
-            href={urls.showAddress(farmPoolAddress)}
+            href={urls.showAddress(address)}
           >
             View Contract{" "}
             <OpenInNewIcon fontSize="small" className={classes.icon} />{" "}
@@ -510,11 +445,7 @@ const Farm = (props) => {
         </div>
 
         <div className="d-flex justify-content-between align-items-center ">
-          <a
-            target="_blank"
-            className={classes.link}
-            href={`/pair/${farmPoolAddress}`}
-          >
+          <a target="_blank" className={classes.link} href={`/pair/${address}`}>
             See Pair Info{" "}
             <OpenInNewIcon fontSize="small" className={classes.icon} />{" "}
           </a>

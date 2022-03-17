@@ -3,7 +3,10 @@ import { connect } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
 import TabPage from "../../TabPage";
 import Farm from "./Farm";
-import { supportedFarmingPools } from "../../../constants/index";
+import {
+  farmingPoolConstants,
+  supportedFarmingPools,
+} from "../../../constants/index";
 import StakeDialog from "./StakeDialog";
 import store from "../../../store";
 import { START_TRANSACTION } from "../../../actions/types";
@@ -79,8 +82,17 @@ const Farms = (props) => {
   };
 
   const farmPools = useMemo(() => {
-    return Object.keys(supportedFarmingPools).includes(chainId)
-      ? supportedFarmingPools?.[chainId]
+    return Object.keys(supportedFarmingPools).includes(chainId?.toString())
+      ? supportedFarmingPools?.[chainId].map((poolName) => {
+          return {
+            name: poolName,
+            address: farmingPoolConstants?.[chainId]?.[poolName]?.address,
+            multiplier: farmingPoolConstants?.[chainId]?.[poolName]?.multiplier,
+            pid: farmingPoolConstants?.[chainId]?.[poolName]?.pid,
+            lpApr: farmingPoolConstants?.[chainId]?.[poolName]?.lpApr,
+            decimals: farmingPoolConstants?.[chainId]?.[poolName]?.decimals,
+          };
+        })
       : [];
   }, [chainId]);
 
@@ -96,7 +108,7 @@ const Farms = (props) => {
       </div>
       <div className="mt-5 mb-2 container row">
         <div className={classes.subTitle}>
-          {!farmPools
+          {farmPools?.length === 0
             ? "Farming will be available soon on " + currentNetwork + " network"
             : "Stake LP tokens to Earn Rewards"}
         </div>

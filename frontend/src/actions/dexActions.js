@@ -753,6 +753,10 @@ const localTokenList = {
 };
 export const loadTokens = (chainId) => async (dispatch) => {
   try {
+    if (!chainId) {
+      return;
+    }
+
     dispatch({
       type: SHOW_LOADING,
     });

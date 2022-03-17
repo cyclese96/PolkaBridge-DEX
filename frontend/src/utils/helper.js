@@ -324,11 +324,6 @@ export const getPbrRewardApr = (poolWeight, pbrPriceUSD, poolLiquidityUSD) => {
   }
 };
 
-export const getLpApr = (pool) => {
-  const lpApr = farmingPoolConstants.ethereum?.[pool]?.lpApr;
-  return lpApr ? lpApr : 0;
-};
-
 export const getNetworkNameById = (networkId) => {
   if ([56, 97].includes(parseInt(networkId))) {
     return bscNetwork;
