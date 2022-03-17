@@ -77,12 +77,9 @@ const Wallet = ({ onWalletClick }) => {
           />
           <strong className={classes.numbers}>
             {account ? <span></span> : "..."}
-            {[...account?.toString()]?.splice(0, 3)}
+            {account?.slice(0, 3)}
             {"..."}
-            {[...account?.toString()]?.splice(
-              [...account?.toString()]?.length - 4,
-              4
-            )}
+            {account?.slice(account?.length - 4, account?.length)}
           </strong>
         </Button>
       )}

@@ -1,7 +1,7 @@
 import { TokenAmount, Pair, Currency, Token } from "polkabridge-sdk";
 import { useMemo } from "react";
 import { Interface } from "@ethersproject/abi";
-import { wrappedCurrency } from "../hooks/wrappedCurrency";
+import { wrappedCurrency } from "./wrappedCurrency";
 
 import { useMultipleContractSingleData } from "../state/multicall/hooks";
 import IUniswapV2PairABI from "../contracts/abi/pair.json";

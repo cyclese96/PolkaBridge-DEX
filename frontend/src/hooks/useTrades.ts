@@ -10,7 +10,7 @@ import {
 import flatMap from "lodash.flatmap";
 import { useMemo } from "react";
 
-import { PairState, usePairs } from "../data/Reserves";
+import { PairState, usePairs } from "./usePairs";
 import { ETH, NATIVE_TOKEN, SWAP_BASES } from "../constants/index";
 import { wrappedCurrency } from "./wrappedCurrency";
 import tokenListLocalRinkeby from "../tokenList/tokenListTest.json";
