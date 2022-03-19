@@ -47,7 +47,6 @@ import { isAddress } from "utils/contractUtils";
 import { computeTradePriceBreakdown } from "utils/prices";
 import { useWalletConnectCallback } from "utils/connectionUtils";
 import BigNumber from "bignumber.js";
-import { useTokenAllowance } from "hooks/useAllowance";
 import { useCurrencyBalances } from "hooks/useBalance";
 
 const useStyles = makeStyles((theme) => ({

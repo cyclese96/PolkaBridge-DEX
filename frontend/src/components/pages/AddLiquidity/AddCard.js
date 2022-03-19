@@ -641,15 +641,20 @@ const AddCard = (props) => {
 
     if (
       ["add", "token_approve"].includes(transaction.type) &&
-      transaction.status === "pending"
+      transaction.status === "pending" &&
+      !swapDialogOpen
     ) {
       setSwapDialog(true);
       return;
     }
 
     if (isBothTokensApproved) {
+      setSwapDialog(true);
+
       handleAddLiquidity();
     } else {
+      setSwapDialog(true);
+
       handleConfirmAllowance();
     }
   };

@@ -615,9 +615,12 @@ const RemoveCard = ({
       setSwapDialog(true);
       return;
     }
+
     if (!currentLpApproved) {
+      setSwapDialog(true);
       handleConfirmAllowance();
     } else {
+      setSwapDialog(true);
       handleRemoveLiquidity();
     }
   };
