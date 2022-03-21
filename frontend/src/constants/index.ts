@@ -50,7 +50,7 @@ export const FACTORY_ADDRESS = {
 export const FARM_ADDRESS = {
   1: "0xF0301472c7e383310bE1D426aA59207818fB8a53",
   4: "0x57eA8360A59468112cE669EA8bFb2169062EAF0d",
-  97: "",
+  97: "0xc14c4F5041D62c03b4E18932975C30817A4CB39f",
   56: "",
 };
 
@@ -149,8 +149,8 @@ export const THRESOLD_WEI_VALUE = 100000000000000;
 export const supportedFarmingPools = {
   1: ["PBR-ETH", "ETH-USDT"],
   4: ["PBR-ETH", "ETH-USDT"],
-  56: ["BNB-PWAR", "BNB-USDT"],
-  97: [],
+  56: ["PWAR-BNB", "BNB-USDT"],
+  97: ["PWAR-BNB", "BNB-USDT"],
 };
 
 export const farmingPoolConstants = {
@@ -190,8 +190,42 @@ export const farmingPoolConstants = {
       decimals: 12,
     },
   },
-  56: {},
-  97: {},
+  56: {
+    "PWAR-BNB": {
+      multiplier: 40,
+      pid: 0,
+      address: "",
+      blocksPerYear: "",
+      lpApr: 0,
+      decimals: 18,
+    },
+    "BNB-USDT": {
+      multiplier: 5,
+      pid: 1,
+      address: "",
+      blocksPerYear: "",
+      lpApr: 0,
+      decimals: 12,
+    },
+  },
+  97: {
+    "PWAR-BNB": {
+      multiplier: 40,
+      pid: 0,
+      address: "0x767929Ec1AE0E66710Fc1D4CA9F0E33cF3bf3A37",
+      blocksPerYear: "",
+      lpApr: 0,
+      decimals: 18,
+    },
+    "BNB-USDT": {
+      multiplier: 5,
+      pid: 1,
+      address: "0x0AD6e5af7A4Da3006B393A91576860c14a562442",
+      blocksPerYear: "",
+      lpApr: 0,
+      decimals: 12,
+    },
+  },
 };
 
 export const RINKEBY_BLOCK_TIME = 15;

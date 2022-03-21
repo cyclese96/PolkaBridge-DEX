@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import { AccountBalanceWallet, Close } from "@material-ui/icons";
@@ -125,20 +125,6 @@ const AccountDialog = ({ open, handleClose, handleLogout }) => {
 
   const ethBalance = useETHBalances(true ? [account] : []);
 
-  useEffect(() => {
-    console.log("balance test ", ethBalance);
-  }, [ethBalance]);
-  // const getCoins = () => {
-  //   if (chainId === etheriumNetwork) {
-  //     return [
-  //       { coin: "ETH", balance: formatCurrency(fromWei(balance["ETH"])) },
-  //     ];
-  //   } else {
-  //     return [
-  //       { coin: "BNB", balance: formatCurrency(fromWei(balance["BNB"])) },
-  //     ];
-  //   }
-  // };
   return (
     <div>
       <Dialog

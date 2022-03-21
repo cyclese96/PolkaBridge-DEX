@@ -15,6 +15,7 @@ import { ETH, NATIVE_TOKEN, SWAP_BASES } from "../constants/index";
 import { wrappedCurrency } from "./wrappedCurrency";
 import tokenListLocalRinkeby from "../tokenList/tokenListTest.json";
 import tokenListEthereum from "../tokenList/tokenListEthereum.json";
+import tokenListBsc from "../tokenList/tokenListBsc.json";
 import useActiveWeb3React from "../hooks/useActiveWeb3React";
 import { getAddress } from "@ethersproject/address";
 
@@ -22,11 +23,12 @@ const localTokens: { [index: string]: Array<any> } = {
   1: tokenListEthereum,
   4: tokenListLocalRinkeby.ethereum,
   97: tokenListLocalRinkeby.bsc,
+  56: tokenListBsc,
 };
 
 function getTokenWithSymbol(symbol: string, chainId: ChainId) {
   const tokenItem = chainId
-    ? localTokens?.[chainId].find((_token: any) => _token.symbol === symbol)
+    ? localTokens?.[chainId]?.find((_token: any) => _token.symbol === symbol)
     : [];
 
   if (NATIVE_TOKEN?.[chainId] === symbol) {

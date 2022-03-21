@@ -69,7 +69,7 @@ export default function NetworkSelect({ selectedNetwork }) {
 
       localStorage.setItem("currentNetwork", _selected);
       setNetwork(_selected);
-      if ([config, config.bscChainTestent].includes(_selected)) {
+      if ([config.bscChain, config.bscChainTestent].includes(_selected)) {
         setupNetwork(
           currentConnection === "mainnet"
             ? bscNetworkDetail.mainnet
@@ -163,7 +163,11 @@ export default function NetworkSelect({ selectedNetwork }) {
               />
             </MenuItem>
             <MenuItem
-              value={currentConnection === "testnet" ? 97 : 56}
+              value={
+                currentConnection === "testnet"
+                  ? config.bscChainTestent
+                  : config.bscChain
+              }
               className={classes.buttonDrop}
             >
               <span>BSC</span>

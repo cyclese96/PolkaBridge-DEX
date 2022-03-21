@@ -96,6 +96,10 @@ const Farms = (props) => {
       : [];
   }, [chainId]);
 
+  // useEffect(() => {
+  //   console.log("farmPools ", { farmPools, chainId });
+  // }, [farmPools]);
+
   const currentNetwork = useMemo(
     () => getNetworkNameById(chainId ? chainId : 1),
     [chainId]

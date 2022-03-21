@@ -9,7 +9,7 @@ import {
   GET_FARM_POOL,
 } from "./types";
 import { farmContract, pairContract } from "../contracts/connections";
-import { FARM_ADDRESS, TOKEN_ADDRESS } from "../constants/index";
+import { FARM_ADDRESS, NATIVE_TOKEN, TOKEN_ADDRESS } from "../constants/index";
 import BigNumber from "bignumber.js";
 import { fromWei } from "../utils/helper";
 
@@ -353,7 +353,8 @@ export const getLpBalanceFarm =
       reserve[token1Addr] = reservesData._reserve1;
 
       //calculating total liquidity usd value
-      const ethAddress = TOKEN_ADDRESS?.ETH?.[chainId].toLowerCase();
+      const ethAddress =
+        TOKEN_ADDRESS?.[NATIVE_TOKEN?.[chainId]]?.[chainId].toLowerCase();
 
       let valueOfBaseTokenInFarm = 0;
       // base in this calculation is eth token

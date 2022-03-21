@@ -56,8 +56,6 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles();
   return (
-    // <Provider store={store}>
-    //   <Web3ReactProvider getLibrary={getLibrary}>
     <Suspense fallback={null}>
       <ThemeProvider theme={theme}>
         <div style={{ overflowX: "hidden" }}>
@@ -131,8 +129,6 @@ function App() {
         </div>
       </ThemeProvider>
     </Suspense>
-    //   </Web3ReactProvider>
-    // </Provider>
   );
 }
 
