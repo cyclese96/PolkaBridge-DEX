@@ -272,6 +272,12 @@ const Navbar = (props) => {
             id: "characters",
             icon: <PeopleAltOutlined />,
           },
+          {
+            name: "INO",
+            link: "https://ino.polkabridge.org/",
+            id: "characters",
+            icon: <PeopleAltOutlined />,
+          },
           { name: "Swap", link: "/", id: "items", icon: <SwapVertIcon /> },
           {
             name: "Lending",
@@ -352,6 +358,17 @@ const Navbar = (props) => {
               className={classes.navbarItemsDesktop}
             >
               Launchpad <DotCircle />
+            </a>
+          </div>
+
+          <div>
+            <a
+              href="https://ino.polkabridge.org"
+              target="_blank"
+              rel="noreferrer"
+              className={classes.navbarItemsDesktop}
+            >
+              INO <DotCircle />
             </a>
           </div>
           <div>
