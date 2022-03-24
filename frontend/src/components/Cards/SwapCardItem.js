@@ -131,7 +131,7 @@ const SwapCardItem = (props) => {
   };
 
   const handleMax = () => {
-    if (!currentToken.symbol) {
+    if (!currentToken.address || !currenryBalance) {
       return;
     }
 

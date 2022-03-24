@@ -13,26 +13,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TokenIcon = ({ symbol, styles, className, address, size }) => {
+const TokenIcon = ({ token, styles, className, size }) => {
   const ownClasses = useStyles();
   const path = `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/${isAddress(
-    address
+    token?.address
   )}/logo.png`;
 
   const _path =
     currentConnection === "testnet"
-      ? !symbol
+      ? !token?.symbol
         ? path
-        : tokenThumbnail(symbol)
+        : tokenThumbnail(token?.symbol)
       : path;
 
   return (
     <img
       className={[ownClasses.root, className, styles].join(" ")}
-      src={_path}
+      src={token?.logoURI}
       onError={(e) => {
         e.target.onerror = null;
-        e.target.src = tokenThumbnail(symbol ? symbol : "");
+        e.target.src = tokenThumbnail(token?.symbol ? token?.symbol : "");
       }}
       alt={""}
       style={{ height: size }}

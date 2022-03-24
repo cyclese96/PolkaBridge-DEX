@@ -190,7 +190,7 @@ const AccountDialog = ({ open, handleClose, handleLogout }) => {
                 />
                 <span className={classes.icon}>{NATIVE_TOKEN?.[chainId]}</span>
                 <span className={classes.numbers}>
-                  {ethBalance?.[account]?.toExact(4)}
+                  {ethBalance ? ethBalance?.[account]?.toExact(4) : "0"}
                 </span>
               </>
             </div>
