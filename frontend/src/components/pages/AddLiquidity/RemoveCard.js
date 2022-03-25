@@ -31,7 +31,6 @@ import {
   importToken,
 } from "../../../actions/dexActions";
 import SelectToken from "../../common/SelectToken";
-import tokenThumbnail from "../../../utils/tokenThumbnail";
 import BigNumber from "bignumber.js";
 import {
   getPairAddress,
@@ -44,6 +43,7 @@ import { formatCurrency } from "../../../utils/formatters";
 import TransactionConfirm from "../../common/TransactionConfirm";
 import { useLocation } from "react-router-dom";
 import useActiveWeb3React from "hooks/useActiveWeb3React";
+import TokenIcon from "components/common/TokenIcon";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -801,16 +801,8 @@ const RemoveCard = ({
 
               <div className="d-flex justify-content-between my-2 align-items-center">
                 <div className="d-flex justify-content-between align-items-center">
-                  <img
-                    className={classes.tokenIcon}
-                    src={tokenThumbnail(selectedToken0.symbol)}
-                    alt={""}
-                  />
-                  <img
-                    className={classes.tokenIcon}
-                    src={tokenThumbnail(selectedToken1.symbol)}
-                    alt={""}
-                  />
+                  <TokenIcon address={selectedToken0?.address} />
+                  <TokenIcon address={selectedToken1?.address} />
                   <span
                     className={classes.itemHeading}
                     style={{ paddingTop: 5 }}

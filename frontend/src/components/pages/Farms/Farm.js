@@ -272,14 +272,6 @@ const Farm = (props) => {
     return totalApr;
   }, [farmData, lpApr, pbrPriceUsd, totalPoolLiquidityUSDValue]);
 
-  // useEffect(() => {
-  //   console.log("aprTest ", {
-  //     pbrPriceUsd,
-  //     farmData,
-  //     totalPoolLiquidityUSDValue,
-  //   });
-  // }, [pbrPriceUsd, farmData, totalPoolLiquidityUSDValue]);
-
   const handleStakeActions = (actionType = "stake") => {
     onStake(name, actionType, address, decimals, pid);
   };

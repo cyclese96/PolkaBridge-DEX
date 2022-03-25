@@ -66,7 +66,7 @@ const TokenList = ({ handleItemSelected, tokens, disableToken }) => {
           }
         >
           <ListItemAvatar>
-            <TokenIcon token={token} className={classes.tokenIcon} />
+            <TokenIcon address={token?.address} className={classes.tokenIcon} />
           </ListItemAvatar>
           <ListItemText
             primary={<p className={classes.tokenTitle}>{token.symbol}</p>}

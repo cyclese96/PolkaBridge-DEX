@@ -111,7 +111,7 @@ export function useWalletConnectCallback() {
     } else {
       createConnectHandler(connectors.walletconnect);
     }
-  }, [activate, createConnectHandler]);
+  }, [createConnectHandler]);
 
   return [connectWallet];
 }

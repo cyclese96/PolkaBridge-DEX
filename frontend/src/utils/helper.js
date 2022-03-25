@@ -2,12 +2,9 @@ import BigNumber from "bignumber.js";
 import axios from "axios";
 import {
   bscNetwork,
-  currentConnection,
   etheriumNetwork,
-  farmingPoolConstants,
   moonriverNetwork,
   PBR_PER_YEAR,
-  tokenAddresses,
 } from "../constants/index";
 import Web3 from "web3";
 

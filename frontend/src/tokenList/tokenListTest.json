@@ -4,43 +4,50 @@
       "name": "Polkabridge",
       "symbol": "PBR",
       "address": "0xf6c9FF0543f932178262DF8C81A12A3132129b51",
-      "decimals": 18
+      "decimals": 18,
+      "logoURI": "https://assets.coingecko.com/coins/images/13744/small/symbol-whitebg200x200.png?1611377553"
     },
     {
       "name": "Ethereum",
       "symbol": "ETH",
       "address": "0xc778417e063141139fce010982780140aa0cd5ab",
-      "decimals": 18
+      "decimals": 18,
+      "logoURI": "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880"
     },
     {
       "name": "US Tether",
       "symbol": "USDT",
       "address": "0xe687b0a94c3a20540552d981cd311a6812759df8",
-      "decimals": 6
+      "decimals": 6,
+      "logoURI": "https://assets.coingecko.com/coins/images/325/small/Tether-logo.png?1598003707"
     },
     {
       "name": "USD Coin",
       "symbol": "USDC",
       "address": "0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b",
-      "decimals": 6
+      "decimals": 6,
+      "logoURI": "https://assets.coingecko.com/coins/images/6319/small/USD_Coin_icon.png?1547042389"
     },
     {
       "name": "US Tether12",
       "symbol": "USDT12",
       "address": "0xb6083cf9c33ccde1711ecb63cff1b0dd2cf06c09",
-      "decimals": 12
+      "decimals": 12,
+      "logoURI": "https://assets.coingecko.com/coins/images/325/small/Tether-logo.png?1598003707"
     },
     {
       "name": "US Tether8",
       "symbol": "USDT8",
       "address": "0x1793fbb125512015099261d339ed2e2f3fe94b2d",
-      "decimals": 8
+      "decimals": 8,
+      "logoURI": "https://assets.coingecko.com/coins/images/325/small/Tether-logo.png?1598003707"
     },
     {
       "name": "1INCH Token",
       "symbol": "1INCH",
       "address": "0xcc521406C8F796169DCe1D10bDe6AaA60847FB63",
-      "decimals": 18
+      "decimals": 18,
+      "logoURI": "https://assets.coingecko.com/coins/images/13469/small/1inch-token.png?1608803028"
     }
   ],
   "moonriver": [
@@ -86,19 +93,22 @@
       "name": "Polkawar",
       "symbol": "PWAR",
       "address": "0x16153214E683018D5aA318864c8e692b66E16778",
-      "decimals": 18
+      "decimals": 18,
+      "logoURI": "https://assets.coingecko.com/coins/images/16776/small/polkawar.PNG?1624947747"
     },
     {
       "name": "Binance Coin",
       "symbol": "BNB",
       "address": "0x094616f0bdfb0b526bd735bf66eca0ad254ca81f",
-      "decimals": 18
+      "decimals": 18,
+      "logoURI": "https://assets.coingecko.com/coins/images/12591/small/binance-coin-logo.png?1600947313"
     },
     {
       "name": "US Tether",
       "symbol": "USDT",
       "address": "0x496aA3FE91d239469a797379986948d94e893494",
-      "decimals": 18
+      "decimals": 18,
+      "logoURI": "https://assets.coingecko.com/coins/images/325/small/Tether-logo.png?1598003707"
     },
     {
       "name": "USD Coin",

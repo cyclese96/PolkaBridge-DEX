@@ -1,4 +1,4 @@
-const testing = false;
+const testing = true;
 
 export const currentConnection = testing ? "testnet" : "mainnet";
 

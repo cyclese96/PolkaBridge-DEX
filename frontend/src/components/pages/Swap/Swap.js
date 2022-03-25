@@ -32,7 +32,7 @@ import {
 } from "../../../actions/dexActions";
 import TransactionConfirm from "../../common/TransactionConfirm";
 
-import { Info, Settings } from "@material-ui/icons";
+import { Info, Settings, TramOutlined } from "@material-ui/icons";
 import TabPage from "../../TabPage";
 import store from "../../../store";
 import { START_TRANSACTION } from "../../../actions/types";
@@ -543,7 +543,11 @@ const Swap = (props) => {
       return;
     }
 
-    if (dexLoading) {
+    if (
+      ["swap", "token_approve"].includes(transaction.type) &&
+      transaction.status === "pending" &&
+      !swapDialogOpen
+    ) {
       setSwapDialog(true);
       return;
     }
@@ -551,6 +555,7 @@ const Swap = (props) => {
     if (currentTokenApprovalStatus()) {
       handleSwapToken();
     } else {
+      setSwapDialog(true);
       handleConfirmAllowance();
     }
   };
