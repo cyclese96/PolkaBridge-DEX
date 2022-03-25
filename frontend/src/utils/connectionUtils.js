@@ -89,21 +89,24 @@ export const getCurrentNetwork = (networkId) => {
 export function useWalletConnectCallback() {
   const { activate } = useActiveWeb3React();
 
-  const createConnectHandler = async (connector) => {
-    try {
-      // const connector = connectors.injected;
-      // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
+  const createConnectHandler = useCallback(
+    async (connector) => {
+      try {
+        // const connector = connectors.injected;
+        // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
 
-      if (connector instanceof WalletConnectConnector) {
-        connector.walletConnectProvider = undefined;
+        if (connector instanceof WalletConnectConnector) {
+          connector.walletConnectProvider = undefined;
+        }
+
+        await activate(connector);
+        localStorage.connected = "yes";
+      } catch (error) {
+        console.error("createConnectHandler", error);
       }
-
-      await activate(connector);
-      localStorage.connected = "yes";
-    } catch (error) {
-      console.error("createConnectHandler", error);
-    }
-  };
+    },
+    [activate]
+  );
 
   const connectWallet = useCallback(() => {
     if (isMetaMaskInstalled()) {

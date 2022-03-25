@@ -4,17 +4,17 @@ import store from "../store";
 import { getNetworkNameById } from "../utils/helper";
 import { CHANGE_NETWORK, CONNECT_WALLET } from "../actions/types";
 import { loadTokens } from "../actions/dexActions";
-import { etheriumNetwork } from "../constants/index";
+// import { etheriumNetwork } from "../constants/index";
 import useActiveWeb3React from "../hooks/useActiveWeb3React";
 
 const Home = ({ loadTokens }) => {
   const { active, account, chainId } = useActiveWeb3React();
 
   useEffect(() => {
-    if (!chainId || !active) {
-      loadTokens(etheriumNetwork);
-      return;
-    }
+    // if (!chainId || !active) {
+    //   loadTokens(etheriumNetwork);
+    //   return;
+    // }
 
     const _network = getNetworkNameById(chainId);
 

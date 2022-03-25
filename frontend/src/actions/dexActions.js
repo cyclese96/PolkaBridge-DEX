@@ -753,16 +753,16 @@ const localTokenList = {
 };
 export const loadTokens = (chainId) => async (dispatch) => {
   try {
-    if (!chainId) {
-      return;
-    }
+    // if (!chainId) {
+    //   return;
+    // }
 
     dispatch({
       type: SHOW_LOADING,
     });
 
     // todo: fetch token list from network
-    const localTokens = localTokenList?.[chainId];
+    const localTokens = localTokenList?.[!chainId ? 1 : chainId];
 
     const cachedTokens = getCachedTokens();
     const allTokens =
