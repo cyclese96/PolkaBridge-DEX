@@ -4,7 +4,11 @@ import Varified from "../../../assets/check.png";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import TokenIcon from "../../common/TokenIcon";
 import { useEffect, useMemo } from "react";
-import { allowanceAmount, TOKEN_ADDRESS } from "../../../constants/index";
+import {
+  allowanceAmount,
+  FARM_TOKEN,
+  TOKEN_ADDRESS,
+} from "../../../constants/index";
 import { connect } from "react-redux";
 import { formattedNum, urls } from "../../../utils/formatters";
 import {
@@ -328,11 +332,15 @@ const Farm = (props) => {
 
         <div className="d-flex justify-content-between align-items-center">
           <div className={classes.tokenTitle}>EARN</div>
-          <div className={classes.tokenAmount}>PBR + Fees </div>
+          <div className={classes.tokenAmount}>
+            {FARM_TOKEN?.[chainId ? chainId : 1]} + Fees{" "}
+          </div>
         </div>
 
         <div className="d-flex justify-content-between align-items-center">
-          <div className={classes.tokenTitle}>PBR earned</div>
+          <div className={classes.tokenTitle}>
+            {FARM_TOKEN?.[chainId ? chainId : 1]} earned
+          </div>
           <div className={classes.tokenAmount}></div>
         </div>
 

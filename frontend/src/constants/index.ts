@@ -81,6 +81,13 @@ export const NATIVE_TOKEN: { [index: number]: string } = {
   56: BNB,
 };
 
+export const FARM_TOKEN: { [index: number]: string } = {
+  1: PBR,
+  4: PBR,
+  97: PWAR,
+  56: PWAR,
+};
+
 export const DEFAULT_SWAP_TOKENS = {
   1: ["ETH", "PBR"], // token0 token1
   4: ["ETH", "PBR"],

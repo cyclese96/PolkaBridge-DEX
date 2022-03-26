@@ -15,6 +15,7 @@ import {
   allowanceAmount,
   DEFAULT_SWAP_TOKENS,
   ETH,
+  FARM_TOKEN,
   NATIVE_TOKEN,
   swapFnConstants,
 } from "../../../constants/index";
@@ -801,7 +802,8 @@ const Swap = (props) => {
                 - 80% to LP token holders
               </div>
               <div className={classes.txDetailsValue}>
-                - 20% to the Treasury, for buyback PBR and burn
+                - 20% to the Treasury, for buyback{" "}
+                {FARM_TOKEN?.[chainId ? chainId : 1]} and burn
               </div>
             </div>
           </div>
