@@ -19,13 +19,7 @@ import {
   NATIVE_TOKEN,
   swapFnConstants,
 } from "../../../constants/index";
-import {
-  fromWei,
-  getNetworkNameById,
-  getPriceRatio,
-  getTokenToSelect,
-  toWei,
-} from "../../../utils/helper";
+import { getPriceRatio, getTokenToSelect, toWei } from "../../../utils/helper";
 import {
   checkAllowance,
   confirmAllowance,
@@ -33,7 +27,7 @@ import {
 } from "../../../actions/dexActions";
 import TransactionConfirm from "../../common/TransactionConfirm";
 
-import { Info, Settings, TramOutlined } from "@material-ui/icons";
+import { Info, Settings } from "@material-ui/icons";
 import TabPage from "../../TabPage";
 import store from "../../../store";
 import { START_TRANSACTION } from "../../../actions/types";
@@ -204,7 +198,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Swap = (props) => {
   const {
-    dex: { approvedTokens, transaction, priceLoading, tokenList, dexLoading },
+    dex: { approvedTokens, transaction, priceLoading, tokenList },
     checkAllowance,
     confirmAllowance,
     importToken,
@@ -223,9 +217,7 @@ const Swap = (props) => {
 
   const [swapDialogOpen, setSwapDialog] = useState(false);
 
-  const [localStateLoading, setLocalStateLoading] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  // const [priceRatio, setPriceRatio] = useState(null);
 
   const handleTxPoper = (event) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -235,7 +227,7 @@ const Swap = (props) => {
     tradeType: swapFnConstants.swapExactOut,
     swapFn: swapFnConstants.swapETHforExactTokens,
   });
-  // const [swapPath, setSwapPath] = useState([]);
+
   const { chainId, active, account } = useActiveWeb3React();
 
   const [connectWallet] = useWalletConnectCallback();
@@ -250,11 +242,24 @@ const Swap = (props) => {
     query.get("outputCurrency"),
   ];
 
-  const currentNetwork = useMemo(
-    () => getNetworkNameById(chainId ? chainId : 1),
-    [chainId]
-  );
+  // check allowance on token selection
+  useEffect(() => {
+    async function updateSelectionState() {
+      if (!selectedToken0.symbol || !selectedToken1.symbol) {
+        clearInputState();
+      }
 
+      if (selectedToken0.symbol && selectedToken1.symbol) {
+        // reset token input on token selection
+        clearInputState();
+
+        checkAllowance(selectedToken0, account, chainId);
+      }
+    }
+    updateSelectionState();
+  }, [selectedToken0, selectedToken1, chainId, account]);
+
+  // init default token selection on load
   useEffect(() => {
     async function initSelection() {
       // set default chain to ethereum if not connected to wallet
@@ -293,39 +298,15 @@ const Swap = (props) => {
     initSelection();
   }, [chainId, active, tokenList]);
 
+  // clear input values entered
   const clearInputState = () => {
     setToken1Value("");
     setToken2Value("");
-    // setStatus({ disabled: true, message: "Enter Amounts" });
   };
-
-  useEffect(() => {
-    async function loadPair() {
-      setLocalStateLoading(true);
-
-      if (!selectedToken0.symbol || !selectedToken1.symbol) {
-        localStorage.priceTracker = "None";
-        clearInputState();
-      }
-
-      if (selectedToken0.symbol && selectedToken1.symbol) {
-        // reset token input on token selection
-        clearInputState();
-
-        await checkAllowance(selectedToken0, account, chainId);
-
-        setLocalStateLoading(false);
-      }
-    }
-    loadPair();
-    setLocalStateLoading(false);
-  }, [selectedToken0, selectedToken1, chainId, account]);
 
   // token 1 input change
   const onToken1InputChange = async (tokens) => {
     setToken1Value(tokens);
-
-    // localStorage.priceTracker = token1OutCalling;
 
     let _swapFn = swapFnConstants.swapExactETHForTokens;
     if (selectedToken0.symbol === NATIVE_TOKEN?.[chainId]) {
@@ -349,8 +330,6 @@ const Swap = (props) => {
   const onToken2InputChange = async (tokens) => {
     setToken2Value(tokens);
 
-    // localStorage.priceTracker = token0InCalling;
-
     let _swapFn = swapFnConstants.swapETHforExactTokens;
     if (selectedToken0.symbol === ETH) {
       _swapFn = swapFnConstants.swapETHforExactTokens;
@@ -366,10 +345,8 @@ const Swap = (props) => {
     });
   };
 
-  // new trade hooks
-
   // parseed input token amounts entered by user: token0/token1 to pass into best trade hooks
-  const parsedInputToken0Amount = useMemo(() => {
+  const parsedToken0Amount = useMemo(() => {
     if (!token1Value || !selectedToken0.symbol || !chainId) {
       return undefined;
     }
@@ -388,7 +365,7 @@ const Swap = (props) => {
     );
   }, [token1Value, selectedToken0, chainId]);
 
-  const parsedInputToken1Amount = useMemo(() => {
+  const parsedToken1Amount = useMemo(() => {
     if (!token2Value || !selectedToken1.symbol || !chainId) {
       return undefined;
     }
@@ -406,10 +383,10 @@ const Swap = (props) => {
       JSBI.BigInt(toWei(token2Value, selectedToken1.decimals))
     );
   }, [token2Value, selectedToken1, chainId]);
+  //
 
-  // parsed output tokens:  token0/token1  to pass into best trade hook
-
-  const parsedOutputToken0 = useMemo(() => {
+  // parsed tokens in wrappedCurency format to be used as output asset
+  const wrappedCurrency0 = useMemo(() => {
     if (!selectedToken0.address || !chainId) {
       return undefined;
     }
@@ -425,7 +402,7 @@ const Swap = (props) => {
     return wrappedCurrency(_token, chainId);
   }, [selectedToken0, chainId]);
 
-  const parsedOutputToken1 = useMemo(() => {
+  const wrappedCurrency1 = useMemo(() => {
     if (!selectedToken1.address || !chainId) {
       return undefined;
     }
@@ -441,15 +418,17 @@ const Swap = (props) => {
     return wrappedCurrency(_token, chainId);
   }, [selectedToken1, chainId]);
 
+  // trade hooks
   const bestTradeExactIn = useTradeExactIn(
-    parsedInputToken0Amount,
-    parsedOutputToken1
+    parsedToken0Amount,
+    wrappedCurrency1
   );
 
   const bestTradeExactOut = useTradeExactOut(
-    parsedOutputToken0,
-    parsedInputToken1Amount
+    wrappedCurrency0,
+    parsedToken1Amount
   );
+  //
 
   const tradePriceImpact = useMemo(() => {
     if (currentSwap.tradeType === swapFnConstants.swapExactIn) {
@@ -472,7 +451,7 @@ const Swap = (props) => {
     }
 
     return bestTradeExactOut?.route?.path?.map((_token) => _token.address);
-  }, [bestTradeExactIn, bestTradeExactOut]);
+  }, [bestTradeExactIn, bestTradeExactOut, currentSwap]);
 
   // token usd price tracker start
   const token0PriceData = useTokenData(
@@ -520,7 +499,7 @@ const Swap = (props) => {
     await confirmAllowance(_allowanceAmount, selectedToken0, account, chainId);
   };
 
-  const handleSwapToken = async () => {
+  const handleSwapToken = () => {
     setSwapDialog(true);
   };
 
@@ -532,11 +511,11 @@ const Swap = (props) => {
     setToken2(tokenSelected1);
   };
 
-  const currentTokenApprovalStatus = () => {
+  const isToken0Approved = useMemo(() => {
     return selectedToken0.symbol === NATIVE_TOKEN?.[chainId]
       ? true
       : approvedTokens[selectedToken0.symbol];
-  };
+  }, [approvedTokens, selectedToken0, chainId]);
 
   const handleAction = () => {
     if (!active) {
@@ -553,7 +532,7 @@ const Swap = (props) => {
       return;
     }
 
-    if (currentTokenApprovalStatus()) {
+    if (isToken0Approved) {
       handleSwapToken();
     } else {
       setSwapDialog(true);
@@ -670,19 +649,19 @@ const Swap = (props) => {
     } else if (noRoute && userHasSpecifiedInputOutput) {
       return "Insufficient liquidity for this trade!";
     } else {
-      return !currentTokenApprovalStatus() ? "Approve" : "Swap";
+      return !isToken0Approved ? "Approve" : "Swap";
     }
   }, [
     active,
     transaction,
     userHasSpecifiedInputOutput,
     noRoute,
-    currentTokenApprovalStatus(),
+    isToken0Approved,
   ]);
 
   const currencyBalances = useCurrencyBalances(account, [
-    parsedOutputToken0,
-    parsedOutputToken1,
+    wrappedCurrency0,
+    wrappedCurrency1,
   ]);
 
   return (
@@ -802,8 +781,7 @@ const Swap = (props) => {
                 - 80% to LP token holders
               </div>
               <div className={classes.txDetailsValue}>
-                - 20% to the Treasury, for buyback{" "}
-                {FARM_TOKEN?.[chainId ? chainId : 1]} and burn
+                - 20% to the Treasury, for buyback {FARM_TOKEN?.[1]} and burn
               </div>
             </div>
           </div>
