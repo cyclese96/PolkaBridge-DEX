@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import SwapSettings from "../../common/SwapSettings";
-import SwapCardItem from "../../Cards/SwapCardItem";
+import SwapCardItem from "../Swap/SwapCardItem";
 import AddIcon from "@material-ui/icons/Add";
 import {
   allowanceAmount,

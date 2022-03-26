@@ -1,12 +1,10 @@
 import { Card, makeStyles } from "@material-ui/core";
-import { fromWei, isNumber } from "../../utils/helper";
-import { connect } from "react-redux";
-import SelectToken from "../common/SelectToken";
-import { formatCurrency } from "../../utils/formatters";
-import { formattedNum } from "../../utils/timeUtils";
+import { isNumber } from "../../../utils/helper";
+import SelectToken from "../../common/SelectToken";
+import { formatCurrency } from "../../../utils/formatters";
+import { formattedNum } from "../../../utils/timeUtils";
 import BigNumber from "bignumber.js";
 import React from "react";
-import { useCurrencyBalance } from "hooks/useBalance";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -106,7 +104,6 @@ const useStyles = makeStyles((theme) => ({
 
 const SwapCardItem = (props) => {
   const {
-    account: { balance },
     inputType,
     onInputChange,
     onTokenChange,
@@ -195,8 +192,4 @@ const SwapCardItem = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  account: state.account,
-});
-
-export default connect(mapStateToProps, {})(React.memo(SwapCardItem));
+export default React.memo(SwapCardItem);

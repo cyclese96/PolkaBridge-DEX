@@ -7,7 +7,7 @@ import {
   Popper,
 } from "@material-ui/core";
 import { connect } from "react-redux";
-import SwapCardItem from "../../Cards/SwapCardItem";
+import SwapCardItem from "./SwapCardItem";
 import SwapVertIcon from "@material-ui/icons/SwapVert";
 import { useState } from "react";
 import SwapSettings from "../../common/SwapSettings";
