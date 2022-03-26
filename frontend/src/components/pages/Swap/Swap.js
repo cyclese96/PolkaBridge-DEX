@@ -198,7 +198,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Swap = (props) => {
   const {
-    dex: { approvedTokens, transaction, priceLoading, tokenList },
+    dex: { approvedTokens, transaction, tokenList },
     checkAllowance,
     confirmAllowance,
     importToken,
@@ -627,41 +627,63 @@ const Swap = (props) => {
     return getPriceRatio(parsedToken2Value, parsedToken1Value);
   }, [parsedToken1Value, parsedToken2Value]);
 
-  const disableStatus = useMemo(() => {
-    if (!active) {
-      return false;
-    }
-    return priceLoading || noRoute || !userHasSpecifiedInputOutput;
-  }, [priceLoading, userHasSpecifiedInputOutput, active, noRoute]);
+  const currencyBalances = useCurrencyBalances(account, [
+    wrappedCurrency0,
+    wrappedCurrency1,
+  ]);
 
-  const currentButton = useMemo(() => {
+  const currentSwapStatus = useMemo(() => {
     if (!active) {
-      return "Connect Wallet";
+      return { currentBtnText: "Connect Wallet", disabled: true };
     }
 
     if (
       ["swap", "token_approve"].includes(transaction.type) &&
       transaction.status === "pending"
     ) {
-      return "Pending Transaction...";
-    } else if (!userHasSpecifiedInputOutput) {
-      return "Enter token amount";
-    } else if (noRoute && userHasSpecifiedInputOutput) {
-      return "Insufficient liquidity for this trade!";
-    } else {
-      return !isToken0Approved ? "Approve" : "Swap";
+      return { currentBtnText: "Pending Transaction...", disabled: false };
     }
+
+    if (!userHasSpecifiedInputOutput) {
+      return { currentBtnText: "Enter token amount", disabled: true };
+    }
+
+    if (noRoute && userHasSpecifiedInputOutput) {
+      return {
+        currentBtnText: "Insufficient liquidity for this trade!",
+        disabled: true,
+      };
+    }
+
+    const bal0 = !currencyBalances?.[0]
+      ? "0"
+      : currencyBalances?.[0]?.toExact();
+    const bal1 = !currencyBalances?.[1]
+      ? "0"
+      : currencyBalances?.[1]?.toExact();
+    if (
+      new BigNumber(token1Value).gt(bal0) ||
+      new BigNumber(token2Value).gt(bal1)
+    ) {
+      return { currentBtnText: "Insufficient funds!", disabled: true };
+    }
+
+    if (!isToken0Approved) {
+      return {
+        currentBtnText: "Approve " + selectedToken0?.symbol,
+        disabled: false,
+      };
+    }
+
+    return { currentBtnText: "Swap", disabled: false };
   }, [
     active,
     transaction,
     userHasSpecifiedInputOutput,
     noRoute,
     isToken0Approved,
-  ]);
-
-  const currencyBalances = useCurrencyBalances(account, [
-    wrappedCurrency0,
-    wrappedCurrency1,
+    currencyBalances,
+    selectedToken0,
   ]);
 
   return (
@@ -737,7 +759,7 @@ const Swap = (props) => {
               <div className={classes.tokenPrice}>
                 {selectedToken0.symbol &&
                 selectedToken1.symbol &&
-                !disableStatus ? (
+                !currentSwapStatus.disabled ? (
                   <span style={{ paddingRight: 5 }}>
                     1 {selectedToken0.symbol} {" = "}
                     <NumberFormat
@@ -762,11 +784,11 @@ const Swap = (props) => {
             </div>
           )}
           <Button
-            disabled={disableStatus}
+            disabled={currentSwapStatus.disabled}
             className={classes.swapButton}
             onClick={handleAction}
           >
-            {currentButton}
+            {currentSwapStatus.currentBtnText}
           </Button>
         </div>
 
