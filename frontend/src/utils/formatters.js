@@ -117,3 +117,6 @@ export const urls = {
 export function localNumber(val) {
   return Numeral(val).format("0,0");
 }
+export function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+}

@@ -44,6 +44,7 @@ import TransactionConfirm from "../../common/TransactionConfirm";
 import { useLocation } from "react-router-dom";
 import useActiveWeb3React from "hooks/useActiveWeb3React";
 import TokenIcon from "components/common/TokenIcon";
+import NumberInput from "components/common/NumberInput";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -666,12 +667,10 @@ const RemoveCard = ({
 
             <div className="d-flex justify-content-center align-items-center">
               <div>
-                <input
-                  type="text"
-                  className={classes.input}
-                  onChange={({ target: { value } }) => handleInputChange(value)}
+                <NumberInput
+                  onInputChange={handleInputChange}
                   value={liquidityInputTemp}
-                  placeholder="0.0"
+                  style={classes.input}
                 />
               </div>
               <div className={classes.percentageSymbol}>%</div>

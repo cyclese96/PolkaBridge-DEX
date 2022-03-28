@@ -21,6 +21,7 @@ import {
 import BigNumber from "bignumber.js";
 import { useMemo } from "react";
 import useActiveWeb3React from "hooks/useActiveWeb3React";
+import NumberInput from "components/common/NumberInput";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -305,13 +306,10 @@ const StakeDialog = ({
             </div>
             <div className="d-flex flex-wrap justify-content-between align-items-center mt-2">
               <div>
-                {/* <div className={classes.tokenTitle}>0.00</div> */}
-                <input
-                  className={classes.input}
-                  placeholder="0.00"
-                  onChange={({ target: { value } }) => setInputValue(value)}
+                <NumberInput
+                  onInputChange={setInputValue}
                   value={inputValue}
-                  type="text"
+                  style={classes.input}
                 />
               </div>
               <div className="d-flex justify-content-between align-items-center mt-2">
