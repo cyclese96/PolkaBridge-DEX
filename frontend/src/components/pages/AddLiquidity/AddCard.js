@@ -9,6 +9,7 @@ import {
   allowanceAmount,
   DEFAULT_POOL_TOKENS,
   ETH,
+  liquidityPoolConstants,
   NATIVE_TOKEN,
 } from "../../../constants/index";
 import {
@@ -256,6 +257,7 @@ const AddCard = (props) => {
 
   const [swapDialogOpen, setSwapDialog] = useState(false);
   const [connectWallet] = useWalletConnectCallback();
+  const [inputType, setInputType] = useState(liquidityPoolConstants.exactIn);
 
   // selected token usd value track
   const token0PriceData = useTokenData(
@@ -348,7 +350,7 @@ const AddCard = (props) => {
     token0Query,
   ]);
 
-  const currentPairAddress = () => {
+  const currentPairAddress = useMemo(() => {
     if (
       Object.keys(pairContractData).includes(
         `${selectedToken0.symbol}_${selectedToken1.symbol}`
@@ -368,7 +370,7 @@ const AddCard = (props) => {
     } else {
       return null;
     }
-  };
+  }, [pairContractData, selectedToken0, selectedToken1]);
 
   const token0Approved = useMemo(() => {
     if (selectedToken0?.symbol === ETH) {
@@ -402,7 +404,7 @@ const AddCard = (props) => {
   };
 
   const loadPairReserves = async () => {
-    let _pairAddress = currentPairAddress();
+    let _pairAddress = currentPairAddress;
 
     if (!_pairAddress) {
       _pairAddress = await getPairAddress(
@@ -479,84 +481,108 @@ const AddCard = (props) => {
     debounce((...params) => getLpBalance(...params), 1000);
   }, []);
 
-  const onToken1InputChange = async (tokens) => {
+  const onToken1InputChange = (tokens) => {
     setToken1Value(tokens);
 
-    setLocalStateLoading(true);
-    //calculate resetpective value of token 2 if selected
-    let _token2Value = "";
-    const pairAddress = currentPairAddress();
+    const pairAddress = currentPairAddress;
+
+    setInputType(liquidityPoolConstants.exactIn);
 
     if (selectedToken1.symbol && tokens && pairAddress) {
-      await debouncedGetLpBalance(
+      debouncedGetLpBalance(
         selectedToken0,
         selectedToken1,
         pairAddress,
         account,
         chainId
       );
-
-      _token2Value = getTokenOutWithReserveRatio(
-        tokens,
-        fromWei(poolReserves[selectedToken1.symbol], selectedToken1.decimals),
-        fromWei(poolReserves[selectedToken0.symbol], selectedToken0.decimals)
-      );
-      if (new BigNumber(_token2Value).gt(0)) {
-        setToken2Value(_token2Value);
-      }
-    } else if (selectedToken1.symbol && !tokens) {
-      setToken2Value("");
     }
-
-    setLocalStateLoading(false);
   };
 
-  const onToken2InputChange = async (tokens) => {
+  const onToken2InputChange = (tokens) => {
     setToken2Value(tokens);
 
-    setLocalStateLoading(true);
-    let _token1Value = "";
-    const pairAddress = currentPairAddress();
+    const pairAddress = currentPairAddress;
+
+    setInputType(liquidityPoolConstants.exactOut);
 
     if (selectedToken0.symbol && tokens && pairAddress) {
-      await debouncedGetLpBalance(
+      debouncedGetLpBalance(
         selectedToken0,
         selectedToken1,
         pairAddress,
         account,
         chainId
       );
-
-      _token1Value = getTokenOutWithReserveRatio(
-        tokens,
-        fromWei(poolReserves[selectedToken0.symbol], selectedToken0.decimals),
-        fromWei(poolReserves[selectedToken1.symbol], selectedToken1.decimals)
-      );
-      if (new BigNumber(_token1Value).eq(0)) {
-      } else {
-        setToken1Value(_token1Value);
-      }
-    } else if (selectedToken0.symbol && !tokens) {
-      setToken1Value("");
     }
-
-    setLocalStateLoading(false);
   };
 
+  const parsedToken1Value = useMemo(() => {
+    if (inputType === liquidityPoolConstants.exactIn || !currentPairAddress) {
+      return token1Value;
+    }
+
+    if (!token2Value) {
+      return "";
+    }
+
+    const _tokenValue = getTokenOutWithReserveRatio(
+      token2Value,
+      fromWei(poolReserves[selectedToken0.symbol], selectedToken0.decimals),
+      fromWei(poolReserves[selectedToken1.symbol], selectedToken1.decimals)
+    );
+
+    return _tokenValue;
+  }, [
+    token1Value,
+    token2Value,
+    poolReserves,
+    inputType,
+    selectedToken0,
+    selectedToken1,
+    currentPairAddress,
+  ]);
+
+  const parsedToken2Value = useMemo(() => {
+    if (inputType === liquidityPoolConstants.exactOut || !currentPairAddress) {
+      return token2Value;
+    }
+
+    if (!token1Value) {
+      return "";
+    }
+
+    const _token2Value = getTokenOutWithReserveRatio(
+      token1Value,
+      fromWei(poolReserves[selectedToken1.symbol], selectedToken1.decimals),
+      fromWei(poolReserves[selectedToken0.symbol], selectedToken0.decimals)
+    );
+
+    return _token2Value;
+  }, [
+    token1Value,
+    token2Value,
+    poolReserves,
+    inputType,
+    selectedToken0,
+    selectedToken1,
+    currentPairAddress,
+  ]);
+
   const resetInput = () => {
-    setToken1Value("0");
-    setToken2Value("0");
+    setToken1Value("");
+    setToken2Value("");
     store.dispatch({ type: RESET_POOL_SHARE });
   };
 
   const onToken1Select = (token) => {
     setToken0(token);
-    resetInput();
+    // resetInput();
   };
 
   const onToken2Select = (token) => {
     setToken1(token);
-    resetInput();
+    // resetInput();
   };
 
   const handleClearState = () => {
@@ -617,21 +643,21 @@ const AddCard = (props) => {
     await loadPairReserves();
   };
 
-  const currentPoolShare = () => {
+  const currentPoolShare = useMemo(() => {
     if (
       !poolReserves[selectedToken0.symbol] ||
       !poolReserves[selectedToken1.symbol]
     ) {
       return "100";
     }
-    const token1Amount = toWei(token1Value);
+    const token1Amount = toWei(parsedToken1Value);
     const token1Reserves = new BigNumber(poolReserves[selectedToken0.symbol]);
     const share = getPercentage(
       token1Amount,
       token1Reserves.plus(token1Amount).toString()
     );
     return share;
-  };
+  }, [poolReserves, selectedToken0, selectedToken1, parsedToken1Value]);
 
   const handleAction = () => {
     if (!active) {
@@ -714,8 +740,8 @@ const AddCard = (props) => {
     }
 
     if (
-      new BigNumber(token1Value || 0).eq(0) ||
-      new BigNumber(token2Value || 0).eq(0)
+      new BigNumber(parsedToken1Value || 0).eq(0) ||
+      new BigNumber(parsedToken2Value || 0).eq(0)
     ) {
       return { currentBtnText: "Enter token amounts", disabled: true };
     }
@@ -727,8 +753,8 @@ const AddCard = (props) => {
       ? "0"
       : currencyBalances?.[1]?.toExact();
     if (
-      new BigNumber(token1Value).gt(bal0) ||
-      new BigNumber(token2Value).gt(bal1)
+      new BigNumber(parsedToken1Value).gt(bal0) ||
+      new BigNumber(parsedToken2Value).gt(bal1)
     ) {
       return { currentBtnText: "Insufficient funds!", disabled: true };
     }
@@ -745,8 +771,8 @@ const AddCard = (props) => {
     transaction,
     isBothTokensApproved,
     currencyBalances,
-    token1Value,
-    token2Value,
+    parsedToken1Value,
+    parsedToken2Value,
   ]);
 
   // liquidity transaction status updates
@@ -786,14 +812,6 @@ const AddCard = (props) => {
       store.dispatch({ type: START_TRANSACTION });
     }
   };
-
-  // useEffect(() => {
-  //   console.log("current stated ", {
-  //     currApproveBtnText,
-  //     currentAddLiquidityStatus,
-  //     isBothTokensApproved,
-  //   });
-  // }, [currApproveBtnText, currentAddLiquidityStatus, isBothTokensApproved]);
 
   return (
     <>
@@ -837,7 +855,7 @@ const AddCard = (props) => {
             onTokenChange={onToken1Select}
             currentToken={selectedToken0}
             disableToken={selectedToken1}
-            inputValue={token1Value}
+            inputValue={parsedToken1Value}
             priceUSD={token0PriceUsd}
             currenryBalance={currencyBalances?.[0]?.toExact()}
           />
@@ -850,7 +868,7 @@ const AddCard = (props) => {
             onTokenChange={onToken2Select}
             currentToken={selectedToken1}
             disableToken={selectedToken0}
-            inputValue={token2Value}
+            inputValue={parsedToken2Value}
             priceUSD={token1PriceUsd}
             currenryBalance={currencyBalances?.[1]?.toExact()}
           />
@@ -882,7 +900,7 @@ const AddCard = (props) => {
 
                 <div className={classes.feeSelectContainer}>
                   <div className={classes.feeSelectHeading}>
-                    {`${currentPoolShare()}%`}
+                    {`${currentPoolShare}%`}
                   </div>
                   <span className={classes.feeSelectHeadingSpan}>
                     Share of pool

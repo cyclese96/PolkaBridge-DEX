@@ -3,7 +3,6 @@ import {
   currentConnection,
   swapFnConstants,
   ROUTER_ADDRESS,
-  TOKEN_ADDRESS,
   NATIVE_TOKEN,
 } from "../constants/index";
 import {
@@ -753,10 +752,6 @@ const localTokenList = {
 };
 export const loadTokens = (chainId) => async (dispatch) => {
   try {
-    // if (!chainId) {
-    //   return;
-    // }
-
     dispatch({
       type: SHOW_LOADING,
     });
