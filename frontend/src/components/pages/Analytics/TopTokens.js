@@ -378,13 +378,6 @@ const TopTokens = ({
     );
   }, [allPairs]);
 
-  //   id: 1,
-  //   name: "Ether",
-  //   symbol: "ETH",
-  //   price: 2330,
-  //   price_change: 2.74,
-  //   vol_24_h: 882.93,
-  //   tvl: 572.82,
   const getFormattedTokenObject = (rawObject) => {
     const obj = {
       id: rawObject.id,
@@ -406,15 +399,6 @@ const TopTokens = ({
     );
   }, [allTokens]);
 
-  // id: 1,
-  // transactionType: "swap",
-  // fromToken: { symbol: "ETH", amount: 1.0003 },
-  // toTokenL: { symbol: "PBR", amount: 42021 },
-  // token1_amount
-  // token2_amount
-  // total_value: 20000,
-  // account: "0x9d1599C943AaDb3c0A1964d159113dF913E08f64",
-  // time: "2 minutes ago",
   const getFormattedTransactionObject = (rawObject) => {
     const obj = {
       id: rawObject.transaction.id,

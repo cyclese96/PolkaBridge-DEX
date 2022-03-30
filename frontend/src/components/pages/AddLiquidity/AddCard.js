@@ -8,7 +8,6 @@ import AddIcon from "@material-ui/icons/Add";
 import {
   allowanceAmount,
   DEFAULT_POOL_TOKENS,
-  ETH,
   liquidityPoolConstants,
   NATIVE_TOKEN,
 } from "../../../constants/index";
@@ -373,14 +372,14 @@ const AddCard = (props) => {
   }, [pairContractData, selectedToken0, selectedToken1]);
 
   const token0Approved = useMemo(() => {
-    if (selectedToken0?.symbol === ETH) {
+    if (selectedToken0?.symbol === NATIVE_TOKEN?.[chainId]) {
       return true;
     }
     return approvedTokens && approvedTokens?.[selectedToken0?.symbol];
   }, [selectedToken0, approvedTokens]);
 
   const token1Approved = useMemo(() => {
-    if (selectedToken1?.symbol === ETH) {
+    if (selectedToken1?.symbol === NATIVE_TOKEN?.[chainId]) {
       return true;
     }
     return approvedTokens && approvedTokens?.[selectedToken1?.symbol];
@@ -598,10 +597,10 @@ const AddCard = (props) => {
       if (selectedToken0.symbol === NATIVE_TOKEN?.[chainId]) {
         etherToken = {
           ...selectedToken0,
-          amount: token1Value,
+          amount: parsedToken1Value,
         };
 
-        const _amount = toWei(token2Value, selectedToken1.decimals);
+        const _amount = toWei(parsedToken2Value, selectedToken1.decimals);
         erc20Token = {
           ...selectedToken1,
           amount: _amount,
@@ -609,10 +608,10 @@ const AddCard = (props) => {
       } else {
         etherToken = {
           ...selectedToken1,
-          amount: token2Value,
+          amount: parsedToken2Value,
         };
 
-        const _amount = toWei(token1Value, selectedToken0.decimals);
+        const _amount = toWei(parsedToken1Value, selectedToken0.decimals);
         erc20Token = {
           ...selectedToken0,
           amount: _amount,
@@ -629,8 +628,8 @@ const AddCard = (props) => {
     } else {
       // addLiquidity
 
-      const _amount1 = toWei(token1Value, selectedToken0.decimals);
-      const _amount2 = toWei(token2Value, selectedToken1.decimals);
+      const _amount1 = toWei(parsedToken1Value, selectedToken0.decimals);
+      const _amount2 = toWei(parsedToken2Value, selectedToken1.decimals);
       await addLiquidity(
         { ...selectedToken0, amount: _amount1 },
         { ...selectedToken1, amount: _amount2 },

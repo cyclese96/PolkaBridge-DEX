@@ -13,7 +13,7 @@ import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import {
   allowanceAmount,
   DEFAULT_POOL_TOKENS,
-  ETH,
+  NATIVE_TOKEN,
 } from "../../../constants/index";
 import {
   fromWei,
@@ -410,10 +410,6 @@ const RemoveCard = ({
           type: RESET_POOL_DATA,
         });
 
-        // load erc20 token abi and balance
-        // const erc20Token =
-        //   selectedToken0.symbol === ETH ? selectedToken1 : selectedToken0;
-
         let _pairAddress = currentPairAddress;
         if (!_pairAddress) {
           _pairAddress = await getPairAddress(
@@ -469,10 +465,13 @@ const RemoveCard = ({
 
     const _lpAmount = lpAmount;
 
-    if (selectedToken0.symbol === ETH || selectedToken1.symbol === ETH) {
+    if (
+      selectedToken0.symbol === NATIVE_TOKEN?.[chainId] ||
+      selectedToken1.symbol === NATIVE_TOKEN?.[chainId]
+    ) {
       // remove liquidity eth-erc20 || erc20 - eth
       let ethToken, erc20Token;
-      if (selectedToken0.symbol === ETH) {
+      if (selectedToken0.symbol === NATIVE_TOKEN?.[chainId]) {
         ethToken = selectedToken0;
         erc20Token = selectedToken1;
       } else {

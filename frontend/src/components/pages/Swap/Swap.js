@@ -14,7 +14,6 @@ import SwapSettings from "../../common/SwapSettings";
 import {
   allowanceAmount,
   DEFAULT_SWAP_TOKENS,
-  ETH,
   FARM_TOKEN,
   NATIVE_TOKEN,
   swapFnConstants,
@@ -331,9 +330,12 @@ const Swap = (props) => {
     setToken2Value(tokens);
 
     let _swapFn = swapFnConstants.swapETHforExactTokens;
-    if (selectedToken0.symbol === ETH) {
+    if (selectedToken0.symbol === NATIVE_TOKEN?.[chainId]) {
       _swapFn = swapFnConstants.swapETHforExactTokens;
-    } else if (selectedToken1.symbol && selectedToken1.symbol === ETH) {
+    } else if (
+      selectedToken1.symbol &&
+      selectedToken1.symbol === NATIVE_TOKEN?.[chainId]
+    ) {
       _swapFn = swapFnConstants.swapTokensForExactETH;
     } else {
       _swapFn = swapFnConstants.swapTokensForExactTokens;
@@ -634,7 +636,7 @@ const Swap = (props) => {
 
   const currentSwapStatus = useMemo(() => {
     if (!active) {
-      return { currentBtnText: "Connect Wallet", disabled: true };
+      return { currentBtnText: "Connect Wallet", disabled: false };
     }
 
     if (
@@ -658,13 +660,8 @@ const Swap = (props) => {
     const bal0 = !currencyBalances?.[0]
       ? "0"
       : currencyBalances?.[0]?.toExact();
-    const bal1 = !currencyBalances?.[1]
-      ? "0"
-      : currencyBalances?.[1]?.toExact();
-    if (
-      new BigNumber(token1Value).gt(bal0) ||
-      new BigNumber(token2Value).gt(bal1)
-    ) {
+
+    if (new BigNumber(parsedToken1Value).gt(bal0)) {
       return { currentBtnText: "Insufficient funds!", disabled: true };
     }
 
@@ -684,6 +681,7 @@ const Swap = (props) => {
     isToken0Approved,
     currencyBalances,
     selectedToken0,
+    parsedToken1Value,
   ]);
 
   return (
