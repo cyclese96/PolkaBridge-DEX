@@ -349,7 +349,7 @@ const RemoveCard = ({
 
   const handleConfirmAllowance = async () => {
     const _allowanceAmount = allowanceAmount;
-    const pairAddress = currentPairAddress();
+    const pairAddress = currentPairAddress;
     await confirmLPAllowance(
       _allowanceAmount,
       selectedToken0,
@@ -378,7 +378,7 @@ const RemoveCard = ({
     }
   }, [lpBalance, selectedToken0, selectedToken1]);
 
-  const currentPairAddress = () => {
+  const currentPairAddress = useMemo(() => {
     if (
       Object.keys(pairContractData).includes(
         `${selectedToken0.symbol}_${selectedToken1.symbol}`
@@ -398,7 +398,7 @@ const RemoveCard = ({
     } else {
       return null;
     }
-  };
+  }, [pairContractData, selectedToken0, selectedToken1]);
 
   // new use effect
   useEffect(() => {
@@ -414,7 +414,7 @@ const RemoveCard = ({
         // const erc20Token =
         //   selectedToken0.symbol === ETH ? selectedToken1 : selectedToken0;
 
-        let _pairAddress = currentPairAddress();
+        let _pairAddress = currentPairAddress;
         if (!_pairAddress) {
           _pairAddress = await getPairAddress(
             selectedToken0.address,
@@ -501,7 +501,7 @@ const RemoveCard = ({
       );
     }
 
-    const pairAddress = currentPairAddress();
+    const pairAddress = currentPairAddress;
     await getLpBalance(
       selectedToken0,
       selectedToken1,
