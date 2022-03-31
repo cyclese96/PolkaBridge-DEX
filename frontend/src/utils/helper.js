@@ -159,7 +159,6 @@ export const fetchTokenInfo = async (address, chainId = 1) => {
       .join("")}`;
     const _bscApi = `https://api.bscscan.com/api?module=token&action=tokeninfo&contractaddress=${address}&apikey=${bscApiKey}`;
     const res = await axios.get([1, 4].includes(chainId) ? _api : _bscApi);
-    console.log("fetchToken ", { res, chainId });
     return res.data;
   } catch (error) {
     console.log("fetchTokenInfo", error);
