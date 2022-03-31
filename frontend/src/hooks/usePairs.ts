@@ -1,7 +1,7 @@
 import { TokenAmount, Pair, Currency, Token } from "polkabridge-sdk";
 import { useMemo } from "react";
 import { Interface } from "@ethersproject/abi";
-import { wrappedCurrency } from "./wrappedCurrency";
+// import { wrappedCurrency } from "./wrappedCurrency";
 
 import { useMultipleContractSingleData } from "../state/multicall/hooks";
 import IUniswapV2PairABI from "../contracts/abi/pair.json";
@@ -29,22 +29,22 @@ export function usePairs(
   const pairAddresses = useMemo(
     () =>
       tokens.map(([tokenA, tokenB]) => {
-        return tokenA && tokenB && !tokenA.equals(tokenB)
-          ? Pair.getAddress(tokenA, tokenB, tokenA.chainId)
-          : undefined;
+        try {
+          return tokenA && tokenB && !tokenA.equals(tokenB)
+            ? Pair.getAddress(tokenA, tokenB, tokenA.chainId)
+            : undefined;
+        } catch (error) {
+          return undefined;
+        }
       }),
     [tokens]
   );
-
-  // console.log("tradeTest usePairs", { pairAddresses, currencies });
 
   const results = useMultipleContractSingleData(
     pairAddresses,
     PAIR_INTERFACE,
     "getReserves"
   );
-
-  // console.log("tradeTest callResults", results);
 
   return useMemo(() => {
     return results.map((result, i) => {

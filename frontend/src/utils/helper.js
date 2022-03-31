@@ -145,14 +145,21 @@ export const getPercentageAmount = (value, percent) => {
 };
 
 // :todo remove this function after testing
-export const fetchTokenInfo = async (address) => {
+
+export const fetchTokenInfo = async (address, chainId = 1) => {
+  const bscApiKey = process.env.REACT_APP_BSC_SCAN_API?.split("")
+    .reverse()
+    .join("");
+
   try {
     const _api = `https://api.etherscan.io/api?module=token&action=tokeninfo&contractaddress=${address}&apikey=${process.env.REACT_APP_ETHER_SCAN_API.split(
       ""
     )
       .reverse()
       .join("")}`;
-    const res = await axios.get(_api);
+    const _bscApi = `https://api.bscscan.com/api?module=token&action=tokeninfo&contractaddress=${address}&apikey=${bscApiKey}`;
+    const res = await axios.get([1, 4].includes(chainId) ? _api : _bscApi);
+    console.log("fetchToken ", { res, chainId });
     return res.data;
   } catch (error) {
     console.log("fetchTokenInfo", error);

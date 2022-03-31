@@ -1,4 +1,4 @@
-const testing = true;
+const testing = false;
 
 export const currentConnection = testing ? "testnet" : "mainnet";
 
@@ -37,7 +37,7 @@ export const ROUTER_ADDRESS = {
   1: "0xFF0e9437818258BDEdd1aA374095968ABC82a9E2",
   4: "0x541E97cC33aF16586fB544812b39F1663C3FD779",
   97: "0xCb4Ea1E2f7561edD414AF09d2df308986d4d7a29",
-  56: "",
+  56: "0x8547e2E16783Fdc559C435fDc158d572D1bD0970",
 };
 
 export const FACTORY_ADDRESS = {
@@ -51,7 +51,7 @@ export const FARM_ADDRESS = {
   1: "0xF0301472c7e383310bE1D426aA59207818fB8a53",
   4: "0x57eA8360A59468112cE669EA8bFb2169062EAF0d",
   97: "0xc14c4F5041D62c03b4E18932975C30817A4CB39f",
-  56: "",
+  56: "0x2A5Ce0C18c885fbc9B41933f79559a6c40208c72",
 };
 
 export const MULTICALL_ADDRESS: { [index: string]: string } = {

@@ -309,7 +309,6 @@ export const getFarmInfo =
         type: GET_FARM_POOL,
         payload: farmPoolObj,
       });
-      console.log("farmTest: farm pool fetched ", farmPoolObj);
     } catch (error) {
       console.log("farmTest: getFarmInfo", {
         error,

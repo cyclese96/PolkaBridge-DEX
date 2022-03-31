@@ -784,7 +784,7 @@ export const importToken = (address, chainId) => async (dispatch) => {
     const _tokenContract = tokenContract(address, chainId);
 
     const [tokenInfoData, tokenDecimals] = await Promise.all([
-      fetchTokenInfo(address),
+      fetchTokenInfo(address, chainId),
       _tokenContract.methods.decimals().call(),
     ]);
 
