@@ -5,7 +5,7 @@ import theme from "./theme";
 
 import { Route, Switch, BrowserRouter, Redirect } from "react-router-dom";
 import { PAIR_BLACKLIST, TOKEN_BLACKLIST } from "./constants";
-import { isAddress } from "./utils/helper";
+import { isAddress } from "utils/contractUtils";
 
 const Home = lazy(() => import("./components/Home"));
 const TokenPage = lazy(() =>
@@ -56,8 +56,6 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles();
   return (
-    // <Provider store={store}>
-    //   <Web3ReactProvider getLibrary={getLibrary}>
     <Suspense fallback={null}>
       <ThemeProvider theme={theme}>
         <div style={{ overflowX: "hidden" }}>
@@ -131,8 +129,6 @@ function App() {
         </div>
       </ThemeProvider>
     </Suspense>
-    //   </Web3ReactProvider>
-    // </Provider>
   );
 }
 

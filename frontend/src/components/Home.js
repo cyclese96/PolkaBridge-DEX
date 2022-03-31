@@ -4,18 +4,17 @@ import store from "../store";
 import { getNetworkNameById } from "../utils/helper";
 import { CHANGE_NETWORK, CONNECT_WALLET } from "../actions/types";
 import { loadTokens } from "../actions/dexActions";
-import { getAccountBalance } from "../actions/accountActions";
-import { etheriumNetwork } from "../constants/index";
+// import { etheriumNetwork } from "../constants/index";
 import useActiveWeb3React from "../hooks/useActiveWeb3React";
 
-const Home = ({ loadTokens, getAccountBalance }) => {
+const Home = ({ loadTokens }) => {
   const { active, account, chainId } = useActiveWeb3React();
 
   useEffect(() => {
-    if (!chainId || !active) {
-      loadTokens(etheriumNetwork);
-      return;
-    }
+    // if (!chainId || !active) {
+    //   loadTokens(etheriumNetwork);
+    //   return;
+    // }
 
     const _network = getNetworkNameById(chainId);
 
@@ -28,8 +27,7 @@ const Home = ({ loadTokens, getAccountBalance }) => {
       payload: _network,
     });
 
-    // getAccountBalance(account, _network);
-    loadTokens(_network);
+    loadTokens(chainId);
   }, [chainId, active, account, loadTokens]);
 
   useEffect(() => {
@@ -46,6 +44,10 @@ const Home = ({ loadTokens, getAccountBalance }) => {
           console.log("disconnected ", error);
           localStorage.connected = "none";
         });
+
+        window.ethereum.on("chainChanged", (chainId) => {
+          window.location.reload();
+        });
       }
     }
     onNetworkChangeUpdate();
@@ -56,5 +58,4 @@ const Home = ({ loadTokens, getAccountBalance }) => {
 
 export default connect(null, {
   loadTokens,
-  getAccountBalance,
 })(Home);

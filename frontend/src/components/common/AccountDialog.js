@@ -1,13 +1,13 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
-
 import { AccountBalanceWallet, Close } from "@material-ui/icons";
-import { etheriumNetwork } from "../../constants/index";
-import { fromWei } from "../../utils/helper";
+import { NATIVE_TOKEN } from "../../constants/index";
 import { connect } from "react-redux";
-import { formatCurrency } from "../../utils/formatters";
+import { urls } from "../../utils/formatters";
 import { Button } from "@material-ui/core";
+import useActiveWeb3React from "hooks/useActiveWeb3React";
+import { useETHBalances } from "hooks/useBalance";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -114,30 +114,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AccountDialog = ({
-  open,
-  handleClose,
-  handleLogout,
-  account: { currentAccount, balance, currentNetwork },
-}) => {
+const AccountDialog = ({ open, handleClose, handleLogout }) => {
   const classes = useStyles();
+  const { chainId, account } = useActiveWeb3React();
   const onSingOut = () => {
-    localStorage.setItem(`logout${currentAccount}`, currentAccount);
+    localStorage.setItem(`logout${account}`, account);
     handleLogout();
     handleClose();
   };
 
-  const getCoins = () => {
-    if (currentNetwork === etheriumNetwork) {
-      return [
-        { coin: "ETH", balance: formatCurrency(fromWei(balance["ETH"])) },
-      ];
-    } else {
-      return [
-        { coin: "BNB", balance: formatCurrency(fromWei(balance["BNB"])) },
-      ];
-    }
-  };
+  const ethBalance = useETHBalances(true ? [account] : []);
+
   return (
     <div>
       <Dialog
@@ -167,15 +154,17 @@ const AccountDialog = ({
             <h6 style={{ fontWeight: 600, fontSize: 14, color: "#757575" }}>
               Wallet connected with:
             </h6>
-            <p className={classes.subheading}>
-              {currentAccount ? <span></span> : "..."}
-              {[...currentAccount?.toString()]?.splice(0, 6)}
+            <a
+              href={urls?.showAddress(account, chainId)}
+              target="_blank"
+              className={classes.subheading}
+              rel="noreferrer"
+            >
+              {account ? <span></span> : "..."}
+              {account?.slice(0, 3)}
               {"..."}
-              {[...currentAccount?.toString()]?.splice(
-                [...currentAccount?.toString()]?.length - 6,
-                6
-              )}
-            </p>
+              {account?.slice(account?.length - 4, account?.length)}
+            </a>
             <h6
               style={{
                 fontWeight: 600,
@@ -186,25 +175,25 @@ const AccountDialog = ({
             >
               Balance:
             </h6>
-            {getCoins().map((item) => (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "start",
-                  paddingBottom: 10,
-                }}
-              >
-                <>
-                  <AccountBalanceWallet
-                    fontSize="small"
-                    className={classes.icon}
-                  />
-                  <span className={classes.icon}>{item.coin}</span>
-                  <span className={classes.numbers}>{item.balance}</span>
-                </>
-              </div>
-            ))}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "start",
+                paddingBottom: 10,
+              }}
+            >
+              <>
+                <AccountBalanceWallet
+                  fontSize="small"
+                  className={classes.icon}
+                />
+                <span className={classes.icon}>{NATIVE_TOKEN?.[chainId]}</span>
+                <span className={classes.numbers}>
+                  {ethBalance ? ethBalance?.[account]?.toExact(4) : "0"}
+                </span>
+              </>
+            </div>
           </div>
 
           <div className={classes.buttons}>

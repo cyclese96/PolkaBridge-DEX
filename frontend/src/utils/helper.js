@@ -1,15 +1,10 @@
 import BigNumber from "bignumber.js";
-// import web3 from "../web";
 import axios from "axios";
-import { getAddress } from "ethers/utils/address";
 import {
   bscNetwork,
-  currentConnection,
   etheriumNetwork,
-  farmingPoolConstants,
   moonriverNetwork,
   PBR_PER_YEAR,
-  tokenAddresses,
 } from "../constants/index";
 import Web3 from "web3";
 
@@ -150,14 +145,20 @@ export const getPercentageAmount = (value, percent) => {
 };
 
 // :todo remove this function after testing
-export const fetchTokenInfo = async (address) => {
+
+export const fetchTokenInfo = async (address, chainId = 1) => {
+  const bscApiKey = process.env.REACT_APP_BSC_SCAN_API?.split("")
+    .reverse()
+    .join("");
+
   try {
     const _api = `https://api.etherscan.io/api?module=token&action=tokeninfo&contractaddress=${address}&apikey=${process.env.REACT_APP_ETHER_SCAN_API.split(
       ""
     )
       .reverse()
       .join("")}`;
-    const res = await axios.get(_api);
+    const _bscApi = `https://api.bscscan.com/api?module=token&action=tokeninfo&contractaddress=${address}&apikey=${bscApiKey}`;
+    const res = await axios.get([1, 4].includes(chainId) ? _api : _bscApi);
     return res.data;
   } catch (error) {
     console.log("fetchTokenInfo", error);
@@ -198,52 +199,7 @@ export const getToken2Out = (tokenIn, token1Reserve, token2Reserve) => {
     const denominator = r0.multipliedBy(1000).plus(x.multipliedBy(998));
     const y = numerator.div(denominator);
 
-    // let result;
-    // let integerPart;
     const result = fromWei(y.toFixed(0).toString());
-    // if (y.gt(1)) {
-    //   // integerPart = y.toString().split(".");
-    //   // result = fromWei(integerPart[0]);
-    // } else {
-    //   // integerPart = y.toString().split(".");
-    //   // result = fromWei(y.toString());
-    //   const _toString = y.div(WEI_UNITS).toString();
-    //   result = _toString;
-    // }
-
-    return result;
-  } catch (error) {
-    console.log("exeption getTokenOut", { error, tokenIn });
-    return new BigNumber(0).toFixed(0).toString();
-  }
-};
-
-export const getToken1Out = (tokenIn, token1Reserve, token2Reserve) => {
-  const r0 = new BigNumber(!token1Reserve ? 0 : token1Reserve);
-  const r1 = new BigNumber(!token2Reserve ? 0 : token2Reserve);
-  const y = new BigNumber(!tokenIn ? 0 : tokenIn);
-
-  if (r0.lte(0) || r1.lte(0) || y.lte(0)) {
-    return new BigNumber(0).toFixed(0).toString();
-  }
-
-  try {
-    // price out calculation
-    const numerator = y.multipliedBy(998).multipliedBy(r0);
-    const denominator = r1.multipliedBy(1000).plus(y.multipliedBy(998));
-    // const numerator = y.multipliedBy(1000).multipliedBy(r0);
-    // const denominator = r1.multipliedBy(998).minus(y.multipliedBy(998));
-    const x = numerator.div(denominator);
-
-    const result = fromWei(x.toFixed(0).toString());
-
-    // if (x.gt(1)) {
-    //   const _toString = x.div(WEI_UNITS).toString()
-    //   result = _toString;
-    // } else {
-    //   const _toString = x.div(WEI_UNITS).toString();
-    //   result = _toString;
-    // }
 
     return result;
   } catch (error) {
@@ -322,14 +278,6 @@ export const formatFloat = (floatValue) => {
   return _f.toFixed(4).toString();
 };
 
-export const isAddress = (value) => {
-  try {
-    return getAddress(value.toLowerCase());
-  } catch {
-    return false;
-  }
-};
-
 export const cacheImportedToken = (tokenData) => {
   let tokens = localStorage.getItem("tokens");
   if (!tokens) {
@@ -379,11 +327,6 @@ export const getPbrRewardApr = (poolWeight, pbrPriceUSD, poolLiquidityUSD) => {
   }
 };
 
-export const getLpApr = (pool) => {
-  const lpApr = farmingPoolConstants.ethereum?.[pool]?.lpApr;
-  return lpApr ? lpApr : 0;
-};
-
 export const getNetworkNameById = (networkId) => {
   if ([56, 97].includes(parseInt(networkId))) {
     return bscNetwork;
@@ -412,13 +355,4 @@ export const getTokenToSelect = (tokenList, tokenQuery) => {
   }
 
   return {};
-};
-
-export const getTokenWithSymbol = (symbol, network = etheriumNetwork) => {
-  const tokenAddress =
-    currentConnection === "testnet"
-      ? tokenAddresses?.[network]?.[symbol]?.testnet
-      : tokenAddresses?.[network]?.[symbol]?.mainnet;
-
-  return { address: tokenAddress, symbol: symbol };
 };

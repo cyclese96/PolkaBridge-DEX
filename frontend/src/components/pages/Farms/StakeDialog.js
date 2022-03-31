@@ -6,7 +6,6 @@ import {
   IconButton,
   makeStyles,
 } from "@material-ui/core";
-import { Link } from "react-router-dom";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import CloseIcon from "@material-ui/icons/Close";
 import { fromWei, toWei } from "../../../utils/helper";
@@ -21,6 +20,8 @@ import {
 } from "../../../actions/farmActions";
 import BigNumber from "bignumber.js";
 import { useMemo } from "react";
+import useActiveWeb3React from "hooks/useActiveWeb3React";
+import NumberInput from "components/common/NumberInput";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -155,7 +156,6 @@ const StakeDialog = ({
   handleClose,
   dex: { transaction },
   farm: { farms, lpBalance },
-  account: { currentAccount, currentNetwork },
   stakeLpTokens,
   unstakeLpTokens,
   getFarmInfo,
@@ -163,6 +163,7 @@ const StakeDialog = ({
 }) => {
   const classes = useStyles();
   const [inputValue, setInputValue] = useState("");
+  const { chainId, account } = useActiveWeb3React();
 
   const parseLpBalance = useMemo(
     () =>
@@ -183,19 +184,9 @@ const StakeDialog = ({
 
   const handleMax = () => {
     if (type === "stake") {
-      setInputValue(
-        parseLpBalance,
-        poolInfo.pid,
-        currentAccount,
-        currentNetwork
-      );
+      setInputValue(parseLpBalance, poolInfo.pid, account, chainId);
     } else {
-      setInputValue(
-        parseStakedAmount,
-        poolInfo.pid,
-        currentAccount,
-        currentNetwork
-      );
+      setInputValue(parseStakedAmount, poolInfo.pid, account, chainId);
     }
   };
 
@@ -231,28 +222,23 @@ const StakeDialog = ({
         inputTokens,
         poolInfo.poolAddress,
         poolInfo.pid,
-        currentAccount,
-        currentNetwork
+        account,
+        chainId
       );
     } else {
       await unstakeLpTokens(
         inputTokens,
         poolInfo.poolAddress,
         poolInfo.pid,
-        currentAccount,
-        currentNetwork
+        account,
+        chainId
       );
     }
 
     // update pool after transaction:
     await Promise.all([
-      getFarmInfo(
-        poolInfo.poolAddress,
-        poolInfo.pid,
-        currentAccount,
-        currentNetwork
-      ),
-      getLpBalanceFarm(poolInfo.poolAddress, currentAccount, currentNetwork),
+      getFarmInfo(poolInfo.poolAddress, poolInfo.pid, account, chainId),
+      getLpBalanceFarm(poolInfo.poolAddress, account, chainId),
     ]);
   };
 
@@ -320,13 +306,10 @@ const StakeDialog = ({
             </div>
             <div className="d-flex flex-wrap justify-content-between align-items-center mt-2">
               <div>
-                {/* <div className={classes.tokenTitle}>0.00</div> */}
-                <input
-                  className={classes.input}
-                  placeholder="0.00"
-                  onChange={({ target: { value } }) => setInputValue(value)}
+                <NumberInput
+                  onInputChange={setInputValue}
                   value={inputValue}
-                  type="text"
+                  style={classes.input}
                 />
               </div>
               <div className="d-flex justify-content-between align-items-center mt-2">

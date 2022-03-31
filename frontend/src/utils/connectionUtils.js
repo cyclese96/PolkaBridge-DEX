@@ -13,9 +13,9 @@ import { factoryContract } from "../contracts/connections";
 import config from "./config";
 import { isMetaMaskInstalled } from "./helper";
 
-export const getPairAddress = async (address0, address1, network) => {
+export const getPairAddress = async (address0, address1, chainId) => {
   try {
-    const factory = factoryContract(network);
+    const factory = factoryContract(chainId);
     const pairAddress = await factory.methods
       .getPair(address0, address1)
       .call();
@@ -89,21 +89,24 @@ export const getCurrentNetwork = (networkId) => {
 export function useWalletConnectCallback() {
   const { activate } = useActiveWeb3React();
 
-  const createConnectHandler = async (connector) => {
-    try {
-      // const connector = connectors.injected;
-      // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
+  const createConnectHandler = useCallback(
+    async (connector) => {
+      try {
+        // const connector = connectors.injected;
+        // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
 
-      if (connector instanceof WalletConnectConnector) {
-        connector.walletConnectProvider = undefined;
+        if (connector instanceof WalletConnectConnector) {
+          connector.walletConnectProvider = undefined;
+        }
+
+        await activate(connector);
+        localStorage.connected = "yes";
+      } catch (error) {
+        console.error("createConnectHandler", error);
       }
-
-      await activate(connector);
-      localStorage.connected = "yes";
-    } catch (error) {
-      console.error("createConnectHandler", error);
-    }
-  };
+    },
+    [activate]
+  );
 
   const connectWallet = useCallback(() => {
     if (isMetaMaskInstalled()) {
@@ -111,7 +114,7 @@ export function useWalletConnectCallback() {
     } else {
       createConnectHandler(connectors.walletconnect);
     }
-  }, [activate, createConnectHandler]);
+  }, [createConnectHandler]);
 
   return [connectWallet];
 }

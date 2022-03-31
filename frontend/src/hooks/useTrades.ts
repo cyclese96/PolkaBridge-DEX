@@ -10,24 +10,28 @@ import {
 import flatMap from "lodash.flatmap";
 import { useMemo } from "react";
 
-import { PairState, usePairs } from "../data/Reserves";
-import { ETH, SWAP_BASES } from "../constants";
+import { PairState, usePairs } from "./usePairs";
+import { ETH, NATIVE_TOKEN, SWAP_BASES } from "../constants/index";
 import { wrappedCurrency } from "./wrappedCurrency";
 import tokenListLocalRinkeby from "../tokenList/tokenListTest.json";
 import tokenListEthereum from "../tokenList/tokenListEthereum.json";
+import tokenListBsc from "../tokenList/tokenListBsc.json";
 import useActiveWeb3React from "../hooks/useActiveWeb3React";
 import { getAddress } from "@ethersproject/address";
 
 const localTokens: { [index: string]: Array<any> } = {
   1: tokenListEthereum,
   4: tokenListLocalRinkeby.ethereum,
+  97: tokenListLocalRinkeby.bsc,
+  56: tokenListBsc,
 };
-function getTokenWithSymbol(symbol: String, chainId: ChainId) {
+
+function getTokenWithSymbol(symbol: string, chainId: ChainId) {
   const tokenItem = chainId
-    ? localTokens?.[chainId].find((_token: any) => _token.symbol === symbol)
+    ? localTokens?.[chainId]?.find((_token: any) => _token.symbol === symbol)
     : [];
 
-  if (symbol === ETH) {
+  if (NATIVE_TOKEN?.[chainId] === symbol) {
     return WETH?.[chainId];
   }
 
@@ -45,14 +49,15 @@ export function useAllCommonPairs(
   currencyA?: Currency,
   currencyB?: Currency
 ): Pair[] {
-  const { chainId, active } = useActiveWeb3React();
+  const { chainId } = useActiveWeb3React();
 
   const bases: Token[] = useMemo(
     () =>
       chainId
-        ? SWAP_BASES?.[chainId].map((symbol) =>
-            getTokenWithSymbol(symbol, chainId)
-          )
+        ? SWAP_BASES?.[chainId].map((symbol) => {
+            const tokenWithSymbol = getTokenWithSymbol(symbol, chainId);
+            return tokenWithSymbol;
+          })
         : [],
     [chainId]
   );
@@ -115,6 +120,13 @@ export function useAllCommonPairs(
     [tokenA, tokenB, bases, basePairs, chainId]
   );
 
+  // console.log("tradeTest trade", {
+  //   basePairs,
+  //   tokenA,
+  //   tokenB,
+  //   bases,
+  //   allPairCombinations,
+  // });
   const allPairs = usePairs(allPairCombinations);
 
   // only pass along valid pairs, non-duplicated pairs
@@ -148,6 +160,12 @@ export function useTradeExactIn(
     currencyAmountIn?.currency,
     currencyOut
   );
+
+  // console.log("tradeTest  useTrade in", {
+  //   currencyA: currencyAmountIn?.currency,
+  //   currencyOut,
+  //   allowedPairs,
+  // });
 
   return useMemo(() => {
     if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {

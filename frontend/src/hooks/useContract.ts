@@ -6,6 +6,9 @@ import { getContract } from "../utils/contractUtils";
 import MulticallABI from "../contracts/abi/multicall.json";
 import useActiveWeb3React from "./useActiveWeb3React";
 import { MULTICALL_ADDRESS } from "constants/index";
+import ERC20_ABI from "../contracts/abi/erc20.json";
+import WETH_ABI from "../contracts/abi/weth.json";
+import { WETH } from "polkabridge-sdk";
 
 // returns null on errors
 export function useContract<T extends Contract = Contract>(
@@ -23,7 +26,7 @@ export function useContract<T extends Contract = Contract>(
     if (!address) return null;
     try {
       return getContract(
-        MULTICALL_ADDRESS?.[chainId],
+        address,
         ABI,
         library,
         withSignerIfPossible && account ? account : undefined
@@ -45,9 +48,23 @@ export function useContract<T extends Contract = Contract>(
 export function useInterfaceMulticall(): Contract | null {
   const { chainId } = useActiveWeb3React();
 
+  return useContract(MULTICALL_ADDRESS, MulticallABI, false);
+}
+
+export function useTokenContract(
+  tokenAddress?: string,
+  withSignerIfPossible?: boolean
+): Contract | null {
+  return useContract(tokenAddress, ERC20_ABI, withSignerIfPossible);
+}
+
+export function useWETHContract(
+  withSignerIfPossible?: boolean
+): Contract | null {
+  const { chainId } = useActiveWeb3React();
   return useContract(
-    MULTICALL_ADDRESS?.[chainId ? chainId : 1],
-    MulticallABI,
-    false
+    chainId ? WETH[chainId].address : undefined,
+    WETH_ABI,
+    withSignerIfPossible
   );
 }

@@ -3,14 +3,14 @@ import { connect } from "react-redux";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import SwapSettings from "../../common/SwapSettings";
-import etherImg from "../../../assets/ether.png";
-import SwapCardItem from "../../Cards/SwapCardItem";
+import SwapCardItem from "../Swap/SwapCardItem";
 import AddIcon from "@material-ui/icons/Add";
 import {
   allowanceAmount,
-  defaultPoolToken0,
-  defaultPoolToken1,
-  ETH,
+  corgibAllowance,
+  DEFAULT_POOL_TOKENS,
+  liquidityPoolConstants,
+  NATIVE_TOKEN,
 } from "../../../constants/index";
 import {
   fromWei,
@@ -30,7 +30,6 @@ import {
   addLiquidity,
   importToken,
 } from "../../../actions/dexActions";
-import { getAccountBalance } from "../../../actions/accountActions";
 import BigNumber from "bignumber.js";
 import store from "../../../store";
 import { RESET_POOL_SHARE, START_TRANSACTION } from "../../../actions/types";
@@ -44,6 +43,10 @@ import TransactionConfirm from "../../common/TransactionConfirm";
 import { useTokenData } from "../../../contexts/TokenData";
 import { useLocation } from "react-router-dom";
 import useActiveWeb3React from "hooks/useActiveWeb3React";
+import { useCurrencyBalances } from "hooks/useBalance";
+import { Token } from "polkabridge-sdk";
+import { isAddress } from "utils/contractUtils";
+import { wrappedCurrency } from "hooks/wrappedCurrency";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -225,7 +228,6 @@ const useStyles = makeStyles((theme) => ({
 
 const AddCard = (props) => {
   const {
-    account: { balance, loading, currentNetwork, currentAccount },
     dex: {
       swapSettings,
       approvedTokens,
@@ -241,27 +243,21 @@ const AddCard = (props) => {
     handleBack,
     getLpBalance,
     loadPairAddress,
-    getAccountBalance,
     addLiquidity,
     importToken,
   } = props;
 
-  const currentDefaultToken = {
-    icon: etherImg,
-    name: "Ethereum",
-    symbol: "ETH",
-  };
   const classes = useStyles();
   const [settingOpen, setOpen] = useState(false);
-  const [selectedToken0, setToken0] = useState(currentDefaultToken);
+  const [selectedToken0, setToken0] = useState({});
   const [selectedToken1, setToken1] = useState({});
-  const [token1Value, setToken1Value] = useState(""); // token1 for eth only
-  const [token2Value, setToken2Value] = useState(""); // token2 for pbr
+  const [token1Value, setToken1Value] = useState("");
+  const [token2Value, setToken2Value] = useState("");
   const [localStateLoading, setLocalStateLoading] = useState(false);
 
   const [swapDialogOpen, setSwapDialog] = useState(false);
-  const { active } = useActiveWeb3React();
   const [connectWallet] = useWalletConnectCallback();
+  const [inputType, setInputType] = useState(liquidityPoolConstants.exactIn);
 
   // selected token usd value track
   const token0PriceData = useTokenData(
@@ -287,11 +283,6 @@ const AddCard = (props) => {
     return token1PriceData?.priceUSD;
   }, [token1PriceData, selectedToken1]);
 
-  const [addStatus, setStatus] = useState({
-    message: "Please select tokens",
-    disabled: true,
-  });
-
   const handleSettings = () => {
     setOpen(true);
   };
@@ -302,11 +293,13 @@ const AddCard = (props) => {
 
   const query = new URLSearchParams(useLocation().search);
 
+  const { chainId, active, account } = useActiveWeb3React();
+
   const handleTokenImport = useCallback(
     (_tokenAddress) => {
-      importToken(_tokenAddress, currentNetwork);
+      importToken(_tokenAddress, chainId);
     },
-    [currentNetwork, importToken]
+    [chainId, importToken]
   );
 
   const [token0Query, token1Query] = [
@@ -320,14 +313,13 @@ const AddCard = (props) => {
         const _token = getTokenToSelect(tokenList, token0Query);
 
         if (!_token || !_token.symbol) {
-          // importToken(token0Query, currentAccount, currentNetwork);
           handleTokenImport(token0Query);
         }
         setToken0(_token);
       } else {
         const _token = getTokenToSelect(
           tokenList,
-          defaultPoolToken0?.[currentNetwork]
+          DEFAULT_POOL_TOKENS?.[chainId]?.[0]
         );
         setToken0(_token);
       }
@@ -336,7 +328,6 @@ const AddCard = (props) => {
         const _token = getTokenToSelect(tokenList, token1Query);
 
         if (!_token || !_token.symbol) {
-          // importToken(token1Query, currentAccount, currentNetwork);
           handleTokenImport(token1Query);
         }
 
@@ -344,22 +335,22 @@ const AddCard = (props) => {
       } else {
         const _token = getTokenToSelect(
           tokenList,
-          defaultPoolToken1?.[currentNetwork]
+          DEFAULT_POOL_TOKENS?.[chainId]?.[1]
         );
         setToken1(_token);
       }
     }
     initSelection();
   }, [
-    currentNetwork,
-    currentAccount,
+    chainId,
+    account,
     tokenList,
     handleTokenImport,
     token1Query,
     token0Query,
   ]);
 
-  const currentPairAddress = () => {
+  const currentPairAddress = useMemo(() => {
     if (
       Object.keys(pairContractData).includes(
         `${selectedToken0.symbol}_${selectedToken1.symbol}`
@@ -379,23 +370,23 @@ const AddCard = (props) => {
     } else {
       return null;
     }
-  };
+  }, [pairContractData, selectedToken0, selectedToken1]);
 
   const token0Approved = useMemo(() => {
-    if (selectedToken0?.symbol === ETH) {
+    if (selectedToken0?.symbol === NATIVE_TOKEN?.[chainId]) {
       return true;
     }
     return approvedTokens && approvedTokens?.[selectedToken0?.symbol];
   }, [selectedToken0, approvedTokens]);
 
   const token1Approved = useMemo(() => {
-    if (selectedToken1?.symbol === ETH) {
+    if (selectedToken1?.symbol === NATIVE_TOKEN?.[chainId]) {
       return true;
     }
     return approvedTokens && approvedTokens?.[selectedToken1?.symbol];
   }, [approvedTokens, selectedToken1]);
 
-  const currentTokenApprovalStatus = useMemo(() => {
+  const isBothTokensApproved = useMemo(() => {
     return token0Approved && token1Approved;
   }, [token0Approved, token1Approved]);
 
@@ -410,24 +401,23 @@ const AddCard = (props) => {
   const clearInputState = () => {
     setToken1Value("");
     setToken2Value("");
-    setStatus({ disabled: true, message: "Enter Amounts" });
   };
 
   const loadPairReserves = async () => {
-    let _pairAddress = currentPairAddress();
+    let _pairAddress = currentPairAddress;
 
     if (!_pairAddress) {
       _pairAddress = await getPairAddress(
         selectedToken0.address,
         selectedToken1.address,
-        currentNetwork
+        chainId
       );
 
       loadPairAddress(
         selectedToken0.symbol,
         selectedToken1.symbol,
         _pairAddress,
-        currentNetwork
+        chainId
       );
     }
 
@@ -438,8 +428,8 @@ const AddCard = (props) => {
         selectedToken0,
         selectedToken1,
         _pairAddress,
-        currentAccount,
-        currentNetwork
+        account,
+        chainId
       );
     }
   };
@@ -452,11 +442,9 @@ const AddCard = (props) => {
         clearInputState();
 
         await Promise.all([
-          getAccountBalance(selectedToken0, currentNetwork),
-          getAccountBalance(selectedToken1, currentNetwork),
           loadPairReserves(),
-          checkAllowance(selectedToken0, currentAccount, currentNetwork),
-          checkAllowance(selectedToken1, currentAccount, currentNetwork),
+          checkAllowance(selectedToken0, account, chainId),
+          checkAllowance(selectedToken1, account, chainId),
         ]);
 
         setLocalStateLoading(false);
@@ -464,82 +452,23 @@ const AddCard = (props) => {
     }
 
     loadPair();
-  }, [selectedToken0, selectedToken1, currentNetwork, currentAccount]);
+  }, [selectedToken0, selectedToken1, chainId, account]);
 
   const handleConfirmAllowance = async () => {
-    const _allowanceAmount = allowanceAmount;
+    const _allowanceAmount =  allowanceAmount;
     if (!approvedTokens[selectedToken0.symbol]) {
       await confirmAllowance(
-        _allowanceAmount,
+        selectedToken0?.symbol === 'CORGIB' ? corgibAllowance :  _allowanceAmount,
         selectedToken0,
-        currentAccount,
-        currentNetwork
+        account,
+        chainId
       );
     } else {
       await confirmAllowance(
-        _allowanceAmount,
+        selectedToken1?.symbol === 'CORGIB' ? corgibAllowance :  _allowanceAmount,
         selectedToken1,
-        currentAccount,
-        currentNetwork
-      );
-    }
-  };
-
-  const verifySwapStatus = (token0, token1) => {
-    let message, disabled;
-    const _token1 = new BigNumber(token0.value ? token0.value : 0);
-    const _token2 = new BigNumber(token1.value ? token1.value : 0);
-
-    if (token0.selected.symbol === token1.selected.symbol) {
-      message = "Invalid pair";
-      disabled = true;
-    } else if (!token0.selected.symbol || !token1.selected.symbol) {
-      message = "Select both tokens";
-      disabled = true;
-    } else if (
-      (_token1.eq("0") && token0.selected.symbol) ||
-      (_token2.eq("0") && token1.selected.symbol)
-    ) {
-      message = "Enter amounts";
-      disabled = true;
-    } else if (
-      _token1.gt("0") &&
-      _token2.gt("0") &&
-      token0.selected.symbol &&
-      token1.selected.symbol
-    ) {
-      message = "Add liquidity ";
-      disabled = false;
-    }
-
-    // balance check before trade
-    const _bal0 = Object.keys(balance).includes(selectedToken0.symbol)
-      ? balance[selectedToken0.symbol]
-      : 0;
-    const bal0Wei = fromWei(_bal0, selectedToken0.decimals);
-
-    // balance check before trade
-    const _bal1 = Object.keys(balance).includes(selectedToken1.symbol)
-      ? balance[selectedToken1.symbol]
-      : 0;
-    const bal1Wei = fromWei(_bal1, selectedToken1.decimals);
-
-    if (
-      new BigNumber(_token1).gt(bal0Wei) ||
-      new BigNumber(_token2).gt(bal1Wei)
-    ) {
-      disabled = true;
-      message = "Insufficient funds!";
-    }
-
-    setStatus({ message, disabled });
-
-    if (!disabled && currentPairAddress()) {
-      debouncedPoolShareCall(
-        currentPairAddress(),
-        { ...selectedToken0, input: token0.value },
-        { ...selectedToken1, input: token1.value },
-        currentNetwork
+        account,
+        chainId
       );
     }
   };
@@ -552,145 +481,127 @@ const AddCard = (props) => {
     debounce((...params) => getLpBalance(...params), 1000);
   }, []);
 
-  const onToken1InputChange = async (tokens) => {
+  const onToken1InputChange = (tokens) => {
     setToken1Value(tokens);
 
-    setLocalStateLoading(true);
-    //calculate resetpective value of token 2 if selected
-    let _token2Value = "";
-    const pairAddress = currentPairAddress();
+    const pairAddress = currentPairAddress;
+
+    setInputType(liquidityPoolConstants.exactIn);
 
     if (selectedToken1.symbol && tokens && pairAddress) {
-      await debouncedGetLpBalance(
+      debouncedGetLpBalance(
         selectedToken0,
         selectedToken1,
         pairAddress,
-        currentAccount,
-        currentNetwork
-      );
-
-      _token2Value = getTokenOutWithReserveRatio(
-        tokens,
-        fromWei(poolReserves[selectedToken1.symbol], selectedToken1.decimals),
-        fromWei(poolReserves[selectedToken0.symbol], selectedToken0.decimals)
-      );
-      if (new BigNumber(_token2Value).gt(0)) {
-        setToken2Value(_token2Value);
-        verifySwapStatus(
-          { value: tokens, selected: selectedToken0 },
-          { value: _token2Value, selected: selectedToken1 }
-        );
-      }
-    } else if (selectedToken1.symbol && !tokens) {
-      setToken2Value("");
-      if (!addStatus.disabled) {
-        setStatus({ disabled: true, message: "Enter Amounts" });
-      }
-    } else if (selectedToken1.symbol && tokens) {
-      // setStatus({ disabled: false, message: "Add Liquidity" });
-      verifySwapStatus(
-        { value: tokens, selected: selectedToken0 },
-        { value: token2Value, selected: selectedToken1 }
+        account,
+        chainId
       );
     }
-
-    setLocalStateLoading(false);
   };
 
-  const onToken2InputChange = async (tokens) => {
+  const onToken2InputChange = (tokens) => {
     setToken2Value(tokens);
 
-    setLocalStateLoading(true);
-    let _token1Value = "";
-    const pairAddress = currentPairAddress();
+    const pairAddress = currentPairAddress;
+
+    setInputType(liquidityPoolConstants.exactOut);
 
     if (selectedToken0.symbol && tokens && pairAddress) {
-      await debouncedGetLpBalance(
+      debouncedGetLpBalance(
         selectedToken0,
         selectedToken1,
         pairAddress,
-        currentAccount,
-        currentNetwork
-      );
-
-      _token1Value = getTokenOutWithReserveRatio(
-        tokens,
-        fromWei(poolReserves[selectedToken0.symbol], selectedToken0.decimals),
-        fromWei(poolReserves[selectedToken1.symbol], selectedToken1.decimals)
-      );
-      if (new BigNumber(_token1Value).eq(0)) {
-        verifySwapStatus(
-          { value: token1Value, selected: selectedToken0 },
-          { value: tokens, selected: selectedToken1 }
-        );
-      } else {
-        setToken1Value(_token1Value);
-        verifySwapStatus(
-          { value: _token1Value, selected: selectedToken0 },
-          { value: tokens, selected: selectedToken1 }
-        );
-      }
-    } else if (selectedToken0.symbol && !tokens) {
-      setToken1Value("");
-      if (!addStatus.disabled) {
-        setStatus({ disabled: true, message: "Enter Amounts" });
-      }
-    } else if (selectedToken0.symbol && tokens) {
-      // setStatus({ disabled: false, message: "Add Liquidity" });
-      verifySwapStatus(
-        { value: token1Value, selected: selectedToken0 },
-        { value: tokens, selected: selectedToken1 }
+        account,
+        chainId
       );
     }
-
-    setLocalStateLoading(false);
   };
 
+  const parsedToken1Value = useMemo(() => {
+    if (inputType === liquidityPoolConstants.exactIn || !currentPairAddress) {
+      return token1Value;
+    }
+
+    if (!token2Value) {
+      return "";
+    }
+
+    const _tokenValue = getTokenOutWithReserveRatio(
+      token2Value,
+      fromWei(poolReserves[selectedToken0.symbol], selectedToken0.decimals),
+      fromWei(poolReserves[selectedToken1.symbol], selectedToken1.decimals)
+    );
+
+    return _tokenValue;
+  }, [
+    token1Value,
+    token2Value,
+    poolReserves,
+    inputType,
+    selectedToken0,
+    selectedToken1,
+    currentPairAddress,
+  ]);
+
+  const parsedToken2Value = useMemo(() => {
+    if (inputType === liquidityPoolConstants.exactOut || !currentPairAddress) {
+      return token2Value;
+    }
+
+    if (!token1Value) {
+      return "";
+    }
+
+    const _token2Value = getTokenOutWithReserveRatio(
+      token1Value,
+      fromWei(poolReserves[selectedToken1.symbol], selectedToken1.decimals),
+      fromWei(poolReserves[selectedToken0.symbol], selectedToken0.decimals)
+    );
+
+    return _token2Value;
+  }, [
+    token1Value,
+    token2Value,
+    poolReserves,
+    inputType,
+    selectedToken0,
+    selectedToken1,
+    currentPairAddress,
+  ]);
+
   const resetInput = () => {
-    setToken1Value("0");
-    setToken2Value("0");
+    setToken1Value("");
+    setToken2Value("");
     store.dispatch({ type: RESET_POOL_SHARE });
   };
 
   const onToken1Select = (token) => {
     setToken0(token);
-    resetInput();
-
-    verifySwapStatus(
-      { value: "0", selected: token },
-      { value: "0", selected: selectedToken1 }
-    );
+    // resetInput();
   };
 
   const onToken2Select = (token) => {
     setToken1(token);
-    resetInput();
-
-    verifySwapStatus(
-      { value: "0", selected: selectedToken0 },
-      { value: "0", selected: token }
-    );
+    // resetInput();
   };
 
   const handleClearState = () => {
     resetInput();
-
-    verifySwapStatus(
-      { value: "", selected: selectedToken0 },
-      { value: "", selected: selectedToken1 }
-    );
   };
 
   const handleAddLiquidity = async () => {
-    if (selectedToken0.symbol === ETH || selectedToken1.symbol === ETH) {
+    if (
+      selectedToken0.symbol === NATIVE_TOKEN?.[chainId] ||
+      selectedToken1.symbol === NATIVE_TOKEN?.[chainId]
+    ) {
       let etherToken, erc20Token;
-      if (selectedToken0.symbol === ETH) {
+      if (selectedToken0.symbol === NATIVE_TOKEN?.[chainId]) {
         etherToken = {
           ...selectedToken0,
-          amount: token1Value,
+          amount: parsedToken1Value,
         };
 
-        const _amount = toWei(token2Value, selectedToken1.decimals);
+        const _amount = toWei(parsedToken2Value, selectedToken1.decimals);
         erc20Token = {
           ...selectedToken1,
           amount: _amount,
@@ -698,10 +609,10 @@ const AddCard = (props) => {
       } else {
         etherToken = {
           ...selectedToken1,
-          amount: token2Value,
+          amount: parsedToken2Value,
         };
 
-        const _amount = toWei(token1Value, selectedToken0.decimals);
+        const _amount = toWei(parsedToken1Value, selectedToken0.decimals);
         erc20Token = {
           ...selectedToken0,
           amount: _amount,
@@ -711,50 +622,42 @@ const AddCard = (props) => {
       await addLiquidityEth(
         etherToken,
         erc20Token,
-        currentAccount,
+        account,
         swapSettings.deadline,
-        currentNetwork
+        chainId
       );
     } else {
       // addLiquidity
 
-      const _amount1 = toWei(token1Value, selectedToken0.decimals);
-      const _amount2 = toWei(token2Value, selectedToken1.decimals);
+      const _amount1 = toWei(parsedToken1Value, selectedToken0.decimals);
+      const _amount2 = toWei(parsedToken2Value, selectedToken1.decimals);
       await addLiquidity(
         { ...selectedToken0, amount: _amount1 },
         { ...selectedToken1, amount: _amount2 },
-        currentAccount,
+        account,
         swapSettings.deadline,
-        currentNetwork
+        chainId
       );
     }
 
     await loadPairReserves();
   };
 
-  const currentPoolShare = () => {
+  const currentPoolShare = useMemo(() => {
     if (
       !poolReserves[selectedToken0.symbol] ||
       !poolReserves[selectedToken1.symbol]
     ) {
       return "100";
     }
-    const token1Amount = toWei(token1Value);
+    const token1Amount = toWei(parsedToken1Value);
     const token1Reserves = new BigNumber(poolReserves[selectedToken0.symbol]);
     const share = getPercentage(
       token1Amount,
       token1Reserves.plus(token1Amount).toString()
     );
     return share;
-  };
-
-  const disableStatus = useMemo(() => {
-    if (!active) {
-      return false;
-    }
-
-    return addStatus.disabled || loading || localStateLoading;
-  }, [active, addStatus, loading, localStateLoading]);
+  }, [poolReserves, selectedToken0, selectedToken1, parsedToken1Value]);
 
   const handleAction = () => {
     if (!active) {
@@ -764,59 +667,118 @@ const AddCard = (props) => {
 
     if (
       ["add", "token_approve"].includes(transaction.type) &&
-      transaction.status === "pending"
+      transaction.status === "pending" &&
+      !swapDialogOpen
     ) {
       setSwapDialog(true);
       return;
     }
 
-    if (currentTokenApprovalStatus) {
+    if (isBothTokensApproved) {
+      setSwapDialog(true);
+
       handleAddLiquidity();
     } else {
+      setSwapDialog(true);
+
       handleConfirmAllowance();
     }
   };
 
-  const currentButton = useMemo(() => {
+  // wrapped curreny formats of selected token
+  const wrappedCurrency0 = useMemo(() => {
+    if (!selectedToken0.address || !chainId) {
+      return undefined;
+    }
+
+    const _token = new Token(
+      chainId,
+      isAddress(selectedToken0?.address),
+      selectedToken0.decimals,
+      selectedToken0.symbol,
+      selectedToken0.name
+    );
+
+    return wrappedCurrency(_token, chainId);
+  }, [selectedToken0, chainId]);
+
+  const wrappedCurrency1 = useMemo(() => {
+    if (!selectedToken1.address || !chainId) {
+      return undefined;
+    }
+
+    const _token = new Token(
+      chainId,
+      isAddress(selectedToken1?.address),
+      selectedToken1.decimals,
+      selectedToken1.symbol,
+      selectedToken1.name
+    );
+
+    return wrappedCurrency(_token, chainId);
+  }, [selectedToken1, chainId]);
+
+  const currencyBalances = useCurrencyBalances(account, [
+    wrappedCurrency0,
+    wrappedCurrency1,
+  ]);
+
+  const currentAddLiquidityStatus = useMemo(() => {
     if (!active) {
-      return "Connect Wallet";
+      return { currentBtnText: "Connect Wallet", disabled: false };
     }
 
     if (localStateLoading) {
-      return "Please wait...";
-    } else if (addStatus.disabled) {
-      return addStatus.message;
-    } else if (
+      return { currentBtnText: "Please wait...", disabled: true };
+    }
+
+    if (
       ["add", "token_approve"].includes(transaction.type) &&
       transaction.status === "pending"
     ) {
-      return "Pending Transaction...";
-    } else {
-      return !currentTokenApprovalStatus
-        ? currApproveBtnText
-        : addStatus.message;
+      return { currentBtnText: "Pending Transaction...", disabled: true };
     }
+
+    if (
+      new BigNumber(parsedToken1Value || 0).eq(0) ||
+      new BigNumber(parsedToken2Value || 0).eq(0)
+    ) {
+      return { currentBtnText: "Enter token amounts", disabled: true };
+    }
+
+    const bal0 = !currencyBalances?.[0]
+      ? "0"
+      : currencyBalances?.[0]?.toExact();
+    const bal1 = !currencyBalances?.[1]
+      ? "0"
+      : currencyBalances?.[1]?.toExact();
+    if (
+      new BigNumber(parsedToken1Value).gt(bal0) ||
+      new BigNumber(parsedToken2Value).gt(bal1)
+    ) {
+      return { currentBtnText: "Insufficient funds!", disabled: true };
+    }
+
+    if (!isBothTokensApproved) {
+      return { currentBtnText: currApproveBtnText, disabled: false };
+    }
+
+    return { currentBtnText: "Add liquidity", disabled: false };
   }, [
     currApproveBtnText,
     active,
     localStateLoading,
     transaction,
-    currentTokenApprovalStatus,
-    addStatus,
+    isBothTokensApproved,
+    currencyBalances,
+    parsedToken1Value,
+    parsedToken2Value,
   ]);
 
   // liquidity transaction status updates
   useEffect(() => {
     if (!transaction.hash && !transaction.type) {
       return;
-    }
-
-    if (
-      ["add", "token_approve"].includes(transaction.type) &&
-      transaction.status === "success"
-    ) {
-      getAccountBalance(selectedToken0, currentNetwork);
-      getAccountBalance(selectedToken1, currentNetwork);
     }
 
     if (
@@ -833,13 +795,7 @@ const AddCard = (props) => {
     ) {
       setSwapDialog(true);
     }
-  }, [
-    transaction,
-    currentNetwork,
-    getAccountBalance,
-    selectedToken0,
-    selectedToken1,
-  ]);
+  }, [transaction]);
 
   const handleConfirmSwapClose = (value) => {
     setSwapDialog(value);
@@ -899,8 +855,9 @@ const AddCard = (props) => {
             onTokenChange={onToken1Select}
             currentToken={selectedToken0}
             disableToken={selectedToken1}
-            inputValue={token1Value}
+            inputValue={parsedToken1Value}
             priceUSD={token0PriceUsd}
+            currenryBalance={currencyBalances?.[0]?.toExact()}
           />
           <IconButton className={classes.iconButton}>
             <AddIcon fontSize="default" className={classes.addIcon} />
@@ -911,8 +868,9 @@ const AddCard = (props) => {
             onTokenChange={onToken2Select}
             currentToken={selectedToken1}
             disableToken={selectedToken0}
-            inputValue={token2Value}
+            inputValue={parsedToken2Value}
             priceUSD={token1PriceUsd}
+            currenryBalance={currencyBalances?.[1]?.toExact()}
           />
 
           {selectedToken0.symbol && selectedToken1.symbol ? (
@@ -942,7 +900,7 @@ const AddCard = (props) => {
 
                 <div className={classes.feeSelectContainer}>
                   <div className={classes.feeSelectHeading}>
-                    {`${currentPoolShare()}%`}
+                    {`${currentPoolShare}%`}
                   </div>
                   <span className={classes.feeSelectHeadingSpan}>
                     Share of pool
@@ -962,11 +920,11 @@ const AddCard = (props) => {
           </div>
 
           <Button
-            disabled={disableStatus}
+            disabled={currentAddLiquidityStatus.disabled}
             onClick={handleAction}
             className={classes.addLiquidityButton}
           >
-            {currentButton}
+            {currentAddLiquidityStatus.currentBtnText}
           </Button>
         </div>
       </Card>
@@ -986,7 +944,6 @@ export default connect(mapStateToProps, {
   getPoolShare,
   getLpBalance,
   loadPairAddress,
-  getAccountBalance,
   addLiquidity,
   importToken,
 })(AddCard);

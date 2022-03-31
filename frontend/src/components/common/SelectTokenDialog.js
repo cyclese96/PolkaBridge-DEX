@@ -7,7 +7,8 @@ import { importToken } from "../../actions/dexActions";
 import { connect } from "react-redux";
 import { Button, CircularProgress, Divider } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
-import { isAddress } from "../../utils/helper";
+import { isAddress } from "utils/contractUtils";
+import useActiveWeb3React from "hooks/useActiveWeb3React";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -81,13 +82,13 @@ const SelectTokenDialog = ({
   handleClose,
   handleTokenSelected,
   disableToken,
-  account: { currentNetwork },
   dex: { tokenList, dexLoading },
   importToken,
 }) => {
   const classes = useStyles();
 
   const [filterInput, setFilterInput] = useState("");
+  const { chainId } = useActiveWeb3React();
 
   const onTokenSelect = (token) => {
     handleTokenSelected(token);
@@ -130,7 +131,7 @@ const SelectTokenDialog = ({
     const _value = value.split(" ").join("");
 
     if (isAddress(_value)) {
-      importToken(_value, currentNetwork);
+      importToken(_value, chainId);
     }
 
     setFilterInput(_value);
@@ -214,7 +215,6 @@ const SelectTokenDialog = ({
 
 const mapStateToProps = (state) => ({
   dex: state.dex,
-  account: state.account,
 });
 
 export default connect(mapStateToProps, { importToken })(

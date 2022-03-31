@@ -12,6 +12,13 @@ const API_MAINNET = `https://gateway.thegraph.com/api/${process.env.REACT_APP_GR
   ?.reverse()
   ?.join("")}/deployments/id/QmcpX4ScNaWfSE1ZmfEFM3mPSCz5frk6edwsYMAvfGtrXV`; // dencentralized subgraph api
 
+const QUERY_URL = {
+  1: "",
+  4: "",
+  97: "https://api.thegraph.com/subgraphs/name/aamiralam/polkabridge-amm-bsc",
+  56: "",
+};
+
 // const API_MAINNET =
 //   "https://api.studio.thegraph.com/query/2992/polkabridge-amm-v1/3.5.9"; // mainnet temp query url
 
@@ -58,7 +65,7 @@ export const blockClient = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-const _api = currentConnection === "testnet" ? APIURL : API_MAINNET;
+const _api = currentConnection === "testnet" ? QUERY_URL[97] : API_MAINNET;
 export const client = new ApolloClient({
   link: new HttpLink({
     uri: _api,

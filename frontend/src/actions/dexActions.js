@@ -1,31 +1,21 @@
 import BigNumber from "bignumber.js";
 import {
   currentConnection,
-  ETH,
-  moonriverNetwork,
-  PBR,
-  routerAddresses,
   swapFnConstants,
-  THRESOLD_WEI_VALUE,
-  tokenAddresses,
-  USDC,
-  USDT,
+  ROUTER_ADDRESS,
+  NATIVE_TOKEN,
 } from "../constants/index";
 import {
   pairContract,
   routerContract,
   tokenContract,
 } from "../contracts/connections";
-import { getPairAddress } from "../utils/connectionUtils";
 import {
   toWei,
   getUnixTime,
   getPercentage,
   cacheImportedToken,
   getCachedTokens,
-  fromWei,
-  sellPriceImpact,
-  getTokenWithSymbol,
 } from "../utils/helper";
 import { fetchTokenInfo } from "../utils/helper";
 import {
@@ -33,8 +23,6 @@ import {
   APPROVE_TOKEN,
   DEX_ERROR,
   GET_POOL_SHARE,
-  GET_TOKEN_1_OUT,
-  GET_TOKEN_O_IN,
   HIDE_DEX_LOADING,
   HIDE_LOADING,
   IMPORT_TOKEN,
@@ -44,21 +32,19 @@ import {
   SET_POOL_RESERVES,
   SHOW_DEX_LOADING,
   SHOW_LOADING,
-  START_PRICE_LOADING,
   START_TRANSACTION,
-  STOP_PRICE_LOADING,
   UPDATE_TRANSACTION_STATUS,
 } from "./types";
 import ethereumTokens from "../tokenList/tokenListEthereum.json";
-import moonriverTokens from "../tokenList/tokenListMoonriver.json";
 import testTokens from "../tokenList/tokenListTest.json";
+import tokenListBsc from "../tokenList/tokenListBsc.json";
 
 // swap transaction function
 export const swapTokens =
-  (token0, token1, deadline, currentSwapFn, currenSwapPath, account, network) =>
+  (token0, token1, deadline, currentSwapFn, currenSwapPath, account, chainId) =>
   async (dispatch) => {
     try {
-      const _routerContract = routerContract(network);
+      const _routerContract = routerContract(chainId);
 
       const token0In = token0.amount;
 
@@ -230,10 +216,6 @@ export const swapTokens =
         });
     } catch (error) {
       console.log("swapTokens: ", error);
-      dispatch({
-        type: DEX_ERROR,
-        payload: "Some went wrong with exchange",
-      });
     }
     dispatch({
       type: HIDE_DEX_LOADING,
@@ -242,10 +224,10 @@ export const swapTokens =
 
 //token0 : { name, symbol, amount }, token1: {name, symbol, amount }
 export const getPoolShare =
-  (pairAddress, tokenA, tokenB, network) => async (dispatch) => {
+  (pairAddress, tokenA, tokenB, chainId) => async (dispatch) => {
     try {
       //Load pair contract of selected token pair
-      const _pairContract = pairContract(pairAddress, network);
+      const _pairContract = pairContract(pairAddress, chainId);
 
       const [token0Address, reservesData] = await Promise.all([
         _pairContract.methods.token0().call(),
@@ -275,9 +257,9 @@ export const getPoolShare =
 //token0: { amount: "", address: "", desired:"", min:"" }
 //token1 { amount: "", address: "", desired:"", min:"" }
 export const addLiquidity =
-  (token0, token1, account, deadline, network) => async (dispatch) => {
+  (token0, token1, account, deadline, chainId) => async (dispatch) => {
     try {
-      const _routerContract = routerContract(network);
+      const _routerContract = routerContract(chainId);
 
       dispatch({
         type: SHOW_DEX_LOADING,
@@ -348,9 +330,9 @@ export const addLiquidity =
 // token0: { amount: "", address: "", desired:"", min:"" }
 // token1 { amount: "", address: "", desired:"", min:"" }
 export const addLiquidityEth =
-  (ethToken, erc20Token, account, deadline, network) => async (dispatch) => {
+  (ethToken, erc20Token, account, deadline, chainId) => async (dispatch) => {
     try {
-      const _routerContract = routerContract(network);
+      const _routerContract = routerContract(chainId);
       dispatch({
         type: SHOW_DEX_LOADING,
       });
@@ -422,10 +404,10 @@ export const addLiquidityEth =
 //token0: { amount: "", address: "", desired:"", min:"" }
 //token1 { amount: "", address: "", desired:"", min:"" }
 export const removeLiquidity =
-  (token0, token1, account, lpAmount, deadline, network) =>
+  (token0, token1, account, lpAmount, deadline, chainId) =>
   async (dispatch) => {
     try {
-      const _routerContract = routerContract(network);
+      const _routerContract = routerContract(chainId);
 
       dispatch({
         type: SHOW_DEX_LOADING,
@@ -494,10 +476,10 @@ export const removeLiquidity =
 //token0: { amount: "", address: "", desired:"", min:"" }
 //token1 { amount: "", address: "", desired:"", min:"" }
 export const removeLiquidityEth =
-  (ethToken, erc20Token, account, lpAmount, deadline, network) =>
+  (ethToken, erc20Token, account, lpAmount, deadline, chainId) =>
   async (dispatch) => {
     try {
-      const _routerContract = routerContract(network);
+      const _routerContract = routerContract(chainId);
 
       dispatch({
         type: SHOW_DEX_LOADING,
@@ -564,12 +546,12 @@ export const removeLiquidityEth =
   };
 
 // token: { symbol, name, address, abi }
-export const checkAllowance = (token, account, network) => async (dispatch) => {
+export const checkAllowance = (token, account, chainId) => async (dispatch) => {
   try {
-    const _tokenContract = tokenContract(token.address, network);
+    const _tokenContract = tokenContract(token.address, chainId);
 
-    const _routerContract = routerContract(network);
-    if (token.symbol === ETH) {
+    const _routerContract = routerContract(chainId);
+    if (token.symbol === NATIVE_TOKEN?.[chainId]) {
       dispatch({
         type: APPROVE_TOKEN,
         payload: { symbol: token.symbol, status: true },
@@ -607,12 +589,11 @@ export const checkAllowance = (token, account, network) => async (dispatch) => {
 };
 
 export const confirmAllowance =
-  (balance, token, account, network) => async (dispatch) => {
+  (balance, token, account, chainId) => async (dispatch) => {
     try {
-      const _tokenContract = tokenContract(token.address, network);
+      const _tokenContract = tokenContract(token.address, chainId);
 
-      // const _routerContract = routerContract(network);
-      const _routerAddress = routerAddresses.ethereum;
+      const _routerAddress = ROUTER_ADDRESS?.[chainId];
 
       dispatch({
         type: SHOW_DEX_LOADING,
@@ -666,11 +647,10 @@ export const confirmAllowance =
   };
 
 export const checkLpAllowance =
-  (token0, token1, pairAddress, account, network) => async (dispatch) => {
+  (token0, token1, pairAddress, account, chainId) => async (dispatch) => {
     try {
-      const _pairContract = pairContract(pairAddress, network);
-      // const _routerContract = routerContract(network);
-      const _routerAddress = routerAddresses.ethereum;
+      const _pairContract = pairContract(pairAddress, chainId);
+      const _routerAddress = ROUTER_ADDRESS?.[chainId];
 
       dispatch({
         type: SHOW_DEX_LOADING,
@@ -704,22 +684,18 @@ export const checkLpAllowance =
   };
 
 export const confirmLPAllowance =
-  (balance, token0, token1, pairAddress, account, network) =>
+  (balance, token0, token1, pairAddress, account, chainId) =>
   async (dispatch) => {
     dispatch({
       type: SHOW_DEX_LOADING,
     });
 
     try {
-      const _pairContract = pairContract(pairAddress, network);
-      const _routerContractAddress = Object.keys(routerAddresses).includes(
-        network
-      )
-        ? routerAddresses?.[network]
-        : routerAddresses.ethereum;
+      const _pairContract = pairContract(pairAddress, chainId);
+      const _routerAddress = ROUTER_ADDRESS?.[chainId];
 
       await _pairContract.methods
-        .approve(_routerContractAddress, balance)
+        .approve(_routerAddress, balance)
         .send({ from: account }, function (error, transactionHash) {
           if (error) {
             dispatch({
@@ -767,24 +743,20 @@ export const confirmLPAllowance =
   };
 
 // load token list to be selected
-export const loadTokens = (network) => async (dispatch) => {
+const localTokenList = {
+  1: ethereumTokens,
+  4: testTokens.ethereum,
+  56: tokenListBsc,
+  97: testTokens.bsc,
+};
+export const loadTokens = (chainId) => async (dispatch) => {
   try {
     dispatch({
       type: SHOW_LOADING,
     });
 
-    let localTokens = [];
-    if (network === moonriverNetwork) {
-      localTokens =
-        currentConnection === "testnet"
-          ? testTokens?.[network]
-          : moonriverTokens;
-    } else {
-      localTokens =
-        currentConnection === "testnet"
-          ? testTokens?.[network]
-          : ethereumTokens;
-    }
+    // todo: fetch token list from network
+    const localTokens = localTokenList?.[!chainId ? 1 : chainId];
 
     const cachedTokens = getCachedTokens();
     const allTokens =
@@ -803,16 +775,16 @@ export const loadTokens = (network) => async (dispatch) => {
   });
 };
 
-export const importToken = (address, network) => async (dispatch) => {
+export const importToken = (address, chainId) => async (dispatch) => {
   try {
     dispatch({
       type: SHOW_DEX_LOADING,
     });
 
-    const _tokenContract = tokenContract(address, network);
+    const _tokenContract = tokenContract(address, chainId);
 
     const [tokenInfoData, tokenDecimals] = await Promise.all([
-      fetchTokenInfo(address),
+      fetchTokenInfo(address, chainId),
       _tokenContract.methods.decimals().call(),
     ]);
 
@@ -850,481 +822,14 @@ export const importToken = (address, network) => async (dispatch) => {
     }
   } catch (error) {
     console.log("importToken ", error);
-    // dispatch({
-    //   type: DEX_ERROR,
-    //   payload: "Failed to importToken",
-    // });
   }
   dispatch({
     type: HIDE_DEX_LOADING,
   });
 };
 
-// token0 {input, address, symbol  }
-export const getToken1OutAmount =
-  (token0, token1, account, network) => async (dispatch) => {
-    dispatch({ type: START_PRICE_LOADING });
-    try {
-      const _routerContract = routerContract(network);
-
-      // calculate price from token0->weth->token path
-      const wethAddress =
-        currentConnection === "testnet"
-          ? tokenAddresses.ethereum.ETH.testnet
-          : tokenAddresses.ethereum.ETH.mainnet;
-      const usdtAddress =
-        currentConnection === "testnet"
-          ? tokenAddresses.ethereum.USDT.testnet
-          : tokenAddresses.ethereum.USDT.mainnet;
-
-      const token0In = token0.amount;
-
-      const _path0 = [token0.address, token1.address];
-      const _path1 = [token0.address, wethAddress, token1.address];
-      const _path2 = [token0.address, wethAddress, usdtAddress, token1.address];
-      const _path21 = [
-        token0.address,
-        usdtAddress,
-        wethAddress,
-        token1.address,
-      ]; // when usdc is token0
-      const _path3 = [token0.address, usdtAddress, token1.address];
-
-      let bridgePath = _path0;
-      if (
-        [PBR, USDT].includes(token0.symbol) &&
-        [PBR, USDT].includes(token1.symbol)
-      ) {
-        bridgePath = _path1;
-      } else if (
-        [PBR, USDC].includes(token0.symbol) &&
-        [PBR, USDC].includes(token1.symbol)
-      ) {
-        bridgePath = token0.symbol === PBR ? _path2 : _path21;
-      } else if (
-        [ETH, USDC].includes(token0.symbol) &&
-        [ETH, USDC].includes(token1.symbol)
-      ) {
-        bridgePath = _path3;
-      }
-
-      // let amountsOutPair;
-      let amountsOutBridge;
-      let selectedPath = [];
-      let resultOut = "0";
-
-      const pairAddress = await getPairAddress(
-        token0.address,
-        token1.address,
-        network
-      );
-
-      let reserve;
-
-      if (pairAddress) {
-        const _pairContract = pairContract(pairAddress, network);
-        const pairReserveRes = await fetchPairData(
-          token0,
-          token1,
-          _pairContract,
-          account
-        );
-        reserve = pairReserveRes.reserve;
-        // totalSupply = pairReserveRes.totalSupply;
-        // lpBalance = pairReserveRes.lpBalance;
-      }
-
-      if (
-        pairAddress &&
-        reserve &&
-        (new BigNumber(reserve[token0.symbol]).gt(THRESOLD_WEI_VALUE) ||
-          new BigNumber(reserve[token1.symbol]).gt(THRESOLD_WEI_VALUE))
-      ) {
-        let amountsOutPair;
-        try {
-          amountsOutPair = await _routerContract.methods
-            .getAmountOut(
-              token0In,
-              reserve[token0.symbol],
-              reserve[token1.symbol]
-            )
-            .call();
-        } catch (error) {
-          amountsOutPair = "0";
-        }
-
-        resultOut = fromWei(amountsOutPair, token1.decimals);
-        selectedPath = _path0;
-
-        if (
-          [token0.symbol, token1.symbol].includes(USDT) &&
-          [token0.symbol, token1.symbol].includes(PBR)
-        ) {
-          //pbr-usdt fix if pair exist and not enough liquidity
-
-          amountsOutBridge = await _routerContract.methods
-            .getAmountsOut(token0In, _path0)
-            .call();
-
-          const token1OutBridge = new BigNumber(
-            amountsOutBridge[amountsOutBridge.length - 1]
-          );
-
-          const _resultOutBridge = fromWei(
-            token1OutBridge.toString(),
-            token1.decimals
-          );
-
-          if (new BigNumber(resultOut).lt(_resultOutBridge)) {
-            //consider swap from bridge instead of pair
-            resultOut = _resultOutBridge;
-            selectedPath = bridgePath;
-          }
-        }
-      } else {
-        //fix if it is bridge swap and token0 is usdc
-
-        amountsOutBridge = await _routerContract.methods
-          .getAmountsOut(token0In, bridgePath)
-          .call();
-
-        const token1OutBridge = new BigNumber(
-          amountsOutBridge[amountsOutBridge.length - 1]
-        );
-        resultOut = fromWei(token1OutBridge.toString(), token1.decimals);
-        selectedPath = bridgePath;
-      }
-
-      // fetch token usd price in AMM,
-      // const [token0DerivedEth, token1DerivedEth, ethUsdValue] =
-      //   await Promise.all([
-      //     getCurrentTokenPriceInEth(token0.address),
-      //     getCurrentTokenPriceInEth(token1.address),
-      //     getOnlyCurrentEthPrice(),
-      //   ]);
-
-      dispatch({
-        type: GET_TOKEN_1_OUT,
-        payload: {
-          tokenAmount: resultOut,
-          // token0UsdValue: new BigNumber(token0DerivedEth)
-          //   .times(ethUsdValue)
-          //   .toString(),
-          // token1UsdValue: new BigNumber(token1DerivedEth)
-          //   .times(ethUsdValue)
-          //   .toString(),
-          selectedPath,
-        },
-      });
-    } catch (error) {
-      console.log("getToken1OutAmount error ", error);
-      dispatch({
-        type: GET_TOKEN_1_OUT,
-        payload: { tokenAmount: "0", selectedPath: [] },
-      });
-    }
-
-    dispatch({ type: STOP_PRICE_LOADING });
-  };
-
-// token0 {input,   }
-export const getToken0InAmount =
-  (token0, token1, account, network) => async (dispatch) => {
-    dispatch({ type: START_PRICE_LOADING });
-    try {
-      const _routerContract = routerContract(network);
-      // calculate price from token0->weth->token path
-      const wethAddress =
-        currentConnection === "testnet"
-          ? tokenAddresses.ethereum.ETH.testnet
-          : tokenAddresses.ethereum.ETH.mainnet;
-      const usdtAddress =
-        currentConnection === "testnet"
-          ? tokenAddresses.ethereum.USDT.testnet
-          : tokenAddresses.ethereum.USDT.mainnet;
-
-      const token1Out = token1.amount;
-
-      const _path0 = [token0.address, token1.address];
-      const _path1 = [token0.address, wethAddress, token1.address];
-      const _path2 = [token0.address, wethAddress, usdtAddress, token1.address];
-      const _path21 = [
-        token0.address,
-        usdtAddress,
-        wethAddress,
-        token1.address,
-      ]; // when usdc is token0
-      const _path3 = [token0.address, usdtAddress, token1.address];
-
-      let bridgePath = _path0;
-      if (
-        [PBR, USDT].includes(token0.symbol) &&
-        [PBR, USDT].includes(token1.symbol)
-      ) {
-        bridgePath = _path1;
-      } else if (
-        [PBR, USDC].includes(token0.symbol) &&
-        [PBR, USDC].includes(token1.symbol)
-      ) {
-        bridgePath = token0.symbol === PBR ? _path2 : _path21;
-      } else if (
-        [ETH, USDC].includes(token0.symbol) &&
-        [ETH, USDC].includes(token1.symbol)
-      ) {
-        bridgePath = _path3;
-      }
-
-      let amountsInBridge;
-
-      let selectedPath = [];
-      let resultIn = "0";
-
-      const pairAddress = await getPairAddress(
-        token0.address,
-        token1.address,
-        network
-      );
-
-      let reserve;
-
-      if (pairAddress) {
-        const _pairContract = pairContract(pairAddress, network);
-        const pairReserveRes = await fetchPairData(
-          token0,
-          token1,
-          _pairContract,
-          account
-        );
-        reserve = pairReserveRes.reserve;
-        // totalSupply = pairReserveRes.totalSupply;
-        // lpBalance = pairReserveRes.lpBalance;
-      }
-
-      if (
-        pairAddress &&
-        reserve &&
-        (new BigNumber(reserve[token0.symbol]).gt(THRESOLD_WEI_VALUE) ||
-          new BigNumber(reserve[token1.symbol]).gt(THRESOLD_WEI_VALUE))
-      ) {
-        // new
-        let amountsInPair;
-        try {
-          amountsInPair = await _routerContract.methods
-            .getAmountIn(
-              token1Out,
-              reserve[token0.symbol],
-              reserve[token1.symbol]
-            )
-            .call();
-        } catch (error) {
-          amountsInPair = "0";
-        }
-
-        resultIn = fromWei(amountsInPair, token0.decimals);
-        selectedPath = _path0;
-
-        // temp fix for pbr-usdt pair with low liquidity
-        if (
-          [token0.symbol, token1.symbol].includes(USDT) &&
-          [token0.symbol, token1.symbol].includes(PBR)
-        ) {
-          amountsInBridge = await _routerContract.methods
-            .getAmountsIn(token1Out, bridgePath)
-            .call();
-          const token1OutWethBridge = new BigNumber(amountsInBridge[0]);
-
-          const _resultInBridge = fromWei(
-            token1OutWethBridge.toString(),
-            token1.decimals
-          );
-
-          if (new BigNumber(resultIn).lt(_resultInBridge)) {
-            //consider swap from bridge instead of pair
-            resultIn = _resultInBridge;
-            selectedPath = bridgePath;
-          }
-        }
-      } else {
-        //Note: token1Out should be in usdc decimals if we are fetching amount from path,
-        // in normal wei if fetching from pair reserves
-
-        amountsInBridge = await _routerContract.methods
-          .getAmountsIn(token1Out, bridgePath)
-          .call();
-        const token1OutWethBridge = new BigNumber(amountsInBridge[0]);
-
-        resultIn = fromWei(token1OutWethBridge.toString(), token0.decimals);
-        selectedPath = bridgePath;
-      }
-
-      // // fetch token usd price in AMM,
-      // const [token0DerivedEth, token1DerivedEth, ethUsdValue] =
-      //   await Promise.all([
-      //     getCurrentTokenPriceInEth(token0.address),
-      //     getCurrentTokenPriceInEth(token1.address),
-      //     getOnlyCurrentEthPrice(),
-      //   ]);
-
-      dispatch({
-        type: GET_TOKEN_O_IN,
-        payload: {
-          tokenAmount: resultIn,
-          // token0UsdValue: new BigNumber(token0DerivedEth)
-          //   .times(ethUsdValue)
-          //   .toString(),
-          // token1UsdValue: new BigNumber(token1DerivedEth)
-          //   .times(ethUsdValue)
-          //   .toString(),
-          selectedPath,
-        },
-      });
-    } catch (error) {
-      console.log("getToken0InAmount error ", { error });
-      dispatch({
-        type: GET_TOKEN_O_IN,
-        payload: { tokenAmount: "0", selectedPath: [] },
-      });
-
-      dispatch({
-        type: DEX_ERROR,
-        payload: "getTokenOutAmount error",
-      });
-    }
-
-    dispatch({ type: STOP_PRICE_LOADING });
-  };
-
-const fetchReservesForPriceImpactCalculation = async (
-  token0,
-  token1,
-  account,
-  network
-) => {
-  const token0Address = token0?.address;
-
-  const baseToken =
-    token0.symbol === ETH ? getTokenWithSymbol(USDT) : getTokenWithSymbol(ETH);
-
-  const baseToken1 =
-    token0.symbol === USDC
-      ? getTokenWithSymbol(USDT)
-      : getTokenWithSymbol(USDC);
-
-  const token1Address = token1?.address;
-
-  //check pair token0 token1
-  let pairAddress = await getPairAddress(token0Address, token1Address, network);
-  let _pairContract;
-  let pairReserves = {};
-  if (pairAddress) {
-    // fetch reserves from pair and return
-    _pairContract = pairContract(pairAddress, network);
-    pairReserves = await fetchPairData(token0, token1, _pairContract, account);
-
-    return { ...pairReserves.reserve };
-  }
-  // check pair token0+baseToken
-  pairAddress = await getPairAddress(token0Address, baseToken.address, network);
-
-  if (pairAddress) {
-    _pairContract = pairContract(pairAddress, network);
-    pairReserves = await fetchPairData(
-      token0,
-      baseToken,
-      _pairContract,
-      account
-    );
-
-    return { ...pairReserves.reserve };
-  }
-
-  // check pair token1+baseToken
-  pairAddress = await getPairAddress(
-    token0Address,
-    baseToken1.address,
-    network
-  );
-
-  if (pairAddress) {
-    _pairContract = pairContract(pairAddress, network);
-    pairReserves = await fetchPairData(
-      token0,
-      baseToken1,
-      _pairContract,
-      account
-    );
-
-    return { ...pairReserves.reserve };
-  }
-};
-
-const tokenThresoldValue = (decimals) => {
-  return new BigNumber(10).exponentiatedBy(parseInt(decimals) - 3);
-};
-
-export const calculatePriceImpact = async (
-  token0,
-  token1,
-  account,
-  network
-) => {
-  try {
-    const pairAddress = await getPairAddress(
-      token0.address,
-      token1.address,
-      network
-    );
-
-    let reserve;
-
-    if (pairAddress) {
-      const _pairContract = pairContract(pairAddress, network);
-      const pairReserveRes = await fetchPairData(
-        token0,
-        token1,
-        _pairContract,
-        account
-      );
-      reserve = pairReserveRes.reserve;
-      // totalSupply = pairReserveRes.totalSupply;
-      // lpBalance = pairReserveRes.lpBalance;
-    }
-
-    if (
-      pairAddress &&
-      reserve &&
-      (new BigNumber(reserve[token0.symbol]).gt(
-        tokenThresoldValue(token0.decimals)
-      ) ||
-        new BigNumber(reserve[token1.symbol]).gt(
-          tokenThresoldValue(token1.decimals)
-        ))
-    ) {
-      return sellPriceImpact(
-        fromWei(token0.amount, token0.decimals),
-        fromWei(token1.amount, token1.decimals),
-        fromWei(reserve[token0.symbol], token0.decimals)
-      );
-    } else {
-      const reserves = await fetchReservesForPriceImpactCalculation(
-        token0,
-        token1,
-        account,
-        network
-      );
-
-      return sellPriceImpact(
-        fromWei(token0.amount, token0.decimals),
-        fromWei(token1.amount, token1.decimals),
-        fromWei(reserves[token0.symbol], token0.decimals)
-      );
-    }
-  } catch (error) {
-    console.log("checkPriceImpact calculatePriceImpact exeption : ", { error });
-  }
-};
 export const loadPairAddress =
-  (token0Symbol, token1Symbol, pairAddress, network) => async (dispatch) => {
+  (token0Symbol, token1Symbol, pairAddress, chainId) => async (dispatch) => {
     try {
       dispatch({
         type: SHOW_DEX_LOADING,
@@ -1377,9 +882,9 @@ const fetchPairData = async (token0, token1, _pairContract, account) => {
 };
 
 export const getLpBalance =
-  (token0, token1, pairAddress, account, network) => async (dispatch) => {
+  (token0, token1, pairAddress, account, chainId) => async (dispatch) => {
     try {
-      const _pairContract = pairContract(pairAddress, network);
+      const _pairContract = pairContract(pairAddress, chainId);
 
       dispatch({
         type: SHOW_DEX_LOADING,

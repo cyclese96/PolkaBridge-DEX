@@ -1,11 +1,10 @@
 import { Card, makeStyles } from "@material-ui/core";
-import { fromWei, isNumber } from "../../utils/helper";
-import { connect } from "react-redux";
-import SelectToken from "../common/SelectToken";
-import { formatCurrency } from "../../utils/formatters";
-import { formattedNum } from "../../utils/timeUtils";
+import SelectToken from "../../common/SelectToken";
+import { formatCurrency } from "../../../utils/formatters";
+import { formattedNum } from "../../../utils/timeUtils";
 import BigNumber from "bignumber.js";
 import React from "react";
+import NumberInput from "components/common/NumberInput";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -105,7 +104,6 @@ const useStyles = makeStyles((theme) => ({
 
 const SwapCardItem = (props) => {
   const {
-    account: { balance },
     inputType,
     onInputChange,
     onTokenChange,
@@ -113,31 +111,16 @@ const SwapCardItem = (props) => {
     inputValue,
     disableToken,
     priceUSD,
+    currenryBalance,
   } = props;
   const classes = useStyles();
 
-  const handleInputChange = (event) => {
-    if (
-      !isNumber(event.nativeEvent.data) &&
-      event.nativeEvent.inputType !== "deleteContentBackward"
-    ) {
-      return;
-    }
-
-    const value = event.target.value;
-    onInputChange(value);
-  };
-
   const handleMax = () => {
-    if (!currentToken.symbol) {
+    if (!currentToken.address || !currenryBalance) {
       return;
     }
 
-    onInputChange(
-      balance
-        ? fromWei(balance[currentToken.symbol], currentToken.decimals)
-        : "0"
-    );
+    onInputChange(!currenryBalance ? "0" : currenryBalance);
   };
 
   return (
@@ -154,18 +137,14 @@ const SwapCardItem = (props) => {
             )}
             <p className={classes.labelFont}>
               Balance:
-              {formatCurrency(
-                fromWei(balance[currentToken.symbol], currentToken.decimals)
-              )}
+              {formatCurrency(!currenryBalance ? "0" : currenryBalance)}
             </p>
           </div>
           <div className={classes.inputRow}>
-            <input
-              type="text"
-              className={classes.input}
-              onChange={handleInputChange}
+            <NumberInput
+              style={classes.input}
+              onInputChange={onInputChange}
               value={inputValue}
-              placeholder="0.0"
             />
 
             <div className="d-flex align-items-center">
@@ -199,8 +178,4 @@ const SwapCardItem = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-  account: state.account,
-});
-
-export default connect(mapStateToProps, {})(React.memo(SwapCardItem));
+export default React.memo(SwapCardItem);

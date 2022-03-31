@@ -2,74 +2,63 @@ const testing = false;
 
 export const currentConnection = testing ? "testnet" : "mainnet";
 
-export const tokenAddresses = {
-  ethereum: {
-    PBR: {
-      testnet: "0xf6c9FF0543f932178262DF8C81A12A3132129b51",
-      mainnet: "0x298d492e8c1d909D3F63Bc4A36C66c64ACB3d695",
-    },
-    USDT: {
-      testnet: "0xe687b0a94c3a20540552d981cd311a6812759df8",
-      mainnet: "0xdac17f958d2ee523a2206206994597c13d831ec7",
-    },
-    USDC: {
-      testnet: "0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b",
-      mainnet: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-    },
-    ETH: {
-      testnet: "0xc778417e063141139fce010982780140aa0cd5ab",
-      mainnet: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-    },
-    BITE: {
-      testnet: "0xA9Bf3904f7216B4cA2BA862Ac27b9469c030C0eA",
-      mainnet: "0x4eed0fa8de12d5a86517f214c2f11586ba2ed88d",
-    },
+export const TOKEN_ADDRESS = {
+  PBR: {
+    1: "0x298d492e8c1d909D3F63Bc4A36C66c64ACB3d695",
+    4: "0xf6c9FF0543f932178262DF8C81A12A3132129b51",
   },
-  bsc: {
-    PWAR: {
-      testnet: "0x16153214E683018D5aA318864c8e692b66E16778",
-      mainnet: "0x16153214E683018D5aA318864c8e692b66E16778",
-    },
-    CORGIB: {
-      testnet: "0xE428Cc8A06Cdba0ad5074180f8E80ec6D4083b24",
-      mainnet: "0x1cfd6813a59d7b90c41dd5990ed99c3bf2eb8f55",
-    },
+  USDT: {
+    1: "0xdac17f958d2ee523a2206206994597c13d831ec7",
+    4: "0xe687b0a94c3a20540552d981cd311a6812759df8",
   },
-  polygon: {
-    //todo
+  USDC: {
+    1: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    4: "0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b",
   },
-  harmony: {
-    //
+  ETH: {
+    1: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+    4: "0xc778417e063141139fce010982780140aa0cd5ab",
+  },
+  PWAR: {
+    54: "0x16153214E683018D5aA318864c8e692b66E16778",
+    97: "0x16153214E683018D5aA318864c8e692b66E16778",
+  },
+  CORGIB: {
+    54: "0x1cfd6813a59d7b90c41dd5990ed99c3bf2eb8f55",
+    97: "0xE428Cc8A06Cdba0ad5074180f8E80ec6D4083b24",
+  },
+  BNB: {
+    56: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+    97: "0x094616F0BdFB0b526bD735Bf66Eca0Ad254ca81F",
   },
 };
 
-export const routerAddresses = {
-  ethereum: testing
-    ? "0x541E97cC33aF16586fB544812b39F1663C3FD779"
-    : "0xFF0e9437818258BDEdd1aA374095968ABC82a9E2",
-  moonriver: testing
-    ? "0x1C586Bc16e9Aa5fdf45F4dB3F37Bd97cA25A5aE9"
-    : "0x1C586Bc16e9Aa5fdf45F4dB3F37Bd97cA25A5aE9",
+export const ROUTER_ADDRESS = {
+  1: "0xFF0e9437818258BDEdd1aA374095968ABC82a9E2",
+  4: "0x541E97cC33aF16586fB544812b39F1663C3FD779",
+  97: "0xCb4Ea1E2f7561edD414AF09d2df308986d4d7a29",
+  56: "0x8547e2E16783Fdc559C435fDc158d572D1bD0970",
 };
 
-export const factoryAddresses = {
-  ethereum: testing
-    ? "0x628cf8e2A079C6D9bDd0293125273F71EA3d74Ec"
-    : "0xf5d8E98ef1f66f1cAb949A2555837FE755fc2D68",
-  moonriver: testing
-    ? "0x2fc26998c0EB0CC67DC9d41f7f1F4508dE214292"
-    : "0x2fc26998c0EB0CC67DC9d41f7f1F4508dE214292",
+export const FACTORY_ADDRESS = {
+  1: "0xf5d8E98ef1f66f1cAb949A2555837FE755fc2D68",
+  4: "0x628cf8e2A079C6D9bDd0293125273F71EA3d74Ec",
+  97: "0xAeE1F15957C6c7AbDF245527b6497E96bDB17091",
+  56: "0xDda79Ec4AF818D1e95F0A45B3E7e60461d5228cb",
 };
 
-export const farmAddresses = {
-  ethereum: testing
-    ? "0x57eA8360A59468112cE669EA8bFb2169062EAF0d"
-    : "0xF0301472c7e383310bE1D426aA59207818fB8a53",
+export const FARM_ADDRESS = {
+  1: "0xF0301472c7e383310bE1D426aA59207818fB8a53",
+  4: "0x57eA8360A59468112cE669EA8bFb2169062EAF0d",
+  97: "0xc14c4F5041D62c03b4E18932975C30817A4CB39f",
+  56: "0x2A5Ce0C18c885fbc9B41933f79559a6c40208c72",
 };
 
 export const MULTICALL_ADDRESS: { [index: string]: string } = {
   1: "0x3a2Bd96Da4B14C30918aE0fC0E784E2F56120F1d",
   4: "0x6c4f9282bBD29992bF4F064F0165e805336Eef59",
+  97: "0x688EC8C059592104fC713E0dA9276e649302C4Ab",
+  56: "0x6e568FcE995F5c7ddaFB8C0b74B3241328498F8A",
 };
 
 export const farmContractConfig = {
@@ -80,32 +69,43 @@ export const farmContractConfig = {
 export const ETH = "ETH";
 export const BNB = "BNB";
 export const PBR = "PBR";
-export const BITE = "BITE";
-export const CORGIB = "CORGIB";
 export const PWAR = "PWAR";
 export const USDT = "USDT";
 export const USDC = "USDC";
 export const MOVR = "MOVR";
 
-export const defaultSwapInputToken = {
-  ethereum: "ETH",
-  moonriver: "WMOVR",
+export const NATIVE_TOKEN: { [index: number]: string } = {
+  1: ETH,
+  4: ETH,
+  97: BNB,
+  56: BNB,
 };
 
-export const defaultPoolToken0 = {
-  ethereum: "ETH",
-  moonriver: "WMOVR",
+export const FARM_TOKEN: { [index: number]: string } = {
+  1: PBR,
+  4: PBR,
+  97: PWAR,
+  56: PWAR,
 };
 
-export const defaultPoolToken1 = {
-  ethereum: "PBR",
-  moonriver: "USDT",
+export const DEFAULT_SWAP_TOKENS = {
+  1: ["ETH", "PBR"], // token0 token1
+  4: ["ETH", "PBR"],
+  97: ["BNB", "PWAR"],
+  56: ["BNB", "PWAR"],
+};
+
+export const DEFAULT_POOL_TOKENS = {
+  1: ["ETH", "PBR"], // token0 token1
+  4: ["ETH", "PBR"],
+  97: ["BNB", "PWAR"],
+  56: ["BNB", "PWAR"],
 };
 
 export const TOKEN_BLACKLIST = [];
 export const PAIR_BLACKLIST = [];
 
-export const exchangeFee = 0.25;
+export const exchangeFee = 0.2;
 export const defaultSlippage = 0.5;
 export const defaultTransactionDeadline = 20; //20 minutes
 
@@ -118,16 +118,13 @@ export const supportedChains = [
 ];
 
 export const allowanceAmount = "9999999999999999999999999";
+export const corgibAllowance = "999999999999999999999999999999999999";
 
-export const blocksExplorer = {
-  ethereum: {
-    testnet: "https://rinkeby.etherscan.io",
-    mainnet: "https://etherscan.io",
-  },
-  moonriver: {
-    testnet: "https://moonbase.moonscan.io",
-    mainnet: "https://moonriver.moonscan.io",
-  },
+export const BLOCK_EXPLORER = {
+  1: "https://etherscan.io",
+  4: "https://rinkeby.etherscan.io",
+  56: "https://bscscan.com",
+  97: "https://testnet.bscscan.com",
 };
 
 export const nullAddress = "0x0000000000000000000000000000000000000000";
@@ -154,21 +151,27 @@ export const swapFnConstants = {
   swapExactOut: "swapExactOut", // tradeType case 2
 };
 
+export const liquidityPoolConstants = {
+  exactIn: "exactIn",
+  exactOut: "exactOut",
+};
+
 export const THRESOLD_VALUE = 0.00001;
 export const THRESOLD_WEI_VALUE = 100000000000000;
 
 export const supportedFarmingPools = {
-  ethereum: ["PBR-ETH", "ETH-USDT"],
+  1: ["PBR-ETH", "ETH-USDT"],
+  4: ["PBR-ETH", "ETH-USDT"],
+  56: ["PWAR-BNB", "BNB-USDT"],
+  97: ["PWAR-BNB", "BNB-USDT"],
 };
 
 export const farmingPoolConstants = {
-  ethereum: {
+  1: {
     "PBR-ETH": {
       multiplier: 40,
       pid: 0,
-      address: testing
-        ? "0x306dd2eB9DDACeecdbA4cfA0EccC009e7291cDDE"
-        : "0x173cF7c7356f71c3e75cE02F9cC777Fb762B5080",
+      address: "0x173cF7c7356f71c3e75cE02F9cC777Fb762B5080",
       blocksPerYear: "",
       lpApr: 0,
       decimals: 18,
@@ -176,9 +179,61 @@ export const farmingPoolConstants = {
     "ETH-USDT": {
       multiplier: 5,
       pid: 1,
-      address: testing
-        ? "0x17398F4101dac7c9C1d637b1139EEA9D3d700250"
-        : "0xdda0A346D267a48EC74CC68979584d85501fe5D5",
+      address: "0xdda0A346D267a48EC74CC68979584d85501fe5D5",
+      blocksPerYear: "",
+      lpApr: 0,
+      decimals: 12,
+    },
+  },
+  4: {
+    "PBR-ETH": {
+      multiplier: 40,
+      pid: 0,
+      address: "0x306dd2eB9DDACeecdbA4cfA0EccC009e7291cDDE",
+      blocksPerYear: "",
+      lpApr: 0,
+      decimals: 18,
+    },
+    "ETH-USDT": {
+      multiplier: 5,
+      pid: 1,
+      address: "0x17398F4101dac7c9C1d637b1139EEA9D3d700250",
+      blocksPerYear: "",
+      lpApr: 0,
+      decimals: 12,
+    },
+  },
+  56: {
+    "PWAR-BNB": {
+      multiplier: 40,
+      pid: 0,
+      address: "",
+      blocksPerYear: "",
+      lpApr: 0,
+      decimals: 18,
+    },
+    "BNB-USDT": {
+      multiplier: 5,
+      pid: 1,
+      address: "",
+      blocksPerYear: "",
+      lpApr: 0,
+      decimals: 12,
+    },
+  },
+  97: {
+    "PWAR-BNB": {
+      multiplier: 40,
+      pid: 0,
+      address: "0x767929Ec1AE0E66710Fc1D4CA9F0E33cF3bf3A37",
+      blocksPerYear: "",
+      lpApr: 0,
+      decimals: 18,
+    },
+    "BNB-USDT": {
+      multiplier: 5,
+      pid: 1,
+      address: "0x0AD6e5af7A4Da3006B393A91576860c14a562442",
       blocksPerYear: "",
       lpApr: 0,
       decimals: 12,
@@ -201,8 +256,8 @@ export const SWAP_BASES: { [index: string]: Array<string> } = {
   4: ["USDT", "USDC", "ETH"],
   1285: [],
   1287: [],
-  97: [],
-  56: [],
+  97: ["BNB", "USDT", "USDC"],
+  56: ["BNB"],
   137: [],
   80001: [],
   1666700000: [],

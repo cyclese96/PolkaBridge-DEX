@@ -1,8 +1,8 @@
 import { makeStyles } from "@material-ui/core";
-import React from "react";
+import React, { useMemo } from "react";
+import { useSelector } from "react-redux";
+import { isAddress } from "utils/contractUtils";
 import { currentConnection } from "../../constants/index";
-import { isAddress } from "../../utils/helper";
-import tokenThumbnail from "../../utils/tokenThumbnail";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,26 +13,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TokenIcon = ({ symbol, styles, className, address, size }) => {
+const TokenIcon = ({ address, symbol, styles, className, size }) => {
   const ownClasses = useStyles();
   const path = `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/${isAddress(
     address
   )}/logo.png`;
 
-  const _path =
-    currentConnection === "testnet"
-      ? !symbol
-        ? path
-        : tokenThumbnail(symbol)
-      : path;
+  const tokenList = useSelector((state) => state?.dex?.tokenList);
+
+  const logoUri = useMemo(() => {
+    const tokenItem = tokenList?.find(
+      (item) =>
+        (address && item?.address?.toLowerCase() === address?.toLowerCase()) ||
+        (symbol && item?.symbol?.toLowerCase() === symbol?.toLowerCase())
+    );
+    if (tokenItem) {
+      return tokenItem.logoURI ? tokenItem.logoURI : path;
+    }
+    return path;
+  }, [address, symbol, tokenList]);
 
   return (
     <img
       className={[ownClasses.root, className, styles].join(" ")}
-      src={_path}
+      src={logoUri}
       onError={(e) => {
         e.target.onerror = null;
-        e.target.src = tokenThumbnail(symbol ? symbol : "");
+        e.target.src = "img/no_icon.png";
       }}
       alt={""}
       style={{ height: size }}

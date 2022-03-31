@@ -6,51 +6,51 @@ import tokenAbi from "../abi/erc20.json";
 import farmAbi from "../abi/PolkaBridgeFarm.json";
 
 import {
-  routerAddresses,
-  factoryAddresses,
-  farmAddresses,
+  FARM_ADDRESS,
+  FACTORY_ADDRESS,
+  ROUTER_ADDRESS,
 } from "../../constants/index";
 import { isMetaMaskInstalled } from "../../utils/helper";
 import config from "../../utils/config";
 
-export const pairContract = (pairAddress, network) => {
+export const pairContract = (pairAddress, chainId) => {
   const _pairAbi = pairAbi;
   const _pairAddress = pairAddress;
-  const connection = getCurrentConnection(network, _pairAbi, _pairAddress);
+  const connection = getCurrentConnection(chainId, _pairAbi, _pairAddress);
   return connection;
 };
 
 //get connecttion of imported contract
-export const tokenContract = (address, network) => {
+export const tokenContract = (address, chainId) => {
   const _address = address;
 
   const _abi = tokenAbi;
-  const connection = getCurrentConnection(network, _abi, _address);
+  const connection = getCurrentConnection(chainId, _abi, _address);
   return connection;
 };
 
-export const routerContract = (network) => {
-  const _routerAddress = routerAddresses?.ethereum;
+export const routerContract = (chainId) => {
+  const _routerAddress = ROUTER_ADDRESS[chainId];
   const abi = RouterAbi;
-  const connection = getCurrentConnection(network, abi, _routerAddress);
+  const connection = getCurrentConnection(chainId, abi, _routerAddress);
   return connection;
 };
 
-export const factoryContract = (network) => {
-  const _factoryAddress = factoryAddresses?.ethereum;
+export const factoryContract = (chainId) => {
+  const _factoryAddress = FACTORY_ADDRESS?.[chainId];
   const abi = FactoryAbi;
-  const connection = getCurrentConnection(network, abi, _factoryAddress);
+  const connection = getCurrentConnection(chainId, abi, _factoryAddress);
   return connection;
 };
 
-export const farmContract = (network) => {
-  const _farmAddress = farmAddresses?.ethereum;
+export const farmContract = (chainId) => {
+  const _farmAddress = FARM_ADDRESS?.[chainId];
   const abi = farmAbi;
-  const connection = getCurrentConnection(network, abi, _farmAddress);
+  const connection = getCurrentConnection(chainId, abi, _farmAddress);
   return connection;
 };
 
-const getCurrentConnection = (blockChainNetwork, abi, contractAddress) => {
+const getCurrentConnection = (chainId, abi, contractAddress) => {
   let web3;
   if (isMetaMaskInstalled()) {
     web3 = new Web3(window.ethereum);

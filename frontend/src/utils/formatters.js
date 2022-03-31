@@ -1,4 +1,4 @@
-import { currentConnection } from "constants/index";
+import { BLOCK_EXPLORER } from "constants/index";
 import Decimal from "decimal.js-light";
 import { Numeral } from "numeral";
 
@@ -105,24 +105,18 @@ export const formattedNum = (number, usd = false, acceptNegatives = false) => {
 };
 
 export const urls = {
-  showTransaction: (tx) =>
-    currentConnection === "mainnet"
-      ? `https://etherscan.io/tx/${tx}/`
-      : `https://rinkeby.etherscan.io/tx/${tx}/`,
-  showAddress: (address) =>
-    currentConnection === "mainnet"
-      ? `https://www.etherscan.io/address/${address}/`
-      : `https://rinkeby.etherscan.io/address/${address}/`,
-  showToken: (address) =>
-    currentConnection === "mainnet"
-      ? `https://www.etherscan.io/token/${address}/`
-      : `https://rinkeby.etherscan.io/token/${address}/`,
-  showBlock: (block) =>
-    currentConnection === "mainnet"
-      ? `https://etherscan.io/block/${block}/`
-      : `https://rinkeby.etherscan.io/block/${block}/`,
+  showTransaction: (tx, chainId = 1) => `${BLOCK_EXPLORER[chainId]}/tx/${tx}/`,
+  showAddress: (address, chainId = 1) =>
+    `${BLOCK_EXPLORER[chainId]}/address/${address}/`,
+  showToken: (address, chainId = 1) =>
+    `${BLOCK_EXPLORER[chainId]}/token/${address}/`,
+  showBlock: (block, chainId = 1) =>
+    `${BLOCK_EXPLORER[chainId]}/block/${block}/`,
 };
 
 export function localNumber(val) {
   return Numeral(val).format("0,0");
+}
+export function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 }

@@ -12,9 +12,8 @@ import SwapSettings from "../../common/SwapSettings";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import {
   allowanceAmount,
-  defaultPoolToken0,
-  defaultPoolToken1,
-  ETH,
+  DEFAULT_POOL_TOKENS,
+  NATIVE_TOKEN,
 } from "../../../constants/index";
 import {
   fromWei,
@@ -31,9 +30,7 @@ import {
   removeLiquidity,
   importToken,
 } from "../../../actions/dexActions";
-import { getAccountBalance } from "../../../actions/accountActions";
 import SelectToken from "../../common/SelectToken";
-import tokenThumbnail from "../../../utils/tokenThumbnail";
 import BigNumber from "bignumber.js";
 import {
   getPairAddress,
@@ -46,6 +43,8 @@ import { formatCurrency } from "../../../utils/formatters";
 import TransactionConfirm from "../../common/TransactionConfirm";
 import { useLocation } from "react-router-dom";
 import useActiveWeb3React from "hooks/useActiveWeb3React";
+import TokenIcon from "components/common/TokenIcon";
+import NumberInput from "components/common/NumberInput";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -253,7 +252,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const RemoveCard = ({
-  account: { currentNetwork, currentAccount, loading },
+  account: { currentAccount, loading },
   dex: {
     lpApproved,
     lpBalance,
@@ -272,7 +271,6 @@ const RemoveCard = ({
   removeLiquidityEth,
   loadPairAddress,
   removeLiquidity,
-  getAccountBalance,
   importToken,
 }) => {
   const classes = useStyles();
@@ -285,7 +283,7 @@ const RemoveCard = ({
   const [swapDialogOpen, setSwapDialog] = useState(false);
   const query = new URLSearchParams(useLocation().search);
 
-  const { active } = useActiveWeb3React();
+  const { active, chainId } = useActiveWeb3React();
   const [connectWallet] = useWalletConnectCallback();
 
   const handleSettings = () => {
@@ -307,13 +305,13 @@ const RemoveCard = ({
         const _token = getTokenToSelect(tokenList, token0Query);
 
         if (!_token || !_token.symbol) {
-          importToken(token0Query, currentAccount, currentNetwork);
+          importToken(token0Query, currentAccount, chainId);
         }
         setToken0(_token);
       } else {
         const _token = getTokenToSelect(
           tokenList,
-          defaultPoolToken0?.[currentNetwork]
+          DEFAULT_POOL_TOKENS?.[chainId]?.[0]
         );
         setToken0(_token);
       }
@@ -322,20 +320,20 @@ const RemoveCard = ({
         const _token = getTokenToSelect(tokenList, token1Query);
 
         if (!_token || !_token.symbol) {
-          importToken(token1Query, currentAccount, currentNetwork);
+          importToken(token1Query, currentAccount, chainId);
         }
 
         setToken1(_token);
       } else {
         const _token = getTokenToSelect(
           tokenList,
-          defaultPoolToken1?.[currentNetwork]
+          DEFAULT_POOL_TOKENS?.[chainId]?.[1]
         );
         setToken1(_token);
       }
     }
     initSelection();
-  }, [currentNetwork, currentAccount, tokenList, token0Query, token1Query]);
+  }, [chainId, currentAccount, tokenList, token0Query, token1Query]);
 
   const currentLpApproved = useMemo(() => {
     if (
@@ -351,14 +349,14 @@ const RemoveCard = ({
 
   const handleConfirmAllowance = async () => {
     const _allowanceAmount = allowanceAmount;
-    const pairAddress = currentPairAddress();
+    const pairAddress = currentPairAddress;
     await confirmLPAllowance(
       _allowanceAmount,
       selectedToken0,
       selectedToken1,
       pairAddress,
       currentAccount,
-      currentNetwork
+      chainId
     );
   };
 
@@ -380,7 +378,7 @@ const RemoveCard = ({
     }
   }, [lpBalance, selectedToken0, selectedToken1]);
 
-  const currentPairAddress = () => {
+  const currentPairAddress = useMemo(() => {
     if (
       Object.keys(pairContractData).includes(
         `${selectedToken0.symbol}_${selectedToken1.symbol}`
@@ -400,7 +398,7 @@ const RemoveCard = ({
     } else {
       return null;
     }
-  };
+  }, [pairContractData, selectedToken0, selectedToken1]);
 
   // new use effect
   useEffect(() => {
@@ -412,22 +410,18 @@ const RemoveCard = ({
           type: RESET_POOL_DATA,
         });
 
-        // load erc20 token abi and balance
-        // const erc20Token =
-        //   selectedToken0.symbol === ETH ? selectedToken1 : selectedToken0;
-
-        let _pairAddress = currentPairAddress();
+        let _pairAddress = currentPairAddress;
         if (!_pairAddress) {
           _pairAddress = await getPairAddress(
             selectedToken0.address,
             selectedToken1.address,
-            currentNetwork
+            chainId
           );
           loadPairAddress(
             selectedToken0.symbol,
             selectedToken1.symbol,
             _pairAddress,
-            currentNetwork
+            chainId
           );
         }
 
@@ -436,7 +430,7 @@ const RemoveCard = ({
           selectedToken1,
           _pairAddress,
           currentAccount,
-          currentNetwork
+          chainId
         );
 
         await checkLpAllowance(
@@ -444,13 +438,13 @@ const RemoveCard = ({
           selectedToken1,
           _pairAddress,
           currentAccount,
-          currentNetwork
+          chainId
         );
       }
     }
 
     loadPair();
-  }, [selectedToken0, selectedToken1, currentNetwork, currentAccount]);
+  }, [selectedToken0, selectedToken1, chainId, currentAccount]);
 
   const onToken1Select = (token) => {
     setToken0(token);
@@ -471,10 +465,13 @@ const RemoveCard = ({
 
     const _lpAmount = lpAmount;
 
-    if (selectedToken0.symbol === ETH || selectedToken1.symbol === ETH) {
+    if (
+      selectedToken0.symbol === NATIVE_TOKEN?.[chainId] ||
+      selectedToken1.symbol === NATIVE_TOKEN?.[chainId]
+    ) {
       // remove liquidity eth-erc20 || erc20 - eth
       let ethToken, erc20Token;
-      if (selectedToken0.symbol === ETH) {
+      if (selectedToken0.symbol === NATIVE_TOKEN?.[chainId]) {
         ethToken = selectedToken0;
         erc20Token = selectedToken1;
       } else {
@@ -488,7 +485,7 @@ const RemoveCard = ({
         currentAccount,
         _lpAmount,
         swapSettings.deadline,
-        currentNetwork
+        chainId
       );
     } else {
       // remove liquidy erc20 - erc20
@@ -499,17 +496,17 @@ const RemoveCard = ({
         currentAccount,
         _lpAmount,
         swapSettings.deadline,
-        currentNetwork
+        chainId
       );
     }
 
-    const pairAddress = currentPairAddress();
+    const pairAddress = currentPairAddress;
     await getLpBalance(
       selectedToken0,
       selectedToken1,
       pairAddress,
       currentAccount,
-      currentNetwork
+      chainId
     );
   };
 
@@ -544,14 +541,6 @@ const RemoveCard = ({
 
     if (
       ["remove", "lp_token_approve"].includes(transaction.type) &&
-      transaction.status === "success"
-    ) {
-      getAccountBalance(selectedToken0, currentNetwork);
-      getAccountBalance(selectedToken1, currentNetwork);
-    }
-
-    if (
-      ["remove", "lp_token_approve"].includes(transaction.type) &&
       transaction.status === "pending"
     ) {
       setSwapDialog(true);
@@ -572,7 +561,7 @@ const RemoveCard = ({
       transaction.status === "success"
     ) {
       store.dispatch({ type: START_TRANSACTION });
-      handleClearState();
+      // handleClearState();
     } else if (
       ["remove", "lp_token_approve"].includes(transaction.type) &&
       transaction.status === "failed"
@@ -626,9 +615,12 @@ const RemoveCard = ({
       setSwapDialog(true);
       return;
     }
+
     if (!currentLpApproved) {
+      setSwapDialog(true);
       handleConfirmAllowance();
     } else {
+      setSwapDialog(true);
       handleRemoveLiquidity();
     }
   };
@@ -674,12 +666,10 @@ const RemoveCard = ({
 
             <div className="d-flex justify-content-center align-items-center">
               <div>
-                <input
-                  type="text"
-                  className={classes.input}
-                  onChange={({ target: { value } }) => handleInputChange(value)}
+                <NumberInput
+                  onInputChange={handleInputChange}
                   value={liquidityInputTemp}
-                  placeholder="0.0"
+                  style={classes.input}
                 />
               </div>
               <div className={classes.percentageSymbol}>%</div>
@@ -809,16 +799,8 @@ const RemoveCard = ({
 
               <div className="d-flex justify-content-between my-2 align-items-center">
                 <div className="d-flex justify-content-between align-items-center">
-                  <img
-                    className={classes.tokenIcon}
-                    src={tokenThumbnail(selectedToken0.symbol)}
-                    alt={""}
-                  />
-                  <img
-                    className={classes.tokenIcon}
-                    src={tokenThumbnail(selectedToken1.symbol)}
-                    alt={""}
-                  />
+                  <TokenIcon address={selectedToken0?.address} />
+                  <TokenIcon address={selectedToken1?.address} />
                   <span
                     className={classes.itemHeading}
                     style={{ paddingTop: 5 }}
@@ -860,6 +842,5 @@ export default connect(mapStateToProps, {
   removeLiquidityEth,
   loadPairAddress,
   removeLiquidity,
-  getAccountBalance,
   importToken,
 })(RemoveCard);
