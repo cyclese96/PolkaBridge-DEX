@@ -7,6 +7,7 @@ import SwapCardItem from "../Swap/SwapCardItem";
 import AddIcon from "@material-ui/icons/Add";
 import {
   allowanceAmount,
+  corgibAllowance,
   DEFAULT_POOL_TOKENS,
   liquidityPoolConstants,
   NATIVE_TOKEN,
@@ -454,17 +455,17 @@ const AddCard = (props) => {
   }, [selectedToken0, selectedToken1, chainId, account]);
 
   const handleConfirmAllowance = async () => {
-    const _allowanceAmount = allowanceAmount;
+    const _allowanceAmount =  allowanceAmount;
     if (!approvedTokens[selectedToken0.symbol]) {
       await confirmAllowance(
-        _allowanceAmount,
+        selectedToken0?.symbol === 'CORGIB' ? corgibAllowance :  _allowanceAmount,
         selectedToken0,
         account,
         chainId
       );
     } else {
       await confirmAllowance(
-        _allowanceAmount,
+        selectedToken1?.symbol === 'CORGIB' ? corgibAllowance :  _allowanceAmount,
         selectedToken1,
         account,
         chainId

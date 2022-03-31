@@ -13,10 +13,12 @@ import { useState } from "react";
 import SwapSettings from "../../common/SwapSettings";
 import {
   allowanceAmount,
+  corgibAllowance,
   DEFAULT_SWAP_TOKENS,
   FARM_TOKEN,
   NATIVE_TOKEN,
   swapFnConstants,
+  TOKEN_ADDRESS,
 } from "../../../constants/index";
 import { getPriceRatio, getTokenToSelect, toWei } from "../../../utils/helper";
 import {
@@ -497,7 +499,11 @@ const Swap = (props) => {
   };
 
   const handleConfirmAllowance = async () => {
-    const _allowanceAmount = allowanceAmount;
+    const _allowanceAmount =
+      selectedToken0?.address?.toLowerCase() ===
+      TOKEN_ADDRESS?.CORGIB?.[chainId]?.toLowerCase()
+        ? corgibAllowance
+        : allowanceAmount;
     await confirmAllowance(_allowanceAmount, selectedToken0, account, chainId);
   };
 

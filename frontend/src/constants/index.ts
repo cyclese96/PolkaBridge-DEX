@@ -44,7 +44,7 @@ export const FACTORY_ADDRESS = {
   1: "0xf5d8E98ef1f66f1cAb949A2555837FE755fc2D68",
   4: "0x628cf8e2A079C6D9bDd0293125273F71EA3d74Ec",
   97: "0xAeE1F15957C6c7AbDF245527b6497E96bDB17091",
-  56: "",
+  56: "0xDda79Ec4AF818D1e95F0A45B3E7e60461d5228cb",
 };
 
 export const FARM_ADDRESS = {
@@ -58,7 +58,7 @@ export const MULTICALL_ADDRESS: { [index: string]: string } = {
   1: "0x3a2Bd96Da4B14C30918aE0fC0E784E2F56120F1d",
   4: "0x6c4f9282bBD29992bF4F064F0165e805336Eef59",
   97: "0x688EC8C059592104fC713E0dA9276e649302C4Ab",
-  56: "",
+  56: "0x6e568FcE995F5c7ddaFB8C0b74B3241328498F8A",
 };
 
 export const farmContractConfig = {
@@ -118,6 +118,7 @@ export const supportedChains = [
 ];
 
 export const allowanceAmount = "9999999999999999999999999";
+export const corgibAllowance = "999999999999999999999999999999999999";
 
 export const BLOCK_EXPLORER = {
   1: "https://etherscan.io",

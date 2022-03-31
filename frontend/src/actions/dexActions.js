@@ -36,7 +36,6 @@ import {
   UPDATE_TRANSACTION_STATUS,
 } from "./types";
 import ethereumTokens from "../tokenList/tokenListEthereum.json";
-// import moonriverTokens from "../tokenList/tokenListMoonriver.json";
 import testTokens from "../tokenList/tokenListTest.json";
 import tokenListBsc from "../tokenList/tokenListBsc.json";
 
