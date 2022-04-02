@@ -23,14 +23,14 @@
   },
   "homepage": "https://github.com/Uniswap/uniswap-v2-periphery#readme",
   "dependencies": {
-    "@truffle/hdwallet-provider": "^1.4.3",
-    "@uniswap/lib": "^4.0.1-alpha",
-    "@uniswap/v2-core": "^1.0.1",
-    "chai": "^4.3.4",
-    "chai-as-promised": "^7.1.1",
+    "@truffle/hdwallet-provider": "^1.0.37",
     "dotenv": "^10.0.0",
     "fs": "0.0.1-security",
-    "truffle-plugin-verify": "^0.5.15",
+    "moonbeam-truffle-plugin": "^1.4.0",
+    "truffle": "^5.5.2",
     "web3": "^1.5.2"
+  },
+  "devDependencies": {
+    "truffle-plugin-verify": "^0.5.15"
   }
 }

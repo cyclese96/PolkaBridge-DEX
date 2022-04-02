@@ -8,13 +8,14 @@ module.exports = async function (deployer) {
     //testnet
     //let owner = "0xfEEF5F353aE5022d0cfcD072165cDA284B65772B";
     // let owner = "0x57866ed63ca5f9744cef9aa270bd1f1dce935831";
-    let factorycontract = "0xd624C547bCEEB9A0152F64BE4F85416365e3Ba6b";
+    let factorycontract = "0xDda79Ec4AF818D1e95F0A45B3E7e60461d5228cb";
     // let WETH = "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2";//main
     let WETH = "0xc778417E063141139Fce010982780140Aa0cD5Ab";//test
+    let WBNB = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";//main
     // let treasury = "0xC5516e155aa03F002A00c6bbA9467Cdbc4272581";
     //mainnet
 
-    await deployer.deploy(UniswapV2Router02, factorycontract, WETH);
+    await deployer.deploy(UniswapV2Router02, factorycontract, WBNB);
     let routerInstance = await UniswapV2Router02.deployed();
 
     console.log("Router Deployed at:", routerInstance.address);
