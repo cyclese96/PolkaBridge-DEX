@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react";
 
-import { client } from "../apollo/client";
+import { client, clients } from "../apollo/client";
 import {
   PAIR_DATA,
   PAIR_CHART,
@@ -34,6 +34,7 @@ import {
 import { timeframeOptions } from "../constants/index";
 import { useLatestBlocks } from "./Application";
 import { isAddress } from "utils/contractUtils";
+import { useSelector } from "react-redux";
 // import { PAIRS_CURRENT } from '../apollo/queries'
 // import { updateNameData } from '../utils/data'
 
@@ -201,13 +202,13 @@ export default function Provider({ children }) {
   );
 }
 
-async function getBulkPairData(pairList, ethPrice) {
+async function getBulkPairData(pairList, ethPrice, chainId=1) {
   try {
     const [t1, t2, tWeek] = getTimestampsForChanges();
     let [{ number: b1 }, { number: b2 }, { number: bWeek }] =
-      await getBlocksFromTimestamps([t1, t2, tWeek]);
+      await getBlocksFromTimestamps([t1, t2, tWeek], chainId);
 
-    let current = await client.query({
+    let current = await clients?.[chainId]?.query({
       query: PAIRS_BULK,
       variables: {
         allPairs: pairList,
@@ -217,7 +218,7 @@ async function getBulkPairData(pairList, ethPrice) {
 
     let [oneDayResult, twoDayResult, oneWeekResult] = await Promise.all(
       [b1, b2, bWeek].map(async (block) => {
-        let result = client.query({
+        let result = clients?.[chainId]?.query({
           query: PAIRS_HISTORICAL_BULK(block, pairList),
           fetchPolicy: "cache-first",
         });
@@ -243,7 +244,7 @@ async function getBulkPairData(pairList, ethPrice) {
           let data = pair;
           let oneDayHistory = oneDayData?.[pair.id];
           if (!oneDayHistory) {
-            let newData = await client.query({
+            let newData = await clients?.[chainId]?.query({
               query: PAIR_DATA(pair.id, b1),
               fetchPolicy: "cache-first",
             });
@@ -251,7 +252,7 @@ async function getBulkPairData(pairList, ethPrice) {
           }
           let twoDayHistory = twoDayData?.[pair.id];
           if (!twoDayHistory) {
-            let newData = await client.query({
+            let newData = await clients?.[chainId]?.query({
               query: PAIR_DATA(pair.id, b2),
               fetchPolicy: "cache-first",
             });
@@ -259,7 +260,7 @@ async function getBulkPairData(pairList, ethPrice) {
           }
           let oneWeekHistory = oneWeekData?.[pair.id];
           if (!oneWeekHistory) {
-            let newData = await client.query({
+            let newData = await clients?.[chainId]?.query({
               query: PAIR_DATA(pair.id, bWeek),
               fetchPolicy: "cache-first",
             });
@@ -349,11 +350,11 @@ function parseData(
   return data;
 }
 
-const getPairTransactions = async (pairAddress) => {
+const getPairTransactions = async (pairAddress, chainId=1) => {
   const transactions = {};
 
   try {
-    let result = await client.query({
+    let result = await clients?.[chainId]?.query({
       query: FILTERED_TRANSACTIONS,
       variables: {
         allPairs: [pairAddress],
@@ -370,7 +371,7 @@ const getPairTransactions = async (pairAddress) => {
   return transactions;
 };
 
-const getPairChartData = async (pairAddress) => {
+const getPairChartData = async (pairAddress, chainId=1) => {
   let data = [];
   try {
     const utcEndTime = dayjs.utc();
@@ -380,7 +381,7 @@ const getPairChartData = async (pairAddress) => {
     let allFound = false;
     let skip = 0;
     while (!allFound) {
-      let result = await client.query({
+      let result = await clients?.[chainId].query({
         query: PAIR_CHART,
         variables: {
           pairAddress: pairAddress,
@@ -437,7 +438,7 @@ const getPairChartData = async (pairAddress) => {
   return data;
 };
 
-const getHourlyRateData = async (pairAddress, startTime, latestBlock) => {
+const getHourlyRateData = async (pairAddress, startTime, latestBlock, chainId=1) => {
   try {
     const utcEndTime = dayjs.utc();
     let time = startTime;
@@ -457,7 +458,7 @@ const getHourlyRateData = async (pairAddress, startTime, latestBlock) => {
     // once you have all the timestamps, get the blocks for each timestamp in a bulk query
     let blocks;
 
-    blocks = await getBlocksFromTimestamps(timestamps, 100);
+    blocks = await getBlocksFromTimestamps(timestamps,chainId, 100);
 
     // catch failing case
     if (!blocks || blocks?.length === 0) {
@@ -472,7 +473,7 @@ const getHourlyRateData = async (pairAddress, startTime, latestBlock) => {
 
     const result = await splitQuery(
       HOURLY_PAIR_RATES,
-      client,
+      clients?.[chainId],
       [pairAddress],
       blocks,
       100
@@ -518,6 +519,8 @@ const getHourlyRateData = async (pairAddress, startTime, latestBlock) => {
 export function Updater() {
   const [, { updateTopPairs }] = usePairDataContext();
   const [ethPrice] = useEthPrice();
+  const selectedChain = useSelector(state => state.account?.currentChain);
+
   useEffect(() => {
     async function getData() {
       // get top pairs by reserves
@@ -534,11 +537,11 @@ export function Updater() {
       });
 
       // get data for every pair in list
-      let topPairs = await getBulkPairData(formattedPairs, ethPrice);
+      let topPairs = await getBulkPairData(formattedPairs, ethPrice, selectedChain);
       topPairs && updateTopPairs(topPairs);
     }
     ethPrice && getData();
-  }, [ethPrice, updateTopPairs]);
+  }, [ethPrice, updateTopPairs, selectedChain]);
   return null;
 }
 
@@ -546,6 +549,7 @@ export function useHourlyRateData(pairAddress, timeWindow) {
   const [state, { updateHourlyData }] = usePairDataContext();
   const chartData = state?.[pairAddress]?.hourlyData?.[timeWindow];
   const [latestBlock] = useLatestBlocks();
+  const selectedChain = useSelector(state => state.account?.currentChain);
 
   useEffect(() => {
     const currentTime = dayjs.utc();
@@ -556,13 +560,13 @@ export function useHourlyRateData(pairAddress, timeWindow) {
         : currentTime.subtract(1, windowSize).startOf("hour").unix();
 
     async function fetch() {
-      let data = await getHourlyRateData(pairAddress, startTime, latestBlock);
+      let data = await getHourlyRateData(pairAddress, startTime, latestBlock, selectedChain);
       updateHourlyData(pairAddress, data, timeWindow);
     }
     if (!chartData) {
       fetch();
     }
-  }, [chartData, timeWindow, pairAddress, updateHourlyData, latestBlock]);
+  }, [chartData, timeWindow, pairAddress, updateHourlyData, latestBlock, selectedChain]);
 
   return chartData;
 }
@@ -577,6 +581,8 @@ export function useDataForList(pairList) {
 
   const [stale, setStale] = useState(false);
   const [fetched, setFetched] = useState([]);
+
+  const selectedChain = useSelector(state => state.account?.currentChain);
 
   // reset
   useEffect(() => {
@@ -604,7 +610,8 @@ export function useDataForList(pairList) {
         unfetched.map((pair) => {
           return pair;
         }),
-        ethPrice
+        ethPrice,
+        selectedChain
       );
       setFetched(newFetched.concat(newPairData));
     }
@@ -612,7 +619,7 @@ export function useDataForList(pairList) {
       setStale(true);
       fetchNewPairData();
     }
-  }, [ethPrice, state, pairList, stale, fetched]);
+  }, [ethPrice, state, pairList, stale, fetched, selectedChain]);
 
   let formattedFetch =
     fetched &&
@@ -630,18 +637,19 @@ export function usePairData(pairAddress) {
   const [state, { update }] = usePairDataContext();
   const [ethPrice] = useEthPrice();
   const pairData = state?.[pairAddress];
+  const selectedChain = useSelector(state => state.account?.currentChain);
 
   useEffect(() => {
     async function fetchData() {
       if (!pairData && pairAddress) {
-        let data = await getBulkPairData([pairAddress], ethPrice);
+        let data = await getBulkPairData([pairAddress], ethPrice, selectedChain);
         data && update(pairAddress, data[0]);
       }
     }
     if (!pairData && pairAddress && ethPrice && isAddress(pairAddress)) {
       fetchData();
     }
-  }, [pairAddress, pairData, update, ethPrice]);
+  }, [pairAddress, pairData, update, ethPrice, selectedChain]);
 
   return pairData || {};
 }
@@ -652,15 +660,17 @@ export function usePairData(pairAddress) {
 export function usePairTransactions(pairAddress) {
   const [state, { updatePairTxns }] = usePairDataContext();
   const pairTxns = state?.[pairAddress]?.txns;
+  const selectedChain = useSelector(state => state.account?.currentChain);
+
   useEffect(() => {
     async function checkForTxns() {
       if (!pairTxns) {
-        let transactions = await getPairTransactions(pairAddress);
+        let transactions = await getPairTransactions(pairAddress, selectedChain);
         updatePairTxns(pairAddress, transactions);
       }
     }
     checkForTxns();
-  }, [pairTxns, pairAddress, updatePairTxns]);
+  }, [pairTxns, pairAddress, updatePairTxns, selectedChain]);
   return pairTxns;
 }
 
@@ -668,15 +678,17 @@ export function usePairChartData(pairAddress) {
   const [state, { updateChartData }] = usePairDataContext();
   const chartData = state?.[pairAddress]?.chartData;
 
+  const selectedChain = useSelector(state => state.account?.currentChain);
+
   useEffect(() => {
     async function checkForChartData() {
       if (!chartData) {
-        let data = await getPairChartData(pairAddress);
+        let data = await getPairChartData(pairAddress, selectedChain);
         updateChartData(pairAddress, data);
       }
     }
     checkForChartData();
-  }, [chartData, pairAddress, updateChartData]);
+  }, [chartData, pairAddress, updateChartData, selectedChain]);
   return chartData;
 }
 

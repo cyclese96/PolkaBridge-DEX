@@ -1,34 +1,18 @@
 import React, { useEffect } from "react";
-import { connect } from "react-redux";
-import store from "../store";
-import { getNetworkNameById } from "../utils/helper";
-import { CHANGE_NETWORK, CONNECT_WALLET } from "../actions/types";
+import { connect, useSelector } from "react-redux";
+
 import { loadTokens } from "../actions/dexActions";
-// import { etheriumNetwork } from "../constants/index";
 import useActiveWeb3React from "../hooks/useActiveWeb3React";
 
 const Home = ({ loadTokens }) => {
-  const { active, account, chainId } = useActiveWeb3React();
+  const { active, account } = useActiveWeb3React();
+  const selectedChain = useSelector(state => state.account?.currentChain);
 
   useEffect(() => {
-    // if (!chainId || !active) {
-    //   loadTokens(etheriumNetwork);
-    //   return;
-    // }
 
-    const _network = getNetworkNameById(chainId);
 
-    store.dispatch({
-      type: CONNECT_WALLET,
-      payload: account,
-    });
-    store.dispatch({
-      type: CHANGE_NETWORK,
-      payload: _network,
-    });
-
-    loadTokens(chainId);
-  }, [chainId, active, account, loadTokens]);
+    loadTokens(selectedChain);
+  }, [selectedChain, active, account, loadTokens]);
 
   useEffect(() => {
     async function onNetworkChangeUpdate() {

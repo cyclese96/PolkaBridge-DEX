@@ -5,7 +5,7 @@ import {
   IconButton,
   makeStyles,
 } from "@material-ui/core";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import { useEffect, useMemo, useState } from "react";
 import SwapSettings from "../../common/SwapSettings";
@@ -299,6 +299,8 @@ const RemoveCard = ({
     query.get("outputCurrency"),
   ];
 
+  const selectedChain = useSelector(state => state.account?.currentChain);
+
   useEffect(() => {
     async function initSelection() {
       if (token0Query) {
@@ -311,7 +313,7 @@ const RemoveCard = ({
       } else {
         const _token = getTokenToSelect(
           tokenList,
-          DEFAULT_POOL_TOKENS?.[chainId]?.[0]
+          DEFAULT_POOL_TOKENS?.[selectedChain]?.[0]
         );
         setToken0(_token);
       }
@@ -327,7 +329,7 @@ const RemoveCard = ({
       } else {
         const _token = getTokenToSelect(
           tokenList,
-          DEFAULT_POOL_TOKENS?.[chainId]?.[1]
+          DEFAULT_POOL_TOKENS?.[selectedChain]?.[1]
         );
         setToken1(_token);
       }

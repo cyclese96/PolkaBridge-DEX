@@ -1,5 +1,5 @@
 import { Button, Card, IconButton, makeStyles } from "@material-ui/core";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import SwapSettings from "../../common/SwapSettings";
@@ -307,6 +307,8 @@ const AddCard = (props) => {
     query.get("outputCurrency"),
   ];
 
+  const selectedChain = useSelector(state => state.account?.currentChain);
+
   useEffect(() => {
     async function initSelection() {
       if (token0Query) {
@@ -319,7 +321,7 @@ const AddCard = (props) => {
       } else {
         const _token = getTokenToSelect(
           tokenList,
-          DEFAULT_POOL_TOKENS?.[chainId]?.[0]
+          DEFAULT_POOL_TOKENS?.[selectedChain]?.[0]
         );
         setToken0(_token);
       }
@@ -335,7 +337,7 @@ const AddCard = (props) => {
       } else {
         const _token = getTokenToSelect(
           tokenList,
-          DEFAULT_POOL_TOKENS?.[chainId]?.[1]
+          DEFAULT_POOL_TOKENS?.[selectedChain]?.[1]
         );
         setToken1(_token);
       }

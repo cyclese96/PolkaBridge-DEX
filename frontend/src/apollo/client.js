@@ -14,7 +14,7 @@ const QUERY_URL = {
   1: API_MAINNET,
   4: APIURL,
   97: "https://api.thegraph.com/subgraphs/name/aamiralam/polkabridge-amm-bsc",
-  56: "https://api.thegraph.com/subgraphs/id/QmbvoDWUj9ZSCMfzZjBjk9LFti4YJFL9rskgAzZd4X8GTR",
+  56: "https://api.thegraph.com/subgraphs/id/Qmag97G4eeNXQLdgxXtJG7GuE1kiP4C7UGhMzmL9MAyviq",
 };
 
 const BLOCKS_API_TESTNET =
@@ -64,6 +64,13 @@ export const blockClientBscMainnet = new ApolloClient({
   }),
   cache: new InMemoryCache(),
 });
+
+export const blockClients = {
+  1: blockClient,
+  4: blockClientRinkeby,
+  56: blockClientBscMainnet,
+  97: blockClientBscTestnet
+}
 
 export const client = new ApolloClient({
   link: new HttpLink({

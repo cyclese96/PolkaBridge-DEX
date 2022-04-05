@@ -6,7 +6,7 @@ import {
   makeStyles,
   Popper,
 } from "@material-ui/core";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import SwapCardItem from "./SwapCardItem";
 import SwapVertIcon from "@material-ui/icons/SwapVert";
 import { useState } from "react";
@@ -243,6 +243,8 @@ const Swap = (props) => {
     query.get("outputCurrency"),
   ];
 
+  const selectedChain = useSelector(state => state.account?.currentChain);
+
   // check allowance on token selection
   useEffect(() => {
     async function updateSelectionState() {
@@ -275,7 +277,7 @@ const Swap = (props) => {
       } else {
         const _token = getTokenToSelect(
           tokenList,
-          DEFAULT_SWAP_TOKENS?.[chainId]?.[0]
+          DEFAULT_SWAP_TOKENS?.[selectedChain]?.[0]
         );
         setToken1(_token);
       }
@@ -291,7 +293,7 @@ const Swap = (props) => {
       } else {
         const _token = getTokenToSelect(
           tokenList,
-          DEFAULT_SWAP_TOKENS?.[chainId]?.[1]
+          DEFAULT_SWAP_TOKENS?.[selectedChain]?.[1]
         );
         setToken2(_token);
       }

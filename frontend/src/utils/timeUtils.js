@@ -2,7 +2,7 @@ import React from "react";
 import { BigNumber } from "bignumber.js";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { blockClient } from "../apollo/client";
+import { blockClient, blockClients } from "../apollo/client";
 import { GET_BLOCK, GET_BLOCKS } from "../apollo/queries";
 import { Text } from "rebass";
 import _Decimal from "decimal.js-light";
@@ -182,8 +182,8 @@ export async function splitQuery(
  * @dev Query speed is optimized by limiting to a 600-second period
  * @param {Int} timestamp in seconds
  */
-export async function getBlockFromTimestamp(timestamp) {
-  let result = await blockClient.query({
+export async function getBlockFromTimestamp(timestamp, chainId=1) {
+  let result = await blockClients?.[chainId]?.query({
     query: GET_BLOCK,
     variables: {
       timestampFrom: timestamp,
@@ -201,14 +201,14 @@ export async function getBlockFromTimestamp(timestamp) {
  * @dev timestamps are returns as they were provided; not the block time.
  * @param {Array} timestamps
  */
-export async function getBlocksFromTimestamps(timestamps, skipCount = 500) {
+export async function getBlocksFromTimestamps(timestamps, chainId=1, skipCount = 500  ) {
   if (timestamps?.length === 0) {
     return [];
   }
 
   let fetchedData = await splitQuery(
     GET_BLOCKS,
-    blockClient,
+    blockClients?.[chainId],
     [],
     timestamps,
     skipCount

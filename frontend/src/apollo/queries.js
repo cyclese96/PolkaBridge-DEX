@@ -1,7 +1,8 @@
 import gql from "graphql-tag";
+import { useSelector } from "react-redux";
 import { BUNDLE_ID } from "../constants/index";
 import { getUnixTime } from "../utils/helper";
-import { client } from "./client";
+import { client, clients } from "./client";
 
 export const testQuery = async () => {
   const queryObj = `
@@ -20,7 +21,7 @@ export const testQuery = async () => {
   console.log(res.data);
 };
 
-export const getTopTokens = async (page = 1) => {
+export const getTopTokens = async (page = 1, chainId=1) => {
   const items = page * 10;
   const skips = page * 10 - 10;
 
@@ -39,7 +40,7 @@ export const getTopTokens = async (page = 1) => {
      }
     `;
 
-    const res = await client.query({ query: gql(queryObj) });
+    const res = await clients?.[chainId].query({ query: gql(queryObj) });
     return res.data.tokens;
   } catch (error) {
     console.log("getTopTokens", error);
@@ -48,7 +49,7 @@ export const getTopTokens = async (page = 1) => {
 };
 
 // top pools based on reserved ETH in the pool
-export const topPools = async (order = "desc", page = 1) => {
+export const topPools = async (order = "desc", page = 1, chainId=1) => {
   const items = 10 * page;
   const skips = 10 * page - 10;
 
@@ -68,7 +69,7 @@ export const topPools = async (order = "desc", page = 1) => {
             }
           }
     `;
-    const res = await client.query({ query: gql(queryObj) });
+    const res = await clients?.[chainId].query({ query: gql(queryObj) });
     return res.data.pairs;
   } catch (error) {
     return [];
@@ -77,7 +78,7 @@ export const topPools = async (order = "desc", page = 1) => {
 
 // pair volume 24: pairDayData(pairId, 1 )
 // pair volume 7d pairDayData(pairId, 7 )
-export const pairDayData = async (pairId, days) => {
+export const pairDayData = async (pairId, days, chainId=1) => {
   const todayUnixTime = getUnixTime(0);
 
   try {
@@ -97,7 +98,7 @@ export const pairDayData = async (pairId, days) => {
             }
           }
       `;
-    const res = await client.query({ query: gql(queryObj) });
+    const res = await clients?.[chainId].query({ query: gql(queryObj) });
     return res.data.pairDayDatas;
   } catch (error) {
     return [];
@@ -106,7 +107,7 @@ export const pairDayData = async (pairId, days) => {
 
 // PolkabridgeAmmDailyData
 
-export const polkabridgeAmmDailyData = async (days = 128) => {
+export const polkabridgeAmmDailyData = async (days = 128, chainId=1) => {
   try {
     const queryObj = `
       query {
@@ -122,7 +123,7 @@ export const polkabridgeAmmDailyData = async (days = 128) => {
           }
     
     `;
-    const res = await client.query({ query: gql(queryObj) });
+    const res = await clients?.[chainId].query({ query: gql(queryObj) });
     return res.data.polkabridgeAmmDayDatas;
   } catch (error) {
     return [];
@@ -254,7 +255,7 @@ export const GLOBAL_TXNS = gql`
   }
 `;
 
-export const topTransactions = async (page = 1, order = "desc") => {
+export const topTransactions = async (page = 1, order = "desc", chainId=1) => {
   try {
     const items = 60 * page;
     const skips = 60 * page - 60;
@@ -335,7 +336,7 @@ export const topTransactions = async (page = 1, order = "desc") => {
     }
   `;
 
-    const res = await client.query({ query: gql(queryObj) });
+    const res = await clients?.[chainId].query({ query: gql(queryObj) });
     // console.log("res", res.data);
     return res.data.transactions;
   } catch (error) {
@@ -430,7 +431,7 @@ export const GET_BLOCKS = (timestamps) => {
 
 export const SUBGRAPH_HEALTH = gql`
   query health {
-    indexingStatusForCurrentVersion(subgraphName: "uniswap/uniswap-v2") {
+    indexingStatusForCurrentVersion(subgraphName: "PolkaBridge AMM-V1") {
       synced
       health
       chains {
