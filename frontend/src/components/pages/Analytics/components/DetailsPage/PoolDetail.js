@@ -20,6 +20,7 @@ import PairChart from "../Charts/PairChart";
 import { Link } from "react-router-dom";
 import CurrencyFormat from "react-currency-format";
 import { urls } from "utils/formatters";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -213,6 +214,14 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     cursor: "pointer",
   },
+  loader: {
+  
+    minHeight: `calc(100vh - 120px)`,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 }));
 
 function PoolDetail({ pairAddress }) {
@@ -236,6 +245,7 @@ function PoolDetail({ pairAddress }) {
   const transactions = usePairTransactions(pairAddress); // todo fix api for pair transactions
   // const transactions = useGlobalTransactions();
   const poolData = usePairData(pairAddress);
+  const selectedChain = useSelector(state => state.account?.currentChain);
 
   useEffect(() => {
     if (Object.keys(poolData).length !== 0 || !poolData) {
@@ -283,9 +293,8 @@ function PoolDetail({ pairAddress }) {
   return (
     <div className="container">
       {!isLoaded() && (
-        <div className="text-center mt-4">
+        <div className={classes.loader}>
           <Loader />
-          <h6>Fetching data...</h6>
         </div>
       )}
       {isLoaded() && (
@@ -538,7 +547,7 @@ function PoolDetail({ pairAddress }) {
                   </div>
                   <div className="d-flex justify-content-end">
                     <a
-                      href={urls.showAddress(pairAddress)}
+                      href={urls.showAddress(pairAddress, selectedChain)}
                       target="_blank"
                       rel="noreferrer"
                     >

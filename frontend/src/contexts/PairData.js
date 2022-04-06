@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react";
 
-import { client, clients } from "../apollo/client";
+import {  clients } from "../apollo/client";
 import {
   PAIR_DATA,
   PAIR_CHART,
@@ -526,7 +526,7 @@ export function Updater() {
       // get top pairs by reserves
       let {
         data: { pairs },
-      } = await client.query({
+      } = await clients?.[selectedChain]?.query({
         query: PAIRS_CURRENT,
         fetchPolicy: "cache-first",
       });

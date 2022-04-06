@@ -19,6 +19,7 @@ import {
 // import CurrencyFormat from "react-currency-format";
 import BigNumber from "bignumber.js";
 import { urls } from "utils/formatters";
+import { useSelector } from "react-redux";
 const useStyles = makeStyles((theme) => ({
   table: {
     boxShadow: `rgb(0 0 0 / 1%) 0px 0px 1px, rgb(0 0 0 / 4%) 0px 4px 8px, rgb(0 0 0 / 4%) 0px 16px 24px, rgb(0 0 0 / 1%) 0px 24px 32px`,
@@ -89,6 +90,8 @@ export default function TransactionsTable({ data }) {
     token0: "Token(In)",
     token1: "Token(Out)",
   });
+
+  const selectedChain = useSelector(state => state.account?.currentChain);
 
   let styles = {
     tableHeading: {
@@ -353,7 +356,7 @@ export default function TransactionsTable({ data }) {
                       {skipIndex * 5 + index + 1}
                     </span>
                     <a
-                      href={urls.showTransaction(row?.transaction?.id)}
+                      href={urls.showTransaction(row?.transaction?.id, selectedChain)}
                       target="_blank"
                       rel="noreferrer"
                       className={classes.link}
@@ -410,7 +413,7 @@ export default function TransactionsTable({ data }) {
                   >
                     <a
                       style={{ color: "rgb(223, 9, 124)" }}
-                      href={urls.showAddress(row?.sender)}
+                      href={urls.showAddress(row?.sender, selectedChain)}
                       target="_blank"
                       rel="noreferrer"
                     >

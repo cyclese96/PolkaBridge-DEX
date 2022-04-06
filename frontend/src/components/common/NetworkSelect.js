@@ -193,7 +193,7 @@ export default function NetworkSelect() {
               className={classes.buttonDrop}
             >
               <span>BSC</span>
-              <img className={classes.imgIcon} src="img/binance.png" />
+              <img className={classes.imgIcon} src="https://assets.coingecko.com/coins/images/12591/small/binance-coin-logo.png?1600947313" />
             </MenuItem>
             {/* <MenuItem
             value={

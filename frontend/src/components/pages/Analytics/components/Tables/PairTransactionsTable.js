@@ -12,6 +12,7 @@ import Loader from "../../../../common/Loader";
 import { formatTime } from "../../../../../utils/timeUtils";
 import BigNumber from "bignumber.js";
 import { formattedNum, urls } from "../../../../../utils/formatters";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -70,6 +71,8 @@ export default function PairTransactionsTable({ data }) {
     token0: "Token(In)",
     token1: "Token(Out)",
   });
+
+  const selectedChain = useSelector(state => state.account?.currentChain);
 
   let styles = {
     tableHeading: {
@@ -325,7 +328,7 @@ export default function PairTransactionsTable({ data }) {
                       {skipIndex * 5 + index + 1}
                     </span>
                     <a
-                      href={urls.showTransaction(row.transaction.id)}
+                      href={urls.showTransaction(row.transaction.id,selectedChain)}
                       target="_blank"
                       rel="noreferrer"
                       className={classes.link}

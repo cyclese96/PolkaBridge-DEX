@@ -26,6 +26,7 @@ import Loader from "../../../../common/Loader";
 import TokenTxTable from "../Tables/TokenTxTable";
 import { useGlobalTransactions } from "../../../../../contexts/GlobalData";
 import TokenPairsTable from "../Tables/TokenPairsTable";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -181,6 +182,14 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "850px",
     margin: "0 auto",
   },
+  loader: {
+  
+    minHeight: `calc(100vh - 120px)`,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 }));
 
 function TokenPage({ address }) {
@@ -199,6 +208,8 @@ function TokenPage({ address }) {
 
   const [rows, setRows] = useState([]);
   const [tokenPairRows, setTokenPairRows] = useState([]);
+
+  const selectedChain = useSelector(state => state.account?.currentChain);
 
   useEffect(() => {
     document.querySelector("body").scrollTo(0, 0);
@@ -275,9 +286,8 @@ function TokenPage({ address }) {
   return (
     <div className="container">
       {!isLoaded() && (
-        <div className="text-center mt-4">
+        <div className={classes.loader}>
           <Loader />
-          <h6>Fetching data...</h6>
         </div>
       )}
       {isLoaded() && (
@@ -415,7 +425,7 @@ function TokenPage({ address }) {
                   </div>
                   <div className="d-flex justify-content-end">
                     <a
-                      href={urls.showAddress(id)}
+                      href={urls.showAddress(id, selectedChain)}
                       target="_blank"
                       rel="noreferrer"
                     >
