@@ -692,10 +692,6 @@ const Swap = (props) => {
     parsedToken1Value,
   ]);
 
-  useEffect(() => {
-    console.log("token price ", { token1PriceUsd, token0PriceUsd });
-  }, [token1PriceUsd, token0PriceUsd]);
-
   return (
     <>
       <TabPage data={0} />
