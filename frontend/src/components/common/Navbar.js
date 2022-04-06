@@ -221,7 +221,7 @@ const Navbar = (props) => {
     setState({ ...state, [anchor]: open });
   };
 
-  const { active, chainId, deactivate } = useActiveWeb3React();
+  const { active, deactivate } = useActiveWeb3React();
 
   useEffect(() => {
     if (!active && localStorage.connected === "yes") {
@@ -389,7 +389,7 @@ const Navbar = (props) => {
 
           <div className={classes.grow} />
 
-          <NetworkSelect selectedNetwork={chainId} />
+          <NetworkSelect  />
           <Wallet onWalletClick={handleWalletClick} />
         </Toolbar>
 
@@ -408,7 +408,7 @@ const Navbar = (props) => {
 
             {/* <Wallet onWalletClick={() => setAccountDialog(true)} /> */}
             <div className="d-flex justify-content-between align-items-center">
-              <NetworkSelect selectedNetwork={chainId} />
+              <NetworkSelect  />
               {["right"].map((anchor) => (
                 <React.Fragment key={anchor}>
                   <IconButton

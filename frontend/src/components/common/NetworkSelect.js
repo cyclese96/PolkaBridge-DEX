@@ -15,6 +15,10 @@ import { currentConnection, FACTORY_ADDRESS } from "../../constants/index";
 import config from "../../utils/config";
 import { Button } from "@material-ui/core";
 import useActiveWeb3React from "../../hooks/useActiveWeb3React";
+import { useSelector } from "react-redux";
+import { isMetaMaskInstalled} from '../../utils/helper'
+import store from '../../store';
+import {CHANGE_NETWORK } from '../../actions/types'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,13 +57,15 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 3,
   },
 }));
-export default function NetworkSelect({ selectedNetwork }) {
+export default function NetworkSelect() {
   const classes = useStyles();
   const [network, setNetwork] = React.useState(
     parseInt(localStorage.getItem("currentNetwork") || config.chainId)
   );
 
   const { active, chainId } = useActiveWeb3React();
+  const selectedChain = useSelector(state => state.account?.currentChain);
+
 
   const handleChange = useCallback(
     (_selected) => {
@@ -115,12 +121,28 @@ export default function NetworkSelect({ selectedNetwork }) {
   );
 
   useEffect(() => {
-    if (!selectedNetwork) {
-      return;
+    if (! isMetaMaskInstalled() && !selectedChain){
+      // if wallet not connected set default chain to ethereum
+      store.dispatch({
+        type: CHANGE_NETWORK,
+        payload: 1,
+      });
+      setNetwork(1);
+
+      return
+    }
+    if(chainId && !selectedChain){
+      store.dispatch({
+        type: CHANGE_NETWORK,
+        payload: chainId,
+      });
     }
 
-    handleChange(selectedNetwork);
-  }, [selectedNetwork, handleChange]);
+    if (chainId === selectedChain){
+
+      handleChange(selectedChain);
+    }
+  }, [chainId, selectedChain, handleChange]);
 
   return (
     <div>
@@ -141,7 +163,7 @@ export default function NetworkSelect({ selectedNetwork }) {
         <FormControl className={classes.root}>
           <Select
             className={classes.main}
-            value={parseInt(selectedNetwork)}
+            value={parseInt(selectedChain)}
             disableUnderline={true}
             notched={true}
             id="adornment-weight"
@@ -171,7 +193,7 @@ export default function NetworkSelect({ selectedNetwork }) {
               className={classes.buttonDrop}
             >
               <span>BSC</span>
-              <img className={classes.imgIcon} src="img/binance.png" />
+              <img className={classes.imgIcon} src="https://assets.coingecko.com/coins/images/12591/small/binance-coin-logo.png?1600947313" />
             </MenuItem>
             {/* <MenuItem
             value={

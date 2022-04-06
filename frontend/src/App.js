@@ -6,6 +6,7 @@ import theme from "./theme";
 import { Route, Switch, BrowserRouter, Redirect } from "react-router-dom";
 import { PAIR_BLACKLIST, TOKEN_BLACKLIST } from "./constants";
 import { isAddress } from "utils/contractUtils";
+import Loader from "components/common/Loader";
 
 const Home = lazy(() => import("./components/Home"));
 const TokenPage = lazy(() =>
@@ -40,6 +41,14 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-start",
     alignItems: "center",
   },
+  fallbackLoader: {
+  
+    minHeight: `calc(100vh - 120px)`,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   footer: {
     width: "100vw",
     display: "flex",
@@ -56,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles();
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<div className={classes.fallbackLoader}><Loader /> </div> }>
       <ThemeProvider theme={theme}>
         <div style={{ overflowX: "hidden" }}>
           <div className={classes.navbar}>

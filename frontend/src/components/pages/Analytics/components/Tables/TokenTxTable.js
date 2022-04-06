@@ -13,6 +13,7 @@ import Loader from "../../../../common/Loader";
 import { formattedNum, formatTime } from "../../../../../utils/timeUtils";
 import BigNumber from "bignumber.js";
 import { urls } from "utils/formatters";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -82,6 +83,9 @@ export default function TokenTxTable({ data }) {
     token0: "Token(In)",
     token1: "Token(Out)",
   });
+
+  const selectedChain = useSelector(state => state.account?.currentChain);
+
 
   let styles = {
     tableHeading: {
@@ -335,7 +339,7 @@ export default function TokenTxTable({ data }) {
                       {skipIndex * 5 + index + 1}
                     </span>
                     <a
-                      href={urls.showAddress(row?.transaction?.id)}
+                      href={urls.showAddress(row?.transaction?.id, selectedChain)}
                       target="_blank"
                       rel="noreferrer"
                       className={classes.link}
@@ -394,7 +398,7 @@ export default function TokenTxTable({ data }) {
                   >
                     <a
                       style={{ color: "#df097c" }}
-                      href={urls.showAddress(row?.sender)}
+                      href={urls.showAddress(row?.sender, selectedChain)}
                       target="_blank"
                       rel="noreferrer"
                     >

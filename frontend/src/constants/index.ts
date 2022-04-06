@@ -207,7 +207,7 @@ export const farmingPoolConstants = {
     "PWAR-BNB": {
       multiplier: 40,
       pid: 0,
-      address: "",
+      address: "0xc1197FFBd177b1E6cc16a00DB86e45516898E116",
       blocksPerYear: "",
       lpApr: 0,
       decimals: 18,
@@ -215,7 +215,7 @@ export const farmingPoolConstants = {
     "BNB-USDT": {
       multiplier: 5,
       pid: 1,
-      address: "",
+      address: "0xD044646E11112F806731f16495632e2DB00D171F",
       blocksPerYear: "",
       lpApr: 0,
       decimals: 12,

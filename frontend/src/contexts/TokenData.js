@@ -7,7 +7,7 @@ import React, {
   useEffect,
 } from "react";
 
-import { client } from "../apollo/client";
+import { client, clients } from "../apollo/client";
 import {
   TOKEN_DATA,
   FILTERED_TRANSACTIONS,
@@ -34,6 +34,7 @@ import {
 import { timeframeOptions } from "../constants/index";
 import { useLatestBlocks } from "./Application";
 import { isAddress } from "utils/contractUtils";
+import { useSelector } from "react-redux";
 
 const UPDATE = "UPDATE";
 const UPDATE_TOKEN_TXNS = "UPDATE_TOKEN_TXNS";
@@ -227,18 +228,18 @@ export default function Provider({ children }) {
   );
 }
 
-const getTopTokens = async (ethPrice, ethPriceOld) => {
+const getTopTokens = async (ethPrice, ethPriceOld, chainId=1) => {
   const utcCurrentTime = dayjs();
   const utcOneDayBack = utcCurrentTime.subtract(1, "day").unix();
   const utcTwoDaysBack = utcCurrentTime.subtract(2, "day").unix();
-  let oneDayBlock = await getBlockFromTimestamp(utcOneDayBack);
-  let twoDayBlock = await getBlockFromTimestamp(utcTwoDaysBack);
+  let oneDayBlock = await getBlockFromTimestamp(utcOneDayBack, chainId);
+  let twoDayBlock = await getBlockFromTimestamp(utcTwoDaysBack, chainId);
 
   try {
     // need to get the top tokens by liquidity by need token day datas
     const currentDate = parseInt(Date.now() / 86400 / 1000) * 86400 - 86400;
 
-    let tokenids = await client.query({
+    let tokenids = await clients?.[chainId]?.query({
       query: TOKEN_TOP_DAY_DATAS,
       fetchPolicy: "network-only",
       variables: { date: currentDate },
@@ -249,17 +250,17 @@ const getTopTokens = async (ethPrice, ethPriceOld) => {
       return accum;
     }, []);
 
-    let current = await client.query({
+    let current = await clients?.[chainId]?.query({
       query: TOKENS_HISTORICAL_BULK(ids),
       fetchPolicy: "cache-first",
     });
 
-    let oneDayResult = await client.query({
+    let oneDayResult = await clients?.[chainId]?.query({
       query: TOKENS_HISTORICAL_BULK(ids, oneDayBlock),
       fetchPolicy: "cache-first",
     });
 
-    let twoDayResult = await client.query({
+    let twoDayResult = await clients?.[chainId]?.query({
       query: TOKENS_HISTORICAL_BULK(ids, twoDayBlock),
       fetchPolicy: "cache-first",
     });
@@ -285,14 +286,14 @@ const getTopTokens = async (ethPrice, ethPriceOld) => {
 
           // catch the case where token wasnt in top list in previous days
           if (!oneDayHistory) {
-            let oneDayResult = await client.query({
+            let oneDayResult = await clients?.[chainId]?.query({
               query: TOKEN_DATA(token.id, oneDayBlock),
               fetchPolicy: "cache-first",
             });
             oneDayHistory = oneDayResult.data.tokens[0];
           }
           if (!twoDayHistory) {
-            let twoDayResult = await client.query({
+            let twoDayResult = await clients?.[chainId]?.query({
               query: TOKEN_DATA(token.id, twoDayBlock),
               fetchPolicy: "cache-first",
             });
@@ -487,7 +488,7 @@ const getTopTokens = async (ethPrice, ethPriceOld) => {
 //   return data;
 // };
 
-const getTokenData = async (address, ethPrice, ethPriceOld) => {
+const getTokenData = async (address, ethPrice, ethPriceOld, chainId=1) => {
   const utcCurrentTime = dayjs();
   const utcOneDayBack = utcCurrentTime
     .subtract(1, "day")
@@ -497,8 +498,8 @@ const getTokenData = async (address, ethPrice, ethPriceOld) => {
     .subtract(2, "day")
     .startOf("minute")
     .unix();
-  let oneDayBlock = await getBlockFromTimestamp(utcOneDayBack);
-  let twoDayBlock = await getBlockFromTimestamp(utcTwoDaysBack);
+  let oneDayBlock = await getBlockFromTimestamp(utcOneDayBack, chainId);
+  let twoDayBlock = await getBlockFromTimestamp(utcTwoDaysBack, chainId);
 
   // initialize data arrays
   let data = {};
@@ -507,21 +508,21 @@ const getTokenData = async (address, ethPrice, ethPriceOld) => {
 
   try {
     // fetch all current and historical data
-    let result = await client.query({
+    let result = await clients?.[chainId]?.query({
       query: TOKEN_DATA(address),
       fetchPolicy: "cache-first",
     });
     data = result?.data?.tokens?.[0];
 
     // get results from 24 hours in past
-    let oneDayResult = await client.query({
+    let oneDayResult = await clients?.[chainId]?.query({
       query: TOKEN_DATA(address, oneDayBlock),
       fetchPolicy: "cache-first",
     });
     oneDayData = oneDayResult.data.tokens[0];
 
     // get results from 48 hours in past
-    let twoDayResult = await client.query({
+    let twoDayResult = await clients?.[chainId]?.query({
       query: TOKEN_DATA(address, twoDayBlock),
       fetchPolicy: "cache-first",
     });
@@ -529,14 +530,14 @@ const getTokenData = async (address, ethPrice, ethPriceOld) => {
 
     // catch the case where token wasnt in top list in previous days
     if (!oneDayData) {
-      let oneDayResult = await client.query({
+      let oneDayResult = await clients?.[chainId]?.query({
         query: TOKEN_DATA(address, oneDayBlock),
         fetchPolicy: "cache-first",
       });
       oneDayData = oneDayResult.data.tokens[0];
     }
     if (!twoDayData) {
-      let twoDayResult = await client.query({
+      let twoDayResult = await clients?.[chainId]?.query({
         query: TOKEN_DATA(address, twoDayBlock),
         fetchPolicy: "cache-first",
       });
@@ -623,10 +624,10 @@ const getTokenData = async (address, ethPrice, ethPriceOld) => {
   return data;
 };
 
-const getTokenTransactions = async (allPairsFormatted) => {
+const getTokenTransactions = async (allPairsFormatted, chainId=1) => {
   const transactions = {};
   try {
-    let result = await client.query({
+    let result = await clients?.[chainId]?.query({
       query: FILTERED_TRANSACTIONS,
       variables: {
         allPairs: allPairsFormatted,
@@ -642,10 +643,10 @@ const getTokenTransactions = async (allPairsFormatted) => {
   return transactions;
 };
 
-const getTokenPairs = async (tokenAddress) => {
+const getTokenPairs = async (tokenAddress, chainId=1) => {
   try {
     // fetch all current and historical data
-    let result = await client.query({
+    let result = await clients?.[chainId]?.query({
       query: TOKEN_DATA(tokenAddress),
       fetchPolicy: "cache-first",
     });
@@ -659,7 +660,8 @@ const getIntervalTokenData = async (
   tokenAddress,
   startTime,
   interval = 3600,
-  latestBlock
+  latestBlock,
+  chainId=1
 ) => {
   const utcEndTime = dayjs.utc();
   let time = startTime;
@@ -680,7 +682,7 @@ const getIntervalTokenData = async (
   // once you have all the timestamps, get the blocks for each timestamp in a bulk query
   let blocks;
   try {
-    blocks = await getBlocksFromTimestamps(timestamps, 100);
+    blocks = await getBlocksFromTimestamps(timestamps, chainId, 100);
 
     // catch failing case
     if (!blocks || blocks.length === 0) {
@@ -695,7 +697,7 @@ const getIntervalTokenData = async (
 
     let result = await splitQuery(
       PRICES_BY_BLOCK,
-      client,
+      clients?.[chainId],
       [tokenAddress],
       blocks,
       50
@@ -744,7 +746,7 @@ const getIntervalTokenData = async (
   }
 };
 
-const getTokenChartData = async (tokenAddress) => {
+const getTokenChartData = async (tokenAddress, chainId=1) => {
   let data = [];
   const utcEndTime = dayjs.utc();
   let utcStartTime = utcEndTime.subtract(1, "year");
@@ -754,7 +756,7 @@ const getTokenChartData = async (tokenAddress) => {
     let allFound = false;
     let skip = 0;
     while (!allFound) {
-      let result = await client.query({
+      let result = await clients?.[chainId]?.query({
         query: TOKEN_CHART,
         variables: {
           tokenAddr: tokenAddress,
@@ -815,17 +817,18 @@ const getTokenChartData = async (tokenAddress) => {
 export function Updater() {
   const [state, { updateTopTokens }] = useTokenDataContext();
   const [ethPrice, ethPriceOld] = useEthPrice();
+  const selectedChain = useSelector(state => state.account?.currentChain);
 
   useEffect(() => {
     async function getData() {
       // get top pairs for overview list
-      let topTokens = await getTopTokens(ethPrice, ethPriceOld);
+      let topTokens = await getTopTokens(ethPrice, ethPriceOld, selectedChain);
 
       topTokens && updateTopTokens(topTokens);
     }
     // ethPrice && ethPriceOld && getData()
     ethPrice && getData();
-  }, [ethPrice, ethPriceOld, updateTopTokens]);
+  }, [ethPrice, ethPriceOld, updateTopTokens, selectedChain]);
   return null;
 }
 
@@ -834,13 +837,15 @@ export function useTokenData(tokenAddress) {
   const [ethPrice, ethPriceOld] = useEthPrice();
   const tokenData = state?.[tokenAddress];
 
+  const selectedChain = useSelector(state => state.account?.currentChain);
+
   useEffect(() => {
     if (!tokenData && ethPrice && ethPriceOld && isAddress(tokenAddress)) {
-      getTokenData(tokenAddress, ethPrice, ethPriceOld).then((data) => {
+      getTokenData(tokenAddress, ethPrice, ethPriceOld, selectedChain).then((data) => {
         update(tokenAddress, data);
       });
     }
-  }, [ethPrice, ethPriceOld, tokenAddress, tokenData, update]);
+  }, [ethPrice, ethPriceOld, tokenAddress, tokenData, update, selectedChain]);
 
   return tokenData || {};
 }
@@ -866,6 +871,8 @@ export function useTokenTransactions(tokenAddress) {
   const [state, { updateTokenTxns }] = useTokenDataContext();
   const tokenTxns = state?.[tokenAddress]?.txns;
 
+  const selectedChain = useSelector(state => state.account?.currentChain);
+
   const allPairsFormatted =
     state[tokenAddress] &&
     state[tokenAddress].TOKEN_PAIRS_KEY &&
@@ -876,12 +883,12 @@ export function useTokenTransactions(tokenAddress) {
   useEffect(() => {
     async function checkForTxns() {
       if (!tokenTxns && allPairsFormatted) {
-        let transactions = await getTokenTransactions(allPairsFormatted);
+        let transactions = await getTokenTransactions(allPairsFormatted, selectedChain);
         updateTokenTxns(tokenAddress, transactions);
       }
     }
     checkForTxns();
-  }, [tokenTxns, tokenAddress, updateTokenTxns, allPairsFormatted]);
+  }, [tokenTxns, tokenAddress, updateTokenTxns, allPairsFormatted, selectedChain]);
 
   return tokenTxns || [];
 }
@@ -890,15 +897,17 @@ export function useTokenPairs(tokenAddress) {
   const [state, { updateAllPairs }] = useTokenDataContext();
   const tokenPairs = state?.[tokenAddress]?.[TOKEN_PAIRS_KEY];
 
+  const selectedChain = useSelector(state => state.account?.currentChain);
+
   useEffect(() => {
     async function fetchData() {
-      let allPairs = await getTokenPairs(tokenAddress);
+      let allPairs = await getTokenPairs(tokenAddress, selectedChain);
       updateAllPairs(tokenAddress, allPairs);
     }
     if (!tokenPairs && isAddress(tokenAddress)) {
       fetchData();
     }
-  }, [tokenAddress, tokenPairs, updateAllPairs]);
+  }, [tokenAddress, tokenPairs, updateAllPairs, selectedChain]);
 
   return tokenPairs || [];
 }
@@ -909,11 +918,13 @@ export function useTokenDataCombined(tokenAddresses) {
 
   const volume = state?.combinedVol;
 
+  const selectedChain = useSelector(state => state.account?.currentChain);
+
   useEffect(() => {
     async function fetchDatas() {
       Promise.all(
         tokenAddresses.map(async (address) => {
-          return await getTokenData(address, ethPrice, ethPriceOld);
+          return await getTokenData(address, ethPrice, ethPriceOld, selectedChain);
         })
       )
         .then((res) => {
@@ -934,13 +945,15 @@ export function useTokenDataCombined(tokenAddresses) {
     if (!volume && ethPrice && ethPriceOld) {
       fetchDatas();
     }
-  }, [tokenAddresses, ethPrice, ethPriceOld, volume, updateCombinedVolume]);
+  }, [tokenAddresses, ethPrice, ethPriceOld, volume, updateCombinedVolume, selectedChain]);
 
   return volume;
 }
 
 export function useTokenChartDataCombined(tokenAddresses) {
   const [state, { updateChartData }] = useTokenDataContext();
+
+  const selectedChain = useSelector(state => state.account?.currentChain);
 
   const datas = useMemo(() => {
     return (
@@ -975,7 +988,7 @@ export function useTokenChartDataCombined(tokenAddresses) {
     async function fetchDatas() {
       Promise.all(
         tokenAddresses.map(async (address) => {
-          return await getTokenChartData(address);
+          return await getTokenChartData(address, selectedChain);
         })
       )
         .then((res) => {
@@ -993,7 +1006,7 @@ export function useTokenChartDataCombined(tokenAddresses) {
     if (isMissingData) {
       fetchDatas();
     }
-  }, [isMissingData, tokenAddresses, updateChartData]);
+  }, [isMissingData, tokenAddresses, updateChartData, selectedChain]);
 
   return formattedByDate;
 }
@@ -1001,15 +1014,17 @@ export function useTokenChartDataCombined(tokenAddresses) {
 export function useTokenChartData(tokenAddress) {
   const [state, { updateChartData }] = useTokenDataContext();
   const chartData = state?.[tokenAddress]?.chartData;
+  const selectedChain = useSelector(state => state.account?.currentChain);
+
   useEffect(() => {
     async function checkForChartData() {
       if (!chartData) {
-        let data = await getTokenChartData(tokenAddress);
+        let data = await getTokenChartData(tokenAddress, selectedChain);
         updateChartData(tokenAddress, data);
       }
     }
     checkForChartData();
-  }, [chartData, tokenAddress, updateChartData]);
+  }, [chartData, tokenAddress, updateChartData, selectedChain]);
   return chartData;
 }
 
@@ -1024,6 +1039,7 @@ export function useTokenPriceData(tokenAddress, timeWindow, interval = 3600) {
   const [state, { updatePriceData }] = useTokenDataContext();
   const chartData = state?.[tokenAddress]?.[timeWindow]?.[interval];
   const [latestBlock] = useLatestBlocks();
+  const selectedChain = useSelector(state => state.account?.currentChain);
 
   useEffect(() => {
     const currentTime = dayjs.utc();
@@ -1038,7 +1054,8 @@ export function useTokenPriceData(tokenAddress, timeWindow, interval = 3600) {
         tokenAddress,
         startTime,
         interval,
-        latestBlock
+        latestBlock,
+        selectedChain
       );
       updatePriceData(tokenAddress, data, timeWindow, interval);
     }
@@ -1052,6 +1069,7 @@ export function useTokenPriceData(tokenAddress, timeWindow, interval = 3600) {
     tokenAddress,
     updatePriceData,
     latestBlock,
+    selectedChain
   ]);
 
   return chartData;

@@ -13,6 +13,7 @@ import { etheriumNetwork } from "../constants/index";
 const initalState = {
   connected: false,
   currentAccount: "",
+  currentChain: null,
   balance: {
     PBR: null,
     ETH: null,
@@ -60,8 +61,7 @@ export default function (state = initalState, action) {
     case CHANGE_NETWORK:
       return {
         ...state,
-        currentNetwork: action.payload,
-        balance: initalState.balance,
+        currentChain: action.payload
       };
     case HIDE_LOADING:
       return {
