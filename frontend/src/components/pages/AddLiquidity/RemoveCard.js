@@ -252,7 +252,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const RemoveCard = ({
-  account: { currentAccount, loading },
   dex: {
     lpApproved,
     lpBalance,
@@ -283,7 +282,7 @@ const RemoveCard = ({
   const [swapDialogOpen, setSwapDialog] = useState(false);
   const query = new URLSearchParams(useLocation().search);
 
-  const { active, chainId } = useActiveWeb3React();
+  const { active, account, chainId } = useActiveWeb3React();
   const [connectWallet] = useWalletConnectCallback();
 
   const handleSettings = () => {
@@ -299,7 +298,7 @@ const RemoveCard = ({
     query.get("outputCurrency"),
   ];
 
-  const selectedChain = useSelector(state => state.account?.currentChain);
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   useEffect(() => {
     async function initSelection() {
@@ -307,7 +306,7 @@ const RemoveCard = ({
         const _token = getTokenToSelect(tokenList, token0Query);
 
         if (!_token || !_token.symbol) {
-          importToken(token0Query, currentAccount, chainId);
+          importToken(token0Query, account, chainId);
         }
         setToken0(_token);
       } else {
@@ -322,7 +321,7 @@ const RemoveCard = ({
         const _token = getTokenToSelect(tokenList, token1Query);
 
         if (!_token || !_token.symbol) {
-          importToken(token1Query, currentAccount, chainId);
+          importToken(token1Query, account, chainId);
         }
 
         setToken1(_token);
@@ -335,7 +334,7 @@ const RemoveCard = ({
       }
     }
     initSelection();
-  }, [chainId, currentAccount, tokenList, token0Query, token1Query]);
+  }, [chainId, account, tokenList, token0Query, token1Query]);
 
   const currentLpApproved = useMemo(() => {
     if (
@@ -357,7 +356,7 @@ const RemoveCard = ({
       selectedToken0,
       selectedToken1,
       pairAddress,
-      currentAccount,
+      account,
       chainId
     );
   };
@@ -431,7 +430,7 @@ const RemoveCard = ({
           selectedToken0,
           selectedToken1,
           _pairAddress,
-          currentAccount,
+          account,
           chainId
         );
 
@@ -439,14 +438,14 @@ const RemoveCard = ({
           selectedToken0,
           selectedToken1,
           _pairAddress,
-          currentAccount,
+          account,
           chainId
         );
       }
     }
 
     loadPair();
-  }, [selectedToken0, selectedToken1, chainId, currentAccount]);
+  }, [selectedToken0, selectedToken1, chainId, account]);
 
   const onToken1Select = (token) => {
     setToken0(token);
@@ -484,7 +483,7 @@ const RemoveCard = ({
       await removeLiquidityEth(
         ethToken,
         erc20Token,
-        currentAccount,
+        account,
         _lpAmount,
         swapSettings.deadline,
         chainId
@@ -495,7 +494,7 @@ const RemoveCard = ({
       await removeLiquidity(
         selectedToken0,
         selectedToken1,
-        currentAccount,
+        account,
         _lpAmount,
         swapSettings.deadline,
         chainId
@@ -507,7 +506,7 @@ const RemoveCard = ({
       selectedToken0,
       selectedToken1,
       pairAddress,
-      currentAccount,
+      account,
       chainId
     );
   };
@@ -582,18 +581,17 @@ const RemoveCard = ({
     }
 
     return (
-      loading ||
       new BigNumber(currentLpBalance).eq(0) ||
       new BigNumber(liquidityPercent).eq(0)
     );
-  }, [active, loading, liquidityPercent, currentLpBalance]);
+  }, [active, liquidityPercent, currentLpBalance]);
 
   const currentButton = useMemo(() => {
     if (!active) {
       return "Connect Wallet";
     }
 
-    if (loading) {
+    if (dexLoading) {
       return "Please wait...";
     } else if (new BigNumber(currentLpBalance).eq(0)) {
       return "No liquidity to remove";
@@ -605,7 +603,7 @@ const RemoveCard = ({
     } else {
       return !currentLpApproved ? "Approve LP token" : "Remove Liquidity";
     }
-  }, [active, loading, transaction, currentLpApproved, currentLpBalance]);
+  }, [active, dexLoading, transaction, currentLpApproved, currentLpBalance]);
 
   const handleAction = () => {
     if (!active) {
@@ -731,7 +729,7 @@ const RemoveCard = ({
           </div>
 
           <div className={classes.priceContainer}>
-            {loading ? (
+            {dexLoading ? (
               <div className="d-flex justify-content-center">
                 <CircularProgress className={classes.spinner} size={30} />
               </div>
