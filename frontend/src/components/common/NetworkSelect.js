@@ -16,9 +16,9 @@ import config from "../../utils/config";
 import { Button } from "@material-ui/core";
 import useActiveWeb3React from "../../hooks/useActiveWeb3React";
 import { useSelector } from "react-redux";
-import { isMetaMaskInstalled} from '../../utils/helper'
-import store from '../../store';
-import {CHANGE_NETWORK } from '../../actions/types'
+import { isMetaMaskInstalled } from "../../utils/helper";
+import store from "../../store";
+import { CHANGE_NETWORK } from "../../actions/types";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,9 +63,8 @@ export default function NetworkSelect() {
     parseInt(localStorage.getItem("currentNetwork") || config.chainId)
   );
 
-  const { active, chainId } = useActiveWeb3React();
-  const selectedChain = useSelector(state => state.account?.currentChain);
-
+  const { active, chainId, account } = useActiveWeb3React();
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   const handleChange = useCallback(
     (_selected) => {
@@ -121,7 +120,7 @@ export default function NetworkSelect() {
   );
 
   useEffect(() => {
-    if (! isMetaMaskInstalled() && !selectedChain){
+    if (!isMetaMaskInstalled() && !selectedChain) {
       // if wallet not connected set default chain to ethereum
       store.dispatch({
         type: CHANGE_NETWORK,
@@ -129,17 +128,16 @@ export default function NetworkSelect() {
       });
       setNetwork(1);
 
-      return
+      return;
     }
-    if(chainId && !selectedChain){
+    if (chainId && !selectedChain) {
       store.dispatch({
         type: CHANGE_NETWORK,
         payload: chainId,
       });
     }
 
-    if (chainId === selectedChain){
-
+    if (chainId === selectedChain) {
       handleChange(selectedChain);
     }
   }, [chainId, selectedChain, handleChange]);
@@ -193,7 +191,10 @@ export default function NetworkSelect() {
               className={classes.buttonDrop}
             >
               <span>BSC</span>
-              <img className={classes.imgIcon} src="https://assets.coingecko.com/coins/images/12591/small/binance-coin-logo.png?1600947313" />
+              <img
+                className={classes.imgIcon}
+                src="https://assets.coingecko.com/coins/images/12591/small/binance-coin-logo.png?1600947313"
+              />
             </MenuItem>
             {/* <MenuItem
             value={

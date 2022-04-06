@@ -5,7 +5,7 @@ import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import TokenIcon from "../../common/TokenIcon";
 import { useEffect, useMemo } from "react";
 import { allowanceAmount, FARM_TOKEN } from "../../../constants/index";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { formattedNum, urls } from "../../../utils/formatters";
 import {
   checkLpFarmAllowance,
@@ -180,16 +180,18 @@ const Farm = (props) => {
   const ethPrice = useEthPrice();
   const { address, pid, multiplier, decimals, lpApr, name } = farmPool;
 
+  const selectedChain = useSelector((state) => state.account?.currentChain);
+
   useEffect(() => {
     async function loadFarmData() {
       Promise.all([
-        checkLpFarmAllowance(address, account, chainId),
-        getFarmInfo(address, pid, account, chainId),
-        getLpBalanceFarm(address, account, chainId),
+        checkLpFarmAllowance(address, account, selectedChain),
+        getFarmInfo(address, pid, account, selectedChain),
+        getLpBalanceFarm(address, account, selectedChain),
       ]);
     }
     loadFarmData();
-  }, [account, chainId, address, pid]);
+  }, [account, selectedChain, address, pid]);
 
   const farmData = useMemo(() => {
     if (!farms) {
