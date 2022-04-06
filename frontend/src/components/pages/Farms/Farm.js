@@ -4,12 +4,8 @@ import Varified from "../../../assets/check.png";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import TokenIcon from "../../common/TokenIcon";
 import { useEffect, useMemo } from "react";
-import {
-  allowanceAmount,
-  FARM_TOKEN,
-  TOKEN_ADDRESS,
-} from "../../../constants/index";
-import { connect } from "react-redux";
+import { allowanceAmount, FARM_TOKEN } from "../../../constants/index";
+import { connect, useSelector } from "react-redux";
 import { formattedNum, urls } from "../../../utils/formatters";
 import {
   checkLpFarmAllowance,
@@ -20,7 +16,6 @@ import {
 } from "../../../actions/farmActions";
 import BigNumber from "bignumber.js";
 import { fromWei, getPbrRewardApr } from "../../../utils/helper";
-import { useTokenData } from "../../../contexts/TokenData";
 import { useEthPrice } from "../../../contexts/GlobalData";
 import useActiveWeb3React from "hooks/useActiveWeb3React";
 
@@ -168,6 +163,7 @@ const useStyles = makeStyles((theme) => ({
 const Farm = (props) => {
   const {
     farmPool,
+    tokenPriceUsd,
     onStake,
     farm: { farms, lpApproved, loading, lpBalance },
     dex: { transaction },
@@ -181,30 +177,21 @@ const Farm = (props) => {
 
   const { chainId, account } = useActiveWeb3React();
 
-  const pbrPriceData = useTokenData(
-    TOKEN_ADDRESS.PBR?.[chainId]?.toLowerCase()
-  );
-
-  const pbrPriceUsd = useMemo(() => {
-    if (!pbrPriceData) {
-      return "0";
-    }
-    return pbrPriceData?.priceUSD;
-  }, [pbrPriceData]);
-
   const ethPrice = useEthPrice();
   const { address, pid, multiplier, decimals, lpApr, name } = farmPool;
+
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   useEffect(() => {
     async function loadFarmData() {
       Promise.all([
-        checkLpFarmAllowance(address, account, chainId),
-        getFarmInfo(address, pid, account, chainId),
-        getLpBalanceFarm(address, account, chainId),
+        checkLpFarmAllowance(address, account, selectedChain),
+        getFarmInfo(address, pid, account, selectedChain),
+        getLpBalanceFarm(address, account, selectedChain),
       ]);
     }
     loadFarmData();
-  }, [account, chainId, address, pid]);
+  }, [account, selectedChain, address, pid]);
 
   const farmData = useMemo(() => {
     if (!farms) {
@@ -266,7 +253,7 @@ const Farm = (props) => {
 
     const pbrRewardApr = getPbrRewardApr(
       poolWeight,
-      pbrPriceUsd,
+      tokenPriceUsd,
       totalPoolLiquidityUSDValue
     );
     const totalApr = new BigNumber(pbrRewardApr)
@@ -274,7 +261,7 @@ const Farm = (props) => {
       .toFixed(0)
       .toString();
     return totalApr;
-  }, [farmData, lpApr, pbrPriceUsd, totalPoolLiquidityUSDValue]);
+  }, [farmData, lpApr, tokenPriceUsd, totalPoolLiquidityUSDValue]);
 
   const handleStakeActions = (actionType = "stake") => {
     onStake(name, actionType, address, decimals, pid);

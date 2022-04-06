@@ -1,17 +1,19 @@
 import { makeStyles } from "@material-ui/core";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
 import TabPage from "../../TabPage";
 import Farm from "./Farm";
 import {
   farmingPoolConstants,
   supportedFarmingPools,
+  TOKEN_ADDRESS,
 } from "../../../constants/index";
 import StakeDialog from "./StakeDialog";
 import store from "../../../store";
 import { START_TRANSACTION } from "../../../actions/types";
 import useActiveWeb3React from "hooks/useActiveWeb3React";
 import { getNetworkNameById } from "utils/helper";
+import { useTokenData } from "contexts/TokenData";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -45,6 +47,22 @@ const Farms = (props) => {
     poolInfo: {},
   });
   const { chainId } = useActiveWeb3React();
+
+  const selectedChain = useSelector((state) => state.account?.currentChain);
+
+  // pbr for ethereum, pwar for bsc
+  const farmTokenPriceData = useTokenData(
+    [1, 4].includes(selectedChain)
+      ? TOKEN_ADDRESS.PBR?.[selectedChain]?.toLowerCase()
+      : TOKEN_ADDRESS?.PWAR?.[selectedChain]?.toLowerCase()
+  );
+
+  const farmTokenPriceUsd = useMemo(() => {
+    if (!farmTokenPriceData) {
+      return "0";
+    }
+    return farmTokenPriceData?.priceUSD;
+  }, [farmTokenPriceData]);
 
   const handleStake = (farmPool, type, poolAddress, poolDecimals, pid) => {
     setStakeDialog({
@@ -82,19 +100,23 @@ const Farms = (props) => {
   };
 
   const farmPools = useMemo(() => {
-    return Object.keys(supportedFarmingPools).includes(chainId?.toString())
-      ? supportedFarmingPools?.[chainId].map((poolName) => {
+    return Object.keys(supportedFarmingPools).includes(
+      selectedChain?.toString()
+    )
+      ? supportedFarmingPools?.[selectedChain].map((poolName) => {
           return {
             name: poolName,
-            address: farmingPoolConstants?.[chainId]?.[poolName]?.address,
-            multiplier: farmingPoolConstants?.[chainId]?.[poolName]?.multiplier,
-            pid: farmingPoolConstants?.[chainId]?.[poolName]?.pid,
-            lpApr: farmingPoolConstants?.[chainId]?.[poolName]?.lpApr,
-            decimals: farmingPoolConstants?.[chainId]?.[poolName]?.decimals,
+            address: farmingPoolConstants?.[selectedChain]?.[poolName]?.address,
+            multiplier:
+              farmingPoolConstants?.[selectedChain]?.[poolName]?.multiplier,
+            pid: farmingPoolConstants?.[selectedChain]?.[poolName]?.pid,
+            lpApr: farmingPoolConstants?.[selectedChain]?.[poolName]?.lpApr,
+            decimals:
+              farmingPoolConstants?.[selectedChain]?.[poolName]?.decimals,
           };
         })
       : [];
-  }, [chainId]);
+  }, [selectedChain]);
 
   // useEffect(() => {
   //   console.log("farmPools ", { farmPools, chainId });
@@ -124,7 +146,11 @@ const Farms = (props) => {
         {farmPools?.map((farmPool) => {
           return (
             <div className="col-12 col-xl-4 col-lg-6">
-              <Farm farmPool={farmPool} onStake={handleStake} />
+              <Farm
+                farmPool={farmPool}
+                tokenPriceUsd={farmTokenPriceUsd}
+                onStake={handleStake}
+              />
             </div>
           );
         })}

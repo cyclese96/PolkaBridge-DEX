@@ -243,7 +243,7 @@ const Swap = (props) => {
     query.get("outputCurrency"),
   ];
 
-  const selectedChain = useSelector(state => state.account?.currentChain);
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   // check allowance on token selection
   useEffect(() => {
