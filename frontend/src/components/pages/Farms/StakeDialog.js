@@ -165,22 +165,25 @@ const StakeDialog = ({
   const [inputValue, setInputValue] = useState("");
   const { chainId, account } = useActiveWeb3React();
 
-  const parseLpBalance = useMemo(
-    () =>
-      fromWei(
-        lpBalance?.[poolInfo.poolAddress]?.lpBalance,
-        poolInfo.poolDecimals
-      ),
-    [poolInfo.pid, lpBalance]
-  );
-  const parseStakedAmount = useMemo(
-    () =>
-      fromWei(
-        farms?.[poolInfo.poolAddress]?.stakeData?.amount,
-        poolInfo.poolDecimals
-      ),
-    [poolInfo.pid, farms]
-  );
+  const parseLpBalance = useMemo(() => {
+    if (!lpBalance || !lpBalance?.[poolInfo.poolAddress]?.lpBalance) {
+      return "0";
+    }
+    return fromWei(
+      lpBalance?.[poolInfo.poolAddress]?.lpBalance,
+      poolInfo.poolDecimals
+    );
+  }, [poolInfo.pid, lpBalance]);
+
+  const parseStakedAmount = useMemo(() => {
+    if (!farms || !farms?.[poolInfo.poolAddress]?.stakeData?.amount) {
+      return "0";
+    }
+    return fromWei(
+      farms?.[poolInfo.poolAddress]?.stakeData?.amount,
+      poolInfo.poolDecimals
+    );
+  }, [poolInfo.pid, farms]);
 
   const handleMax = () => {
     if (type === "stake") {
