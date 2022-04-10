@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react";
 
-import {  clients } from "../apollo/client";
+import { clients } from "../apollo/client";
 import {
   PAIR_DATA,
   PAIR_CHART,
@@ -202,7 +202,7 @@ export default function Provider({ children }) {
   );
 }
 
-async function getBulkPairData(pairList, ethPrice, chainId=1) {
+async function getBulkPairData(pairList, ethPrice, chainId = 1) {
   try {
     const [t1, t2, tWeek] = getTimestampsForChanges();
     let [{ number: b1 }, { number: b2 }, { number: bWeek }] =
@@ -350,7 +350,7 @@ function parseData(
   return data;
 }
 
-const getPairTransactions = async (pairAddress, chainId=1) => {
+const getPairTransactions = async (pairAddress, chainId = 1) => {
   const transactions = {};
 
   try {
@@ -371,7 +371,7 @@ const getPairTransactions = async (pairAddress, chainId=1) => {
   return transactions;
 };
 
-const getPairChartData = async (pairAddress, chainId=1) => {
+const getPairChartData = async (pairAddress, chainId = 1) => {
   let data = [];
   try {
     const utcEndTime = dayjs.utc();
@@ -438,7 +438,12 @@ const getPairChartData = async (pairAddress, chainId=1) => {
   return data;
 };
 
-const getHourlyRateData = async (pairAddress, startTime, latestBlock, chainId=1) => {
+const getHourlyRateData = async (
+  pairAddress,
+  startTime,
+  latestBlock,
+  chainId = 1
+) => {
   try {
     const utcEndTime = dayjs.utc();
     let time = startTime;
@@ -458,7 +463,7 @@ const getHourlyRateData = async (pairAddress, startTime, latestBlock, chainId=1)
     // once you have all the timestamps, get the blocks for each timestamp in a bulk query
     let blocks;
 
-    blocks = await getBlocksFromTimestamps(timestamps,chainId, 100);
+    blocks = await getBlocksFromTimestamps(timestamps, chainId, 100);
 
     // catch failing case
     if (!blocks || blocks?.length === 0) {
@@ -519,7 +524,7 @@ const getHourlyRateData = async (pairAddress, startTime, latestBlock, chainId=1)
 export function Updater() {
   const [, { updateTopPairs }] = usePairDataContext();
   const [ethPrice] = useEthPrice();
-  const selectedChain = useSelector(state => state.account?.currentChain);
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   useEffect(() => {
     async function getData() {
@@ -537,7 +542,11 @@ export function Updater() {
       });
 
       // get data for every pair in list
-      let topPairs = await getBulkPairData(formattedPairs, ethPrice, selectedChain);
+      let topPairs = await getBulkPairData(
+        formattedPairs,
+        ethPrice,
+        selectedChain
+      );
       topPairs && updateTopPairs(topPairs);
     }
     ethPrice && getData();
@@ -549,7 +558,7 @@ export function useHourlyRateData(pairAddress, timeWindow) {
   const [state, { updateHourlyData }] = usePairDataContext();
   const chartData = state?.[pairAddress]?.hourlyData?.[timeWindow];
   const [latestBlock] = useLatestBlocks();
-  const selectedChain = useSelector(state => state.account?.currentChain);
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   useEffect(() => {
     const currentTime = dayjs.utc();
@@ -560,13 +569,25 @@ export function useHourlyRateData(pairAddress, timeWindow) {
         : currentTime.subtract(1, windowSize).startOf("hour").unix();
 
     async function fetch() {
-      let data = await getHourlyRateData(pairAddress, startTime, latestBlock, selectedChain);
+      let data = await getHourlyRateData(
+        pairAddress,
+        startTime,
+        latestBlock,
+        selectedChain
+      );
       updateHourlyData(pairAddress, data, timeWindow);
     }
     if (!chartData) {
       fetch();
     }
-  }, [chartData, timeWindow, pairAddress, updateHourlyData, latestBlock, selectedChain]);
+  }, [
+    chartData,
+    timeWindow,
+    pairAddress,
+    updateHourlyData,
+    latestBlock,
+    selectedChain,
+  ]);
 
   return chartData;
 }
@@ -582,7 +603,7 @@ export function useDataForList(pairList) {
   const [stale, setStale] = useState(false);
   const [fetched, setFetched] = useState([]);
 
-  const selectedChain = useSelector(state => state.account?.currentChain);
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   // reset
   useEffect(() => {
@@ -637,12 +658,16 @@ export function usePairData(pairAddress) {
   const [state, { update }] = usePairDataContext();
   const [ethPrice] = useEthPrice();
   const pairData = state?.[pairAddress];
-  const selectedChain = useSelector(state => state.account?.currentChain);
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   useEffect(() => {
     async function fetchData() {
       if (!pairData && pairAddress) {
-        let data = await getBulkPairData([pairAddress], ethPrice, selectedChain);
+        let data = await getBulkPairData(
+          [pairAddress],
+          ethPrice,
+          selectedChain
+        );
         data && update(pairAddress, data[0]);
       }
     }
@@ -660,12 +685,15 @@ export function usePairData(pairAddress) {
 export function usePairTransactions(pairAddress) {
   const [state, { updatePairTxns }] = usePairDataContext();
   const pairTxns = state?.[pairAddress]?.txns;
-  const selectedChain = useSelector(state => state.account?.currentChain);
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   useEffect(() => {
     async function checkForTxns() {
       if (!pairTxns) {
-        let transactions = await getPairTransactions(pairAddress, selectedChain);
+        let transactions = await getPairTransactions(
+          pairAddress,
+          selectedChain
+        );
         updatePairTxns(pairAddress, transactions);
       }
     }
@@ -678,7 +706,7 @@ export function usePairChartData(pairAddress) {
   const [state, { updateChartData }] = usePairDataContext();
   const chartData = state?.[pairAddress]?.chartData;
 
-  const selectedChain = useSelector(state => state.account?.currentChain);
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   useEffect(() => {
     async function checkForChartData() {

@@ -17,10 +17,10 @@ const QUERY_URL = {
   56: "https://api.thegraph.com/subgraphs/id/Qmag97G4eeNXQLdgxXtJG7GuE1kiP4C7UGhMzmL9MAyviq",
 };
 
-const BLOCKS_API_TESTNET =
-  "https://api.studio.thegraph.com/query/8207/rinkeby-blocks/0.0.1";
-const BLOCKS_API_MAINNET =
-  "https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks";
+// const BLOCKS_API_TESTNET =
+//   "https://api.studio.thegraph.com/query/8207/rinkeby-blocks/0.0.1";
+// const BLOCKS_API_MAINNET =
+//   "https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks";
 
 const BLOCKS_API = {
   1: "https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks",
@@ -39,28 +39,28 @@ export const healthClient = new ApolloClient({
 
 export const blockClient = new ApolloClient({
   link: new HttpLink({
-    uri: BLOCKS_API_MAINNET,
+    uri: BLOCKS_API[1],
   }),
   cache: new InMemoryCache(),
 });
 
 export const blockClientRinkeby = new ApolloClient({
   link: new HttpLink({
-    uri: BLOCKS_API_TESTNET,
+    uri: BLOCKS_API[4],
   }),
   cache: new InMemoryCache(),
 });
 
 export const blockClientBscTestnet = new ApolloClient({
   link: new HttpLink({
-    uri: BLOCKS_API_TESTNET,
+    uri: BLOCKS_API[97],
   }),
   cache: new InMemoryCache(),
 });
 
 export const blockClientBscMainnet = new ApolloClient({
   link: new HttpLink({
-    uri: BLOCKS_API_TESTNET,
+    uri: BLOCKS_API[56],
   }),
   cache: new InMemoryCache(),
 });
@@ -69,8 +69,8 @@ export const blockClients = {
   1: blockClient,
   4: blockClientRinkeby,
   56: blockClientBscMainnet,
-  97: blockClientBscTestnet
-}
+  97: blockClientBscTestnet,
+};
 
 export const client = new ApolloClient({
   link: new HttpLink({
