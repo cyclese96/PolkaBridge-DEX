@@ -298,11 +298,12 @@ const StakeDialog = ({
               <div>
                 {type === "stake" ? (
                   <h1 className={classes.section}>
-                    Balance: {formattedNum(parseLpBalance)}
+                    Balance: {parseLpBalance && formattedNum(parseLpBalance)}
                   </h1>
                 ) : (
                   <h1 className={classes.section}>
-                    LP Staked: {formattedNum(parseStakedAmount)}
+                    LP Staked:{" "}
+                    {parseStakedAmount && formattedNum(parseStakedAmount)}
                   </h1>
                 )}
               </div>
