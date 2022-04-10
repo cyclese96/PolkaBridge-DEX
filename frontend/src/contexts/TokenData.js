@@ -228,7 +228,7 @@ export default function Provider({ children }) {
   );
 }
 
-const getTopTokens = async (ethPrice, ethPriceOld, chainId=1) => {
+const getTopTokens = async (ethPrice, ethPriceOld, chainId = 1) => {
   const utcCurrentTime = dayjs();
   const utcOneDayBack = utcCurrentTime.subtract(1, "day").unix();
   const utcTwoDaysBack = utcCurrentTime.subtract(2, "day").unix();
@@ -488,7 +488,7 @@ const getTopTokens = async (ethPrice, ethPriceOld, chainId=1) => {
 //   return data;
 // };
 
-const getTokenData = async (address, ethPrice, ethPriceOld, chainId=1) => {
+const getTokenData = async (address, ethPrice, ethPriceOld, chainId = 1) => {
   const utcCurrentTime = dayjs();
   const utcOneDayBack = utcCurrentTime
     .subtract(1, "day")
@@ -624,7 +624,7 @@ const getTokenData = async (address, ethPrice, ethPriceOld, chainId=1) => {
   return data;
 };
 
-const getTokenTransactions = async (allPairsFormatted, chainId=1) => {
+const getTokenTransactions = async (allPairsFormatted, chainId = 1) => {
   const transactions = {};
   try {
     let result = await clients?.[chainId]?.query({
@@ -643,7 +643,7 @@ const getTokenTransactions = async (allPairsFormatted, chainId=1) => {
   return transactions;
 };
 
-const getTokenPairs = async (tokenAddress, chainId=1) => {
+const getTokenPairs = async (tokenAddress, chainId = 1) => {
   try {
     // fetch all current and historical data
     let result = await clients?.[chainId]?.query({
@@ -661,7 +661,7 @@ const getIntervalTokenData = async (
   startTime,
   interval = 3600,
   latestBlock,
-  chainId=1
+  chainId = 1
 ) => {
   const utcEndTime = dayjs.utc();
   let time = startTime;
@@ -746,7 +746,7 @@ const getIntervalTokenData = async (
   }
 };
 
-const getTokenChartData = async (tokenAddress, chainId=1) => {
+const getTokenChartData = async (tokenAddress, chainId = 1) => {
   let data = [];
   const utcEndTime = dayjs.utc();
   let utcStartTime = utcEndTime.subtract(1, "year");
@@ -817,7 +817,7 @@ const getTokenChartData = async (tokenAddress, chainId=1) => {
 export function Updater() {
   const [state, { updateTopTokens }] = useTokenDataContext();
   const [ethPrice, ethPriceOld] = useEthPrice();
-  const selectedChain = useSelector(state => state.account?.currentChain);
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   useEffect(() => {
     async function getData() {
@@ -837,13 +837,15 @@ export function useTokenData(tokenAddress) {
   const [ethPrice, ethPriceOld] = useEthPrice();
   const tokenData = state?.[tokenAddress];
 
-  const selectedChain = useSelector(state => state.account?.currentChain);
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   useEffect(() => {
     if (!tokenData && ethPrice && ethPriceOld && isAddress(tokenAddress)) {
-      getTokenData(tokenAddress, ethPrice, ethPriceOld, selectedChain).then((data) => {
-        update(tokenAddress, data);
-      });
+      getTokenData(tokenAddress, ethPrice, ethPriceOld, selectedChain).then(
+        (data) => {
+          update(tokenAddress, data);
+        }
+      );
     }
   }, [ethPrice, ethPriceOld, tokenAddress, tokenData, update, selectedChain]);
 
@@ -871,7 +873,7 @@ export function useTokenTransactions(tokenAddress) {
   const [state, { updateTokenTxns }] = useTokenDataContext();
   const tokenTxns = state?.[tokenAddress]?.txns;
 
-  const selectedChain = useSelector(state => state.account?.currentChain);
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   const allPairsFormatted =
     state[tokenAddress] &&
@@ -883,12 +885,21 @@ export function useTokenTransactions(tokenAddress) {
   useEffect(() => {
     async function checkForTxns() {
       if (!tokenTxns && allPairsFormatted) {
-        let transactions = await getTokenTransactions(allPairsFormatted, selectedChain);
+        let transactions = await getTokenTransactions(
+          allPairsFormatted,
+          selectedChain
+        );
         updateTokenTxns(tokenAddress, transactions);
       }
     }
     checkForTxns();
-  }, [tokenTxns, tokenAddress, updateTokenTxns, allPairsFormatted, selectedChain]);
+  }, [
+    tokenTxns,
+    tokenAddress,
+    updateTokenTxns,
+    allPairsFormatted,
+    selectedChain,
+  ]);
 
   return tokenTxns || [];
 }
@@ -897,7 +908,7 @@ export function useTokenPairs(tokenAddress) {
   const [state, { updateAllPairs }] = useTokenDataContext();
   const tokenPairs = state?.[tokenAddress]?.[TOKEN_PAIRS_KEY];
 
-  const selectedChain = useSelector(state => state.account?.currentChain);
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   useEffect(() => {
     async function fetchData() {
@@ -918,13 +929,18 @@ export function useTokenDataCombined(tokenAddresses) {
 
   const volume = state?.combinedVol;
 
-  const selectedChain = useSelector(state => state.account?.currentChain);
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   useEffect(() => {
     async function fetchDatas() {
       Promise.all(
         tokenAddresses.map(async (address) => {
-          return await getTokenData(address, ethPrice, ethPriceOld, selectedChain);
+          return await getTokenData(
+            address,
+            ethPrice,
+            ethPriceOld,
+            selectedChain
+          );
         })
       )
         .then((res) => {
@@ -945,7 +961,14 @@ export function useTokenDataCombined(tokenAddresses) {
     if (!volume && ethPrice && ethPriceOld) {
       fetchDatas();
     }
-  }, [tokenAddresses, ethPrice, ethPriceOld, volume, updateCombinedVolume, selectedChain]);
+  }, [
+    tokenAddresses,
+    ethPrice,
+    ethPriceOld,
+    volume,
+    updateCombinedVolume,
+    selectedChain,
+  ]);
 
   return volume;
 }
@@ -953,7 +976,7 @@ export function useTokenDataCombined(tokenAddresses) {
 export function useTokenChartDataCombined(tokenAddresses) {
   const [state, { updateChartData }] = useTokenDataContext();
 
-  const selectedChain = useSelector(state => state.account?.currentChain);
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   const datas = useMemo(() => {
     return (
@@ -1014,7 +1037,7 @@ export function useTokenChartDataCombined(tokenAddresses) {
 export function useTokenChartData(tokenAddress) {
   const [state, { updateChartData }] = useTokenDataContext();
   const chartData = state?.[tokenAddress]?.chartData;
-  const selectedChain = useSelector(state => state.account?.currentChain);
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   useEffect(() => {
     async function checkForChartData() {
@@ -1039,7 +1062,7 @@ export function useTokenPriceData(tokenAddress, timeWindow, interval = 3600) {
   const [state, { updatePriceData }] = useTokenDataContext();
   const chartData = state?.[tokenAddress]?.[timeWindow]?.[interval];
   const [latestBlock] = useLatestBlocks();
-  const selectedChain = useSelector(state => state.account?.currentChain);
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   useEffect(() => {
     const currentTime = dayjs.utc();
@@ -1069,7 +1092,7 @@ export function useTokenPriceData(tokenAddress, timeWindow, interval = 3600) {
     tokenAddress,
     updatePriceData,
     latestBlock,
-    selectedChain
+    selectedChain,
   ]);
 
   return chartData;

@@ -229,12 +229,11 @@ export default function Provider({ children }) {
  * @param {*} oldEthPrice
  */
 
-async function getGlobalData(ethPrice, oldEthPrice, chainId=1) {
+async function getGlobalData(ethPrice, oldEthPrice, chainId = 1) {
   // data for each day , historic data used for % changes
   let data = {};
   let oneDayData = {};
   let twoDayData = {};
-
 
   try {
     // get timestamps for the days
@@ -246,13 +245,19 @@ async function getGlobalData(ethPrice, oldEthPrice, chainId=1) {
 
     // get the blocks needed for time travel queries
     let [oneDayBlock, twoDayBlock, oneWeekBlock, twoWeekBlock] =
-      await getBlocksFromTimestamps([
-        utcOneDayBack,
-        utcTwoDaysBack,
-        utcOneWeekBack,
-        utcTwoWeeksBack,
-      ], chainId);
+      await getBlocksFromTimestamps(
+        [utcOneDayBack, utcTwoDaysBack, utcOneWeekBack, utcTwoWeeksBack],
+        chainId
+      );
 
+    console.log("bsc change ", {
+      oneDayBlock,
+      twoDayBlock,
+      oneWeekBlock,
+      twoWeekBlock,
+      oldEthPrice,
+      ethPrice,
+    });
     // fetch the global data
     let result = await clients?.[chainId]?.query({
       query: GLOBAL_DATA(),
@@ -349,7 +354,7 @@ async function getGlobalData(ethPrice, oldEthPrice, chainId=1) {
 
 let checked = false;
 
-const getChartData = async (oldestDateToFetch, offsetData, chainId=1) => {
+const getChartData = async (oldestDateToFetch, offsetData, chainId = 1) => {
   let data = [];
   let weeklyData = [];
   const utcEndTime = dayjs.utc();
@@ -458,7 +463,7 @@ const getChartData = async (oldestDateToFetch, offsetData, chainId=1) => {
 /**
  * Get and format transactions for global page
  */
-const getGlobalTransactions = async (chainId=1) => {
+const getGlobalTransactions = async (chainId = 1) => {
   let transactions = {};
 
   try {
@@ -498,7 +503,7 @@ const getGlobalTransactions = async (chainId=1) => {
 /**
  * Gets the current price  of ETH, 24 hour price, and % change between them
  */
-const getEthPrice = async (chainId=1) => {
+const getEthPrice = async (chainId = 1) => {
   const utcCurrentTime = dayjs();
   const utcOneDayBack = utcCurrentTime
     .subtract(1, "day")
@@ -531,14 +536,13 @@ const getEthPrice = async (chainId=1) => {
   return [ethPrice, ethPriceOneDay, priceChangeETH];
 };
 
-
 const PAIRS_TO_FETCH = 500;
 const TOKENS_TO_FETCH = 500;
 
 /**
  * Loop through every pair on uniswap, used for search
  */
-async function getAllPairsOnUniswap(chainId=1) {
+async function getAllPairsOnUniswap(chainId = 1) {
   try {
     let allFound = false;
     let pairs = [];
@@ -569,7 +573,7 @@ async function getAllPairsOnUniswap(chainId=1) {
 /**
  * Loop through every token on uniswap, used for search
  */
-async function getAllTokensOnUniswap(chainId=1) {
+async function getAllTokensOnUniswap(chainId = 1) {
   try {
     let allFound = false;
     let skipCount = 0;
@@ -607,13 +611,17 @@ export function useGlobalData() {
 
   const data = state?.globalData;
 
-  const selectedChain = useSelector(state => state.account?.currentChain);
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   // const combinedVolume = useTokenDataCombined(offsetVolumes)
 
   useEffect(() => {
     async function fetchData() {
-      let globalData = await getGlobalData(ethPrice, oldEthPrice, selectedChain);
+      let globalData = await getGlobalData(
+        ethPrice,
+        oldEthPrice,
+        selectedChain
+      );
 
       globalData && update(globalData);
 
@@ -636,7 +644,7 @@ export function useGlobalData() {
     data,
     updateAllPairsInUniswap,
     updateAllTokensInUniswap,
-    selectedChain
+    selectedChain,
   ]);
 
   return data || null;
@@ -650,7 +658,7 @@ export function useGlobalChartData() {
   const chartDataDaily = state?.chartData?.daily;
   const chartDataWeekly = state?.chartData?.weekly;
 
-  const selectedChain = useSelector(state => state.account?.currentChain);
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   /**
    * Keep track of oldest date fetched. Used to
@@ -696,7 +704,7 @@ export function useGlobalChartData() {
     combinedData,
     oldestDateFetch,
     updateChart,
-    selectedChain
+    selectedChain,
   ]);
 
   return [chartDataDaily, chartDataWeekly];
@@ -705,8 +713,8 @@ export function useGlobalChartData() {
 export function useGlobalTransactions() {
   const [state, { updateTransactions }] = useGlobalDataContext();
   const transactions = state?.transactions;
-  
-  const selectedChain = useSelector(state => state.account?.currentChain);
+
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   useEffect(() => {
     async function fetchData() {
@@ -725,12 +733,14 @@ export function useEthPrice() {
   const ethPrice = state?.[ETH_PRICE_KEY];
   const ethPriceOld = state?.["oneDayPrice"];
 
-  const selectedChain = useSelector(state => state.account?.currentChain);
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   useEffect(() => {
     async function checkForEthPrice() {
       if (!ethPrice) {
-        let [newPrice, oneDayPrice, priceChange] = await getEthPrice(selectedChain);
+        let [newPrice, oneDayPrice, priceChange] = await getEthPrice(
+          selectedChain
+        );
         updateEthPrice(newPrice, oneDayPrice, priceChange);
       }
     }
