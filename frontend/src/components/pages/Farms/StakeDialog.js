@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Dialog,
@@ -9,7 +9,7 @@ import {
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import CloseIcon from "@material-ui/icons/Close";
 import { fromWei, toWei } from "../../../utils/helper";
-import { formattedNum } from "../../../utils/formatters";
+import { formatCurrency } from "../../../utils/formatters";
 import TransactionStatus from "../../common/TransactionStatus";
 import { connect } from "react-redux";
 import {
@@ -298,12 +298,12 @@ const StakeDialog = ({
               <div>
                 {type === "stake" ? (
                   <h1 className={classes.section}>
-                    Balance: {parseLpBalance && formattedNum(parseLpBalance)}
+                    Balance:
+                    {formatCurrency(parseLpBalance)}
                   </h1>
                 ) : (
                   <h1 className={classes.section}>
-                    LP Staked:{" "}
-                    {parseStakedAmount && formattedNum(parseStakedAmount)}
+                    LP Staked: {formatCurrency(parseStakedAmount)}
                   </h1>
                 )}
               </div>
