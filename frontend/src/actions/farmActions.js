@@ -357,7 +357,7 @@ export const getLpBalanceFarm =
 
       let valueOfBaseTokenInFarm = 0;
       // base in this calculation is eth token
-      if (token0Addr.toLowerCase() === ethAddress) {
+      if (token0Addr?.toLowerCase() === ethAddress) {
         valueOfBaseTokenInFarm = reservesData._reserve0;
       } else {
         valueOfBaseTokenInFarm = reservesData._reserve1;
@@ -384,7 +384,12 @@ export const getLpBalanceFarm =
         payload: balObject,
       });
     } catch (error) {
-      console.log("getLpBalanceFarm ", error);
+      console.log("getLpBalanceFarm ", {
+        error,
+        chainId,
+        pairAddress,
+        account,
+      });
     }
 
     dispatch({

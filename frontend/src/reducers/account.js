@@ -61,7 +61,8 @@ export default function (state = initalState, action) {
     case CHANGE_NETWORK:
       return {
         ...state,
-        currentChain: action.payload
+        currentNetwork: action.payload.network,
+        currentChain: action.payload.chain,
       };
     case HIDE_LOADING:
       return {

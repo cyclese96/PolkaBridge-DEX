@@ -16,7 +16,7 @@ import config from "../../utils/config";
 import { Button } from "@material-ui/core";
 import useActiveWeb3React from "../../hooks/useActiveWeb3React";
 import { useSelector } from "react-redux";
-import { isMetaMaskInstalled } from "../../utils/helper";
+import { getCurrentNetworkName, isMetaMaskInstalled } from "../../utils/helper";
 import store from "../../store";
 import { CHANGE_NETWORK } from "../../actions/types";
 
@@ -66,6 +66,25 @@ export default function NetworkSelect() {
   const { active, chainId, account } = useActiveWeb3React();
   const selectedChain = useSelector((state) => state.account?.currentChain);
 
+  useEffect(() => {
+    if (!selectedChain) {
+      return;
+    }
+
+    setNetwork(selectedChain);
+  }, [selectedChain]);
+
+  const handleChangeNetwork = (_selected) => {
+    store.dispatch({
+      type: CHANGE_NETWORK,
+      payload: {
+        network: getCurrentNetworkName(_selected),
+        chain: _selected,
+      },
+    });
+    setNetwork(_selected);
+  };
+
   const handleChange = useCallback(
     (_selected) => {
       if (network === _selected) {
@@ -73,6 +92,12 @@ export default function NetworkSelect() {
       }
 
       localStorage.setItem("currentNetwork", _selected);
+
+      // handle network stated when metamask in not available
+      if (!active) {
+        handleChangeNetwork(_selected);
+      }
+
       setNetwork(_selected);
       if ([config.bscChain, config.bscChainTestent].includes(_selected)) {
         setupNetwork(
@@ -118,29 +143,6 @@ export default function NetworkSelect() {
     },
     [network]
   );
-
-  useEffect(() => {
-    if (!isMetaMaskInstalled() && !selectedChain) {
-      // if wallet not connected set default chain to ethereum
-      store.dispatch({
-        type: CHANGE_NETWORK,
-        payload: 1,
-      });
-      setNetwork(1);
-
-      return;
-    }
-    if (chainId && !selectedChain) {
-      store.dispatch({
-        type: CHANGE_NETWORK,
-        payload: chainId,
-      });
-    }
-
-    if (chainId === selectedChain) {
-      handleChange(selectedChain);
-    }
-  }, [chainId, selectedChain, handleChange]);
 
   return (
     <div>
