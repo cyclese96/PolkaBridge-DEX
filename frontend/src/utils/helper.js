@@ -7,6 +7,7 @@ import {
   PBR_PER_YEAR,
 } from "../constants/index";
 import Web3 from "web3";
+import config from "./config";
 
 export const fromWei = (tokens, decimals = 18) => {
   try {
@@ -355,4 +356,19 @@ export const getTokenToSelect = (tokenList, tokenQuery) => {
   }
 
   return {};
+};
+
+export const getCurrentNetworkName = (networkId) => {
+  const _id = parseInt(networkId);
+  if ([config.bscChain, config.bscChainTestent].includes(_id)) {
+    return bscNetwork;
+  } else if (
+    [config.polygon_chain_mainnet, config.polygon_chain_testnet].includes(_id)
+  ) {
+    return "polygon";
+  } else if ([config.ethChainId, config.ethChainIdRinkeby].includes(_id)) {
+    return etheriumNetwork;
+  } else {
+    return etheriumNetwork;
+  }
 };

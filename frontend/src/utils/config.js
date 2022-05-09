@@ -10,5 +10,6 @@ export default {
   polygon_chain_mainnet: 137,
   polygon_chain_testnet: 80001,
   ankrEthereumRpc: "https://rpc.ankr.com/eth",
+  ankrRpcBsc: "https://rpc.ankr.com/bsc",
   ankrMoonRiverRpc: "",
 };

@@ -52,10 +52,15 @@ export const farmContract = (chainId) => {
 
 const getCurrentConnection = (chainId, abi, contractAddress) => {
   let web3;
+
+  const ankrRpcs = {
+    1: config.ankrEthereumRpc,
+    56: config.ankrRpcBsc,
+  };
   if (isMetaMaskInstalled()) {
     web3 = new Web3(window.ethereum);
   } else {
-    web3 = new Web3(new Web3.providers.HttpProvider(config.ankrEthereumRpc));
+    web3 = new Web3(new Web3.providers.HttpProvider(ankrRpcs?.[chainId]));
   }
 
   return new web3.eth.Contract(abi, contractAddress);
