@@ -8,8 +8,8 @@ module.exports = function (deployer) {
   //let maintreasury = "0x82c5c4fcd9189ee0160343203d52f97d0b7cabb6";
 
   let maintreasuryBSC = "0x026a2ca75f1af029489eaea073e62e96a550220a";
-  deployer.deploy(UniswapV2Factory, owner, maintreasuryBSC);
-  deployer.deploy(UniswapV2Pair);//, owner, treasury);
+  //deployer.deploy(UniswapV2Factory, owner, maintreasuryBSC);
+  // deployer.deploy(UniswapV2Pair);//, owner, treasury);
   deployer.deploy(Multicall2);
 
   // console.log("Factory address is ", factoryAddress);
