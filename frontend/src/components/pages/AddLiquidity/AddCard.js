@@ -307,7 +307,7 @@ const AddCard = (props) => {
     query.get("outputCurrency"),
   ];
 
-  const selectedChain = useSelector(state => state.account?.currentChain);
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   useEffect(() => {
     async function initSelection() {
@@ -457,17 +457,21 @@ const AddCard = (props) => {
   }, [selectedToken0, selectedToken1, chainId, account]);
 
   const handleConfirmAllowance = async () => {
-    const _allowanceAmount =  allowanceAmount;
+    const _allowanceAmount = allowanceAmount;
     if (!approvedTokens[selectedToken0.symbol]) {
       await confirmAllowance(
-        selectedToken0?.symbol === 'CORGIB' ? corgibAllowance :  _allowanceAmount,
+        selectedToken0?.symbol === "CORGIB"
+          ? corgibAllowance
+          : _allowanceAmount,
         selectedToken0,
         account,
         chainId
       );
     } else {
       await confirmAllowance(
-        selectedToken1?.symbol === 'CORGIB' ? corgibAllowance :  _allowanceAmount,
+        selectedToken1?.symbol === "CORGIB"
+          ? corgibAllowance
+          : _allowanceAmount,
         selectedToken1,
         account,
         chainId
@@ -524,6 +528,12 @@ const AddCard = (props) => {
       return token1Value;
     }
 
+    if (
+      new BigNumber(poolReserves[selectedToken0.symbol]).lte(0) ||
+      new BigNumber(poolReserves[selectedToken1.symbol]).lte(0)
+    ) {
+      return token1Value;
+    }
     if (!token2Value) {
       return "";
     }
@@ -547,6 +557,13 @@ const AddCard = (props) => {
 
   const parsedToken2Value = useMemo(() => {
     if (inputType === liquidityPoolConstants.exactOut || !currentPairAddress) {
+      return token2Value;
+    }
+
+    if (
+      new BigNumber(poolReserves[selectedToken0.symbol]).lte(0) ||
+      new BigNumber(poolReserves[selectedToken1.symbol]).lte(0)
+    ) {
       return token2Value;
     }
 
