@@ -113,7 +113,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 15,
     paddingLeft: 10,
     paddingRight: 10,
-    paddingTop: 15,
+    paddingTop: 30,
     paddingBottom: 15,
 
     [theme.breakpoints.down("sm")]: {
@@ -127,13 +127,26 @@ const useStyles = makeStyles((theme) => ({
   },
   statsGroup: {
     display: "flex",
+    flexDirection: "row",
     width: "30%",
     justifyContent: "center",
-    [theme.breakpoints.down("xs")]: {
+    paddingBottom: 10,
+    [theme.breakpoints.down("md")]: {
       display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      width: "90%",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      width: "100%",
+    },
+  },
+  priceGroup: {
+    display: "flex",
+    width: "30%",
+    justifyContent: "flex-start",
+    paddingBottom: 10,
+    [theme.breakpoints.down("md")]: {
+      justifyContent: "center",
+      width: "100%",
     },
   },
   statLabel: {

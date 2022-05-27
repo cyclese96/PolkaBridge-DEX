@@ -118,8 +118,8 @@ const Analytics = () => {
         {globalData && (
           <Card elevation={10} className={classes.priceStatContainer}>
             <div className={classes.statsGroup}>
-              <span className={classes.statLabel}>Volume 24H:</span>
-              <div className="d-flex align-items-center justify-content-end">
+              <div className={classes.statLabel}>Volume 24H:</div>
+              <div className={classes.priceGroup}>
                 <span className={classes.statAmount}>
                   $
                   {formatCurrency(
@@ -138,9 +138,9 @@ const Analytics = () => {
 
             <div className={classes.statsGroup}>
               <div>
-                <span className={classes.statLabel}>Fees 24H:</span>
+                <div className={classes.statLabel}>Fees 24H:</div>
               </div>
-              <div className="d-flex align-items-center justify-content-end">
+              <div className={classes.priceGroup}>
                 <div className={classes.statAmount}>
                   $
                   {formatCurrency(
@@ -160,8 +160,8 @@ const Analytics = () => {
             </div>
 
             <div className={classes.statsGroup}>
-              <span className={classes.statLabel}>TVL: </span>
-              <div className="d-flex align-items-center justify-content-end">
+              <div className={classes.statLabel}>TVL: </div>
+              <div className={classes.priceGroup}>
                 <span className={classes.statAmount}>
                   {"$" + formatCurrency(globalData.totalLiquidityUSD)}
                 </span>
