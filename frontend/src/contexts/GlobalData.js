@@ -250,14 +250,6 @@ async function getGlobalData(ethPrice, oldEthPrice, chainId = 1) {
         chainId
       );
 
-    console.log("bsc change ", {
-      oneDayBlock,
-      twoDayBlock,
-      oneWeekBlock,
-      twoWeekBlock,
-      oldEthPrice,
-      ethPrice,
-    });
     // fetch the global data
     let result = await clients?.[chainId]?.query({
       query: GLOBAL_DATA(),
