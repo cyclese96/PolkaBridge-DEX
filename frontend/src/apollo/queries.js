@@ -21,7 +21,7 @@ export const testQuery = async () => {
   console.log(res.data);
 };
 
-export const getTopTokens = async (page = 1, chainId=1) => {
+export const getTopTokens = async (page = 1, chainId = 1) => {
   const items = page * 10;
   const skips = page * 10 - 10;
 
@@ -49,7 +49,7 @@ export const getTopTokens = async (page = 1, chainId=1) => {
 };
 
 // top pools based on reserved ETH in the pool
-export const topPools = async (order = "desc", page = 1, chainId=1) => {
+export const topPools = async (order = "desc", page = 1, chainId = 1) => {
   const items = 10 * page;
   const skips = 10 * page - 10;
 
@@ -78,7 +78,7 @@ export const topPools = async (order = "desc", page = 1, chainId=1) => {
 
 // pair volume 24: pairDayData(pairId, 1 )
 // pair volume 7d pairDayData(pairId, 7 )
-export const pairDayData = async (pairId, days, chainId=1) => {
+export const pairDayData = async (pairId, days, chainId = 1) => {
   const todayUnixTime = getUnixTime(0);
 
   try {
@@ -107,7 +107,7 @@ export const pairDayData = async (pairId, days, chainId=1) => {
 
 // PolkabridgeAmmDailyData
 
-export const polkabridgeAmmDailyData = async (days = 128, chainId=1) => {
+export const polkabridgeAmmDailyData = async (days = 128, chainId = 1) => {
   try {
     const queryObj = `
       query {
@@ -255,7 +255,11 @@ export const GLOBAL_TXNS = gql`
   }
 `;
 
-export const topTransactions = async (page = 1, order = "desc", chainId=1) => {
+export const topTransactions = async (
+  page = 1,
+  order = "desc",
+  chainId = 1
+) => {
   try {
     const items = 60 * page;
     const skips = 60 * page - 60;
@@ -695,7 +699,11 @@ export const TOKEN_CURRENT_DATA = (tokenAddress) => {
 // used for getting top tokens by daily volume
 export const TOKEN_TOP_DAY_DATAS = gql`
   query tokenDayDatas($date: Int) {
-    tokenDayDatas(first: 50, orderBy: totalLiquidityUSD, orderDirection: desc) {
+    tokenDayDatas(
+      first: 150
+      orderBy: totalLiquidityUSD
+      orderDirection: desc
+    ) {
       id
       date
     }

@@ -197,11 +197,11 @@ export function useLatestBlocks() {
         })
         .then((res) => {
           const syncedBlock =
-            res.data.indexingStatusForCurrentVersion.chains[0].latestBlock
-              .number;
+            res.data?.indexingStatusForCurrentVersion?.chains?.[0]?.latestBlock
+              ?.number;
           const headBlock =
-            res.data.indexingStatusForCurrentVersion.chains[0].chainHeadBlock
-              .number;
+            res.data?.indexingStatusForCurrentVersion?.chains?.[0]
+              ?.chainHeadBlock?.number;
           if (syncedBlock && headBlock) {
             updateLatestBlock(syncedBlock);
             updateHeadBlock(headBlock);
