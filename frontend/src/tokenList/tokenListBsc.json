@@ -8,6 +8,14 @@
     "logoURI": "https://assets.coingecko.com/coins/images/12591/small/binance-coin-logo.png?1600947313"
   },
   {
+    "name": "Polkabridge",
+    "symbol": "PBR",
+    "address": "0x1D1cB8997570e73949930c01Fe5796C88d7336c6",
+    "chainId": 56,
+    "decimals": 18,
+    "logoURI": "https://assets.coingecko.com/coins/images/13744/small/symbol-whitebg200x200.png?1611377553"
+  },
+  {
     "name": "Polkawar",
     "symbol": "PWAR",
     "address": "0x16153214E683018D5aA318864c8e692b66E16778",

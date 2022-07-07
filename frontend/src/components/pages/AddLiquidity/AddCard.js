@@ -782,6 +782,10 @@ const AddCard = (props) => {
       return { currentBtnText: currApproveBtnText, disabled: false };
     }
 
+    if (!currentPairAddress) {
+      return { currentBtnText: "Create Pool", disabled: false };
+    }
+
     return { currentBtnText: "Add liquidity", disabled: false };
   }, [
     currApproveBtnText,
@@ -792,6 +796,7 @@ const AddCard = (props) => {
     currencyBalances,
     parsedToken1Value,
     parsedToken2Value,
+    currentPairAddress,
   ]);
 
   // liquidity transaction status updates

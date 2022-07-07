@@ -159,7 +159,10 @@ const TabPage = ({ data = 1 }) => {
             Swap{" "}
           </div>
         </Link>
-        <Link to="/liquidity" className={classes.noDecoration}>
+        <Link
+          to="/liquidity?action=add_liquidity"
+          className={classes.noDecoration}
+        >
           <div
             className={
               data === 1 ? classes.active_tabStyle : classes.default_tabStyle
