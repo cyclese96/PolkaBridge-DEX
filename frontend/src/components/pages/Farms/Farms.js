@@ -99,6 +99,10 @@ const Farms = (props) => {
     }
   };
 
+  useEffect(() => {
+    console.log("farm price token price ", { farmTokenPriceUsd });
+  }, [farmTokenPriceData]);
+
   const farmPools = useMemo(() => {
     return Object.keys(supportedFarmingPools).includes(
       selectedChain?.toString()

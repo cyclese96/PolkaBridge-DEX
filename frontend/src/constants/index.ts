@@ -6,6 +6,7 @@ export const TOKEN_ADDRESS = {
   PBR: {
     1: "0x298d492e8c1d909D3F63Bc4A36C66c64ACB3d695",
     4: "0xf6c9FF0543f932178262DF8C81A12A3132129b51",
+    56: "0x1D1cB8997570e73949930c01Fe5796C88d7336c6",
   },
   USDT: {
     1: "0xdac17f958d2ee523a2206206994597c13d831ec7",
@@ -92,14 +93,14 @@ export const DEFAULT_SWAP_TOKENS = {
   1: ["ETH", "PBR"], // token0 token1
   4: ["ETH", "PBR"],
   97: ["BNB", "PWAR"],
-  56: ["BNB", "PWAR"],
+  56: ["BNB", "PBR"],
 };
 
 export const DEFAULT_POOL_TOKENS = {
   1: ["ETH", "PBR"], // token0 token1
   4: ["ETH", "PBR"],
   97: ["BNB", "PWAR"],
-  56: ["BNB", "PWAR"],
+  56: ["BNB", "PBR"],
 };
 
 export const TOKEN_BLACKLIST = [];
@@ -163,7 +164,7 @@ export const THRESOLD_WEI_VALUE = 100000000000000;
 export const supportedFarmingPools = {
   1: ["PBR-ETH", "ETH-USDT"],
   4: ["PBR-ETH", "ETH-USDT"],
-  56: ["PWAR-BNB", "BNB-USDT"],
+  56: ["PBR-BNB", "PWAR-BNB", "BNB-USDT"],
   97: ["PWAR-BNB", "BNB-USDT"],
 };
 
@@ -205,6 +206,14 @@ export const farmingPoolConstants = {
     },
   },
   56: {
+    "PBR-BNB": {
+      multiplier: 50,
+      pid: 2,
+      address: "0xD2F64768FEa0591499344d79627ac7c4a43071D1",
+      blocksPerYear: "",
+      lpApr: 0,
+      decimals: 18,
+    },
     "PWAR-BNB": {
       multiplier: 40,
       pid: 0,
@@ -216,8 +225,8 @@ export const farmingPoolConstants = {
     "BNB-USDT": {
       multiplier: 5,
       pid: 1,
-      address: "",
-      blocksPerYear: "0xd044646e11112f806731f16495632e2db00d171f",
+      address: "0xd044646e11112f806731f16495632e2db00d171f",
+      blocksPerYear: "",
       lpApr: 0,
       decimals: 12,
     },

@@ -225,6 +225,10 @@ const Farm = (props) => {
       .toString();
   }, [ethPrice, farmData, lpBalance, address]);
 
+  // useEffect(() => {
+
+  // },[totalValueLockedUSD])
+
   const parseStakedAmount = useMemo(() => {
     if (!farmData) {
       return 0;
