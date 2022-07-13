@@ -14,13 +14,14 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 30,
     borderRadius: 15,
     display: "flex",
+
     width: 400,
     justifyContent: "space-between",
     alignItems: "center",
     background: "#ffffff",
     padding: 7,
     [theme.breakpoints.down("sm")]: {
-      width: "90%",
+      width: "100%",
     },
   },
   default_tabStyle: {
