@@ -5,6 +5,9 @@ const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`); // match escaped "." charac
 
 const NumberInput = ({ onInputChange, value, placeholder, style }) => {
   const onUserTyped = (nextUserInput) => {
+    if (nextUserInput === ".") {
+      return;
+    }
     if (nextUserInput === "" || inputRegex.test(escapeRegExp(nextUserInput))) {
       onInputChange(nextUserInput);
     }
