@@ -158,7 +158,7 @@ const SwapCardItem = (props) => {
               />
             </div>
           </div>
-          {new BigNumber(priceUSD).gt(0) && (
+          {new BigNumber(priceUSD).gt(0) && inputType === "to" && (
             <div className={classes.labelRow}>
               <p className={classes.hintLabelFont}>
                 ~ $
