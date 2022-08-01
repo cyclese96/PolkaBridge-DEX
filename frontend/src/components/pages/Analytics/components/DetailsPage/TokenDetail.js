@@ -27,6 +27,7 @@ import TokenTxTable from "../Tables/TokenTxTable";
 import { useGlobalTransactions } from "../../../../../contexts/GlobalData";
 import TokenPairsTable from "../Tables/TokenPairsTable";
 import { useSelector } from "react-redux";
+import { BLACK_LIST_PAIRS_ON_CHART } from "../../../../../constants/index";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -183,7 +184,6 @@ const useStyles = makeStyles((theme) => ({
     margin: "0 auto",
   },
   loader: {
-  
     minHeight: `calc(100vh - 120px)`,
     display: "flex",
     flexDirection: "column",
@@ -209,7 +209,7 @@ function TokenPage({ address }) {
   const [rows, setRows] = useState([]);
   const [tokenPairRows, setTokenPairRows] = useState([]);
 
-  const selectedChain = useSelector(state => state.account?.currentChain);
+  const selectedChain = useSelector((state) => state.account?.currentChain);
 
   useEffect(() => {
     document.querySelector("body").scrollTo(0, 0);
@@ -236,10 +236,14 @@ function TokenPage({ address }) {
       return;
     }
     let pairObjects = {};
-    const tokenPairs = Object.keys(allPairs).filter(
+    let tokenPairs = Object.keys(allPairs).filter(
       (key) =>
         allPairs[key].token0.id === address ||
         allPairs[key].token1.id === address
+    );
+
+    tokenPairs = tokenPairs.filter(
+      (key) => !BLACK_LIST_PAIRS_ON_CHART.includes(allPairs[key]?.id)
     );
 
     tokenPairs.map((key) => (pairObjects[key] = allPairs[key]));

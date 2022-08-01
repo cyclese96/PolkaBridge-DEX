@@ -275,3 +275,8 @@ export const SWAP_BASES: { [index: string]: Array<string> } = {
 };
 
 export const NetworkContextName = "NETWORK";
+
+export const BLACK_LIST_PAIRS_ON_CHART = [
+  "0xdda0a346d267a48ec74cc68979584d85501fe5d5", // ETH-USDT  MAINNET
+  "0xd044646e11112f806731f16495632e2db00d171f", // BNB-USDT , BSC
+];
