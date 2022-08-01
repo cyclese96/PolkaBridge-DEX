@@ -15,7 +15,7 @@ import {
   harvestRewards,
 } from "../../../actions/farmActions";
 import BigNumber from "bignumber.js";
-import { fromWei, getPbrRewardApr } from "../../../utils/helper";
+import { fromWei, getRewardApr } from "../../../utils/helper";
 import { useEthPrice } from "../../../contexts/GlobalData";
 import useActiveWeb3React from "hooks/useActiveWeb3React";
 
@@ -255,17 +255,31 @@ const Farm = (props) => {
   const farmApr = useMemo(() => {
     const poolWeight = farmData?.poolWeight;
 
-    const pbrRewardApr = getPbrRewardApr(
+    console.log("apr calc", {
       poolWeight,
       tokenPriceUsd,
-      totalPoolLiquidityUSDValue
+      totalPoolLiquidityUSDValue,
+      lpApr,
+      farmPool,
+    });
+    const pbrRewardApr = getRewardApr(
+      poolWeight,
+      tokenPriceUsd,
+      totalPoolLiquidityUSDValue,
+      selectedChain
     );
     const totalApr = new BigNumber(pbrRewardApr)
       .plus(lpApr)
       .toFixed(0)
       .toString();
     return totalApr;
-  }, [farmData, lpApr, tokenPriceUsd, totalPoolLiquidityUSDValue]);
+  }, [
+    farmData,
+    lpApr,
+    tokenPriceUsd,
+    totalPoolLiquidityUSDValue,
+    selectedChain,
+  ]);
 
   const handleStakeActions = (actionType = "stake") => {
     onStake(name, actionType, address, decimals, pid);

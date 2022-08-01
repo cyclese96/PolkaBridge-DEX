@@ -4,7 +4,7 @@ import {
   bscNetwork,
   etheriumNetwork,
   moonriverNetwork,
-  PBR_PER_YEAR,
+  REWARD_TOKEN_PER_YEAR,
 } from "../constants/index";
 import Web3 from "web3";
 import config from "./config";
@@ -306,22 +306,32 @@ export const getCachedTokens = () => {
   return JSON.parse(tokens);
 };
 
-export const getPbrRewardApr = (poolWeight, pbrPriceUSD, poolLiquidityUSD) => {
+export const getRewardApr = (
+  poolWeight,
+  pbrPriceUSD,
+  poolLiquidityUSD,
+  chainId
+) => {
   try {
     if (!poolWeight || !pbrPriceUSD || !poolLiquidityUSD) {
       return "0";
     }
 
-    const yearlyPbrRewardAllocation = poolWeight
-      ? new BigNumber(poolWeight).times(PBR_PER_YEAR)
+    const rewardPerYear = Object.keys(REWARD_TOKEN_PER_YEAR).includes(
+      chainId?.toString()
+    )
+      ? REWARD_TOKEN_PER_YEAR[chainId]
+      : 0;
+    const yearlyRewardAllocation = poolWeight
+      ? new BigNumber(poolWeight).times(rewardPerYear)
       : new BigNumber(NaN);
 
-    const pbrRewardApr = yearlyPbrRewardAllocation
+    const rewardApr = yearlyRewardAllocation
       .times(pbrPriceUSD)
       .div(poolLiquidityUSD)
       .times(100);
 
-    return pbrRewardApr.toFixed(0).toString();
+    return rewardApr.toFixed(0).toString();
   } catch (error) {
     console.log("calculate apr exeption ", error);
     return "0";

@@ -256,6 +256,15 @@ export const PBR_PER_BLOCK = 0.5;
 export const BLOCKS_PER_YEAR = (60 / RINKEBY_BLOCK_TIME) * 60 * 24 * 365;
 export const PBR_PER_YEAR = PBR_PER_BLOCK * BLOCKS_PER_YEAR;
 
+export const PWAR_PER_BLOCK = 0.6;
+export const BLOCKS_PER_YEAR_BSC = 10220000;
+export const PWAR_PER_YEAR = PWAR_PER_BLOCK * BLOCKS_PER_YEAR_BSC;
+
+export const REWARD_TOKEN_PER_YEAR = {
+  1: PBR_PER_YEAR,
+  56: PWAR_PER_YEAR,
+};
+
 export const BASE_URL =
   process.env.NODE_ENV && process.env.NODE_ENV === "development"
     ? process.env.REACT_APP_DEVELOPMENT_URL
