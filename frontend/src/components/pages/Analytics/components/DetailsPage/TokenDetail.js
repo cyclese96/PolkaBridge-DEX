@@ -27,7 +27,6 @@ import TokenTxTable from "../Tables/TokenTxTable";
 import { useGlobalTransactions } from "../../../../../contexts/GlobalData";
 import TokenPairsTable from "../Tables/TokenPairsTable";
 import { useSelector } from "react-redux";
-import { BLACK_LIST_PAIRS_ON_CHART } from "../../../../../constants/index";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -243,7 +242,7 @@ function TokenPage({ address }) {
     );
 
     tokenPairs = tokenPairs.filter(
-      (key) => !BLACK_LIST_PAIRS_ON_CHART.includes(allPairs[key]?.id)
+      (key) => parseInt(allPairs[key]?.reserveUSD) > 0
     );
 
     tokenPairs.map((key) => (pairObjects[key] = allPairs[key]));

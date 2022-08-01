@@ -277,6 +277,11 @@ export const SWAP_BASES: { [index: string]: Array<string> } = {
 export const NetworkContextName = "NETWORK";
 
 export const BLACK_LIST_PAIRS_ON_CHART = [
-  "0xdda0a346d267a48ec74cc68979584d85501fe5d5", // ETH-USDT  MAINNET
-  "0xd044646e11112f806731f16495632e2db00d171f", // BNB-USDT , BSC
+  // "0xdda0a346d267a48ec74cc68979584d85501fe5d5", // ETH-USDT  MAINNET
+  // "0xd044646e11112f806731f16495632e2db00d171f", // BNB-USDT , BSC
+];
+
+export const BLACK_LIST_TOKENS_ON_CHART = [
+  // "0xdac17f958d2ee523a2206206994597c13d831ec7", // USDT, MAINNET
+  // "0x55d398326f99059ff775485246999027b3197955", // usdt bsc
 ];

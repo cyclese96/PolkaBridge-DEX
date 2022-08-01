@@ -13,7 +13,6 @@ import TokenIcon from "../../../../common/TokenIcon";
 import { Link } from "react-router-dom";
 import { ArrowDownward } from "@material-ui/icons";
 import { formattedNum } from "../../../../../utils/timeUtils";
-import { BLACK_LIST_PAIRS_ON_CHART } from "../../../../../constants/index";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -82,7 +81,7 @@ export default function TokenPairsTable({ data }) {
   useEffect(() => {
     let result = Object.keys(data).filter((key) => {
       console.log("pair page", key);
-      if (!BLACK_LIST_PAIRS_ON_CHART.includes(key)) {
+      if (parseFloat(data[key]?.reserveUSD) > 0) {
         return true;
       }
     });

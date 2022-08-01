@@ -15,7 +15,6 @@ import { ArrowDownward } from "@material-ui/icons";
 import { formattedNum } from "../../../../../utils/timeUtils";
 import { useEthPrice } from "../../../../../contexts/GlobalData";
 import BigNumber from "bignumber.js";
-import { BLACK_LIST_PAIRS_ON_CHART } from "../../../../../constants/index";
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -83,7 +82,7 @@ export default function TopPoolsTable({ data, numberOfRows = 5 }) {
 
   useEffect(() => {
     let result = Object.keys(data).filter((key) => {
-      if (!BLACK_LIST_PAIRS_ON_CHART.includes(data[key]?.id)) {
+      if (new BigNumber(data[key]?.reserveETH).gt(0)) {
         return true;
       }
     });
