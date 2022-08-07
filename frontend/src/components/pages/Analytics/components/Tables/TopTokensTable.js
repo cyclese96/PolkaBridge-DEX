@@ -254,7 +254,7 @@ export default function TopTokensTable({ data, numberOfRows = 5 }) {
                     align="right"
                     style={{ color: "#212121", fontSize: 13 }}
                   >
-                    ${formattedNum(parseFloat(row.tradeVolumeUSD).toFixed(3))}
+                    ${formattedNum(parseFloat(row?.oneDayVolumeUSD).toFixed(3))}
                   </TableCell>
                   <TableCell
                     align="right"

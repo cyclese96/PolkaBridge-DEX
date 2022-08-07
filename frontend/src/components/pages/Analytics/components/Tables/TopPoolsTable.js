@@ -261,9 +261,7 @@ export default function TopPoolsTable({ data, numberOfRows = 5 }) {
                       style={{ color: "#212121", fontSize: 12 }}
                     >
                       $
-                      {formattedNum(
-                        parseFloat(row.oneDayVolumeUntracked).toFixed(2)
-                      )}
+                      {formattedNum(parseFloat(row.oneDayVolumeUSD).toFixed(2))}
                     </TableCell>
                     <TableCell
                       align="right"
