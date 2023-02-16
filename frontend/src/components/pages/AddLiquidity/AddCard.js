@@ -34,19 +34,17 @@ import BigNumber from "bignumber.js";
 import store from "../../../store";
 import { RESET_POOL_SHARE, START_TRANSACTION } from "../../../actions/types";
 import debounce from "lodash.debounce";
-import {
-  getPairAddress,
-  useWalletConnectCallback,
-} from "../../../utils/connectionUtils";
+import { getPairAddress } from "../../../utils/connectionUtils";
 import { Settings } from "@material-ui/icons";
 import TransactionConfirm from "../../common/TransactionConfirm";
 import { useTokenData } from "../../../contexts/TokenData";
 import { useLocation } from "react-router-dom";
-import useActiveWeb3React from "hooks/useActiveWeb3React";
-import { useCurrencyBalances } from "hooks/useBalance";
+import useActiveWeb3React from "../../../hooks/useActiveWeb3React";
+import { useCurrencyBalances } from "../../../hooks/useBalance";
 import { Token } from "polkabridge-sdk";
-import { isAddress } from "utils/contractUtils";
-import { wrappedCurrency } from "hooks/wrappedCurrency";
+import { isAddress } from "../../../utils/contractUtils";
+import { wrappedCurrency } from "../../../hooks/wrappedCurrency";
+import { useUserAuthentication } from "../../../hooks/useUserAuthentication";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -256,7 +254,7 @@ const AddCard = (props) => {
   const [localStateLoading, setLocalStateLoading] = useState(false);
 
   const [swapDialogOpen, setSwapDialog] = useState(false);
-  const [connectWallet] = useWalletConnectCallback();
+  const { connectWallet } = useUserAuthentication();
   const [inputType, setInputType] = useState(liquidityPoolConstants.exactIn);
 
   // selected token usd value track
@@ -293,7 +291,7 @@ const AddCard = (props) => {
 
   const query = new URLSearchParams(useLocation().search);
 
-  const { chainId, active, account } = useActiveWeb3React();
+  const { chainId, isActive, account } = useActiveWeb3React();
 
   const handleTokenImport = useCallback(
     (_tokenAddress) => {
@@ -679,7 +677,7 @@ const AddCard = (props) => {
   }, [poolReserves, selectedToken0, selectedToken1, parsedToken1Value]);
 
   const handleAction = () => {
-    if (!active) {
+    if (!isActive) {
       connectWallet();
       return;
     }
@@ -743,7 +741,7 @@ const AddCard = (props) => {
   ]);
 
   const currentAddLiquidityStatus = useMemo(() => {
-    if (!active) {
+    if (!isActive) {
       return { currentBtnText: "Connect Wallet", disabled: false };
     }
 
@@ -789,7 +787,7 @@ const AddCard = (props) => {
     return { currentBtnText: "Add liquidity", disabled: false };
   }, [
     currApproveBtnText,
-    active,
+    isActive,
     localStateLoading,
     transaction,
     isBothTokensApproved,

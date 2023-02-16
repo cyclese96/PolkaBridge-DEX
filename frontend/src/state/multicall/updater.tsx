@@ -1,7 +1,7 @@
 import { Contract } from "@ethersproject/contracts";
 import { useEffect, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import useDebounce from "hooks/useDebounce";
+import useDebounce from "../../hooks/useDebounce";
 // import { chunkArray } from "utils/chunkArray";
 // import { retry } from "utils/retry";
 import { AppDispatch, AppState } from "state";
@@ -12,11 +12,11 @@ import {
   parseCallKey,
   updateMulticallResults,
 } from "./actions";
-import useBlockNumber from "hooks/useBlockNumber";
-import useActiveWeb3React from "hooks/useActiveWeb3React";
-import { chunkArray } from "lib/chunkArray";
-import { retry } from "lib/retry";
-import { useInterfaceMulticall } from "hooks/useContract";
+import useBlockNumber from "../../hooks/useBlockNumber";
+import useActiveWeb3React from "../../hooks/useActiveWeb3React";
+import { chunkArray } from "../../lib/chunkArray";
+import { retry } from "../../lib/retry";
+import { useInterfaceMulticall } from "../../hooks/useContract";
 
 // chunk calls so we do not exceed the gas limit
 const CALL_CHUNK_SIZE = 500;

@@ -1,7 +1,7 @@
-import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
-import connectors from "contracts/connections/connectors";
-import useActiveWeb3React from "hooks/useActiveWeb3React";
-import { useCallback } from "react";
+// import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
+// import connectors from "contracts/connections/connectors";
+// import useActiveWeb3React from "hooks/useActiveWeb3React";
+// import { useCallback } from "react";
 import {
   bscNetwork,
   etheriumNetwork,
@@ -86,35 +86,35 @@ export const getCurrentNetwork = (networkId) => {
   }
 };
 
-export function useWalletConnectCallback() {
-  const { activate } = useActiveWeb3React();
+// export function useWalletConnectCallback() {
+//   const { activate } = useActiveWeb3React();
 
-  const createConnectHandler = useCallback(
-    async (connector) => {
-      try {
-        // const connector = connectors.injected;
-        // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
+//   const createConnectHandler = useCallback(
+//     async (connector) => {
+//       try {
+//         // const connector = connectors.injected;
+//         // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
 
-        if (connector instanceof WalletConnectConnector) {
-          connector.walletConnectProvider = undefined;
-        }
+//         // if (connector instanceof WalletConnectConnector) {
+//         //   connector.walletConnectProvider = undefined;
+//         // }
 
-        await activate(connector);
-        localStorage.connected = "yes";
-      } catch (error) {
-        console.error("createConnectHandler", error);
-      }
-    },
-    [activate]
-  );
+//         await activate(connector);
+//         localStorage.connected = "yes";
+//       } catch (error) {
+//         console.error("createConnectHandler", error);
+//       }
+//     },
+//     [activate]
+//   );
 
-  const connectWallet = useCallback(() => {
-    if (isMetaMaskInstalled()) {
-      createConnectHandler(connectors.injected);
-    } else {
-      createConnectHandler(connectors.walletconnect);
-    }
-  }, [createConnectHandler]);
+//   const connectWallet = useCallback(() => {
+//     if (isMetaMaskInstalled()) {
+//       createConnectHandler(connectors.injected);
+//     } else {
+//       createConnectHandler(connectors.walletconnect);
+//     }
+//   }, [createConnectHandler]);
 
-  return [connectWallet];
-}
+//   return [connectWallet];
+// }

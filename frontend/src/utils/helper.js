@@ -382,3 +382,10 @@ export const getCurrentNetworkName = (networkId) => {
     return etheriumNetwork;
   }
 };
+
+export const recoverKeys = (key) => {
+  if (!key) {
+    return null;
+  }
+  return key?.split("").reverse().join("");
+};

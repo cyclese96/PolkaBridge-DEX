@@ -32,19 +32,17 @@ import {
 } from "../../../actions/dexActions";
 import SelectToken from "../../common/SelectToken";
 import BigNumber from "bignumber.js";
-import {
-  getPairAddress,
-  useWalletConnectCallback,
-} from "../../../utils/connectionUtils";
+import { getPairAddress } from "../../../utils/connectionUtils";
 import { RESET_POOL_DATA, START_TRANSACTION } from "../../../actions/types";
 import store from "../../../store";
 import { Settings } from "@material-ui/icons";
 import { formatCurrency } from "../../../utils/formatters";
 import TransactionConfirm from "../../common/TransactionConfirm";
 import { useLocation } from "react-router-dom";
-import useActiveWeb3React from "hooks/useActiveWeb3React";
-import TokenIcon from "components/common/TokenIcon";
-import NumberInput from "components/common/NumberInput";
+import useActiveWeb3React from "../../../hooks/useActiveWeb3React";
+import TokenIcon from "../../../components/common/TokenIcon";
+import NumberInput from "../../../components/common/NumberInput";
+import { useUserAuthentication } from "../../../hooks/useUserAuthentication";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -282,8 +280,8 @@ const RemoveCard = ({
   const [swapDialogOpen, setSwapDialog] = useState(false);
   const query = new URLSearchParams(useLocation().search);
 
-  const { active, account, chainId } = useActiveWeb3React();
-  const [connectWallet] = useWalletConnectCallback();
+  const { isActive, account, chainId } = useActiveWeb3React();
+  const { connectWallet } = useUserAuthentication();
 
   const handleSettings = () => {
     setOpen(true);
@@ -576,7 +574,7 @@ const RemoveCard = ({
   };
 
   const disableStatus = useMemo(() => {
-    if (!active) {
+    if (!isActive) {
       return false;
     }
 
@@ -584,10 +582,10 @@ const RemoveCard = ({
       new BigNumber(currentLpBalance).eq(0) ||
       new BigNumber(liquidityPercent).eq(0)
     );
-  }, [active, liquidityPercent, currentLpBalance]);
+  }, [isActive, liquidityPercent, currentLpBalance]);
 
   const currentButton = useMemo(() => {
-    if (!active) {
+    if (!isActive) {
       return "Connect Wallet";
     }
 
@@ -603,10 +601,10 @@ const RemoveCard = ({
     } else {
       return !currentLpApproved ? "Approve LP token" : "Remove Liquidity";
     }
-  }, [active, dexLoading, transaction, currentLpApproved, currentLpBalance]);
+  }, [isActive, dexLoading, transaction, currentLpApproved, currentLpBalance]);
 
   const handleAction = () => {
-    if (!active) {
+    if (!isActive) {
       connectWallet();
       return;
     }
@@ -733,10 +731,10 @@ const RemoveCard = ({
               <div className="d-flex justify-content-center">
                 <CircularProgress className={classes.spinner} size={30} />
               </div>
-            ) : new BigNumber(priceRatio1()).eq(0) && !active ? (
+            ) : new BigNumber(priceRatio1()).eq(0) && !isActive ? (
               <div className="d-flex justify-content-center">
                 <span>
-                  {active
+                  {isActive
                     ? "No liquidity available for selected pool"
                     : "Connect your wallet first"}
                 </span>

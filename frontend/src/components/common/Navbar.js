@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -16,12 +16,9 @@ import SwapVertIcon from "@material-ui/icons/SwapVert";
 
 import { EqualizerOutlined } from "@material-ui/icons";
 import Wallet from "./Wallet";
-import AccountDialog from "./AccountDialog";
 import DotCircle from "./DotCircle";
 import { connect } from "react-redux";
 import NetworkSelect from "./NetworkSelect";
-import useActiveWeb3React from "../../hooks/useActiveWeb3React";
-import { useWalletConnectCallback } from "utils/connectionUtils";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -213,34 +210,8 @@ const Navbar = (props) => {
     right: false,
   });
 
-  const [accountDialog, setAccountDialog] = useState(false);
-
-  const [connectWallet] = useWalletConnectCallback();
-
   const toggleDrawer = (anchor, open) => (event) => {
     setState({ ...state, [anchor]: open });
-  };
-
-  const { active, deactivate } = useActiveWeb3React();
-
-  useEffect(() => {
-    if (!active && localStorage.connected === "yes") {
-      connectWallet();
-    }
-  }, [active, connectWallet]);
-
-  const handleLogout = () => {
-    localStorage.connected = "none";
-    deactivate();
-  };
-
-  const handleWalletClick = () => {
-    // console.log("active", active);
-    if (active) {
-      setAccountDialog(true);
-    } else {
-      connectWallet();
-    }
   };
 
   const list = (anchor) => (
@@ -301,7 +272,7 @@ const Navbar = (props) => {
         ))}
 
         <ListItem button style={{ paddingLeft: 5 }}>
-          <Wallet onWalletClick={handleWalletClick} />
+          <Wallet />
         </ListItem>
       </List>
     </div>
@@ -309,11 +280,6 @@ const Navbar = (props) => {
 
   return (
     <div className={classes.grow}>
-      <AccountDialog
-        open={accountDialog}
-        handleLogout={handleLogout}
-        handleClose={() => setAccountDialog(false)}
-      />
       <AppBar
         color="transparent"
         position="fixed"
@@ -389,8 +355,8 @@ const Navbar = (props) => {
 
           <div className={classes.grow} />
 
-          <NetworkSelect  />
-          <Wallet onWalletClick={handleWalletClick} />
+          <NetworkSelect />
+          <Wallet />
         </Toolbar>
 
         <Toolbar className={classes.sectionMobile}>
@@ -406,9 +372,8 @@ const Navbar = (props) => {
               </a>
             </div>
 
-            {/* <Wallet onWalletClick={() => setAccountDialog(true)} /> */}
             <div className="d-flex justify-content-between align-items-center">
-              <NetworkSelect  />
+              <NetworkSelect />
               {["right"].map((anchor) => (
                 <React.Fragment key={anchor}>
                   <IconButton

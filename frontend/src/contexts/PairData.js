@@ -529,15 +529,15 @@ export function Updater() {
   useEffect(() => {
     async function getData() {
       // get top pairs by reserves
-      let {
-        data: { pairs },
-      } = await clients?.[selectedChain]?.query({
+      let data = await clients?.[selectedChain]?.query({
         query: PAIRS_CURRENT,
         fetchPolicy: "cache-first",
       });
+      console.log("pair data test", { data });
+      let pairs = data?.data?.pairs;
 
       // format as array of addresses
-      const formattedPairs = pairs.map((pair) => {
+      const formattedPairs = pairs?.map((pair) => {
         return pair.id;
       });
 

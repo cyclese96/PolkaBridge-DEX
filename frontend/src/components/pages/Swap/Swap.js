@@ -37,13 +37,13 @@ import { useLocation } from "react-router";
 import { useTokenData } from "../../../contexts/TokenData";
 import { useTradeExactIn, useTradeExactOut } from "../../../hooks/useTrades";
 import { Token, TokenAmount, JSBI, WETH } from "polkabridge-sdk";
-import { wrappedCurrency } from "hooks/wrappedCurrency";
-import useActiveWeb3React from "hooks/useActiveWeb3React";
-import { isAddress } from "utils/contractUtils";
-import { computeTradePriceBreakdown } from "utils/prices";
-import { useWalletConnectCallback } from "utils/connectionUtils";
+import { wrappedCurrency } from "../../../hooks/wrappedCurrency";
+import useActiveWeb3React from "../../../hooks/useActiveWeb3React";
+import { isAddress } from "../../../utils/contractUtils";
+import { computeTradePriceBreakdown } from "../../../utils/prices";
 import BigNumber from "bignumber.js";
-import { useCurrencyBalances } from "hooks/useBalance";
+import { useCurrencyBalances } from "../../../hooks/useBalance";
+import { useUserAuthentication } from "../../../hooks/useUserAuthentication";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -229,9 +229,9 @@ const Swap = (props) => {
     swapFn: swapFnConstants.swapETHforExactTokens,
   });
 
-  const { chainId, active, account } = useActiveWeb3React();
+  const { chainId, isActive, account } = useActiveWeb3React();
 
-  const [connectWallet] = useWalletConnectCallback();
+  const { connectWallet } = useUserAuthentication();
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popper" : undefined;
@@ -299,7 +299,7 @@ const Swap = (props) => {
       }
     }
     initSelection();
-  }, [chainId, active, tokenList]);
+  }, [chainId, isActive, tokenList]);
 
   // clear input values entered
   const clearInputState = () => {
@@ -528,7 +528,7 @@ const Swap = (props) => {
   }, [approvedTokens, selectedToken0, chainId]);
 
   const handleAction = () => {
-    if (!active) {
+    if (!isActive) {
       connectWallet();
       return;
     }
@@ -643,7 +643,7 @@ const Swap = (props) => {
   ]);
 
   const currentSwapStatus = useMemo(() => {
-    if (!active) {
+    if (!isActive) {
       return { currentBtnText: "Connect Wallet", disabled: false };
     }
 
@@ -682,7 +682,7 @@ const Swap = (props) => {
 
     return { currentBtnText: "Swap", disabled: false };
   }, [
-    active,
+    isActive,
     transaction,
     userHasSpecifiedInputOutput,
     noRoute,

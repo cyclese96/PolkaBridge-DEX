@@ -3,8 +3,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
 // import { currentConnection } from "../../constants/index";
 import { connect } from "react-redux";
-import { urls } from "utils/formatters";
-import useActiveWeb3React from "hooks/useActiveWeb3React";
+import { urls } from "../../utils/formatters";
+import useActiveWeb3React from "../../hooks/useActiveWeb3React";
 
 const useStyles = makeStyles((theme) => ({
   background: {

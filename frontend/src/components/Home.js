@@ -8,15 +8,15 @@ import { loadTokens } from "../actions/dexActions";
 import useActiveWeb3React from "../hooks/useActiveWeb3React";
 
 const Home = ({ loadTokens }) => {
-  const { active, account, chainId } = useActiveWeb3React();
+  const { isActive, account, chainId } = useActiveWeb3React();
   const currentChain = useSelector((state) => state.account?.currentChain);
 
   useEffect(() => {
     loadTokens(currentChain);
-  }, [currentChain, active, account, loadTokens]);
+  }, [currentChain, isActive, account, loadTokens]);
 
   useEffect(() => {
-    if (!chainId || !active) {
+    if (!chainId || !isActive) {
       // check if there is existing cached selected network other wise select ethereum chain by default
 
       const cachedChain = localStorage.getItem("cachedChain");
@@ -45,7 +45,7 @@ const Home = ({ loadTokens }) => {
       type: CHANGE_NETWORK,
       payload: { network: _network, chain: chainId },
     });
-  }, [chainId, active, account]);
+  }, [chainId, isActive, account]);
 
   useEffect(() => {
     async function onNetworkChangeUpdate() {
