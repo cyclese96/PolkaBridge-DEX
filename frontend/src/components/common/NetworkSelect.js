@@ -3,22 +3,15 @@ import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import {
-  bscNetworkDetail,
-  ethereumNetworkDetail,
-  harmonyNetworkDetail,
-  moonriverNetworkDetail,
-  polygonNetworkDetail,
-} from "../../utils/networkConstants";
-import { setupNetwork } from "../../utils/connectionUtils";
-import { currentConnection, FACTORY_ADDRESS } from "../../constants/index";
+
 import config from "../../utils/config";
-import { Button } from "@material-ui/core";
 import useActiveWeb3React from "../../hooks/useActiveWeb3React";
 import { useSelector } from "react-redux";
-import { getCurrentNetworkName, isMetaMaskInstalled } from "../../utils/helper";
+import { getCurrentNetworkName } from "../../utils/helper";
 import store from "../../store";
 import { CHANGE_NETWORK } from "../../actions/types";
+import { switchChain } from "../../connection/switchChain";
+import { SupportedChainId } from "../../connection/chains";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,7 +56,7 @@ export default function NetworkSelect() {
     parseInt(localStorage.getItem("currentNetwork") || config.chainId)
   );
 
-  const { active, chainId, account } = useActiveWeb3React();
+  const { connector } = useActiveWeb3React();
   const selectedChain = useSelector((state) => state.account?.currentChain);
 
   useEffect(() => {
@@ -85,155 +78,116 @@ export default function NetworkSelect() {
     setNetwork(_selected);
   };
 
+  // const handleChange = useCallback(
+  //   (_selected) => {
+  //     if (network === _selected) {
+  //       return;
+  //     }
+
+  //     localStorage.setItem("currentNetwork", _selected);
+
+  //     // handle network stated when metamask in not available
+  //     if (!active) {
+  //       handleChangeNetwork(_selected);
+  //     }
+
+  //     setNetwork(_selected);
+  //     if ([config.bscChain, config.bscChainTestent].includes(_selected)) {
+  //       setupNetwork(
+  //         currentConnection === "mainnet"
+  //           ? bscNetworkDetail.mainnet
+  //           : bscNetworkDetail.testnet
+  //       );
+  //     } else if (
+  //       [config.polygon_chain_mainnet, config.polygon_chain_testnet].includes(
+  //         _selected
+  //       )
+  //     ) {
+  //       setupNetwork(
+  //         currentConnection === "mainnet"
+  //           ? polygonNetworkDetail.mainnet
+  //           : polygonNetworkDetail.testnet
+  //       );
+  //     } else if (
+  //       [config.hmyChainMainnet, config.hmyChainTestnet].includes(_selected)
+  //     ) {
+  //       setupNetwork(
+  //         currentConnection === "mainnet"
+  //           ? harmonyNetworkDetail.mainnet
+  //           : harmonyNetworkDetail.testnet
+  //       );
+  //     } else if (
+  //       [config.moonriverChain, config.moonriverChainTestent].includes(
+  //         _selected
+  //       )
+  //     ) {
+  //       setupNetwork(
+  //         currentConnection === "mainnet"
+  //           ? moonriverNetworkDetail.mainnet
+  //           : moonriverNetworkDetail.testnet
+  //       );
+  //     } else {
+  //       setupNetwork(
+  //         currentConnection === "mainnet"
+  //           ? ethereumNetworkDetail.mainnet
+  //           : ethereumNetworkDetail.testnet
+  //       );
+  //     }
+  //   },
+  //   [network]
+  // );
+
   const handleChange = useCallback(
-    (_selected) => {
+    async (_selected) => {
       if (network === _selected) {
         return;
       }
 
       localStorage.setItem("currentNetwork", _selected);
 
-      // handle network stated when metamask in not available
-      if (!active) {
-        handleChangeNetwork(_selected);
-      }
+      handleChangeNetwork(_selected);
 
-      setNetwork(_selected);
-      if ([config.bscChain, config.bscChainTestent].includes(_selected)) {
-        setupNetwork(
-          currentConnection === "mainnet"
-            ? bscNetworkDetail.mainnet
-            : bscNetworkDetail.testnet
-        );
-      } else if (
-        [config.polygon_chain_mainnet, config.polygon_chain_testnet].includes(
-          _selected
-        )
-      ) {
-        setupNetwork(
-          currentConnection === "mainnet"
-            ? polygonNetworkDetail.mainnet
-            : polygonNetworkDetail.testnet
-        );
-      } else if (
-        [config.hmyChainMainnet, config.hmyChainTestnet].includes(_selected)
-      ) {
-        setupNetwork(
-          currentConnection === "mainnet"
-            ? harmonyNetworkDetail.mainnet
-            : harmonyNetworkDetail.testnet
-        );
-      } else if (
-        [config.moonriverChain, config.moonriverChainTestent].includes(
-          _selected
-        )
-      ) {
-        setupNetwork(
-          currentConnection === "mainnet"
-            ? moonriverNetworkDetail.mainnet
-            : moonriverNetworkDetail.testnet
-        );
-      } else {
-        setupNetwork(
-          currentConnection === "mainnet"
-            ? ethereumNetworkDetail.mainnet
-            : ethereumNetworkDetail.testnet
-        );
+      try {
+        const switchRes = await switchChain(connector, _selected);
+        console.log("switch test activating  chain switch failed ", switchRes);
+      } catch (error) {
+        console.log("switch test activating  chain switch failed ", error);
       }
     },
-    [network]
+    [network, connector, handleChangeNetwork]
   );
 
   return (
     <div>
-      {active && !Object.keys(FACTORY_ADDRESS).includes(chainId?.toString()) ? (
-        <Button
-          onClick={() =>
-            handleChange(
-              currentConnection === "testnet"
-                ? config.ethChainIdRinkeby
-                : config.ethChainId
-            )
-          }
+      <FormControl className={classes.root}>
+        <Select
           className={classes.main}
+          value={parseInt(selectedChain)}
+          disableUnderline={true}
+          notched={true}
+          id="adornment-weight"
+          onChange={({ target: { value } }) => handleChange(value)}
         >
-          Switch to ethereum
-        </Button>
-      ) : (
-        <FormControl className={classes.root}>
-          <Select
-            className={classes.main}
-            value={parseInt(selectedChain)}
-            disableUnderline={true}
-            notched={true}
-            id="adornment-weight"
-            onChange={({ target: { value } }) => handleChange(value)}
-          >
-            <MenuItem
-              value={
-                currentConnection === "testnet"
-                  ? config.ethChainIdRinkeby
-                  : config.ethChainId
-              }
-              className={classes.buttonDrop}
-            >
-              <span>Ethereum</span>
-              <img
-                className={classes.imgIcon}
-                src="https://swap.polkabridge.org/img/eth.png"
-                alt="Ethereum"
-              />
-            </MenuItem>
-            <MenuItem
-              value={
-                currentConnection === "testnet"
-                  ? config.bscChainTestent
-                  : config.bscChain
-              }
-              className={classes.buttonDrop}
-            >
-              <span>BSC</span>
-              <img
-                className={classes.imgIcon}
-                src="https://assets.coingecko.com/coins/images/12591/small/binance-coin-logo.png?1600947313"
-              />
-            </MenuItem>
-            {/* <MenuItem
-            value={
-              currentConnection === "testnet"
-                ? config.bscChainTestent
-                : config.bscChain
-            }
+          <MenuItem
+            value={SupportedChainId.MAINNET}
             className={classes.buttonDrop}
           >
-            <span>Binance Smart Chain</span>
-            <img className={classes.imgIcon} src={binanceIcon} />
-          </MenuItem> */}
-            {/* <MenuItem
-            value={
-              currentConnection === "testnet"
-                ? config.polygon_chain_testnet
-                : config.polygon_chain_mainnet
-            }
-            className={classes.buttonDrop}
-          >
-            <span>Polygon</span>
-            <img className={classes.imgIcon} src={polygonIcon} />
-          </MenuItem> */}
-            {/* <MenuItem
-            value={
-              currentConnection === "testnet"
-                ? config.hmyChainTestnet
-                : config.hmyChainMainnet
-            }
-            className={classes.buttonDrop}
-          >
-            <span>Harmony</span>
-            <img className={classes.imgIcon} src={harmonyIcon} />
-          </MenuItem> */}
-          </Select>
-        </FormControl>
-      )}
+            <span>Ethereum</span>
+            <img
+              className={classes.imgIcon}
+              src="https://swap.polkabridge.org/img/eth.png"
+              alt="Ethereum"
+            />
+          </MenuItem>
+          <MenuItem value={SupportedChainId.BSC} className={classes.buttonDrop}>
+            <span>BSC</span>
+            <img
+              className={classes.imgIcon}
+              src="https://assets.coingecko.com/coins/images/12591/small/binance-coin-logo.png?1600947313"
+            />
+          </MenuItem>
+        </Select>
+      </FormControl>
     </div>
   );
 }

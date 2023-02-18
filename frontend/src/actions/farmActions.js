@@ -273,7 +273,7 @@ const resolvePromise = async (promiseFn) => {
     const data = await promiseFn.call();
     return data;
   } catch (error) {
-    return {};
+    return null;
   }
 };
 

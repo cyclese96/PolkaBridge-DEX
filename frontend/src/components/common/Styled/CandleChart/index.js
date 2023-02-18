@@ -5,7 +5,6 @@ import { formattedNum } from "../../../../utils/formatters";
 import { usePrevious } from "react-use";
 import styled from "styled-components";
 import { Play } from "react-feather";
-// import { useDarkModeManager } from '../../contexts/LocalStorage'
 
 const IconWrapper = styled.div`
   position: absolute;

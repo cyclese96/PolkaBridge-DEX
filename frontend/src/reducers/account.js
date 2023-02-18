@@ -1,3 +1,4 @@
+import { AUTHENTICATION_STATE } from "../connection/connectionConstants";
 import {
   CONNECT_WALLET,
   DISCONNECT_WALLET,
@@ -7,6 +8,8 @@ import {
   SET_ACCOUNT,
   CHANGE_NETWORK,
   LOAD_TOKEN_BALANCE,
+  UPDATE_AUTH_STATE,
+  SET_USER_CHAIN,
 } from "../actions/types";
 import { etheriumNetwork } from "../constants/index";
 
@@ -24,6 +27,7 @@ const initalState = {
   error: null,
   loading: false,
   currentNetwork: etheriumNetwork,
+  authenticationState: AUTHENTICATION_STATE.NOT_STARTED,
 };
 
 export default function (state = initalState, action) {
@@ -62,7 +66,6 @@ export default function (state = initalState, action) {
       return {
         ...state,
         currentNetwork: action.payload.network,
-        currentChain: action.payload.chain,
       };
     case HIDE_LOADING:
       return {
@@ -73,6 +76,16 @@ export default function (state = initalState, action) {
       return {
         ...state,
         error: action.payload,
+      };
+    case UPDATE_AUTH_STATE:
+      return {
+        ...state,
+        authenticationState: action.payload,
+      };
+    case SET_USER_CHAIN:
+      return {
+        ...state,
+        currentChain: action.payload,
       };
     default:
       return state;

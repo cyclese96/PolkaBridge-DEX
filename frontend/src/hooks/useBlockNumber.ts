@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import useDebounce from "../hooks/useDebounce";
 
 function useBlock() {
-  const { chainId, library } = useActiveWeb3React();
+  const { chainId, provider } = useActiveWeb3React();
   const windowVisible = useIsWindowVisible();
   const [state, setState] = useState<{ chainId?: number; block?: number }>({
     chainId,
@@ -26,10 +26,10 @@ function useBlock() {
   );
 
   useEffect(() => {
-    if (library && chainId && windowVisible) {
+    if (provider && chainId && windowVisible) {
       setState({ chainId });
 
-      library
+      provider
         .getBlockNumber()
         .then(onBlock)
         .catch((error: any) => {
@@ -39,13 +39,13 @@ function useBlock() {
           );
         });
 
-      library.on("block", onBlock);
+      provider.on("block", onBlock);
       return () => {
-        library.removeListener("block", onBlock);
+        provider.removeListener("block", onBlock);
       };
     }
     return undefined;
-  }, [chainId, library, onBlock, windowVisible]);
+  }, [chainId, provider, onBlock, windowVisible]);
 
   const debouncedBlock = useDebounce(state.block, 1000);
   return state.block ? debouncedBlock : undefined;

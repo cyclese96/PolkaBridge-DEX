@@ -42,7 +42,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
   },
   fallbackLoader: {
-  
     minHeight: `calc(100vh - 120px)`,
     display: "flex",
     flexDirection: "column",
@@ -65,7 +64,13 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles();
   return (
-    <Suspense fallback={<div className={classes.fallbackLoader}><Loader /> </div> }>
+    <Suspense
+      fallback={
+        <div className={classes.fallbackLoader}>
+          <Loader />{" "}
+        </div>
+      }
+    >
       <ThemeProvider theme={theme}>
         <div style={{ overflowX: "hidden" }}>
           <div className={classes.navbar}>

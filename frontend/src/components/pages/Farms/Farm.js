@@ -286,10 +286,15 @@ const Farm = (props) => {
   };
 
   const harvestDisableStatus = useMemo(() => {
-    return (
-      loading?.[address] ||
-      new BigNumber(!farmData?.pendingPbr ? 0 : farmData.pendingPbr).eq(0)
-    );
+    if (loading?.[address]) {
+      return true;
+    }
+
+    if (!farmData?.pendingPbr) {
+      return true;
+    }
+
+    return new BigNumber(farmData.pendingPbr).eq(0);
   }, [farmData, address, loading]);
 
   const handleHarvest = async () => {

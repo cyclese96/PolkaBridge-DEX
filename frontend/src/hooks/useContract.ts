@@ -16,10 +16,10 @@ export function useContract<T extends Contract = Contract>(
   ABI: any,
   withSignerIfPossible = true
 ): T | null {
-  const { library, account, chainId } = useActiveWeb3React();
+  const { provider, account, chainId } = useActiveWeb3React();
 
   return useMemo(() => {
-    if (!addressOrAddressMap || !ABI || !library || !chainId) return null;
+    if (!addressOrAddressMap || !ABI || !provider || !chainId) return null;
     let address: string | undefined;
     if (typeof addressOrAddressMap === "string") address = addressOrAddressMap;
     else address = addressOrAddressMap[chainId];
@@ -28,7 +28,7 @@ export function useContract<T extends Contract = Contract>(
       return getContract(
         address,
         ABI,
-        library,
+        provider,
         withSignerIfPossible && account ? account : undefined
       );
     } catch (error) {
@@ -38,7 +38,7 @@ export function useContract<T extends Contract = Contract>(
   }, [
     addressOrAddressMap,
     ABI,
-    library,
+    provider,
     chainId,
     withSignerIfPossible,
     account,

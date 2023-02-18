@@ -14,15 +14,9 @@ import PairDataContextProvider, {
 } from "../src/contexts/PairData";
 import MulticallUpdater from "./state/multicall/updater";
 import { BlockUpdater } from "./hooks/useBlockNumber";
-import { createWeb3ReactRoot, Web3ReactProvider } from "web3-react-core";
-
 import { Provider } from "react-redux";
 import store from "./store";
-
-import getLibrary from "./utils/getLibrary";
-import { NetworkContextName } from "./constants/index";
-
-const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName);
+import Web3Provider from "connection/Web3Provider";
 
 function ContextProviders({ children }) {
   return (
@@ -52,16 +46,14 @@ if (!!window.ethereum) {
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <Web3ReactProvider getLibrary={getLibrary}>
-        <Web3ProviderNetwork getLibrary={getLibrary}>
-          <MulticallUpdater />
-          <BlockUpdater />
-          <ContextProviders>
-            <Updaters />
-            <App />
-          </ContextProviders>
-        </Web3ProviderNetwork>
-      </Web3ReactProvider>
+      <Web3Provider>
+        <MulticallUpdater />
+        <BlockUpdater />
+        <ContextProviders>
+          <Updaters />
+          <App />
+        </ContextProviders>
+      </Web3Provider>
     </Provider>
   </React.StrictMode>,
   document.getElementById("root")

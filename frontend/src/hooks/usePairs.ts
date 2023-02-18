@@ -1,11 +1,10 @@
 import { TokenAmount, Pair, Currency, Token } from "polkabridge-sdk";
 import { useMemo } from "react";
 import { Interface } from "@ethersproject/abi";
-// import { wrappedCurrency } from "./wrappedCurrency";
 
 import { useMultipleContractSingleData } from "../state/multicall/hooks";
 import IUniswapV2PairABI from "../contracts/abi/pair.json";
-import useActiveWeb3React from "../lib/useActiveWeb3React";
+import useActiveWeb3React from "./useActiveWeb3React";
 
 const PAIR_INTERFACE = new Interface(IUniswapV2PairABI);
 
