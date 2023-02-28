@@ -54,7 +54,7 @@ export function useAllCommonPairs(
   const bases: Token[] = useMemo(
     () =>
       chainId
-        ? SWAP_BASES?.[chainId].map((symbol) => {
+        ? SWAP_BASES?.[chainId]?.map((symbol) => {
             const tokenWithSymbol = getTokenWithSymbol(symbol, chainId);
             return tokenWithSymbol;
           })
@@ -69,29 +69,29 @@ export function useAllCommonPairs(
   const basePairs: [Token, Token][] = useMemo(
     () =>
       flatMap(bases, (base): [Token, Token][] =>
-        bases.map((otherBase) => [base, otherBase])
-      ).filter(([t0, t1]) => t0.address !== t1.address),
+        bases?.map((otherBase) => [base, otherBase])
+      )?.filter(([t0, t1]) => t0.address !== t1.address),
     [bases]
   );
 
   const allPairCombinations: [Token, Token][] = useMemo(
     () =>
-      tokenA && tokenB
+      tokenA && tokenB && bases
         ? [
             // the direct pair
             [tokenA, tokenB],
             // token A against all bases
-            ...bases.map((base): [Token, Token] => [tokenA, base]),
+            ...bases?.map((base): [Token, Token] => [tokenA, base]),
             // token B against all bases
-            ...bases.map((base): [Token, Token] => [tokenB, base]),
+            ...bases?.map((base): [Token, Token] => [tokenB, base]),
             // each base against all bases
             ...basePairs,
           ]
-            .filter((tokens): tokens is [Token, Token] =>
+            ?.filter((tokens): tokens is [Token, Token] =>
               Boolean(tokens[0] && tokens[1])
             )
-            .filter(([t0, t1]) => t0.address !== t1.address)
-            .filter(([tokenA, tokenB]) => {
+            ?.filter(([t0, t1]) => t0.address !== t1.address)
+            ?.filter(([tokenA, tokenB]) => {
               if (!chainId) return true;
               const customBases = undefined;
               if (!customBases) return true;
@@ -135,11 +135,11 @@ export function useAllCommonPairs(
       Object.values(
         allPairs
           // filter out invalid pairs
-          .filter((result): result is [PairState.EXISTS, Pair] =>
+          ?.filter((result): result is [PairState.EXISTS, Pair] =>
             Boolean(result[0] === PairState.EXISTS && result[1])
           )
           // filter out duplicated pairs
-          .reduce<{ [pairAddress: string]: Pair }>((memo, [, curr]) => {
+          ?.reduce<{ [pairAddress: string]: Pair }>((memo, [, curr]) => {
             memo[curr.liquidityToken.address] =
               memo[curr.liquidityToken.address] ?? curr;
             return memo;
