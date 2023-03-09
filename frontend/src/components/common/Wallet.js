@@ -129,14 +129,7 @@ const Wallet = () => {
     } else {
       setWalletPopup(true);
     }
-  }, [
-    accountDialog,
-    setAccountDialog,
-    isActive,
-    walletPopup,
-    setWalletPopup,
-    isNetworkSwitchRequired,
-  ]);
+  }, [setAccountDialog, isActive, setWalletPopup, isNetworkSwitchRequired]);
 
   return (
     <div>

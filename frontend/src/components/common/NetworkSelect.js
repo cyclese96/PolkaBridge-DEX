@@ -1,13 +1,10 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import useActiveWeb3React from "../../hooks/useActiveWeb3React";
 import { useSelector } from "react-redux";
-import { getCurrentNetworkName } from "../../utils/helper";
-import store from "../../store";
-import { CHANGE_NETWORK } from "../../actions/types";
 import { switchChain } from "../../connection/switchChain";
 import { SupportedChainId } from "../../connection/chains";
 
@@ -54,25 +51,6 @@ export default function NetworkSelect() {
 
   const { connector } = useActiveWeb3React();
   const selectedChain = useSelector((state) => state.account?.currentChain);
-
-  // useEffect(() => {
-  //   if (!selectedChain) {
-  //     return;
-  //   }
-
-  //   console.log("switch test ", selectedChain);
-  // }, [selectedChain]);
-
-  // const handleChangeNetwork = (_selected) => {
-  //   store.dispatch({
-  //     type: CHANGE_NETWORK,
-  //     payload: {
-  //       network: getCurrentNetworkName(_selected),
-  //       chain: _selected,
-  //     },
-  //   });
-  //   // setNetwork(_selected);
-  // };
 
   const handleChange = useCallback(
     async (_selected) => {
@@ -124,6 +102,7 @@ export default function NetworkSelect() {
             <span>BSC</span>
             <img
               className={classes.imgIcon}
+              alt={"BSC"}
               src="https://assets.coingecko.com/coins/images/12591/small/binance-coin-logo.png?1600947313"
             />
           </MenuItem>

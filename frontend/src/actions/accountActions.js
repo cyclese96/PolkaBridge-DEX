@@ -11,12 +11,9 @@ export const getAccountBalance = (token, network) => async (dispatch) => {
     const accountAddress = await getCurrentAccount();
     const _tokenContract = await tokenContract(token.address, network);
 
-    let tokenWei = 0;
-    // if (NATIVE_TOKEN.includes(token.symbol)) {
-    //   tokenWei = await getNetworkBalance(accountAddress);
-    // } else {
-    // }
-    tokenWei = await _tokenContract.methods.balanceOf(accountAddress).call();
+    let tokenWei = await _tokenContract.methods
+      .balanceOf(accountAddress)
+      .call();
 
     const balanceObject = {};
     balanceObject[token.symbol] = tokenWei;

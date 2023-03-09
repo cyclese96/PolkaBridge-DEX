@@ -32,7 +32,6 @@ import BigNumber from "bignumber.js";
 import store from "../../../store";
 import { RESET_POOL_SHARE } from "../../../actions/types";
 import debounce from "lodash.debounce";
-import { getPairAddress } from "../../../utils/connectionUtils";
 import { Settings } from "@material-ui/icons";
 import TransactionConfirm from "../../common/TransactionConfirm";
 import { useTokenData } from "../../../contexts/TokenData";
@@ -43,8 +42,9 @@ import { Token } from "polkabridge-sdk";
 import { isAddress } from "../../../utils/contractUtils";
 import { wrappedCurrency } from "../../../hooks/wrappedCurrency";
 import { useUserAuthentication } from "../../../hooks/useUserAuthentication";
-import { useTokenAllowance } from "hooks/useAllowance";
-import { useTransactionCallback } from "hooks/useTransactionCallback";
+import { useTokenAllowance } from "../../../hooks/useAllowance";
+import { useTransactionCallback } from "../../../hooks/useTransactionCallback";
+import { getPairAddress } from "../../../contracts/connections";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -343,6 +343,7 @@ const AddCard = (props) => {
     handleTokenImport,
     token1Query,
     token0Query,
+    selectedChain,
   ]);
 
   const currentPairAddress = useMemo(() => {

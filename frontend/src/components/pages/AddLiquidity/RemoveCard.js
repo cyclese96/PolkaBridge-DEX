@@ -30,8 +30,7 @@ import {
 } from "../../../actions/dexActions";
 import SelectToken from "../../common/SelectToken";
 import BigNumber from "bignumber.js";
-import { getPairAddress } from "../../../utils/connectionUtils";
-import { RESET_POOL_DATA, START_TRANSACTION } from "../../../actions/types";
+import { RESET_POOL_DATA } from "../../../actions/types";
 import store from "../../../store";
 import { Settings } from "@material-ui/icons";
 import { formatCurrency } from "../../../utils/formatters";
@@ -43,6 +42,7 @@ import NumberInput from "../../../components/common/NumberInput";
 import { useUserAuthentication } from "../../../hooks/useUserAuthentication";
 import { useTokenAllowance } from "../../../hooks/useAllowance";
 import { useTransactionCallback } from "../../../hooks/useTransactionCallback";
+import { getPairAddress } from "../../../contracts/connections/index";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -538,10 +538,6 @@ const RemoveCard = ({
     account,
     chainId,
   ]);
-
-  const handleConfirmSwapClose = (value) => {
-    setSwapDialog(false);
-  };
 
   const disableStatus = useMemo(() => {
     if (!isActive) {

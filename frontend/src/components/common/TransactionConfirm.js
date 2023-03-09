@@ -176,7 +176,7 @@ const TransactionConfirm = (props) => {
     if (transaction?.status !== TransactionStatus.PENDING) {
       resetTrxState();
     }
-  }, [transaction, resetTrxState]);
+  }, [transaction, resetTrxState, handleClose]);
 
   const isValidSlippage = () => {
     if (new BigNumber(priceImpact).lt(swapSettings.slippage)) {

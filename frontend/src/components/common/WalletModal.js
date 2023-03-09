@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo } from "react";
 import {
   useMediaQuery,
   useTheme,
@@ -186,7 +186,7 @@ const WalletModal = ({ popupActive, resetPopup }) => {
         return;
       }
     },
-    [isActive, connectWallet]
+    [connectWallet]
   );
 
   const handleSwitchNetwork = useCallback(async () => {
@@ -198,7 +198,7 @@ const WalletModal = ({ popupActive, resetPopup }) => {
     } catch (error) {
       console.log("switch test activating  chain switch failed ", error);
     }
-  }, [isActive, userSelectedChain, connector]);
+  }, [userSelectedChain, connector]);
 
   const isConnectingState = useMemo(() => {
     return authenticationState === AUTHENTICATION_STATE.CONNECTING_WALLET;
@@ -324,6 +324,7 @@ const WalletModal = ({ popupActive, resetPopup }) => {
                   <img
                     src="img/metamask.png"
                     height="30px"
+                    alt="metamask"
                     style={{ marginRight: 10 }}
                   />
                   Metamask
@@ -335,6 +336,7 @@ const WalletModal = ({ popupActive, resetPopup }) => {
                 >
                   <img
                     src="img/walletConnect.svg"
+                    alt="walletConnect"
                     height="27px"
                     style={{ marginRight: 10 }}
                   />{" "}
