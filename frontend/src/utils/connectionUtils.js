@@ -1,7 +1,3 @@
-// import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
-// import connectors from "contracts/connections/connectors";
-// import useActiveWeb3React from "hooks/useActiveWeb3React";
-// import { useCallback } from "react";
 import {
   bscNetwork,
   etheriumNetwork,
@@ -11,7 +7,6 @@ import {
 
 import { factoryContract } from "../contracts/connections";
 import config from "./config";
-import { isMetaMaskInstalled } from "./helper";
 
 export const getPairAddress = async (address0, address1, chainId) => {
   try {
@@ -85,36 +80,3 @@ export const getCurrentNetwork = (networkId) => {
     return etheriumNetwork;
   }
 };
-
-// export function useWalletConnectCallback() {
-//   const { activate } = useActiveWeb3React();
-
-//   const createConnectHandler = useCallback(
-//     async (connector) => {
-//       try {
-//         // const connector = connectors.injected;
-//         // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
-
-//         // if (connector instanceof WalletConnectConnector) {
-//         //   connector.walletConnectProvider = undefined;
-//         // }
-
-//         await activate(connector);
-//         localStorage.connected = "yes";
-//       } catch (error) {
-//         console.error("createConnectHandler", error);
-//       }
-//     },
-//     [activate]
-//   );
-
-//   const connectWallet = useCallback(() => {
-//     if (isMetaMaskInstalled()) {
-//       createConnectHandler(connectors.injected);
-//     } else {
-//       createConnectHandler(connectors.walletconnect);
-//     }
-//   }, [createConnectHandler]);
-
-//   return [connectWallet];
-// }

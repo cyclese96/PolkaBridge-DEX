@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -17,8 +17,10 @@ import SwapVertIcon from "@material-ui/icons/SwapVert";
 import { EqualizerOutlined } from "@material-ui/icons";
 import Wallet from "./Wallet";
 import DotCircle from "./DotCircle";
-import { connect } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import NetworkSelect from "./NetworkSelect";
+import { loadTokens } from "../../actions/dexActions";
+import useActiveWeb3React from "../../hooks/useActiveWeb3React";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -277,6 +279,49 @@ const Navbar = (props) => {
       </List>
     </div>
   );
+
+  const { account, chainId } = useActiveWeb3React();
+  const currentChain = useSelector((state) => state.account?.currentChain);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!currentChain) {
+      return;
+    }
+    dispatch(loadTokens(currentChain));
+  }, [dispatch, currentChain]);
+
+  useEffect(() => {
+    if (!chainId) {
+      return;
+    }
+    const cachedChain = localStorage.getItem("cachedChain");
+
+    // console.log("chain changed ", { chainId, cachedChain });
+    if (cachedChain && chainId?.toString() !== cachedChain) {
+      localStorage.setItem("cachedChain", chainId?.toString());
+
+      window?.location.reload();
+    } else if (!cachedChain) {
+      localStorage.setItem("cachedChain", chainId?.toString());
+    }
+  }, [chainId, account]);
+
+  useEffect(() => {
+    if (!account) {
+      return;
+    }
+    const cachedAccount = localStorage.getItem("cachedAccount");
+
+    // console.log("chain changed ", { account, cachedAccount });
+    if (cachedAccount && account?.toString() !== cachedAccount) {
+      localStorage.setItem("cachedAccount", account?.toString());
+
+      window?.location.reload();
+    } else if (!cachedAccount) {
+      localStorage.setItem("cachedAccount", account?.toString());
+    }
+  }, [account]);
 
   return (
     <div className={classes.grow}>

@@ -1,7 +1,7 @@
 import { recoverKeys } from "utils/helper";
 import { SupportedChainId } from "./chains";
 
-const INFURA_KEY = recoverKeys(process.env.REACT_APP_INFURA_KEY);
+const INFURA_KEY = recoverKeys(process.env.REACT_APP_INFURA_ID);
 if (typeof INFURA_KEY === "undefined") {
   throw new Error(
     `REACT_APP_INFURA_KEY must be a defined environment variable`

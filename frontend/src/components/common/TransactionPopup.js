@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
-// import { currentConnection } from "../../constants/index";
 import { connect } from "react-redux";
 import { urls } from "../../utils/formatters";
 import useActiveWeb3React from "../../hooks/useActiveWeb3React";
+import { TransactionStatus } from "../../constants/index";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -59,16 +59,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TransactionStatus = ({ dex: { transaction }, onClose }) => {
+const TransactionPopup = ({ dex: { transaction }, onClose }) => {
   const classes = useStyles();
   const { chainId } = useActiveWeb3React();
 
+  useEffect(() => {
+    console.log("trade test transaction status ", { transaction });
+  }, [transaction]);
   return (
     <div>
       <div className={classes.background}>
         <h6 className={classes.heading}>Transaction Status</h6>{" "}
         <div className="mt-4 ">
-          {transaction.status === "pending" && (
+          {transaction.status === TransactionStatus.PENDING && (
             <div className="text-center">
               <img
                 src="/img/submit.png"
@@ -78,13 +81,18 @@ const TransactionStatus = ({ dex: { transaction }, onClose }) => {
               <h6 className={classes.message}>Transaction Submitted</h6>
             </div>
           )}
-          {transaction.status === "failed" && (
-            <div className="text-center">
-              <img src="/img/fail.png" alt="failed" className={classes.image} />
-              <h6 className={classes.message}>Transaction Failed</h6>
-            </div>
-          )}
-          {transaction.status === "success" && (
+          {transaction.status === TransactionStatus.FAILED &&
+            transaction?.hash && (
+              <div className="text-center">
+                <img
+                  src="/img/fail.png"
+                  alt="failed"
+                  className={classes.image}
+                />
+                <h6 className={classes.message}>Transaction Failed</h6>
+              </div>
+            )}
+          {transaction.status === TransactionStatus.COMPLETED && (
             <div className="text-center">
               <img
                 src="/img/success.png"
@@ -96,7 +104,16 @@ const TransactionStatus = ({ dex: { transaction }, onClose }) => {
           )}
           <div className="text-center">
             {!transaction.hash ? (
-              <h6 style={{ color: "#DF097C", fontSize: 14 }}>Cancelled</h6>
+              <div>
+                <img
+                  src="/img/fail.png"
+                  alt="Submitted"
+                  className={classes.image}
+                />
+                <h6 style={{ color: "#DF097C", fontSize: 14, marginTop: 10 }}>
+                  Cancelled
+                </h6>
+              </div>
             ) : (
               <a
                 href={urls.showTransaction(transaction.hash, chainId)}
@@ -122,4 +139,4 @@ const mapStateToProps = (state) => ({
   dex: state.dex,
 });
 
-export default connect(mapStateToProps, {})(React.memo(TransactionStatus));
+export default connect(mapStateToProps, {})(React.memo(TransactionPopup));

@@ -8,7 +8,6 @@ import { PAIR_BLACKLIST, TOKEN_BLACKLIST } from "./constants";
 import { isAddress } from "utils/contractUtils";
 import Loader from "components/common/Loader";
 
-const Home = lazy(() => import("./components/Home"));
 const TokenPage = lazy(() =>
   import("./components/pages/Analytics/components/DetailsPage/TokenDetail")
 );
@@ -78,7 +77,6 @@ function App() {
           </div>
           <div className={classes.mainContent}>
             <BrowserRouter>
-              <Home />
               <Route exact path="/" component={Swap} />
               <Route exact path="/farms" component={Farms} />
               <Route exact path="/liquidity" component={AddLiquidity} />

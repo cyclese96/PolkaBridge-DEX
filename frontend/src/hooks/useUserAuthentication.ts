@@ -141,19 +141,24 @@ export function useUserAuthentication(initHook = false): {
       return;
     }
 
-    const cachedSelectedChain = parseInt(localStorage.userSelectedChain ?? 0);
-    console.log("chain test ", {
-      chainId,
-      cachedSelectedChain,
-      isDappSupported,
-    });
+    const cachedSelectedChain = parseInt(
+      localStorage.userSelectedChain ?? null
+    );
+    // console.log("switch test chain test ", {
+    //   chainId,
+    //   cachedSelectedChain,
+    //   isDappSupported,
+    // });
     if (!cachedSelectedChain && chainId) {
       dispatch({
         type: SET_USER_CHAIN,
         payload: isDappSupported ? chainId : FALLBACK_DEFAULT_CHAIN,
       });
     } else {
-      dispatch({ type: SET_USER_CHAIN, payload: cachedSelectedChain });
+      dispatch({
+        type: SET_USER_CHAIN,
+        payload: cachedSelectedChain || FALLBACK_DEFAULT_CHAIN,
+      });
     }
   }, [chainId, initHook, isDappSupported]);
 

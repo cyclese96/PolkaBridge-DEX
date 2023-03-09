@@ -1,5 +1,4 @@
 import gql from "graphql-tag";
-import { useSelector } from "react-redux";
 import { BUNDLE_ID } from "../constants/index";
 import { getUnixTime } from "../utils/helper";
 import { client, clients } from "./client";

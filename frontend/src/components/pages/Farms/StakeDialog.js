@@ -10,7 +10,7 @@ import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import CloseIcon from "@material-ui/icons/Close";
 import { fromWei, toWei } from "../../../utils/helper";
 import { formatCurrency } from "../../../utils/formatters";
-import TransactionStatus from "../../common/TransactionStatus";
+import TransactionStatus from "../../common/TransactionPopup";
 import { connect } from "react-redux";
 import {
   stakeLpTokens,
