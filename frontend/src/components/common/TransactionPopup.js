@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
 import { connect } from "react-redux";
 import { urls } from "../../utils/formatters";
 import useActiveWeb3React from "../../hooks/useActiveWeb3React";
 import { TransactionStatus } from "../../constants/index";
+import { CircularProgress } from "@mui/material";
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -63,14 +64,31 @@ const TransactionPopup = ({ dex: { transaction }, onClose }) => {
   const classes = useStyles();
   const { chainId } = useActiveWeb3React();
 
-  useEffect(() => {
-    console.log("trade test transaction status ", { transaction });
-  }, [transaction]);
   return (
     <div>
       <div className={classes.background}>
         <h6 className={classes.heading}>Transaction Status</h6>{" "}
         <div className="mt-4 ">
+          {transaction.status === TransactionStatus.WAITING && (
+            <div className="text-center">
+              <CircularProgress
+                style={{ color: "#E0077D" }}
+                color="secondary"
+                size={60}
+              />
+
+              <div className="text-center  mt-5 mb-4 ">
+                <div className={classes.heading}>Waiting for confirmaton</div>
+                <div className="mt-2"></div>
+
+                <div className="mt-5 mb-2">
+                  <span className={classes.message}>
+                    Please confirm transaction in your wallet{" "}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
           {transaction.status === TransactionStatus.PENDING && (
             <div className="text-center">
               <img
@@ -79,8 +97,37 @@ const TransactionPopup = ({ dex: { transaction }, onClose }) => {
                 className={classes.image}
               />
               <h6 className={classes.message}>Transaction Submitted</h6>
+              <a
+                href={urls.showTransaction(transaction.hash, chainId)}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <h6 style={{ color: "#DF097C", fontSize: 14 }}>
+                  View on explorer
+                </h6>
+              </a>
             </div>
           )}
+          {transaction.status === TransactionStatus.COMPLETED && (
+            <div className="text-center">
+              <img
+                src="/img/success.png"
+                alt="success"
+                className={classes.image}
+              />{" "}
+              <h6 className={classes.message}>Transaction Succeed</h6>
+              <a
+                href={urls.showTransaction(transaction.hash, chainId)}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <h6 style={{ color: "#DF097C", fontSize: 14 }}>
+                  View on explorer
+                </h6>
+              </a>
+            </div>
+          )}
+
           {transaction.status === TransactionStatus.FAILED &&
             transaction?.hash && (
               <div className="text-center">
@@ -90,46 +137,35 @@ const TransactionPopup = ({ dex: { transaction }, onClose }) => {
                   className={classes.image}
                 />
                 <h6 className={classes.message}>Transaction Failed</h6>
+                <a
+                  href={urls.showTransaction(transaction.hash, chainId)}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <h6 style={{ color: "#DF097C", fontSize: 14 }}>
+                    View on explorer
+                  </h6>
+                </a>
               </div>
             )}
-          {transaction.status === TransactionStatus.COMPLETED && (
-            <div className="text-center">
-              <img
-                src="/img/success.png"
-                alt="success"
-                className={classes.image}
-              />{" "}
-              <h6 className={classes.message}>Transaction Succeed</h6>
-            </div>
-          )}
-          <div className="text-center">
-            {!transaction.hash ? (
-              <div>
+
+          {transaction.status === TransactionStatus.FAILED &&
+            !transaction?.hash && (
+              <div className="text-center">
                 <img
                   src="/img/fail.png"
                   alt="Submitted"
                   className={classes.image}
                 />
-                <h6 style={{ color: "#DF097C", fontSize: 14, marginTop: 10 }}>
-                  Cancelled
-                </h6>
+                <h6 className={classes.message}> Cancelled</h6>
               </div>
-            ) : (
-              <a
-                href={urls.showTransaction(transaction.hash, chainId)}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <h6 style={{ color: "#DF097C", fontSize: 14 }}>
-                  {!transaction.hash ? "Cancelled" : "View on explorer"}
-                </h6>
-              </a>
             )}
-          </div>
         </div>
-        <Button className={classes.closeButton} onClick={onClose}>
-          Close
-        </Button>
+        {transaction.status !== TransactionStatus.WAITING && (
+          <Button className={classes.closeButton} onClick={onClose}>
+            Close
+          </Button>
+        )}
       </div>
     </div>
   );

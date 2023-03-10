@@ -1,15 +1,11 @@
 import { UPDATE_TRANSACTION_STATUS } from "actions/types";
-import {
-  NATIVE_TOKEN_ADDRESS,
-  swapFnConstants,
-  TransactionStatus,
-} from "../constants/index";
+import { swapFnConstants, TransactionStatus } from "../constants/index";
 import { ChainId, Token } from "polkabridge-sdk";
 import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useActiveWeb3React from "./useActiveWeb3React";
 import useBlockNumber, { useFastForwardBlockNumber } from "./useBlockNumber";
-import { useRouterContract } from "./useContract";
+import { useFarmContract, useRouterContract } from "./useContract";
 import { getUnixTime, toWei } from "../utils/helper";
 import { NATIVE_TOKEN } from "connection/chains";
 
@@ -40,10 +36,24 @@ export function useTransactionCallback(): {
     account: String,
     chainId: ChainId
   ) => Promise<void>;
+  stakeLpTokens: (
+    lpAmount: String,
+    pid: Number,
+    account: String,
+    chainId: ChainId
+  ) => Promise<void>;
+  unstakeLpTokens: (
+    lpAmount: String,
+    pid: Number,
+    account: String,
+    chainId: ChainId
+  ) => Promise<void>;
+  harvest: (pid: Number, account: String, chainId: ChainId) => Promise<void>;
   resetTrxState: () => void;
 } {
   const { provider } = useActiveWeb3React();
   const routerContract = useRouterContract();
+  const farmContract = useFarmContract();
 
   //   const [data, setData] = useState<TransactionStatus>(initialState);
   const blockNumber = useBlockNumber();
@@ -88,6 +98,7 @@ export function useTransactionCallback(): {
         dispatch({
           type: UPDATE_TRANSACTION_STATUS,
           payload: {
+            type: "swap",
             status: TransactionStatus.WAITING,
           },
         });
@@ -235,6 +246,7 @@ export function useTransactionCallback(): {
         dispatch({
           type: UPDATE_TRANSACTION_STATUS,
           payload: {
+            type: "add",
             status: TransactionStatus.WAITING,
           },
         });
@@ -353,6 +365,7 @@ export function useTransactionCallback(): {
         dispatch({
           type: UPDATE_TRANSACTION_STATUS,
           payload: {
+            type: "remove",
             status: TransactionStatus.WAITING,
           },
         });
@@ -423,17 +436,180 @@ export function useTransactionCallback(): {
     });
   }, [dispatch]);
 
+  const stakeLpTokens = useCallback(
+    async (
+      lpAmount: String,
+      pid: Number,
+      account: String,
+      chainId: ChainId
+    ) => {
+      try {
+        if (!lpAmount || !pid || !farmContract || !account || !chainId) {
+          dispatch({
+            type: UPDATE_TRANSACTION_STATUS,
+            payload: {
+              type: `stake_farm_${pid}`,
+              hash: null,
+              status: TransactionStatus.FAILED,
+            },
+          });
+          return;
+        }
+
+        dispatch({
+          type: UPDATE_TRANSACTION_STATUS,
+          payload: {
+            type: `stake_farm_${pid}`,
+            status: TransactionStatus.WAITING,
+          },
+        });
+
+        const trxRes: any = await farmContract.deposit(pid, lpAmount, {
+          from: account,
+        });
+
+        dispatch({
+          type: UPDATE_TRANSACTION_STATUS,
+          payload: {
+            type: `stake_farm_${pid}`,
+            hash: trxRes?.hash,
+            status: TransactionStatus.PENDING,
+          },
+        });
+      } catch (error) {
+        dispatch({
+          type: UPDATE_TRANSACTION_STATUS,
+          payload: {
+            type: `stake_farm_${pid}`,
+            hash: null,
+            status: TransactionStatus.FAILED,
+          },
+        });
+
+        console.log("stake farm  trx error ", { error });
+      }
+    },
+    [routerContract]
+  );
+
+  const unstakeLpTokens = useCallback(
+    async (
+      lpAmount: String,
+      pid: Number,
+      account: String,
+      chainId: ChainId
+    ) => {
+      try {
+        if (!lpAmount || !pid || !farmContract || !account || !chainId) {
+          dispatch({
+            type: UPDATE_TRANSACTION_STATUS,
+            payload: {
+              type: `unstake_farm_${pid}`,
+              hash: null,
+              status: TransactionStatus.FAILED,
+            },
+          });
+          return;
+        }
+
+        dispatch({
+          type: UPDATE_TRANSACTION_STATUS,
+          payload: {
+            type: `unstake_farm_${pid}`,
+            status: TransactionStatus.WAITING,
+          },
+        });
+
+        const trxRes: any = await farmContract.withdraw(pid, lpAmount, {
+          from: account,
+        });
+
+        dispatch({
+          type: UPDATE_TRANSACTION_STATUS,
+          payload: {
+            type: `unstake_farm_${pid}`,
+            hash: trxRes?.hash,
+            status: TransactionStatus.PENDING,
+          },
+        });
+      } catch (error) {
+        dispatch({
+          type: UPDATE_TRANSACTION_STATUS,
+          payload: {
+            type: `unstake_farm_${pid}`,
+            hash: null,
+            status: TransactionStatus.FAILED,
+          },
+        });
+
+        console.log("stake farm  trx error ", { error });
+      }
+    },
+    [routerContract]
+  );
+
+  const harvest = useCallback(
+    async (pid: Number, account: String, chainId: ChainId) => {
+      try {
+        if (!pid || !farmContract || !account || !chainId) {
+          dispatch({
+            type: UPDATE_TRANSACTION_STATUS,
+            payload: {
+              type: `harvest_farm_${pid}`,
+              hash: null,
+              status: TransactionStatus.FAILED,
+            },
+          });
+          return;
+        }
+
+        dispatch({
+          type: UPDATE_TRANSACTION_STATUS,
+          payload: {
+            type: `harvest_farm_${pid}`,
+            status: TransactionStatus.WAITING,
+          },
+        });
+
+        const trxRes: any = await farmContract.harvest(pid, {
+          from: account,
+        });
+
+        dispatch({
+          type: UPDATE_TRANSACTION_STATUS,
+          payload: {
+            type: `harvest_farm_${pid}`,
+            hash: trxRes?.hash,
+            status: TransactionStatus.PENDING,
+          },
+        });
+      } catch (error) {
+        dispatch({
+          type: UPDATE_TRANSACTION_STATUS,
+          payload: {
+            type: `harvest_farm_${pid}`,
+            hash: null,
+            status: TransactionStatus.FAILED,
+          },
+        });
+
+        console.log("stake farm  trx error ", { error });
+      }
+    },
+    [routerContract]
+  );
+
   // check and update pending withdraw transactions
 
   useEffect(() => {
     if (!transaction?.hash) {
       return;
     }
-
+    console.log("trade test status updating ", transaction);
     if (
       transaction?.status === TransactionStatus.COMPLETED ||
       transaction?.status === TransactionStatus.FAILED ||
-      transaction?.type === "allowance" // watch other than allowance transactions
+      transaction?.type?.includes("allowance") // watch other than allowance transactions
     ) {
       return;
     }
@@ -443,9 +619,6 @@ export function useTransactionCallback(): {
       .then((res) => {
         console.log("trade test ", { res });
         if (res && res?.blockHash && res?.blockNumber && res?.status === 1) {
-          // call update deposits at backend
-          // update balance in transaction update
-          // setData({ ...data, status: TransactionState.COMPLETED, state: 3 });
           fastFarwardBlockNumber(res?.blockNumber);
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
@@ -462,7 +635,6 @@ export function useTransactionCallback(): {
               status: TransactionStatus.FAILED,
             },
           });
-          // todo: fix
         }
       })
       .catch((err) => {
@@ -485,5 +657,8 @@ export function useTransactionCallback(): {
     addLiquidity: addLiquidity,
     removeLiquidity: removeLiquidity,
     resetTrxState: resetTrxState,
+    stakeLpTokens: stakeLpTokens,
+    unstakeLpTokens: unstakeLpTokens,
+    harvest: harvest,
   };
 }

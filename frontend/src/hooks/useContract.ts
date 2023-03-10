@@ -5,10 +5,15 @@ import { useMemo } from "react";
 import { getContract } from "../utils/contractUtils";
 import MulticallABI from "../contracts/abi/multicall.json";
 import useActiveWeb3React from "./useActiveWeb3React";
-import { MULTICALL_ADDRESS, ROUTER_ADDRESS } from "constants/index";
+import {
+  FARM_ADDRESS,
+  MULTICALL_ADDRESS,
+  ROUTER_ADDRESS,
+} from "constants/index";
 import ERC20_ABI from "../contracts/abi/erc20.json";
 import WETH_ABI from "../contracts/abi/weth.json";
 import RouterAbi from "../contracts/abi/Router.json";
+import farmAbi from "../contracts/abi/PolkaBridgeFarm.json";
 
 import { WETH } from "polkabridge-sdk";
 import { FALLBACK_DEFAULT_CHAIN } from "connection/chains";
@@ -78,4 +83,12 @@ export function useRouterContract(
   const { chainId } = useActiveWeb3React();
   const _routerAddress = ROUTER_ADDRESS?.[chainId || FALLBACK_DEFAULT_CHAIN];
   return useContract(_routerAddress, RouterAbi, withSignerIfPossible);
+}
+
+export function useFarmContract(
+  withSignerIfPossible?: boolean
+): Contract | null {
+  const { chainId } = useActiveWeb3React();
+  const farmAddress = FARM_ADDRESS?.[chainId || FALLBACK_DEFAULT_CHAIN];
+  return useContract(farmAddress, farmAbi, withSignerIfPossible);
 }

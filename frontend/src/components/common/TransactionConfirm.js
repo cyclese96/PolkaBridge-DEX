@@ -9,7 +9,6 @@ import { connect } from "react-redux";
 import TokenIcon from "./TokenIcon";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import { getPercentageAmount, toWei } from "../../utils/helper";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import TransactionPopup from "./TransactionPopup";
 
 import { default as NumberFormat } from "react-number-format";
@@ -337,42 +336,6 @@ const TransactionConfirm = (props) => {
                 Confirm Swap
               </Button>
               {/* </div> */}
-            </div>
-          )}
-
-        {!transaction?.type &&
-          transaction.status === TransactionStatus.WAITING && (
-            <div className={classes.background}>
-              <DialogTitle onClose={() => handleClose()}>
-                <span className={classes.heading}></span>
-              </DialogTitle>
-
-              <div className="text-center">
-                <CircularProgress
-                  style={{ color: "#E0077D" }}
-                  color="secondary"
-                  size={60}
-                />
-
-                <div className="text-center  mt-5 mb-4 ">
-                  <div className={classes.heading}>Waiting for confirmaton</div>
-                  <div className="mt-2">
-                    {/* <h6 style={{ color: "#DF097C", fontSize: 12 }}>
-                    {" "}
-                    Swapping {token1Value +
-                      " " +
-                      selectedToken0?.symbol} for{" "}
-                    {token2Value + " " + selectedToken1?.symbol}
-                  </h6> */}
-                  </div>
-
-                  <div className="mt-5 mb-2">
-                    <span className={classes.detailTitle}>
-                      Please confirm transaction in your wallet{" "}
-                    </span>
-                  </div>
-                </div>
-              </div>
             </div>
           )}
 

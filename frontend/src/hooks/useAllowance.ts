@@ -54,13 +54,13 @@ export function useTokenAllowance(
   //   allowance: allowance?.toString(),
   // });
   const confirmAllowance = useCallback(
-    async (tokenAmount?: String) => {
+    async (tokenAmount?: String, type: String = "token_approve") => {
       try {
         if (!tokenAmount || !contract) {
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: {
-              type: "token_approve",
+              type: type,
               hash: null,
               status: TransactionStatus.FAILED,
             },
@@ -73,6 +73,7 @@ export function useTokenAllowance(
         dispatch({
           type: UPDATE_TRANSACTION_STATUS,
           payload: {
+            type: type,
             status: TransactionStatus.WAITING,
           },
         });
@@ -82,7 +83,7 @@ export function useTokenAllowance(
           type: UPDATE_TRANSACTION_STATUS,
           payload: {
             hash: trx?.hash,
-            type: "token_approve",
+            type: type,
             status: TransactionStatus.PENDING,
           },
         });
@@ -91,7 +92,7 @@ export function useTokenAllowance(
         dispatch({
           type: UPDATE_TRANSACTION_STATUS,
           payload: {
-            type: "token_approve",
+            type: type,
             status: TransactionStatus.FAILED,
           },
         });
@@ -117,7 +118,7 @@ export function useTokenAllowance(
     if (
       transaction?.status === TransactionStatus.COMPLETED ||
       transaction?.status === TransactionStatus.FAILED ||
-      transaction?.type !== "allowance" // watch only allowance transactions
+      !transaction?.type?.includes("allowance") // watch only allowance transactions
     ) {
       return;
     }
@@ -127,9 +128,6 @@ export function useTokenAllowance(
       .then((res) => {
         console.log("allowance trade test ", { res });
         if (res && res?.blockHash && res?.blockNumber && res?.status === 1) {
-          // call update deposits at backend
-          // update balance in transaction update
-          // setData({ ...data, status: TransactionState.COMPLETED, state: 3 });
           fastFarwardBlockNumber(res?.blockNumber);
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
@@ -146,7 +144,6 @@ export function useTokenAllowance(
               status: TransactionStatus.FAILED,
             },
           });
-          // todo: fix
         }
       })
       .catch((err) => {

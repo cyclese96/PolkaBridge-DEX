@@ -41,7 +41,8 @@ export function useUserAuthentication(initHook = false): {
           await connect(injectedConnection.connector);
           localStorage.connectorType = CONNECTOR_TYPE.injected;
         } else if (connectorType === CONNECTOR_TYPE.walletConnect) {
-          await connect(walletConnectConnection.connector);
+          const res = await connect(walletConnectConnection.connector);
+          console.log("wallet test ", res);
           localStorage.connectorType = CONNECTOR_TYPE.walletConnect;
         } else {
           console.log("wallet test connecting injected ");
@@ -51,9 +52,10 @@ export function useUserAuthentication(initHook = false): {
 
         localStorage.logged_out = undefined;
       } catch (error) {
+        console.log("wallet test error ", error);
         dispatch({
           type: UPDATE_AUTH_STATE,
-          payload: AUTHENTICATION_STATE.WALLET_CONNECTION_FAILED,
+          payload: AUTHENTICATION_STATE.NOT_STARTED,
         });
         dispatch({
           type: AUTH_ERROR,
@@ -144,11 +146,7 @@ export function useUserAuthentication(initHook = false): {
     const cachedSelectedChain = parseInt(
       localStorage.userSelectedChain ?? null
     );
-    // console.log("switch test chain test ", {
-    //   chainId,
-    //   cachedSelectedChain,
-    //   isDappSupported,
-    // });
+
     if (!cachedSelectedChain && chainId) {
       dispatch({
         type: SET_USER_CHAIN,

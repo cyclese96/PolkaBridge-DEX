@@ -3,13 +3,16 @@ import ShowChartIcon from "@material-ui/icons/ShowChart";
 import Varified from "../../../assets/check.png";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import TokenIcon from "../../common/TokenIcon";
-import { useEffect, useMemo } from "react";
-import { allowanceAmount, FARM_TOKEN } from "../../../constants/index";
+import { useCallback, useEffect, useMemo } from "react";
+import {
+  allowanceAmount,
+  FARM_ADDRESS,
+  FARM_TOKEN,
+  TransactionStatus,
+} from "../../../constants/index";
 import { connect, useSelector } from "react-redux";
 import { formattedNum, urls } from "../../../utils/formatters";
 import {
-  checkLpFarmAllowance,
-  confirmLpFarmAllowance,
   getFarmInfo,
   getLpBalanceFarm,
   harvestRewards,
@@ -17,7 +20,9 @@ import {
 import BigNumber from "bignumber.js";
 import { fromWei, getRewardApr } from "../../../utils/helper";
 import { useEthPrice } from "../../../contexts/GlobalData";
-import useActiveWeb3React from "hooks/useActiveWeb3React";
+import useActiveWeb3React from "../../../hooks/useActiveWeb3React";
+import { useTokenAllowance } from "../../../hooks/useAllowance";
+import { useTransactionCallback } from "hooks/useTransactionCallback";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -165,11 +170,9 @@ const Farm = (props) => {
     farmPool,
     tokenPriceUsd,
     onStake,
-    farm: { farms, lpApproved, loading, lpBalance },
+    farm: { farms, loading, lpBalance },
     dex: { transaction },
     getFarmInfo,
-    checkLpFarmAllowance,
-    confirmLpFarmAllowance,
     getLpBalanceFarm,
     harvestRewards,
   } = props;
@@ -182,10 +185,15 @@ const Farm = (props) => {
 
   const selectedChain = useSelector((state) => state.account?.currentChain);
 
+  const { allowance: farmAllowance, confirmAllowance } = useTokenAllowance(
+    { address: address, decimals: decimals, name: name, symbol: "PBRAMM" },
+    account,
+    FARM_ADDRESS?.[chainId]
+  );
+
   useEffect(() => {
     async function loadFarmData() {
       Promise.all([
-        checkLpFarmAllowance(address, account, selectedChain),
         getFarmInfo(address, pid, account, selectedChain),
         getLpBalanceFarm(address, account, selectedChain),
       ]);
@@ -225,10 +233,6 @@ const Farm = (props) => {
       .toString();
   }, [ethPrice, farmData, lpBalance, address]);
 
-  // useEffect(() => {
-
-  // },[totalValueLockedUSD])
-
   const parseStakedAmount = useMemo(() => {
     if (!farmData) {
       return 0;
@@ -237,31 +241,17 @@ const Farm = (props) => {
     return fromWei(farmData?.stakeData?.amount, decimals);
   }, [farmData, decimals]);
 
-  const isPoolApproved = useMemo(() => {
-    if (!lpApproved) {
-      return false;
-    }
-    return lpApproved?.[address];
-  }, [lpApproved, address]);
-
   const isPoolLoading = useMemo(() => {
     return loading && loading?.[address];
   }, [loading, address]);
 
-  const handleApproveLpTokenToFarm = async () => {
-    await confirmLpFarmAllowance(allowanceAmount, address, account, chainId);
-  };
+  const handleApproveLpTokenToFarm = useCallback(() => {
+    confirmAllowance(allowanceAmount, `farm_allowance_${pid}`);
+  }, [confirmAllowance, pid]);
 
   const farmApr = useMemo(() => {
     const poolWeight = farmData?.poolWeight;
 
-    console.log("apr calc", {
-      poolWeight,
-      tokenPriceUsd,
-      totalPoolLiquidityUSDValue,
-      lpApr,
-      farmPool,
-    });
     const pbrRewardApr = getRewardApr(
       poolWeight,
       tokenPriceUsd,
@@ -297,14 +287,40 @@ const Farm = (props) => {
     return new BigNumber(farmData.pendingPbr).eq(0);
   }, [farmData, address, loading]);
 
-  const handleHarvest = async () => {
-    await harvestRewards(address, pid, account, chainId);
+  const { harvest } = useTransactionCallback();
 
-    await getFarmInfo(address, pid, account, chainId);
+  const handleHarvest = async () => {
+    await harvest(pid, account, chainId);
   };
 
+  const isPendingTrx = useMemo(() => {
+    return (
+      transaction?.type === `farm_allowance_${pid}` &&
+      transaction.status === TransactionStatus.PENDING
+    );
+  }, [transaction, pid]);
+
+  useEffect(() => {
+    if (!transaction.hash && !transaction.type) {
+      return;
+    }
+
+    if (
+      [
+        `harvest_farm_${pid}`,
+        `stake_farm_${pid}`,
+        `unstake_farm_${pid}`,
+      ].includes(transaction.type) &&
+      (transaction.status === TransactionStatus.COMPLETED ||
+        transaction.status === TransactionStatus.FAILED)
+    ) {
+      getFarmInfo(address, pid, account, chainId);
+      getLpBalanceFarm(address, account, chainId);
+    }
+  }, [transaction, address, pid, account, chainId]);
+
   return (
-    <Card elevation={10} className={classes.card}>
+    <Card id={pid} elevation={10} className={classes.card}>
       <div className={classes.cardContents}>
         <div className="d-flex justify-content-between align-items-center">
           <div className={classes.imgWrapper}>
@@ -372,7 +388,7 @@ const Farm = (props) => {
           <div className={classes.tokenAmount}></div>
         </div>
 
-        {!isPoolApproved && !isPoolLoading && (
+        {!farmAllowance && !isPoolLoading && !isPendingTrx && (
           <div className="d-flex justify-content-center align-items-center mt-1">
             <Button
               onClick={handleApproveLpTokenToFarm}
@@ -383,7 +399,7 @@ const Farm = (props) => {
           </div>
         )}
 
-        {isPoolApproved && !isPoolLoading && (
+        {farmAllowance && !isPoolLoading && !isPendingTrx && (
           <div className="d-flex justify-content-between align-items-center mt-1">
             <div className={classes.tokenValues}>
               {formattedNum(parseStakedAmount)}
@@ -410,9 +426,14 @@ const Farm = (props) => {
         {isPoolLoading && (
           <div className="d-flex justify-content-center align-items-center mt-1">
             <Button disabled={true} className={classes.approveBtn}>
-              {transaction.type && transaction.status === "pending"
-                ? "Pending transaction..."
-                : "Loading pool..."}
+              Loading pool...
+            </Button>
+          </div>
+        )}
+        {!isPoolLoading && isPendingTrx && (
+          <div className="d-flex justify-content-center align-items-center mt-1">
+            <Button disabled={true} className={classes.approveBtn}>
+              Pending transaction...
             </Button>
           </div>
         )}
@@ -481,8 +502,6 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   getFarmInfo,
-  checkLpFarmAllowance,
-  confirmLpFarmAllowance,
   getLpBalanceFarm,
   harvestRewards,
 })(Farm);

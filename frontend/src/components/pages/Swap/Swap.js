@@ -22,7 +22,12 @@ import {
   TOKEN_ADDRESS,
   TransactionStatus,
 } from "../../../constants/index";
-import { getPriceRatio, getTokenToSelect, toWei } from "../../../utils/helper";
+import {
+  getPriceRatio,
+  getTokenToSelect,
+  isMetaMaskInstalled,
+  toWei,
+} from "../../../utils/helper";
 import { importToken } from "../../../actions/dexActions";
 import TransactionConfirm from "../../common/TransactionConfirm";
 
@@ -43,6 +48,7 @@ import BigNumber from "bignumber.js";
 import { useCurrencyBalances } from "../../../hooks/useBalance";
 import { useUserAuthentication } from "../../../hooks/useUserAuthentication";
 import { useTokenAllowance } from "hooks/useAllowance";
+import { CONNECTOR_TYPE } from "connection/connectionConstants";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -523,7 +529,11 @@ const Swap = (props) => {
 
   const handleAction = () => {
     if (!isActive) {
-      connectWallet();
+      if (isMetaMaskInstalled()) {
+        connectWallet(CONNECTOR_TYPE.injected);
+      } else {
+        connectWallet(CONNECTOR_TYPE.walletConnect);
+      }
       return;
     }
 
