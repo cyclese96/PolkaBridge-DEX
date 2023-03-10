@@ -17,15 +17,18 @@ import {
   DEFAULT_SWAP_TOKENS,
   FARM_TOKEN,
   NATIVE_TOKEN,
+  ROUTER_ADDRESS,
   swapFnConstants,
   TOKEN_ADDRESS,
+  TransactionStatus,
 } from "../../../constants/index";
-import { getPriceRatio, getTokenToSelect, toWei } from "../../../utils/helper";
 import {
-  checkAllowance,
-  confirmAllowance,
-  importToken,
-} from "../../../actions/dexActions";
+  getPriceRatio,
+  getTokenToSelect,
+  isMetaMaskInstalled,
+  toWei,
+} from "../../../utils/helper";
+import { importToken } from "../../../actions/dexActions";
 import TransactionConfirm from "../../common/TransactionConfirm";
 
 import { Info, Settings } from "@material-ui/icons";
@@ -44,6 +47,8 @@ import { computeTradePriceBreakdown } from "../../../utils/prices";
 import BigNumber from "bignumber.js";
 import { useCurrencyBalances } from "../../../hooks/useBalance";
 import { useUserAuthentication } from "../../../hooks/useUserAuthentication";
+import { useTokenAllowance } from "hooks/useAllowance";
+import { CONNECTOR_TYPE } from "connection/connectionConstants";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -199,9 +204,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Swap = (props) => {
   const {
-    dex: { approvedTokens, transaction, tokenList },
-    checkAllowance,
-    confirmAllowance,
+    dex: { transaction, tokenList },
     importToken,
   } = props;
 
@@ -255,8 +258,6 @@ const Swap = (props) => {
       if (selectedToken0.symbol && selectedToken1.symbol) {
         // reset token input on token selection
         clearInputState();
-
-        checkAllowance(selectedToken0, account, chainId);
       }
     }
     updateSelectionState();
@@ -499,6 +500,11 @@ const Swap = (props) => {
   const close = () => {
     setOpen(false);
   };
+  const { confirmAllowance, allowance } = useTokenAllowance(
+    selectedToken0,
+    account,
+    ROUTER_ADDRESS?.[chainId]
+  );
 
   const handleConfirmAllowance = async () => {
     const _allowanceAmount =
@@ -506,7 +512,7 @@ const Swap = (props) => {
       TOKEN_ADDRESS?.CORGIB?.[chainId]?.toLowerCase()
         ? corgibAllowance
         : allowanceAmount;
-    await confirmAllowance(_allowanceAmount, selectedToken0, account, chainId);
+    await confirmAllowance(_allowanceAmount);
   };
 
   const handleSwapToken = () => {
@@ -521,28 +527,26 @@ const Swap = (props) => {
     setToken2(tokenSelected1);
   };
 
-  const isToken0Approved = useMemo(() => {
-    return selectedToken0.symbol === NATIVE_TOKEN?.[chainId]
-      ? true
-      : approvedTokens[selectedToken0.symbol];
-  }, [approvedTokens, selectedToken0, chainId]);
-
   const handleAction = () => {
     if (!isActive) {
-      connectWallet();
+      if (isMetaMaskInstalled()) {
+        connectWallet(CONNECTOR_TYPE.injected);
+      } else {
+        connectWallet(CONNECTOR_TYPE.walletConnect);
+      }
       return;
     }
 
     if (
       ["swap", "token_approve"].includes(transaction.type) &&
-      transaction.status === "pending" &&
+      transaction.status === TransactionStatus.PENDING &&
       !swapDialogOpen
     ) {
       setSwapDialog(true);
       return;
     }
 
-    if (isToken0Approved) {
+    if (allowance) {
       handleSwapToken();
     } else {
       setSwapDialog(true);
@@ -558,14 +562,15 @@ const Swap = (props) => {
 
     if (
       ["swap", "token_approve"].includes(transaction.type) &&
-      transaction.status === "success"
+      transaction.status === TransactionStatus.COMPLETED
     ) {
       localStorage.priceTracker = "None";
     }
 
     if (
       ["swap", "token_approve"].includes(transaction.type) &&
-      (transaction.status === "success" || transaction.status === "failed") &&
+      (transaction.status === TransactionStatus.COMPLETED ||
+        transaction.status === TransactionStatus.COMPLETED) &&
       !swapDialogOpen
     ) {
       setSwapDialog(true);
@@ -577,13 +582,13 @@ const Swap = (props) => {
 
     if (
       ["swap", "token_approve"].includes(transaction.type) &&
-      transaction.status === "success"
+      transaction.status === TransactionStatus.COMPLETED
     ) {
       store.dispatch({ type: START_TRANSACTION });
       // clearInputState();
     } else if (
       ["swap", "token_approve"].includes(transaction.type) &&
-      transaction.status === "failed"
+      transaction.status === TransactionStatus.FAILED
     ) {
       store.dispatch({ type: START_TRANSACTION });
     }
@@ -649,7 +654,7 @@ const Swap = (props) => {
 
     if (
       ["swap", "token_approve"].includes(transaction.type) &&
-      transaction.status === "pending"
+      transaction.status === TransactionStatus.PENDING
     ) {
       return { currentBtnText: "Pending Transaction...", disabled: false };
     }
@@ -673,7 +678,7 @@ const Swap = (props) => {
       return { currentBtnText: "Insufficient funds!", disabled: true };
     }
 
-    if (!isToken0Approved) {
+    if (!allowance) {
       return {
         currentBtnText: "Approve " + selectedToken0?.symbol,
         disabled: false,
@@ -686,7 +691,7 @@ const Swap = (props) => {
     transaction,
     userHasSpecifiedInputOutput,
     noRoute,
-    isToken0Approved,
+    allowance,
     currencyBalances,
     selectedToken0,
     parsedToken1Value,
@@ -825,7 +830,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  checkAllowance,
-  confirmAllowance,
   importToken,
 })(Swap);

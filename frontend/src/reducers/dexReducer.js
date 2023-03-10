@@ -57,7 +57,7 @@ const initalState = {
   transaction: {
     type: null, // swap/ add_liquidity, remove_liquidity
     hash: null,
-    status: "pending", // pending, success, failed
+    status: null, // pending, success, failed
     result: null, // transaction result on success, { token0:{symbol, address, amount  }  , token1: { symbol, address, amount }, priceRatio:token0/token1 }
   }, //
   allTransactions: [],

@@ -29,7 +29,7 @@ export function usePairs(
     () =>
       tokens.map(([tokenA, tokenB]) => {
         try {
-          return tokenA && tokenB && !tokenA.equals(tokenB)
+          return tokenA && tokenB && !tokenA?.equals(tokenB)
             ? Pair.getAddress(tokenA, tokenB, tokenA.chainId)
             : undefined;
         } catch (error) {
@@ -46,25 +46,26 @@ export function usePairs(
   );
 
   return useMemo(() => {
-    return results.map((result, i) => {
+    return results?.map((result, i) => {
       const { result: reserves, loading } = result;
-      const tokenA = tokens[i][0];
-      const tokenB = tokens[i][1];
+      const tokenA = tokens?.[i]?.[0];
+      const tokenB = tokens?.[i]?.[1];
 
-      if (loading) return [PairState.LOADING, null];
-      if (!tokenA || !tokenB || tokenA.equals(tokenB))
+      if (loading) return [PairState?.LOADING, null];
+      if (!tokenA || !tokenB) return [PairState.INVALID, null];
+      if (!tokenA || !tokenB || tokenA?.equals(tokenB))
         return [PairState.INVALID, null];
       if (!reserves) return [PairState.NOT_EXISTS, null];
       const { _reserve0, _reserve1 } = reserves;
       if (!_reserve0 || !_reserve1) return [PairState.NOT_EXISTS, null];
-      const [token0, token1] = tokenA.sortsBefore(tokenB)
+      const [token0, token1] = tokenA?.sortsBefore(tokenB)
         ? [tokenA, tokenB]
         : [tokenB, tokenA];
       return [
         PairState.EXISTS,
         new Pair(
-          new TokenAmount(token0, _reserve0.toString()),
-          new TokenAmount(token1, _reserve1.toString()),
+          new TokenAmount(token0, _reserve0?.toString()),
+          new TokenAmount(token1, _reserve1?.toString()),
           chainId || 1
         ),
       ];

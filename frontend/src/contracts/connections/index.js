@@ -9,9 +9,10 @@ import {
   FARM_ADDRESS,
   FACTORY_ADDRESS,
   ROUTER_ADDRESS,
+  nullAddress,
 } from "../../constants/index";
 import { isMetaMaskInstalled } from "../../utils/helper";
-import config from "../../utils/config";
+import { RPC_URLS } from "../../connection/infura";
 
 export const pairContract = (pairAddress, chainId) => {
   const _pairAbi = pairAbi;
@@ -20,7 +21,7 @@ export const pairContract = (pairAddress, chainId) => {
   return connection;
 };
 
-//get connecttion of imported contract
+// get connecttion of imported contract
 export const tokenContract = (address, chainId) => {
   const _address = address;
 
@@ -53,15 +54,29 @@ export const farmContract = (chainId) => {
 const getCurrentConnection = (chainId, abi, contractAddress) => {
   let web3;
 
-  const ankrRpcs = {
-    1: config.ankrEthereumRpc,
-    56: config.ankrRpcBsc,
-  };
   if (isMetaMaskInstalled()) {
     web3 = new Web3(window.ethereum);
   } else {
-    web3 = new Web3(new Web3.providers.HttpProvider(ankrRpcs?.[chainId]));
+    console.log("connection test ", { rpc: RPC_URLS?.[chainId] });
+    web3 = new Web3(new Web3.providers.HttpProvider(RPC_URLS?.[chainId]?.[0]));
   }
 
   return new web3.eth.Contract(abi, contractAddress);
+};
+
+export const getPairAddress = async (address0, address1, chainId) => {
+  try {
+    const factory = factoryContract(chainId);
+    const pairAddress = await factory.methods
+      .getPair(address0, address1)
+      .call();
+
+    if (pairAddress === nullAddress) {
+      return null;
+    }
+    return pairAddress;
+  } catch (error) {
+    console.log("getPairAddress", error);
+    return null;
+  }
 };

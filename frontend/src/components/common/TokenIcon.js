@@ -2,7 +2,6 @@ import { makeStyles } from "@material-ui/core";
 import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { isAddress } from "utils/contractUtils";
-import { currentConnection } from "../../constants/index";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,7 +30,7 @@ const TokenIcon = ({ address, symbol, styles, className, size }) => {
       return tokenItem.logoURI ? tokenItem.logoURI : path;
     }
     return path;
-  }, [address, symbol, tokenList]);
+  }, [address, symbol, tokenList, path]);
 
   return (
     <img

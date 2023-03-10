@@ -1,6 +1,6 @@
 import { Button, makeStyles } from "@material-ui/core";
 import { AccountBalanceWallet } from "@material-ui/icons";
-import { connect, useSelector } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import useActiveWeb3React from "../../hooks/useActiveWeb3React";
@@ -9,6 +9,7 @@ import { AUTHENTICATION_STATE } from "../../connection/connectionConstants";
 import { DAPP_SUPPORTED_ON_CHAINS } from "../../connection/chains";
 import AccountDialog from "./AccountDialog";
 import { useUserAuthentication } from "../../hooks/useUserAuthentication";
+import { UPDATE_AUTH_STATE } from "../../actions/types";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -86,6 +87,7 @@ const Wallet = () => {
   const [walletPopup, setWalletPopup] = useState(true);
   const [accountDialog, setAccountDialog] = useState(false);
   const { logout } = useUserAuthentication();
+  const dispatch = useDispatch();
 
   const authenticationState = useSelector(
     (state) => state?.account?.authenticationState
@@ -129,14 +131,15 @@ const Wallet = () => {
     } else {
       setWalletPopup(true);
     }
-  }, [
-    accountDialog,
-    setAccountDialog,
-    isActive,
-    walletPopup,
-    setWalletPopup,
-    isNetworkSwitchRequired,
-  ]);
+  }, [setAccountDialog, isActive, setWalletPopup, isNetworkSwitchRequired]);
+
+  const handleWalletClose = useCallback(() => {
+    setWalletPopup(false);
+    dispatch({
+      type: UPDATE_AUTH_STATE,
+      payload: AUTHENTICATION_STATE.NOT_STARTED,
+    });
+  }, [setWalletPopup, dispatch]);
 
   return (
     <div>
@@ -145,10 +148,7 @@ const Wallet = () => {
         handleLogout={handleLogout}
         handleClose={() => setAccountDialog(false)}
       />
-      <WalletModal
-        popupActive={walletPopup}
-        resetPopup={() => setWalletPopup(false)}
-      />
+      <WalletModal popupActive={walletPopup} resetPopup={handleWalletClose} />
       {(!isActive || isNetworkSwitchRequired) && (
         <Button onClick={handleWalletConnect} className={classes.smallBtn}>
           {isNetworkSwitchRequired ? "Switch network" : "Connect wallet"}

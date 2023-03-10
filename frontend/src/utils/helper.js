@@ -6,8 +6,6 @@ import {
   moonriverNetwork,
   REWARD_TOKEN_PER_YEAR,
 } from "../constants/index";
-import Web3 from "web3";
-import config from "./config";
 
 export const fromWei = (tokens, decimals = 18) => {
   try {
@@ -49,34 +47,6 @@ export const getCurrentAccount = async () => {
     return accountAddress;
   } catch (error) {
     console.log("getAccounts", error);
-    return null;
-  }
-};
-
-export const getCurrentNetworkId = async () => {
-  const web3 = new Web3(window.ethereum);
-  if (window.ethereum) {
-    const id = await window.ethereum.networkVersion;
-    if (id) {
-      return id;
-    } else {
-      return await web3.eth.getChainId();
-    }
-  } else {
-    return await web3.eth.getChainId();
-  }
-};
-
-export const getNetworkBalance = async (accountAddress) => {
-  if (!isMetaMaskInstalled() || !accountAddress) {
-    return 0;
-  }
-  try {
-    const web3 = new Web3(window.ethereum);
-    const bal = await web3.eth.getBalance(accountAddress);
-    return bal;
-  } catch (error) {
-    console.log("getNetworkBalance", error);
     return null;
   }
 };
@@ -366,21 +336,6 @@ export const getTokenToSelect = (tokenList, tokenQuery) => {
   }
 
   return {};
-};
-
-export const getCurrentNetworkName = (networkId) => {
-  const _id = parseInt(networkId);
-  if ([config.bscChain, config.bscChainTestent].includes(_id)) {
-    return bscNetwork;
-  } else if (
-    [config.polygon_chain_mainnet, config.polygon_chain_testnet].includes(_id)
-  ) {
-    return "polygon";
-  } else if ([config.ethChainId, config.ethChainIdRinkeby].includes(_id)) {
-    return etheriumNetwork;
-  } else {
-    return etheriumNetwork;
-  }
 };
 
 export const recoverKeys = (key) => {

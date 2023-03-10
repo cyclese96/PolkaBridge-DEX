@@ -1,15 +1,10 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-
-import config from "../../utils/config";
 import useActiveWeb3React from "../../hooks/useActiveWeb3React";
 import { useSelector } from "react-redux";
-import { getCurrentNetworkName } from "../../utils/helper";
-import store from "../../store";
-import { CHANGE_NETWORK } from "../../actions/types";
 import { switchChain } from "../../connection/switchChain";
 import { SupportedChainId } from "../../connection/chains";
 
@@ -52,100 +47,24 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function NetworkSelect() {
   const classes = useStyles();
-  const [network, setNetwork] = React.useState(
-    parseInt(localStorage.getItem("currentNetwork") || config.chainId)
-  );
+  // const [network, setNetwork] = React.useState(null);
 
   const { connector } = useActiveWeb3React();
   const selectedChain = useSelector((state) => state.account?.currentChain);
 
-  useEffect(() => {
-    if (!selectedChain) {
-      return;
-    }
-
-    setNetwork(selectedChain);
-  }, [selectedChain]);
-
-  const handleChangeNetwork = (_selected) => {
-    store.dispatch({
-      type: CHANGE_NETWORK,
-      payload: {
-        network: getCurrentNetworkName(_selected),
-        chain: _selected,
-      },
-    });
-    setNetwork(_selected);
-  };
-
-  // const handleChange = useCallback(
-  //   (_selected) => {
-  //     if (network === _selected) {
-  //       return;
-  //     }
-
-  //     localStorage.setItem("currentNetwork", _selected);
-
-  //     // handle network stated when metamask in not available
-  //     if (!active) {
-  //       handleChangeNetwork(_selected);
-  //     }
-
-  //     setNetwork(_selected);
-  //     if ([config.bscChain, config.bscChainTestent].includes(_selected)) {
-  //       setupNetwork(
-  //         currentConnection === "mainnet"
-  //           ? bscNetworkDetail.mainnet
-  //           : bscNetworkDetail.testnet
-  //       );
-  //     } else if (
-  //       [config.polygon_chain_mainnet, config.polygon_chain_testnet].includes(
-  //         _selected
-  //       )
-  //     ) {
-  //       setupNetwork(
-  //         currentConnection === "mainnet"
-  //           ? polygonNetworkDetail.mainnet
-  //           : polygonNetworkDetail.testnet
-  //       );
-  //     } else if (
-  //       [config.hmyChainMainnet, config.hmyChainTestnet].includes(_selected)
-  //     ) {
-  //       setupNetwork(
-  //         currentConnection === "mainnet"
-  //           ? harmonyNetworkDetail.mainnet
-  //           : harmonyNetworkDetail.testnet
-  //       );
-  //     } else if (
-  //       [config.moonriverChain, config.moonriverChainTestent].includes(
-  //         _selected
-  //       )
-  //     ) {
-  //       setupNetwork(
-  //         currentConnection === "mainnet"
-  //           ? moonriverNetworkDetail.mainnet
-  //           : moonriverNetworkDetail.testnet
-  //       );
-  //     } else {
-  //       setupNetwork(
-  //         currentConnection === "mainnet"
-  //           ? ethereumNetworkDetail.mainnet
-  //           : ethereumNetworkDetail.testnet
-  //       );
-  //     }
-  //   },
-  //   [network]
-  // );
-
   const handleChange = useCallback(
     async (_selected) => {
-      if (network === _selected) {
+      if (selectedChain === _selected) {
+        console.log("switch test returned ", {
+          _selected,
+          selectedChain,
+        });
         return;
       }
 
       localStorage.setItem("currentNetwork", _selected);
 
-      handleChangeNetwork(_selected);
+      // handleChangeNetwork(_selected);
 
       try {
         const switchRes = await switchChain(connector, _selected);
@@ -154,7 +73,7 @@ export default function NetworkSelect() {
         console.log("switch test activating  chain switch failed ", error);
       }
     },
-    [network, connector, handleChangeNetwork]
+    [connector, selectedChain]
   );
 
   return (
@@ -183,6 +102,7 @@ export default function NetworkSelect() {
             <span>BSC</span>
             <img
               className={classes.imgIcon}
+              alt={"BSC"}
               src="https://assets.coingecko.com/coins/images/12591/small/binance-coin-logo.png?1600947313"
             />
           </MenuItem>

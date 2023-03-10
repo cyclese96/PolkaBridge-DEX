@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Button,
   Dialog,
@@ -10,18 +10,14 @@ import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import CloseIcon from "@material-ui/icons/Close";
 import { fromWei, toWei } from "../../../utils/helper";
 import { formatCurrency } from "../../../utils/formatters";
-import TransactionStatus from "../../common/TransactionStatus";
+import TransactionPopup from "../../common/TransactionPopup";
 import { connect } from "react-redux";
-import {
-  stakeLpTokens,
-  unstakeLpTokens,
-  getFarmInfo,
-  getLpBalanceFarm,
-} from "../../../actions/farmActions";
 import BigNumber from "bignumber.js";
 import { useMemo } from "react";
-import useActiveWeb3React from "hooks/useActiveWeb3React";
-import NumberInput from "components/common/NumberInput";
+import useActiveWeb3React from "../../../hooks/useActiveWeb3React";
+import NumberInput from "../../../components/common/NumberInput";
+import { useTransactionCallback } from "../../../hooks/useTransactionCallback";
+import { TransactionStatus } from "../../../constants/index";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -156,10 +152,6 @@ const StakeDialog = ({
   handleClose,
   dex: { transaction },
   farm: { farms, lpBalance },
-  stakeLpTokens,
-  unstakeLpTokens,
-  getFarmInfo,
-  getLpBalanceFarm,
 }) => {
   const classes = useStyles();
   const [inputValue, setInputValue] = useState("");
@@ -193,6 +185,9 @@ const StakeDialog = ({
     }
   };
 
+  const { stakeLpTokens, unstakeLpTokens, resetTrxState } =
+    useTransactionCallback();
+
   const confirmStake = async () => {
     const inputTokens = inputValue
       ? toWei(inputValue, poolInfo.poolDecimals)
@@ -221,32 +216,24 @@ const StakeDialog = ({
     }
 
     if (type === "stake") {
-      await stakeLpTokens(
-        inputTokens,
-        poolInfo.poolAddress,
-        poolInfo.pid,
-        account,
-        chainId
-      );
+      await stakeLpTokens(inputTokens, poolInfo.pid, account, chainId);
     } else {
-      await unstakeLpTokens(
-        inputTokens,
-        poolInfo.poolAddress,
-        poolInfo.pid,
-        account,
-        chainId
-      );
+      await unstakeLpTokens(inputTokens, poolInfo.pid, account, chainId);
     }
-
-    // update pool after transaction:
-    await Promise.all([
-      getFarmInfo(poolInfo.poolAddress, poolInfo.pid, account, chainId),
-      getLpBalanceFarm(poolInfo.poolAddress, account, chainId),
-    ]);
   };
 
   const closeAction = () => {
     handleClose();
+
+    if (
+      transaction?.status &&
+      [TransactionStatus.FAILED, TransactionStatus.COMPLETED].includes(
+        transaction?.status
+      )
+    ) {
+      resetTrxState();
+    }
+
     setTimeout(() => {
       setInputValue("");
     }, 500);
@@ -366,7 +353,7 @@ const StakeDialog = ({
       <div>
         {transaction.type !== null && (
           <div>
-            <TransactionStatus onClose={closeAction} />
+            <TransactionPopup onClose={closeAction} />
           </div>
         )}
       </div>
@@ -380,9 +367,4 @@ const mapStateToProps = (state) => ({
   account: state.account,
 });
 
-export default connect(mapStateToProps, {
-  stakeLpTokens,
-  unstakeLpTokens,
-  getFarmInfo,
-  getLpBalanceFarm,
-})(StakeDialog);
+export default connect(mapStateToProps, {})(StakeDialog);

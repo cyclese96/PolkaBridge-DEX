@@ -14,6 +14,8 @@ import {
   allowanceAmount,
   DEFAULT_POOL_TOKENS,
   NATIVE_TOKEN,
+  ROUTER_ADDRESS,
+  TransactionStatus,
 } from "../../../constants/index";
 import {
   fromWei,
@@ -22,18 +24,13 @@ import {
   getTokenToSelect,
 } from "../../../utils/helper";
 import {
-  checkLpAllowance,
-  confirmLPAllowance,
   getLpBalance,
-  removeLiquidityEth,
   loadPairAddress,
-  removeLiquidity,
   importToken,
 } from "../../../actions/dexActions";
 import SelectToken from "../../common/SelectToken";
 import BigNumber from "bignumber.js";
-import { getPairAddress } from "../../../utils/connectionUtils";
-import { RESET_POOL_DATA, START_TRANSACTION } from "../../../actions/types";
+import { RESET_POOL_DATA } from "../../../actions/types";
 import store from "../../../store";
 import { Settings } from "@material-ui/icons";
 import { formatCurrency } from "../../../utils/formatters";
@@ -43,6 +40,9 @@ import useActiveWeb3React from "../../../hooks/useActiveWeb3React";
 import TokenIcon from "../../../components/common/TokenIcon";
 import NumberInput from "../../../components/common/NumberInput";
 import { useUserAuthentication } from "../../../hooks/useUserAuthentication";
+import { useTokenAllowance } from "../../../hooks/useAllowance";
+import { useTransactionCallback } from "../../../hooks/useTransactionCallback";
+import { getPairAddress } from "../../../contracts/connections/index";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -251,7 +251,6 @@ const useStyles = makeStyles((theme) => ({
 
 const RemoveCard = ({
   dex: {
-    lpApproved,
     lpBalance,
     dexLoading,
     poolReserves,
@@ -262,12 +261,8 @@ const RemoveCard = ({
     tokenList,
   },
   handleBack,
-  checkLpAllowance,
-  confirmLPAllowance,
   getLpBalance,
-  removeLiquidityEth,
   loadPairAddress,
-  removeLiquidity,
   importToken,
 }) => {
   const classes = useStyles();
@@ -334,49 +329,6 @@ const RemoveCard = ({
     initSelection();
   }, [chainId, account, tokenList, token0Query, token1Query]);
 
-  const currentLpApproved = useMemo(() => {
-    if (
-      Object.keys(lpApproved).includes(
-        `${selectedToken0.symbol}_${selectedToken1.symbol}`
-      )
-    ) {
-      return lpApproved[`${selectedToken0.symbol}_${selectedToken1.symbol}`];
-    } else {
-      return lpApproved[`${selectedToken1.symbol}_${selectedToken0.symbol}`];
-    }
-  }, [lpApproved, selectedToken0, selectedToken1]);
-
-  const handleConfirmAllowance = async () => {
-    const _allowanceAmount = allowanceAmount;
-    const pairAddress = currentPairAddress;
-    await confirmLPAllowance(
-      _allowanceAmount,
-      selectedToken0,
-      selectedToken1,
-      pairAddress,
-      account,
-      chainId
-    );
-  };
-
-  const currentLpBalance = useMemo(() => {
-    if (
-      Object.keys(lpBalance).includes(
-        `${selectedToken0.symbol}_${selectedToken1.symbol}`
-      )
-    ) {
-      return lpBalance[`${selectedToken0.symbol}_${selectedToken1.symbol}`];
-    } else if (
-      Object.keys(lpBalance).includes(
-        `${selectedToken1.symbol}_${selectedToken0.symbol}`
-      )
-    ) {
-      return lpBalance[`${selectedToken1.symbol}_${selectedToken0.symbol}`];
-    } else {
-      return "0";
-    }
-  }, [lpBalance, selectedToken0, selectedToken1]);
-
   const currentPairAddress = useMemo(() => {
     if (
       Object.keys(pairContractData).includes(
@@ -398,6 +350,48 @@ const RemoveCard = ({
       return null;
     }
   }, [pairContractData, selectedToken0, selectedToken1]);
+
+  const currentPairDecimals = useMemo(() => {
+    return (
+      (parseInt(selectedToken0.decimals) + parseInt(selectedToken1.decimals)) /
+      2
+    );
+  }, [selectedToken0, selectedToken1]);
+
+  const { confirmAllowance: confirmLPAllowance, allowance: lpAllowance } =
+    useTokenAllowance(
+      {
+        address: currentPairAddress,
+        symbol: "PBRAMM",
+        decimals: currentPairDecimals,
+      },
+      account,
+      ROUTER_ADDRESS?.[chainId]
+    );
+  const { removeLiquidity } = useTransactionCallback();
+
+  const handleConfirmAllowance = async () => {
+    const _allowanceAmount = allowanceAmount;
+    await confirmLPAllowance(_allowanceAmount);
+  };
+
+  const currentLpBalance = useMemo(() => {
+    if (
+      Object.keys(lpBalance).includes(
+        `${selectedToken0.symbol}_${selectedToken1.symbol}`
+      )
+    ) {
+      return lpBalance[`${selectedToken0.symbol}_${selectedToken1.symbol}`];
+    } else if (
+      Object.keys(lpBalance).includes(
+        `${selectedToken1.symbol}_${selectedToken0.symbol}`
+      )
+    ) {
+      return lpBalance[`${selectedToken1.symbol}_${selectedToken0.symbol}`];
+    } else {
+      return "0";
+    }
+  }, [lpBalance, selectedToken0, selectedToken1]);
 
   // new use effect
   useEffect(() => {
@@ -425,14 +419,6 @@ const RemoveCard = ({
         }
 
         await getLpBalance(
-          selectedToken0,
-          selectedToken1,
-          _pairAddress,
-          account,
-          chainId
-        );
-
-        await checkLpAllowance(
           selectedToken0,
           selectedToken1,
           _pairAddress,
@@ -478,35 +464,26 @@ const RemoveCard = ({
         erc20Token = selectedToken0;
       }
 
-      await removeLiquidityEth(
+      await removeLiquidity(
+        _lpAmount,
         ethToken,
         erc20Token,
-        account,
-        _lpAmount,
         swapSettings.deadline,
+        account,
         chainId
       );
     } else {
       // remove liquidy erc20 - erc20
 
       await removeLiquidity(
+        _lpAmount,
         selectedToken0,
         selectedToken1,
-        account,
-        _lpAmount,
         swapSettings.deadline,
+        account,
         chainId
       );
     }
-
-    const pairAddress = currentPairAddress;
-    await getLpBalance(
-      selectedToken0,
-      selectedToken1,
-      pairAddress,
-      account,
-      chainId
-    );
   };
 
   const handleInputChange = (value) => {
@@ -540,38 +517,27 @@ const RemoveCard = ({
 
     if (
       ["remove", "lp_token_approve"].includes(transaction.type) &&
-      transaction.status === "pending"
+      (transaction.status === TransactionStatus.COMPLETED ||
+        transaction.status === TransactionStatus.FAILED)
     ) {
       setSwapDialog(true);
+      // update lp balances
+      getLpBalance(
+        selectedToken0,
+        selectedToken1,
+        currentPairAddress,
+        account,
+        chainId
+      );
     }
-
-    if (
-      ["remove", "lp_token_approve"].includes(transaction.type) &&
-      (transaction.status === "success" || transaction.status === "failed")
-    ) {
-      setSwapDialog(true);
-    }
-  }, [transaction]);
-
-  const handleConfirmSwapClose = (value) => {
-    setSwapDialog(value);
-    if (
-      ["remove", "lp_token_approve"].includes(transaction.type) &&
-      transaction.status === "success"
-    ) {
-      store.dispatch({ type: START_TRANSACTION });
-      // handleClearState();
-    } else if (
-      ["remove", "lp_token_approve"].includes(transaction.type) &&
-      transaction.status === "failed"
-    ) {
-      store.dispatch({ type: START_TRANSACTION });
-    }
-  };
-
-  const currentPairDecimals = (token1, token2) => {
-    return (parseInt(token1.decimals) + parseInt(token2.decimals)) / 2;
-  };
+  }, [
+    transaction,
+    selectedToken0,
+    selectedToken1,
+    currentPairAddress,
+    account,
+    chainId,
+  ]);
 
   const disableStatus = useMemo(() => {
     if (!isActive) {
@@ -599,9 +565,9 @@ const RemoveCard = ({
     ) {
       return "Pending Transaction...";
     } else {
-      return !currentLpApproved ? "Approve LP token" : "Remove Liquidity";
+      return !lpAllowance ? "Approve LP token" : "Remove Liquidity";
     }
-  }, [isActive, dexLoading, transaction, currentLpApproved, currentLpBalance]);
+  }, [isActive, dexLoading, transaction, lpAllowance, currentLpBalance]);
 
   const handleAction = () => {
     if (!isActive) {
@@ -614,7 +580,7 @@ const RemoveCard = ({
       return;
     }
 
-    if (!currentLpApproved) {
+    if (!lpAllowance) {
       setSwapDialog(true);
       handleConfirmAllowance();
     } else {
@@ -628,12 +594,13 @@ const RemoveCard = ({
       <SwapSettings open={settingOpen} handleClose={close} />
       <TransactionConfirm
         open={swapDialogOpen}
-        handleClose={() => handleConfirmSwapClose(false)}
+        handleClose={() => setSwapDialog(false)}
         selectedToken0={selectedToken0}
         selectedToken1={selectedToken1}
         token1Value={0}
         token2Value={0}
         priceImpact={0}
+        type="liquidity"
       />
       <Card elevation={20} className={classes.card}>
         <div className={classes.cardContents}>
@@ -761,7 +728,7 @@ const RemoveCard = ({
           </div>
           <div style={{ color: "#DF097C", fontSize: 13 }}>
             {dexLoading ||
-              !currentLpApproved ||
+              !lpAllowance ||
               new BigNumber(currentLpBalance).eq(0) ||
               (new BigNumber(liquidityPercent).eq(0) &&
                 "* Choose your amount of first to remove liquidity.")}
@@ -809,10 +776,7 @@ const RemoveCard = ({
                 </div>
                 <span className={classes.itemValues}>
                   {formatCurrency(
-                    fromWei(
-                      currentLpBalance,
-                      currentPairDecimals(selectedToken0, selectedToken1)
-                    )
+                    fromWei(currentLpBalance, currentPairDecimals)
                   )}
                 </span>
               </div>
@@ -834,11 +798,7 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  checkLpAllowance,
-  confirmLPAllowance,
   getLpBalance,
-  removeLiquidityEth,
   loadPairAddress,
-  removeLiquidity,
   importToken,
 })(RemoveCard);

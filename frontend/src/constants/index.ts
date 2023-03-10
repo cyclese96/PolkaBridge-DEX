@@ -34,7 +34,14 @@ export const TOKEN_ADDRESS = {
   },
 };
 
-export const ROUTER_ADDRESS = {
+export const NATIVE_TOKEN_ADDRESS: { [index: string]: string } = {
+  1: TOKEN_ADDRESS.ETH[1],
+  4: TOKEN_ADDRESS.ETH[4],
+  56: TOKEN_ADDRESS.BNB[56],
+  97: TOKEN_ADDRESS.BNB[97],
+};
+
+export const ROUTER_ADDRESS: { [index: string]: string } = {
   1: "0xFF0e9437818258BDEdd1aA374095968ABC82a9E2",
   4: "0x541E97cC33aF16586fB544812b39F1663C3FD779",
   97: "0xCb4Ea1E2f7561edD414AF09d2df308986d4d7a29",
@@ -48,7 +55,7 @@ export const FACTORY_ADDRESS = {
   56: "0xDda79Ec4AF818D1e95F0A45B3E7e60461d5228cb",
 };
 
-export const FARM_ADDRESS = {
+export const FARM_ADDRESS: { [index: string]: string } = {
   1: "0xF0301472c7e383310bE1D426aA59207818fB8a53",
   4: "0x57eA8360A59468112cE669EA8bFb2169062EAF0d",
   97: "0xc14c4F5041D62c03b4E18932975C30817A4CB39f",
@@ -294,3 +301,10 @@ export const BLACK_LIST_TOKENS_ON_CHART = [
   // "0xdac17f958d2ee523a2206206994597c13d831ec7", // USDT, MAINNET
   // "0x55d398326f99059ff775485246999027b3197955", // usdt bsc
 ];
+
+export const TransactionStatus = {
+  WAITING: "WAITING",
+  PENDING: "PENDING",
+  COMPLETED: "COMPLETED",
+  FAILED: "FAILED",
+};
