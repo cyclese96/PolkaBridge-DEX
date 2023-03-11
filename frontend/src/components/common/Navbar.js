@@ -205,7 +205,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Navbar = (props) => {
+const Navbar = ({ account: { currentChain } }) => {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
@@ -281,7 +281,7 @@ const Navbar = (props) => {
   );
 
   const { account, chainId } = useActiveWeb3React();
-  const currentChain = useSelector((state) => state.account?.currentChain);
+  // const currentChain = useSelector((state) => state.account?.currentChain);
   const dispatch = useDispatch();
 
   useEffect(() => {
