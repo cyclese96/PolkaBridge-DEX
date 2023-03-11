@@ -74,13 +74,13 @@ const Farms = (props) => {
 
   // swap status updates
   useEffect(() => {
-    if (!transaction.hash && !transaction.type) {
+    if (!transaction?.hash && !transaction?.type) {
       return;
     }
 
     if (
-      transaction.type === "approve" ||
-      (transaction.type === "stake" && !stakeDialog.open)
+      transaction?.type === "approve" ||
+      (transaction?.type === "stake" && !stakeDialog.open)
     ) {
       setStakeDialog({ type: null, open: true, poolInfo: {} });
     }
@@ -90,8 +90,8 @@ const Farms = (props) => {
     setStakeDialog({ ...stakeDialog, open: false });
     //check reset transaction on dialog close: don't reset if transaction already pending
     if (
-      (transaction.type === "approve" || transaction.type === "stake") &&
-      transaction.status !== "pending"
+      (transaction?.type === "approve" || transaction?.type === "stake") &&
+      transaction?.status !== "pending"
     ) {
       setTimeout(() => {
         store.dispatch({ type: START_TRANSACTION });
@@ -99,9 +99,9 @@ const Farms = (props) => {
     }
   };
 
-  useEffect(() => {
-    console.log("farm price token price ", { farmTokenPriceUsd });
-  }, [farmTokenPriceData]);
+  // useEffect(() => {
+  //   console.log("farm price token price ", { farmTokenPriceUsd });
+  // }, [farmTokenPriceData]);
 
   const farmPools = useMemo(() => {
     return Object.keys(supportedFarmingPools).includes(
