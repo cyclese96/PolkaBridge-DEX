@@ -38,6 +38,7 @@ const Farms = (props) => {
   const {
     dex: { transaction },
     farm: {},
+    account: { currentChain },
   } = props;
 
   const classes = useStyles();
@@ -48,13 +49,11 @@ const Farms = (props) => {
   });
   const { chainId } = useActiveWeb3React();
 
-  const selectedChain = useSelector((state) => state.account?.currentChain);
-
   // pbr for ethereum, pwar for bsc
   const farmTokenPriceData = useTokenData(
-    [1, 4].includes(selectedChain)
-      ? TOKEN_ADDRESS.PBR?.[selectedChain]?.toLowerCase()
-      : TOKEN_ADDRESS?.PWAR?.[selectedChain]?.toLowerCase()
+    [1, 4].includes(currentChain)
+      ? TOKEN_ADDRESS.PBR?.[currentChain]?.toLowerCase()
+      : TOKEN_ADDRESS?.PWAR?.[currentChain]?.toLowerCase()
   );
 
   const farmTokenPriceUsd = useMemo(() => {
@@ -104,23 +103,21 @@ const Farms = (props) => {
   // }, [farmTokenPriceData]);
 
   const farmPools = useMemo(() => {
-    return Object.keys(supportedFarmingPools).includes(
-      selectedChain?.toString()
-    )
-      ? supportedFarmingPools?.[selectedChain].map((poolName) => {
+    return Object.keys(supportedFarmingPools).includes(currentChain?.toString())
+      ? supportedFarmingPools?.[currentChain].map((poolName) => {
           return {
             name: poolName,
-            address: farmingPoolConstants?.[selectedChain]?.[poolName]?.address,
+            address: farmingPoolConstants?.[currentChain]?.[poolName]?.address,
             multiplier:
-              farmingPoolConstants?.[selectedChain]?.[poolName]?.multiplier,
-            pid: farmingPoolConstants?.[selectedChain]?.[poolName]?.pid,
-            lpApr: farmingPoolConstants?.[selectedChain]?.[poolName]?.lpApr,
+              farmingPoolConstants?.[currentChain]?.[poolName]?.multiplier,
+            pid: farmingPoolConstants?.[currentChain]?.[poolName]?.pid,
+            lpApr: farmingPoolConstants?.[currentChain]?.[poolName]?.lpApr,
             decimals:
-              farmingPoolConstants?.[selectedChain]?.[poolName]?.decimals,
+              farmingPoolConstants?.[currentChain]?.[poolName]?.decimals,
           };
         })
       : [];
-  }, [selectedChain]);
+  }, [currentChain]);
 
   // useEffect(() => {
   //   console.log("farmPools ", { farmPools, chainId });
