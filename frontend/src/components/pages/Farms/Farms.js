@@ -1,5 +1,5 @@
 import { makeStyles } from "@material-ui/core";
-import { connect, useSelector } from "react-redux";
+import { connect } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
 import TabPage from "../../TabPage";
 import Farm from "./Farm";
@@ -37,7 +37,6 @@ const useStyles = makeStyles((theme) => ({
 const Farms = (props) => {
   const {
     dex: { transaction },
-    farm: {},
     account: { currentChain },
   } = props;
 
@@ -172,7 +171,6 @@ const Farms = (props) => {
 const mapStateToProps = (state) => ({
   account: state.account,
   dex: state.dex,
-  farm: state.farm,
 });
 
 export default connect(mapStateToProps, {})(Farms);
