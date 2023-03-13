@@ -57,28 +57,11 @@ const useStyles = makeStyles((theme) => ({
   sectionMobile: {
     width: "100%",
     display: "flex",
-    alignItems: "stretch",
+    alignItems: "center",
     justifyContent: "space-between",
     [theme.breakpoints.up("md")]: {
       display: "none",
     },
-  },
-  row1: {
-    width: "90vw",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-
-  home: {
-    "text-decoration": "none",
-    color: "black",
-    cursor: "pointer",
-    marginRight: 5,
-    marginLeft: 5,
-  },
-  nav: {
-    marginRight: 15,
   },
 
   fullList: {
@@ -104,36 +87,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1.05vw",
     color: theme.palette.primary.appLink,
   },
-  navbarButton: {
-    backgroundColor: "#f9f9f9",
-    color: "#C80C81",
-    borderRadius: 10,
-    height: 35,
-    marginRight: 40,
-    padding: 20,
-    fontSize: 14,
-    fontWeight: 700,
-    textTransform: "none",
-    "&:hover": {
-      background: "rgba(255, 255, 255, 0.7)",
-    },
-    [theme.breakpoints.down("sm")]: {
-      marginRight: 0,
-      marginLeft: 15,
-      width: 150,
-    },
-  },
-  mobileButton: {
-    borderRadius: "50px",
-    background: `linear-gradient(to bottom,#D9047C, #BF1088)`,
-    lineHeight: "24px",
-    verticalAlign: "baseline",
-    letterSpacing: "-0.8px",
-    margin: 0,
-    color: "#ffffff",
-    padding: "5px 15px 5px 15px",
-    fontWeight: 600,
-  },
   leftMargin: {
     marginLeft: 159,
     [theme.breakpoints.down("lg")]: {
@@ -147,45 +100,11 @@ const useStyles = makeStyles((theme) => ({
       fontSize: 16,
     },
   },
-  network: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    // background: `linear-gradient(to bottom, rgba(224, 1, 125, 0.06), #f5f3f3)`,
-
-    backgroundColor: theme.palette.primary.buttonColor,
-    borderRadius: 14,
-    padding: 6,
-    paddingLeft: 8,
-    paddingRight: 15,
-    fontSize: 14,
-    fontWeight: 700,
-    cursor: "pointer",
-    marginRight: 5,
-    marginLeft: 15,
-
-    "&:hover": {
-      background: "rgba(224, 208, 217,1)",
-    },
-    [theme.breakpoints.down("md")]: {
-      padding: 3,
-      paddingLeft: 8,
-      paddingRight: 8,
-      height: 35,
-    },
-  },
-  networkIcon: {
-    width: "auto",
-    height: 20,
-    fontSize: 25,
-  },
   menuIcon: {
     color: theme.palette.primary.iconColor,
-    marginRight: 5,
   },
   logo: {
     height: 44,
-
     [theme.breakpoints.down("sm")]: {
       height: 30,
       width: "auto",
@@ -200,10 +119,6 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
     // backgroundColor: theme.palette.primary.iconBack,
     color: theme.palette.primary.iconColor,
-  },
-  networkText: {
-    marginRight: 5,
-    color: theme.palette.textColors.heading,
   },
 }));
 
@@ -399,7 +314,7 @@ const Navbar = ({ account: { currentChain } }) => {
             </a>
           </div>
 
-          <div className="d-flex  align-items-center">
+          <div className=" d-flex  align-items-center">
             <NetworkSelect />
             <Wallet />
             {["bottom"].map((anchor) => (

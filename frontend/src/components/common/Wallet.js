@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 15,
       paddingRight: 15,
-      marginLeft: 25,
     },
   },
   smallBtn: {
@@ -40,15 +39,13 @@ const useStyles = makeStyles((theme) => ({
     height: 35,
     marginRight: 40,
     padding: 15,
-    fontSize: 14,
-    fontWeight: 700,
+    fontSize: 12,
     textTransform: "none",
     "&:hover": {
       background: "rgba(255, 255, 255, 0.7)",
     },
     [theme.breakpoints.down("md")]: {
       marginRight: 0,
-      marginLeft: 25,
       width: "fit-content",
       backgroundColor: theme.palette.primary.buttonColor,
       padding: 6,
