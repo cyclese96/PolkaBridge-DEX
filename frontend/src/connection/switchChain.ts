@@ -1,8 +1,9 @@
-import { Connector } from "@web3-react/types";
-import { getChainInfo, isSupportedChain, SupportedChainId } from "./chains";
+import { Connector } from '@web3-react/types';
+import { getChainInfo, isSupportedChain, SupportedChainId } from './chains';
+import { walletConnectConnection } from './connectionConstants';
 
-import { RPC_URLS } from "./infura";
-import { NETWORK_DETAILS } from "./rpc";
+import { RPC_URLS } from './infura';
+import { NETWORK_DETAILS } from './rpc';
 
 function getRpcUrl(chainId: SupportedChainId): string {
   switch (chainId) {
@@ -24,13 +25,15 @@ function getRpcUrl(chainId: SupportedChainId): string {
 
 export const switchChain = async (
   connector: Connector,
-  chainId: SupportedChainId
+  chainId: SupportedChainId,
 ) => {
-  console.log("switch test ", { chainId });
+  console.log('switch test ', { chainId });
   if (!isSupportedChain(chainId)) {
     throw new Error(
-      `Chain ${chainId} not supported for connector (${typeof connector})`
+      `Chain ${chainId} not supported for connector (${typeof connector})`,
     );
+  } else if (connector === walletConnectConnection.connector) {
+    await connector.activate(chainId);
   } else {
     const info = getChainInfo(chainId);
     const addChainParameter = {
@@ -42,23 +45,23 @@ export const switchChain = async (
     };
 
     try {
-      console.log("switch test activating chain ", addChainParameter);
+      console.log('switch test activating chain ', addChainParameter);
       await connector.activate(addChainParameter);
     } catch (error) {
-      console.log("switch test activation failed ", { error });
+      console.log('switch test activation failed ', { error });
       const networkObject =
         chainId === 1 ? NETWORK_DETAILS.MAINNET : NETWORK_DETAILS.BSC;
 
-      console.log("switch test activation failed now adding ", networkObject);
-      console.log("switch test adding chain ", networkObject);
+      console.log('switch test activation failed now adding ', networkObject);
+      console.log('switch test adding chain ', networkObject);
       if (chainId === 56) {
         await connector?.provider?.request({
-          method: "wallet_addEthereumChain",
+          method: 'wallet_addEthereumChain',
           params: [networkObject],
         });
       } else {
         await connector?.provider?.request({
-          method: "wallet_switchEthereumChain",
+          method: 'wallet_switchEthereumChain',
           params: [{ chainId: networkObject.chainId }],
         });
 
