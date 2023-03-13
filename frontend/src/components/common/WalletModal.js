@@ -162,7 +162,7 @@ const WalletModal = ({ popupActive, resetPopup }) => {
       if (wallet === "metamask") {
         if (!isMetaMaskInstalled()) {
           window.open(
-            "https://metamask.app.link/dapp/p2p.polkabridge.org/",
+            "https://metamask.app.link/dapp/swap.polkabridge.org/",
             "_blank",
             "noopener,noreferrer"
           );
@@ -174,7 +174,7 @@ const WalletModal = ({ popupActive, resetPopup }) => {
 
       if (wallet === "trustWallet") {
         window.open(
-          "https://link.trustwallet.com/open_url?coin_id=637&url=https://p2p.polkabridge.org/",
+          "https://link.trustwallet.com/open_url?coin_id=637&url=https://swap.polkabridge.org/",
           "_blank",
           "noopener,noreferrer"
         );

@@ -8,19 +8,18 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import clsx from "clsx";
-import MenuIcon from "@material-ui/icons/Menu";
 import PeopleAltOutlined from "@material-ui/icons/PeopleAltOutlined";
-import FlareOutlined from "@material-ui/icons/FlareOutlined";
 import TouchAppOutlined from "@material-ui/icons/TouchAppOutlined";
 import SwapVertIcon from "@material-ui/icons/SwapVert";
 
-import { EqualizerOutlined } from "@material-ui/icons";
+import { EqualizerOutlined, MoreVert } from "@material-ui/icons";
 import Wallet from "./Wallet";
 import DotCircle from "./DotCircle";
-import { connect, useDispatch, useSelector } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import NetworkSelect from "./NetworkSelect";
 import { loadTokens } from "../../actions/dexActions";
 import useActiveWeb3React from "../../hooks/useActiveWeb3React";
+import { Divider } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -56,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   sectionMobile: {
+    width: "100%",
     display: "flex",
     alignItems: "stretch",
     justifyContent: "space-between",
@@ -181,6 +181,7 @@ const useStyles = makeStyles((theme) => ({
   },
   menuIcon: {
     color: theme.palette.primary.iconColor,
+    marginRight: 5,
   },
   logo: {
     height: 44,
@@ -192,11 +193,12 @@ const useStyles = makeStyles((theme) => ({
   },
   list: {
     paddingTop: 20,
-    width: "250px",
-    borderLeft: "5px solid pink",
-    borderColor: "#3A1242",
+    width: "100%",
+
+    borderTop: `5px solid #E0077D`,
+    // borderColor: "#3A1242",
     height: "100%",
-    backgroundColor: theme.palette.primary.iconBack,
+    // backgroundColor: theme.palette.primary.iconBack,
     color: theme.palette.primary.iconColor,
   },
   networkText: {
@@ -219,7 +221,7 @@ const Navbar = ({ account: { currentChain } }) => {
   const list = (anchor) => (
     <div
       className={clsx(classes.list, {
-        [classes.fullList]: anchor === "top" || anchor === "bottom",
+        [classes.fullList]: anchor === "bottom" || anchor === "bottom",
       })}
       role="presentation"
       onClick={toggleDrawer(anchor, false)}
@@ -252,30 +254,17 @@ const Navbar = ({ account: { currentChain } }) => {
             icon: <PeopleAltOutlined />,
           },
           { name: "Swap", link: "/", id: "items", icon: <SwapVertIcon /> },
-          {
-            name: "Lending",
-            link: "#",
-            id: "features",
-            icon: <FlareOutlined />,
-          },
         ].map((tab, index) => (
-          <a href={tab.link}>
-            <ListItem
-              button
-              key={tab.name}
-              onClick={toggleDrawer(anchor, false)}
-            >
+          <ListItem button key={tab.name} onClick={toggleDrawer(anchor, false)}>
+            <a href={tab.link}>
               <ListItemText
                 primary={tab.name}
                 className={classes.menuTitleMobile}
               />
-            </ListItem>
-          </a>
+            </a>
+            <Divider />
+          </ListItem>
         ))}
-
-        <ListItem button style={{ paddingLeft: 5 }}>
-          <Wallet />
-        </ListItem>
       </List>
     </div>
   );
@@ -392,12 +381,6 @@ const Navbar = ({ account: { currentChain } }) => {
             </a>
           </div>
 
-          <div>
-            <a href="/" className={classes.navbarItemsDesktop}>
-              Lending <DotCircle />
-            </a>
-          </div>
-
           <div className={classes.grow} />
 
           <NetworkSelect />
@@ -405,44 +388,43 @@ const Navbar = ({ account: { currentChain } }) => {
         </Toolbar>
 
         <Toolbar className={classes.sectionMobile}>
-          <div className={classes.row1}>
-            <div>
-              <a href="/">
-                <img
-                  alt="logo"
-                  variant="square"
-                  src="https://polkabridge.org/logo.png"
-                  className={classes.logo}
-                />
-              </a>
-            </div>
+          <div>
+            <a href="/">
+              <img
+                alt="logo"
+                variant="square"
+                src="https://polkabridge.org/logo.png"
+                className={classes.logo}
+              />
+            </a>
+          </div>
 
-            <div className="d-flex justify-content-between align-items-center">
-              <NetworkSelect />
-              {["right"].map((anchor) => (
-                <React.Fragment key={anchor}>
-                  <IconButton
-                    aria-label="Menu"
-                    aria-haspopup="true"
-                    className={classes.menuIcon}
-                    onClick={toggleDrawer(anchor, true)}
-                  >
-                    <MenuIcon className={classes.menuIcon} />
-                  </IconButton>
+          <div className="d-flex  align-items-center">
+            <NetworkSelect />
+            <Wallet />
+            {["bottom"].map((anchor) => (
+              <React.Fragment key={anchor}>
+                <IconButton
+                  aria-label="More"
+                  aria-haspopup="true"
+                  className={classes.menuIcon}
+                  onClick={toggleDrawer(anchor, true)}
+                >
+                  <MoreVert className={classes.menuIcon} />
+                </IconButton>
 
-                  <SwipeableDrawer
-                    anchor={anchor}
-                    disableSwipeToOpen={false}
-                    open={state[anchor]}
-                    onClose={toggleDrawer(anchor, false)}
-                    onOpen={toggleDrawer(anchor, true)}
-                    classes={{ paper: classes.appBarBackground }}
-                  >
-                    {list(anchor)}
-                  </SwipeableDrawer>
-                </React.Fragment>
-              ))}
-            </div>
+                <SwipeableDrawer
+                  anchor={anchor}
+                  disableSwipeToOpen={false}
+                  open={state[anchor]}
+                  onClose={toggleDrawer(anchor, false)}
+                  onOpen={toggleDrawer(anchor, true)}
+                  classes={{ paper: classes.appBarBackground }}
+                >
+                  {list(anchor)}
+                </SwipeableDrawer>
+              </React.Fragment>
+            ))}
           </div>
         </Toolbar>
       </AppBar>

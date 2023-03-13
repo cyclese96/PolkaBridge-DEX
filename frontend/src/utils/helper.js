@@ -344,3 +344,14 @@ export const recoverKeys = (key) => {
   }
   return key?.split("").reverse().join("");
 };
+
+export const formattedAddress = (address, count = 4) => {
+  const _address = address?.toString();
+  if (!address) {
+    return "";
+  }
+
+  const _formatted =
+    _address?.slice(0, count) + "..." + _address?.slice(-count);
+  return _formatted;
+};

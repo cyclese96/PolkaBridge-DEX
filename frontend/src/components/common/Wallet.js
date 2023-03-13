@@ -10,6 +10,7 @@ import { DAPP_SUPPORTED_ON_CHAINS } from "../../connection/chains";
 import AccountDialog from "./AccountDialog";
 import { useUserAuthentication } from "../../hooks/useUserAuthentication";
 import { UPDATE_AUTH_STATE } from "../../actions/types";
+import { formattedAddress } from "../../utils/helper";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,26 +59,6 @@ const useStyles = makeStyles((theme) => ({
   numbers: {
     color: "#f9f9f9",
     fontSize: 14,
-  },
-  largeButton: {
-    marginTop: 30,
-    backgroundColor: theme.palette.primary.pbr,
-    color: "white",
-    width: "auto",
-    height: 45,
-    textTransform: "none",
-    fontSize: 19,
-    borderRadius: 20,
-    willChange: "transform",
-    transition: "transform 450ms ease 0s",
-    transform: "perspective(1px) translateZ(0px)",
-    padding: "12px 50px 12px 50px",
-    "&:hover": {
-      background: "rgba(224, 7, 125, 0.7)",
-    },
-    [theme.breakpoints.down("sm")]: {
-      fontSize: 14,
-    },
   },
 }));
 
@@ -131,6 +112,7 @@ const Wallet = () => {
     } else {
       setWalletPopup(true);
     }
+    console.log("opening popup ", { isActive, isNetworkSwitchRequired });
   }, [setAccountDialog, isActive, setWalletPopup, isNetworkSwitchRequired]);
 
   const handleWalletClose = useCallback(() => {
@@ -162,10 +144,7 @@ const Wallet = () => {
             fontSize="medium"
           />
           <strong className={classes.numbers}>
-            {account ? <span></span> : "..."}
-            {account?.slice(0, 3)}
-            {"..."}
-            {account?.slice(account?.length - 4, account?.length)}
+            {formattedAddress(account, 3)}
           </strong>
         </Button>
       )}
