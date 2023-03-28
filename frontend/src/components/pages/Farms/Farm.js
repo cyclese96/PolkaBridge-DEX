@@ -12,11 +12,7 @@ import {
 } from "../../../constants/index";
 import { connect, useSelector } from "react-redux";
 import { formattedNum, urls } from "../../../utils/formatters";
-import {
-  getFarmInfo,
-  getLpBalanceFarm,
-  harvestRewards,
-} from "../../../actions/farmActions";
+import { getFarmInfo, getLpBalanceFarm } from "../../../actions/farmActions";
 import BigNumber from "bignumber.js";
 import { fromWei, getRewardApr } from "../../../utils/helper";
 import { useEthPrice } from "../../../contexts/GlobalData";
@@ -174,7 +170,6 @@ const Farm = (props) => {
     dex: { transaction },
     getFarmInfo,
     getLpBalanceFarm,
-    harvestRewards,
   } = props;
   const classes = useStyles();
 
@@ -289,13 +284,18 @@ const Farm = (props) => {
 
   const { harvest } = useTransactionCallback();
 
-  const handleHarvest = async () => {
-    await harvest(pid, account, chainId);
-  };
+  const handleHarvest = useCallback(() => {
+    harvest(pid, account, chainId);
+  }, [pid, account, chainId, harvest]);
 
   const isPendingTrx = useMemo(() => {
     return (
-      transaction?.type === `farm_allowance_${pid}` &&
+      [
+        `farm_allowance_${pid}`,
+        `stake_farm_${pid}`,
+        `unstake_farm_${pid}`,
+        `harvest_farm_${pid}`,
+      ].includes(transaction?.type) &&
       transaction.status === TransactionStatus.PENDING
     );
   }, [transaction, pid]);
@@ -503,5 +503,4 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   getFarmInfo,
   getLpBalanceFarm,
-  harvestRewards,
 })(Farm);
