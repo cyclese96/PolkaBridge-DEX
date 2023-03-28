@@ -464,8 +464,13 @@ export function useTransactionCallback(): {
           },
         });
 
+        const gasLimit = await farmContract.estimateGas.deposit(pid, lpAmount);
+        const gasPrice = await provider?.getGasPrice();
+
         const trxRes: any = await farmContract.deposit(pid, lpAmount, {
           from: account,
+          gasLimit: gasLimit,
+          gasPrice: gasPrice,
         });
 
         dispatch({
@@ -520,8 +525,13 @@ export function useTransactionCallback(): {
           },
         });
 
+        const gasLimit = await farmContract.estimateGas.withdraw(pid, lpAmount);
+        const gasPrice = await provider?.getGasPrice();
+
         const trxRes: any = await farmContract.withdraw(pid, lpAmount, {
           from: account,
+          gasLimit: gasLimit,
+          gasPrice: gasPrice,
         });
 
         dispatch({
@@ -551,7 +561,7 @@ export function useTransactionCallback(): {
   const harvest = useCallback(
     async (pid: Number, account: String, chainId: ChainId) => {
       try {
-        if (!pid || !farmContract || !account || !chainId) {
+        if (!pid || !farmContract || !account || !chainId || !provider) {
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: {
@@ -571,8 +581,13 @@ export function useTransactionCallback(): {
           },
         });
 
+        const gasLimit = await farmContract.estimateGas.harvest(pid);
+        const gasPrice = await provider?.getGasPrice();
+
         const trxRes: any = await farmContract.harvest(pid, {
           from: account,
+          gasLimit: gasLimit,
+          gasPrice: gasPrice,
         });
 
         dispatch({

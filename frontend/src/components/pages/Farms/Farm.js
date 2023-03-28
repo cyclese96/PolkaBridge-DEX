@@ -284,9 +284,9 @@ const Farm = (props) => {
 
   const { harvest } = useTransactionCallback();
 
-  const handleHarvest = async () => {
-    await harvest(pid, account, chainId);
-  };
+  const handleHarvest = useCallback(() => {
+    harvest(pid, account, chainId);
+  }, [pid, account, chainId, harvest]);
 
   const isPendingTrx = useMemo(() => {
     return (
