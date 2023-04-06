@@ -122,7 +122,6 @@ export const RPC_URLS: any = {
   ],
   [SupportedChainId.POLYGON_MUMBAI]: [
     `https://polygon-mumbai.infura.io/v3/${INFURA_KEY}`,
-    ,
   ],
   [SupportedChainId.BSC_TESTNET]: [
     `https://rpc.ankr.com/bsc_testnet_chapel`,
