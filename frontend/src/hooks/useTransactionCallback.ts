@@ -55,7 +55,6 @@ export function useTransactionCallback(): {
   const routerContract = useRouterContract();
   const farmContract = useFarmContract();
 
-  //   const [data, setData] = useState<TransactionStatus>(initialState);
   const blockNumber = useBlockNumber();
   const fastFarwardBlockNumber = useFastForwardBlockNumber();
 
@@ -91,6 +90,16 @@ export function useTransactionCallback(): {
               hash: null,
               status: TransactionStatus.FAILED,
             },
+          });
+          console.log("swap tokens invalid params ", {
+            deadline,
+            currentSwapFn,
+            currenSwapPath,
+            chainId,
+            account,
+            routerContract,
+            token0Amount,
+            token1Amount,
           });
           return;
         }
@@ -199,7 +208,7 @@ export function useTransactionCallback(): {
         console.log("trade test  swap tokens  trx error ", { error });
       }
     },
-    [routerContract]
+    [routerContract, dispatch]
   );
 
   const addLiquidity = useCallback(
@@ -213,15 +222,6 @@ export function useTransactionCallback(): {
       chainId: ChainId
     ) => {
       try {
-        console.log("trade test addliq params ", {
-          token0Amount,
-          token1Amount,
-          token0,
-          token1,
-          deadline,
-          account,
-          chainId,
-        });
         if (
           !deadline ||
           !chainId ||
@@ -239,6 +239,16 @@ export function useTransactionCallback(): {
               hash: null,
               status: TransactionStatus.FAILED,
             },
+          });
+          console.log("add liquidity invalid params ", {
+            deadline,
+            chainId,
+            account,
+            routerContract,
+            token0Amount,
+            token1Amount,
+            token0,
+            token1,
           });
           return;
         }
@@ -318,10 +328,10 @@ export function useTransactionCallback(): {
           },
         });
 
-        console.log("trade test add liq trx error ", { error });
+        console.log("Add liquidity error ", { error });
       }
     },
-    [routerContract]
+    [routerContract, dispatch]
   );
 
   const removeLiquidity = useCallback(
@@ -334,14 +344,6 @@ export function useTransactionCallback(): {
       chainId: ChainId
     ) => {
       try {
-        // console.log("trade test addliq params ", {
-        //   lpAmount,
-        //   token0Address,
-        //   token1Address,
-        //   deadline,
-        //   account,
-        //   chainId,
-        // });
         if (
           !deadline ||
           !chainId ||
@@ -358,6 +360,15 @@ export function useTransactionCallback(): {
               hash: null,
               status: TransactionStatus.FAILED,
             },
+          });
+          console.log("remove liquidity invalid params ", {
+            deadline,
+            chainId,
+            account,
+            routerContract,
+            lpAmount,
+            token0,
+            token1,
           });
           return;
         }
@@ -426,7 +437,7 @@ export function useTransactionCallback(): {
         console.log("remove liq trx error ", { error });
       }
     },
-    [routerContract]
+    [routerContract, dispatch]
   );
 
   const resetTrxState = useCallback(() => {
@@ -452,6 +463,13 @@ export function useTransactionCallback(): {
               hash: null,
               status: TransactionStatus.FAILED,
             },
+          });
+          console.log("stake lp error invalid params ", {
+            lpAmount,
+            pid,
+            farmContract,
+            account,
+            chainId,
           });
           return;
         }
@@ -494,7 +512,7 @@ export function useTransactionCallback(): {
         console.log("stake farm  trx error ", { error });
       }
     },
-    [routerContract]
+    [farmContract, provider, dispatch]
   );
 
   const unstakeLpTokens = useCallback(
@@ -513,6 +531,13 @@ export function useTransactionCallback(): {
               hash: null,
               status: TransactionStatus.FAILED,
             },
+          });
+          console.log("unstake lp error invalid params ", {
+            lpAmount,
+            pid,
+            farmContract,
+            account,
+            chainId,
           });
           return;
         }
@@ -552,10 +577,10 @@ export function useTransactionCallback(): {
           },
         });
 
-        console.log("stake farm  trx error ", { error });
+        console.log("unstake lp  trx exeption ", { error });
       }
     },
-    [routerContract]
+    [farmContract, provider, dispatch]
   );
 
   const harvest = useCallback(
@@ -569,6 +594,13 @@ export function useTransactionCallback(): {
               hash: null,
               status: TransactionStatus.FAILED,
             },
+          });
+          console.log("harvest error invalid prarams ", {
+            pid,
+            farmContract,
+            account,
+            chainId,
+            provider,
           });
           return;
         }
@@ -608,10 +640,10 @@ export function useTransactionCallback(): {
           },
         });
 
-        console.log("stake farm  trx error ", { error });
+        console.log("harvest error exeption ", { error });
       }
     },
-    [routerContract]
+    [farmContract, provider, dispatch]
   );
 
   // check and update pending withdraw transactions
@@ -665,7 +697,7 @@ export function useTransactionCallback(): {
           },
         });
       });
-  }, [blockNumber, transaction]);
+  }, [blockNumber, transaction, provider, fastFarwardBlockNumber, dispatch]);
 
   return {
     swapTokens: swapTokens,
