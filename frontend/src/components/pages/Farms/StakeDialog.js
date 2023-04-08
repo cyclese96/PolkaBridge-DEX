@@ -11,7 +11,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import { fromWei, toWei } from "../../../utils/helper";
 import { formatCurrency } from "../../../utils/formatters";
 import TransactionPopup from "../../common/TransactionPopup";
-import { connect } from "react-redux";
+import { useSelector } from "react-redux";
 import BigNumber from "bignumber.js";
 import { useMemo } from "react";
 import useActiveWeb3React from "../../../hooks/useActiveWeb3React";
@@ -145,17 +145,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const StakeDialog = ({
-  open,
-  type,
-  poolInfo,
-  handleClose,
-  dex: { transaction },
-  farm: { farms, lpBalance },
-}) => {
+const StakeDialog = ({ open, type, poolInfo, handleClose }) => {
   const classes = useStyles();
   const [inputValue, setInputValue] = useState("");
+  const [maxValue, setMax] = useState("");
   const { chainId, account } = useActiveWeb3React();
+  const { transaction } = useSelector((state) => state?.dex);
+  const { farms, lpBalance } = useSelector((state) => state?.farm);
 
   const parseLpBalance = useMemo(() => {
     if (!lpBalance || !lpBalance?.[poolInfo.poolAddress]?.lpBalance) {
@@ -179,9 +175,11 @@ const StakeDialog = ({
 
   const handleMax = () => {
     if (type === "stake") {
-      setInputValue(parseLpBalance, poolInfo.pid, account, chainId);
+      // setInputValue(parseLpBalance, poolInfo.pid, account, chainId);
+      setMax(lpBalance?.[poolInfo.poolAddress]?.lpBalance);
     } else {
-      setInputValue(parseStakedAmount, poolInfo.pid, account, chainId);
+      setMax(farms?.[poolInfo.poolAddress]?.stakeData?.amount);
+      // setInputValue(parseStakedAmount, poolInfo.pid, account, chainId);
     }
   };
 
@@ -189,9 +187,7 @@ const StakeDialog = ({
     useTransactionCallback();
 
   const confirmStake = async () => {
-    const inputTokens = inputValue
-      ? toWei(inputValue, poolInfo.poolDecimals)
-      : 0;
+    const inputTokens = !maxValue ? inputValue : maxValue;
 
     if (new BigNumber(inputTokens).lte(0)) {
       return;
@@ -298,8 +294,15 @@ const StakeDialog = ({
             <div className="d-flex flex-wrap justify-content-between align-items-center mt-2">
               <div>
                 <NumberInput
-                  onInputChange={setInputValue}
-                  value={inputValue}
+                  onInputChange={(value) => {
+                    setInputValue(value);
+                    setMax("");
+                  }}
+                  value={
+                    !maxValue
+                      ? inputValue
+                      : fromWei(maxValue, poolInfo.poolDecimals)
+                  }
                   style={classes.input}
                 />
               </div>
@@ -361,10 +364,4 @@ const StakeDialog = ({
   );
 };
 
-const mapStateToProps = (state) => ({
-  dex: state.dex,
-  farm: state.farm,
-  account: state.account,
-});
-
-export default connect(mapStateToProps, {})(StakeDialog);
+export default StakeDialog;
