@@ -169,6 +169,7 @@ const Navbar = ({ account: { currentChain } }) => {
             icon: <PeopleAltOutlined />,
           },
           { name: "Swap", link: "/", id: "items", icon: <SwapVertIcon /> },
+          { name: "P2P", link: "https://p2p.polkabridge.org/", id: "p2p", icon: <PeopleAltOutlined /> },
         ].map((tab, index) => (
           <ListItem button key={tab.name} onClick={toggleDrawer(anchor, false)}>
             <a href={tab.link}>
@@ -293,6 +294,16 @@ const Navbar = ({ account: { currentChain } }) => {
               style={{ color: "#DF097C" }}
             >
               Swap <DotCircle />
+            </a>
+          </div>
+          <div>
+            <a
+              href="https://p2p.polkabridge.org"
+              target="_blank"
+              rel="noreferrer"
+              className={classes.navbarItemsDesktop}
+            >
+              P2P <DotCircle />
             </a>
           </div>
 
