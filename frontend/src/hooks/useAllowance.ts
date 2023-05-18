@@ -77,6 +77,8 @@ export function useTokenAllowance(
             status: TransactionStatus.WAITING,
           },
         });
+        const gasLimit = await contract.estimateGas.approve(spender, _amount);
+        console.log("estimate gas limit ", gasLimit?.toString());
         const trx = await contract?.approve(spender, _amount);
 
         dispatch({
