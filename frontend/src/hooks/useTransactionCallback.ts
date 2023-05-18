@@ -523,7 +523,7 @@ export function useTransactionCallback(): {
       chainId: ChainId
     ) => {
       try {
-        if (!lpAmount || !pid || !farmContract || !account || !chainId) {
+        if (!farmContract || !account || !chainId) {
           dispatch({
             type: UPDATE_TRANSACTION_STATUS,
             payload: {
@@ -532,13 +532,13 @@ export function useTransactionCallback(): {
               status: TransactionStatus.FAILED,
             },
           });
-          console.log("unstake lp error invalid params ", {
-            lpAmount,
-            pid,
-            farmContract,
-            account,
-            chainId,
-          });
+          // console.log("unstake lp error invalid params ", {
+          //   lpAmount,
+          //   pid,
+          //   farmContract,
+          //   account,
+          //   chainId,
+          // });
           return;
         }
 
